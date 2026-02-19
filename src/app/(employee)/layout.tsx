@@ -32,8 +32,8 @@ const EmployeeSidebar = () => {
                         key={item.path}
                         href={item.path}
                         className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${pathname === item.path
-                                ? 'bg-teal-50 text-teal-600 font-medium shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-teal-50 text-teal-600 font-medium shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                             }`}
                     >
                         {item.icon}
