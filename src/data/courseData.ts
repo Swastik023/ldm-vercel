@@ -15,7 +15,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Critical Care Management",
         duration: "1 Years",
         eligibility: "12th Pass with Science",
-        image: "/img1.jpeg",
+        image: "/course_img/dccm.jpeg",
         description: "The Diploma in Critical Care Management provides comprehensive training in managing intensive care units and critical patients. Students learn advanced patient monitoring, ventilator management, emergency response protocols, and specialized care techniques. The program emphasizes hands-on training with modern ICU equipment, understanding critical care procedures, and developing quick decision-making skills in emergency situations.",
         syllabus: [
             "Patient monitoring techniques and equipment",
@@ -40,7 +40,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Hospital Management",
         duration: "1 Year",
         eligibility: "12th Pass",
-        image: "/img2.jpeg",
+        image: "/course_img/dhm.jpeg",
         description: "The Diploma in Hospital Management is designed to prepare students for administrative and managerial roles in the healthcare sector. The program covers topics such as hospital operations, healthcare policies, quality management, medical ethics, patient services, and financial management. Students learn to efficiently manage hospital infrastructure, optimize resource utilization, and ensure smooth patient care processes.",
         syllabus: [
             "Hospital operations and workflow management",
@@ -65,7 +65,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Anaesthesia Technology (DAT)",
         duration: "2.5 Years",
         eligibility: "12th Pass with Science",
-        image: "/img3.jpeg",
+        image: "/course_img/dat.jpeg",
         description: "The Diploma in Anaesthesia Technology equips students with the knowledge and technical skills to assist anesthesiologists during surgeries and medical procedures. The curriculum includes topics such as pharmacology, patient preparation, anesthetic equipment, monitoring vital signs, and managing emergencies during anesthesia administration. Graduates are trained to handle advanced machines like ventilators and monitors, ensuring patient safety.",
         syllabus: [
             "Principles of anesthesia",
@@ -90,7 +90,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Community Care Provider",
         duration: "1 Year",
         eligibility: "12th Pass",
-        image: "/img4.jpeg",
+        image: "/course_img/dcp.jpeg",
         description: "The Diploma in Community Care Provider focuses on training individuals to deliver primary healthcare and social support services to communities, especially in underserved or rural areas. The curriculum includes public health education, disease prevention, health promotion, maternal and child care, and basic first aid. Graduates work closely with healthcare organizations, NGOs, and community health programs to improve the overall health and well-being of communities.",
         syllabus: [
             "Community health basics",
@@ -115,7 +115,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Emergency & Trauma Care Technician",
         duration: "1 Years",
         eligibility: "12th Pass with Science",
-        image: "/img5.jpeg",
+        image: "/course_img/detc.jpeg",
         description: "This program provides in-depth training in managing medical emergencies and trauma care. Students learn skills such as first aid, CPR, advanced life support, wound management, and handling emergency equipment. The course emphasizes rapid assessment and stabilization of critically ill or injured patients. Graduates find employment as emergency medical technicians (EMTs) in ambulance services, emergency rooms, and trauma centers, where quick decision-making is crucial.",
         syllabus: [
             "Emergency medical procedures",
@@ -140,7 +140,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Health & Sanitary Inspector",
         duration: "1 Year",
         eligibility: "12th Pass",
-        image: "/img6.jpeg",
+        image: "/course_img/dhsi.jpg",
         description: "The Diploma in Health & Sanitary Inspector program focuses on maintaining public health through hygiene, sanitation, and disease prevention. Students are trained in environmental health, waste management, food safety, and water quality analysis. The course also includes legal frameworks related to sanitation and public health standards. Graduates typically work as health inspectors or environmental health officers in government health departments, municipal corporations, and private industries.",
         syllabus: [
             "Public health and hygiene",
@@ -165,7 +165,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Home Care Provider",
         duration: "1 Year",
         eligibility: "12th Pass",
-        image: "/img7.jpeg",
+        image: "/course_img/dhcp.jpeg",
         description: "The Diploma in Home Care Provider prepares individuals to care for patients who require assistance with daily living in their homes. Students are trained in patient hygiene, nutrition, medication administration, mobility support, and emotional well-being. This program is especially valuable for those caring for elderly, disabled, or chronically ill patients. Graduates often work as professional caregivers, offering compassionate care and improving the quality of life for their clients.",
         syllabus: [
             "Patient care fundamentals",
@@ -190,7 +190,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Hospital Administration",
         duration: "1 Year",
         eligibility: "12th Pass",
-        image: "/img8.jpeg",
+        image: "/course_img/dha.jpg",
         description: "The Diploma in Hospital Administration focuses on the organizational and operational aspects of healthcare facilities. Students learn about hospital operations, resource management, patient care services, healthcare policies, and medical ethics. The program also includes training in communication, leadership, and staff coordination. Graduates are well-prepared to take up roles as hospital administrators, department managers, or healthcare consultants.",
         syllabus: [
             "Healthcare management",
@@ -215,7 +215,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Hospital Waste Management",
         duration: "1 Year",
         eligibility: "12th Pass",
-        image: "/img9.jpeg",
+        image: "/course_img/waste-managment-1.jpeg",
         description: "This diploma provides specialized training in the management and disposal of biomedical waste in healthcare facilities. The curriculum covers waste segregation, sterilization, disposal methods, and compliance with environmental and safety regulations. Students also learn about infection control and sustainability practices. Graduates are qualified to work as waste management officers or environmental health specialists in hospitals and healthcare organizations.",
         syllabus: [
             "Biomedical waste handling",
@@ -240,7 +240,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Medical Laboratory Technology (DMLT)",
         duration: "2.5 Years",
         eligibility: "12th Pass with Science",
-        image: "/img10.jpeg",
+        image: "/course_img/dmlt.jpeg",
         description: "The Diploma in Medical Laboratory Technology prepares students for careers in diagnostic laboratories. The program includes training in hematology, microbiology, clinical biochemistry, and pathology. Students learn to operate laboratory equipment, collect and analyze samples, and maintain accurate reports. Graduates work as lab technicians in hospitals, diagnostic centers, research labs, and blood banks, contributing to accurate diagnosis and treatment.",
         syllabus: [
             "Clinical laboratory procedures",
@@ -265,7 +265,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Nanny Training",
         duration: "1 Year",
         eligibility: "10th Pass",
-        image: "/img11.jpeg",
+        image: "/course_img/nanny.jpg",
         description: "The Diploma in Nanny Training is tailored for individuals aspiring to work as professional nannies or childcare providers. The program covers child psychology, early childhood education, nutrition, hygiene, and safety. Students also learn first aid and techniques to handle emergencies. Graduates find opportunities in childcare centers, schools, or private households, providing expert care and support for children.",
         syllabus: [
             "Child development",
@@ -290,7 +290,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Operation Theatre Technology (DOTT)",
         duration: "2.5 Years",
         eligibility: "12th Pass with Science",
-        image: "/img12.jpeg",
+        image: "/course_img/dott.jpg",
         description: "This diploma trains students to assist in surgical procedures by managing operation theater equipment, maintaining sterilized environments, and supporting surgeons during operations. The curriculum includes anatomy, surgical procedures, infection control, and anesthesia techniques. Graduates are employed as operation theater technicians in hospitals, where they play a critical role in ensuring successful surgeries.",
         syllabus: [
             "Surgical procedures",
@@ -315,7 +315,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Panchkarma",
         duration: "1 Year",
         eligibility: "12th Pass",
-        image: "/img13.jpeg",
+        image: "/course_img/Panchkarma.jpg",
         description: "The Diploma in Panchkarma focuses on the principles of Ayurveda, specifically the detoxification and rejuvenation therapy known as Panchkarma. Students learn about Ayurvedic treatments, herbal medicines, massage techniques, and lifestyle counseling. This program is ideal for those interested in natural healing practices. Graduates can work in wellness centers, Ayurvedic clinics, or as independent practitioners.",
         syllabus: [
             "Ayurvedic principles",
@@ -340,7 +340,7 @@ export const courseData: CourseData[] = [
         title: "Diploma in Radiology & Imaging Technology (DRIT)",
         duration: "2.5 Years",
         eligibility: "12th Pass with Science",
-        image: "/img14.jpeg",
+        image: "/course_img/drit.jpg",
         description: "This program provides comprehensive training in diagnostic imaging techniques such as X-rays, CT scans, MRIs, and ultrasound. Students are taught patient positioning, radiation safety, image interpretation, and equipment maintenance. The curriculum emphasizes accuracy and attention to detail. Graduates typically work as radiology technicians in hospitals, diagnostic centers, and imaging labs.",
         syllabus: [
             "Radiological procedures",
@@ -365,7 +365,7 @@ export const courseData: CourseData[] = [
         title: "Multipurpose Health Worker (MPHW)",
         duration: "2 Years",
         eligibility: "12th Pass",
-        image: "/img15.jpeg",
+        image: "/course_img/mphw.jpg",
         description: "The Multipurpose Health Worker program is designed to train individuals to provide basic healthcare services in rural and urban areas. The course covers immunization, maternal and child health, communicable disease prevention, and health education. Graduates work in government healthcare programs, NGOs, and primary health centers, delivering essential health services to communities in need.",
         syllabus: [
             "Primary healthcare",
@@ -390,7 +390,7 @@ export const courseData: CourseData[] = [
         title: "Certificate in Ayurveda Infertility Management",
         duration: "6 Months",
         eligibility: "BAMS or equivalent",
-        image: "/img9.jpeg",
+        image: "/course_img/ayrveda-infertility.jpeg",
         description: "This certification course provides comprehensive training in Ayurvedic approaches to infertility management. Students learn traditional Ayurvedic principles and modern techniques for treating infertility, including dietary recommendations, herbal remedies, and therapeutic procedures.",
         syllabus: [
             "Ayurvedic principles of reproduction",
@@ -414,7 +414,7 @@ export const courseData: CourseData[] = [
         title: "Certificate in Ayurveda Nutrition & Dietetics",
         duration: "6 Months",
         eligibility: "12th Pass with Science",
-        image: "/img10.jpeg",
+        image: "/course_img/ayrvedic-nutrition.jpg",
         description: "This program focuses on Ayurvedic principles of nutrition and dietary management. Students learn about food properties, dietary recommendations for different body types, and therapeutic diet planning according to Ayurvedic principles.",
         syllabus: [
             "Basics of Ayurvedic nutrition",
@@ -438,7 +438,7 @@ export const courseData: CourseData[] = [
         title: "Certificate in Ayurveda Parasurgery",
         duration: "1 Year",
         eligibility: "BAMS or equivalent",
-        image: "/img11.jpeg",
+        image: "/course_img/ayurveda.jpg",
         description: "This certification provides specialized training in Ayurvedic parasurgical procedures. The course covers traditional surgical techniques, wound management, and post-operative care following Ayurvedic principles.",
         syllabus: [
             "Parasurgical procedures",
@@ -462,7 +462,7 @@ export const courseData: CourseData[] = [
         title: "Certificate in Ayurvedic Cosmetology, Skin & Beauty Care",
         duration: "6 Months",
         eligibility: "12th Pass",
-        image: "/img12.jpeg",
+        image: "/course_img/ayurvedic-cosmetology.jpeg",
         description: "This certification course focuses on Ayurvedic approaches to skincare and beauty treatments. Students learn about natural cosmetics, skin types according to Ayurveda, and traditional beauty enhancement techniques.",
         syllabus: [
             "Ayurvedic skin care principles",
