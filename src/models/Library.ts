@@ -9,6 +9,8 @@ export interface ILibrary extends Document {
     file_type: string; // e.g. 'application/pdf'
     category: string; // 'syllabus', 'paper', 'book'
     uploaded_by: mongoose.Types.ObjectId;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const LibrarySchema = new Schema<ILibrary>({
