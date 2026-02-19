@@ -42,7 +42,9 @@ const Gallery: React.FC = () => {
 
     const filteredImages = filter === 'All'
         ? images
-        : images.filter(img => img.category === filter || (!img.category && filter === 'General'));
+        : images.filter(img =>
+            (img.category || 'General').toLowerCase() === filter.toLowerCase()
+        );
 
     return (
         <div className="bg-gray-50 min-h-screen flex flex-col">
