@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { FeePayment } from '@/models/FeePayment';
 import { FeeStructure } from '@/models/FeeStructure';
+import '@/models/Academic'; // registers Program & Session for populate()
+
 
 // GET /api/admin/finance/payments/[studentId] — student's full payment history
 export async function GET(

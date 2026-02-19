@@ -6,6 +6,8 @@ import { FeePayment } from '@/models/FeePayment';
 import { FeeStructure } from '@/models/FeeStructure';
 import { Expense } from '@/models/Expense';
 import { Salary } from '@/models/Salary';
+// Must import Academic models so Mongoose registers Program/Session before populate()
+import '@/models/Academic';
 
 // GET /api/admin/finance/dashboard — all summary stats
 export async function GET(req: Request) {
