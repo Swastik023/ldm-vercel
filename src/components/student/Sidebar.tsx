@@ -8,7 +8,8 @@ import {
     Library,
     FileText,
     User,
-    LogOut
+    LogOut,
+    Wallet,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -19,6 +20,7 @@ const StudentSidebar = () => {
         { title: 'Dashboard', path: '/student', icon: <LayoutDashboard size={20} /> },
         { title: 'Library', path: '/student/library', icon: <Library size={20} /> },
         { title: 'Report Card', path: '/student/report-card', icon: <FileText size={20} /> },
+        { title: 'My Fees', path: '/student/fees', icon: <Wallet size={20} /> },
         // { title: 'Profile', path: '/student/profile', icon: <User size={20} /> },
     ];
 
@@ -36,8 +38,8 @@ const StudentSidebar = () => {
                         key={item.path}
                         href={item.path}
                         className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${pathname === item.path
-                                ? 'bg-blue-50 text-blue-600 font-medium shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-blue-50 text-blue-600 font-medium shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                             }`}
                     >
                         {item.icon}
