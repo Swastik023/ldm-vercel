@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Sitemap: https://ldmcollege.com/sitemap.xml
+
+# Optimize crawling rate
+Crawl-delay: 10
+
+# Prevent crawling of certain files
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*?*
