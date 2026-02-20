@@ -8,6 +8,7 @@ export interface IProgram extends Document {
     description?: string;
     duration_years: number;
     total_semesters: number;
+    course_type: 'diploma' | 'certificate';
     is_active: boolean;
 }
 
@@ -55,6 +56,7 @@ const ProgramSchema = new Schema<IProgram>({
     description: { type: String },
     duration_years: { type: Number, required: true },
     total_semesters: { type: Number, required: true },
+    course_type: { type: String, enum: ['diploma', 'certificate'], default: 'diploma' },
     is_active: { type: Boolean, default: true },
 }, { timestamps: true });
 
