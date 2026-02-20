@@ -10,6 +10,7 @@ export async function GET() {
 
         const documents = await LibraryDocument.find({ is_deleted: { $ne: true } })
             .populate('category_id', 'name')
+            .populate('course_id', 'name code')
             .sort({ updatedAt: -1 })
             .lean();
 
@@ -22,6 +23,11 @@ export async function GET() {
                 url: d.file_path || '',
                 content: d.content || '',
                 category: (d.category_id as any)?.name || 'General',
+                program: (d.course_id as any) ? {
+                    code: (d.course_id as any).code,
+                    name: (d.course_id as any).name
+                } : null,
+                is_common: d.is_common,
                 current_version: d.current_version,
                 createdAt: d.createdAt,
             })),

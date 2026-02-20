@@ -117,7 +117,7 @@ export default function CategoryManager({ initialCategories }: { initialCategori
                                             )}
                                         </td>
                                         <td className="px-6 py-4 text-gray-500">
-                                            {new Date(cat.createdAt).toLocaleDateString()}
+                                            {cat.createdAt ? new Date(cat.createdAt).toLocaleDateString() : 'N/A'}
                                         </td>
                                     </tr>
                                 ))}

@@ -16,41 +16,39 @@ export async function GET() {
 
     await dbConnect();
 
-    // Get student's enrolled program via their batch
+    // For now, we allow students to see ALL documents in the library to match the public portal,
+    // but we fetch their program info so the UI can auto-filter/highlight for them.
     const student = await User.findById(session.user.id).select('batch').lean();
-    let programId: string | null = null;
+    let studentProgramCode: string | null = null;
+    let studentProgramName: string | null = null;
 
     if (student?.batch) {
-        const batch = await Batch.findById(student.batch).select('program').lean();
-        programId = batch?.program?.toString() ?? null;
+        const batch = await Batch.findById(student.batch).populate('program', 'name code').lean();
+        studentProgramCode = (batch?.program as any)?.code ?? null;
+        studentProgramName = (batch?.program as any)?.name ?? null;
     }
 
-    // If student has a program: show their program docs + common docs
-    // If student has NO batch/program (new student): show ALL docs so the library isn't blank
-    const query: Record<string, unknown> = programId
-        ? {
-            is_deleted: { $ne: true },
-            $or: [{ is_common: true }, { course_id: programId }]
-        }
-        : { is_deleted: { $ne: true } }; // fallback: show everything
-
-    const documents = await LibraryDocument.find(query)
-
+    const documents = await LibraryDocument.find({ is_deleted: { $ne: true } })
         .populate('category_id', 'name')
+        .populate('course_id', 'name code')
         .sort({ updatedAt: -1 })
         .lean();
 
     return NextResponse.json({
         success: true,
+        student_program: studentProgramCode ? { code: studentProgramCode, name: studentProgramName } : null,
         documents: documents.map(d => ({
             _id: d._id?.toString(),
             title: d.title,
-            description: '',           // new model has no standalone description
-            url: d.file_path || '',    // file_path maps to old 'url' field
-            file_size: 0,              // new model does not track file size
+            description: '',
+            url: d.file_path || '',
             file_type: d.file_type,
             content: d.content || '',
             category: (d.category_id as any)?.name || 'General',
+            program: (d.course_id as any) ? {
+                code: (d.course_id as any).code,
+                name: (d.course_id as any).name
+            } : null,
             is_common: d.is_common,
             current_version: d.current_version,
             createdAt: d.createdAt,
