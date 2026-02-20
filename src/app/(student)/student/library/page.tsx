@@ -10,6 +10,8 @@ import {
     ArrowRight, SortAsc, LayoutList, ChevronRight, Clock,
     Database, AlertCircle
 } from 'lucide-react';
+import PremiumBookReader from '@/components/library/PremiumBookReader';
+import ReactMarkdown from 'react-markdown';
 
 interface LibraryDoc {
     _id: string;
@@ -43,10 +45,14 @@ const CATEGORY_META: Record<string, { icon: React.ElementType; color: string; bg
 };
 
 function getFileMeta(type: string): { label: string; color: string; bg: string } {
-    if (type === 'rich-text' || type === 'rich_text') return { label: 'Rich Text', color: 'text-blue-700', bg: 'bg-blue-50' };
-    if (type?.includes('pdf')) return { label: 'PDF', color: 'text-red-700', bg: 'bg-red-50' };
-    if (type?.includes('word') || type?.includes('doc')) return { label: 'DOCX', color: 'text-blue-700', bg: 'bg-blue-50' };
-    return { label: type?.split('/')[1]?.toUpperCase() || 'FILE', color: 'text-gray-600', bg: 'bg-gray-100' };
+    const t = type?.toLowerCase();
+    if (t === 'rich-text' || t === 'rich_text') return { label: 'Academic Book', color: 'text-blue-700', bg: 'bg-blue-50' };
+    if (t === 'md' || t === 'markdown') return { label: 'Markdown', color: 'text-teal-700', bg: 'bg-teal-50' };
+    if (t?.includes('pdf')) return { label: 'PDF', color: 'text-red-700', bg: 'bg-red-50' };
+    if (t?.includes('word') || t?.includes('doc') || t === 'docx') return { label: 'Word', color: 'text-blue-700', bg: 'bg-blue-50' };
+    if (t === 'pptx' || t?.includes('powerpoint')) return { label: 'Slides', color: 'text-orange-700', bg: 'bg-orange-50' };
+    if (t === 'xlsx' || t?.includes('excel')) return { label: 'Spreadsheet', color: 'text-green-700', bg: 'bg-green-50' };
+    return { label: type?.toUpperCase() || 'FILE', color: 'text-gray-600', bg: 'bg-gray-100' };
 }
 
 function formatSize(bytes?: number) {
@@ -150,7 +156,24 @@ export default function StudentLibrary() {
 
     const openDoc = (doc: LibraryDoc) => {
         setSelected(doc);
-        setShowContent(false);
+        // Automatically open reader for rich-text/markdown, show modal for others
+        const t = doc.file_type?.toLowerCase();
+        const contentStr = (doc.content || '').trim();
+        const isMD = t === 'md' || t === 'markdown' ||
+            doc.url?.toLowerCase().endsWith('.md') ||
+            /^(#|---|\*|-|\d+\.|>|\[.*\]\(.*\))/.test(contentStr) ||
+            contentStr.includes('**') ||
+            contentStr.includes('##') ||
+            contentStr.includes('###');
+
+        const isPremiumDoc = t === 'rich-text' || t === 'rich_text' || isMD;
+
+        if (isPremiumDoc) {
+            setShowContent(true);
+        } else {
+            setShowContent(false);
+        }
+
         setRecentlyViewed(prev => {
             const without = prev.filter(d => d._id !== doc._id);
             return [doc, ...without].slice(0, 3);
@@ -352,10 +375,30 @@ export default function StudentLibrary() {
                 </div>
             </div>
 
-            {/* Modal */}
-            <AnimatePresence>
+            {/* Document Details & Reader Overlay */}
+            <AnimatePresence mode="wait">
                 {selected && (
-                    <DocModal doc={selected} showContent={showContent} setShowContent={setShowContent} onClose={() => { setSelected(null); setShowContent(false); }} />
+                    showContent ? (
+                        <PremiumBookReader
+                            key="reader"
+                            doc={selected as any}
+                            onClose={() => {
+                                setSelected(null);
+                                setShowContent(false);
+                            }}
+                        />
+                    ) : (
+                        <DocModal
+                            key="modal"
+                            doc={selected}
+                            showContent={showContent}
+                            setShowContent={setShowContent}
+                            onClose={() => {
+                                setSelected(null);
+                                setShowContent(false);
+                            }}
+                        />
+                    )
                 )}
             </AnimatePresence>
         </div>
@@ -458,6 +501,14 @@ function DocModal({ doc, showContent, setShowContent, onClose }: {
     const catMeta = getCategoryMeta(doc.category);
     const CatIcon = catMeta.icon;
     const isRichText = doc.file_type === 'rich-text' || doc.file_type === 'rich_text';
+    // Robust Markdown detection: Check file_type OR if content starts with a Markdown header
+    const contentStr = (doc.content || '').trim();
+    const isMarkdown = doc.file_type === 'md' || doc.file_type === 'markdown' ||
+        doc.url?.toLowerCase().endsWith('.md') ||
+        /^(#|---|\*|-|\d+\.|>|\[.*\]\(.*\))/.test(contentStr) ||
+        contentStr.includes('**') ||
+        contentStr.includes('##') ||
+        contentStr.includes('###');
 
     return (
         <motion.div
@@ -515,19 +566,32 @@ function DocModal({ doc, showContent, setShowContent, onClose }: {
                             </div>
                         )}
 
-                        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden min-h-[100px]">
-                            {isRichText ? (
-                                showContent ? (
-                                    <div className="p-1 prose prose-teal max-w-none" dangerouslySetInnerHTML={{ __html: doc.content }} />
-                                ) : (
-                                    <div className="p-10 text-center italic text-gray-400 text-sm">
-                                        Open the book reader below to view content.
+                        {/* Rendering Area - High Quality Preview */}
+                        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden min-h-[120px]">
+                            {(isRichText || isMarkdown) ? (
+                                <div className="p-8 prose prose-teal max-w-none">
+                                    <div className="flex items-center gap-3 mb-4 text-teal-600">
+                                        <BookOpen size={18} />
+                                        <span className="text-xs font-bold uppercase tracking-widest">Immersive Reader Content</span>
                                     </div>
-                                )
+                                    <div className="line-clamp-6 text-gray-600 leading-relaxed font-serif text-sm">
+                                        {isMarkdown ? (
+                                            <ReactMarkdown>{doc.content.substring(0, 500) + '...'}</ReactMarkdown>
+                                        ) : (
+                                            <div dangerouslySetInnerHTML={{ __html: doc.content.substring(0, 800) + '...' }} />
+                                        )}
+                                    </div>
+                                    <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-center">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic text-center">
+                                            This is a premium scholarly book. Launch the immersive reader below to view the full content and navigation.
+                                        </p>
+                                    </div>
+                                </div>
                             ) : (
                                 <div className="p-12 text-center bg-gray-50/50">
-                                    <FileText size={40} className="mx-auto text-gray-200 mb-4" />
-                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">File Download Required</p>
+                                    <FileText size={48} className="mx-auto text-gray-200 mb-4" />
+                                    <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Digital Download Available</p>
+                                    <p className="text-xs text-gray-400 mt-2">This is a {fileMeta.label} document. You can download it to view the contents.</p>
                                 </div>
                             )}
                         </div>
@@ -535,12 +599,12 @@ function DocModal({ doc, showContent, setShowContent, onClose }: {
                 </div>
 
                 <div className="px-8 py-6 border-t border-gray-50 flex items-center gap-3 bg-white">
-                    {isRichText ? (
+                    {(isRichText || isMarkdown) ? (
                         <button
-                            onClick={() => setShowContent(!showContent)}
-                            className="flex-1 py-4 bg-teal-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-teal-700 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2"
+                            onClick={() => setShowContent(true)}
+                            className="flex-1 py-4 bg-teal-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-teal-700 transition-all shadow-lg shadow-teal-500/20 active:scale-[0.98] flex items-center justify-center gap-2"
                         >
-                            <BookOpen size={16} /> {showContent ? 'Hide Reader' : 'Open Reader'}
+                            <BookOpen size={16} /> Launch Immersive Reader
                         </button>
                     ) : doc.url && (
                         <a href={doc.url} target="_blank" rel="noopener noreferrer" download
@@ -558,182 +622,4 @@ function DocModal({ doc, showContent, setShowContent, onClose }: {
     );
 }
 
-function CategorySection({ category, docs, onOpen }: { category: string; docs: LibraryDoc[]; onOpen: (d: LibraryDoc) => void }) {
-    const [expanded, setExpanded] = useState(false);
-    const meta = getCategoryMeta(category);
-    const Icon = meta.icon;
-    const visible = expanded ? docs : docs.slice(0, 3);
 
-    return (
-        <section className="mb-6">
-            <div className="flex items-center justify-between mb-2.5">
-                <h2 className="flex items-center gap-2 text-sm font-bold text-gray-900">
-                    <span className={`w-6 h-6 rounded-lg ${meta.bg} flex items-center justify-center`}>
-                        <Icon size={12} className={meta.color} />
-                    </span>
-                    {category}
-                    <span className="text-[11px] font-medium px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">{docs.length}</span>
-                </h2>
-                {docs.length > 3 && (
-                    <button onClick={() => setExpanded(!expanded)}
-                        className="flex items-center gap-1 text-xs font-medium text-teal-600 hover:text-teal-700">
-                        {expanded ? 'Show less' : `View all ${docs.length}`}
-                        <ArrowRight size={11} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
-                    </button>
-                )}
-            </div>
-            <div className="space-y-2">
-                {visible.map(doc => <DocRow key={doc._id} doc={doc} onOpen={onOpen} />)}
-            </div>
-        </section>
-    );
-}
-
-function DocRow({ doc, onOpen }: { doc: LibraryDoc; onOpen: (d: LibraryDoc) => void }) {
-    const fileMeta = getFileMeta(doc.file_type);
-    const catMeta = getCategoryMeta(doc.category);
-    const CatIcon = catMeta.icon;
-    const isRichText = doc.file_type === 'rich-text' || doc.file_type === 'rich_text';
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-            whileHover={{ x: 2 }}
-            onClick={() => onOpen(doc)}
-            className="bg-white border border-gray-100 rounded-xl px-4 py-3.5 flex items-center gap-3.5 cursor-pointer hover:border-teal-200 hover:shadow-md transition-all"
-        >
-            <div className={`w-9 h-9 rounded-xl ${fileMeta.bg} flex items-center justify-center flex-shrink-0`}>
-                <FileText size={16} className={fileMeta.color} />
-            </div>
-
-            <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                    <h3 className="font-semibold text-gray-900 text-sm truncate">{doc.title}</h3>
-                    {doc.current_version && doc.current_version > 1 && (
-                        <span className="flex-shrink-0 text-[9px] font-bold px-1 py-0.5 rounded bg-gray-100 text-gray-400">v{doc.current_version}</span>
-                    )}
-                </div>
-                {doc.description && (
-                    <p className="text-[11px] text-gray-500 line-clamp-1 mb-1">{doc.description}</p>
-                )}
-                <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${catMeta.bg} ${catMeta.color}`}>
-                        <CatIcon size={9} /> {doc.category}
-                    </span>
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${fileMeta.bg} ${fileMeta.color}`}>
-                        {fileMeta.label}
-                    </span>
-                </div>
-            </div>
-
-            <div className="flex items-center gap-3 flex-shrink-0">
-                <div className="text-right hidden md:block">
-                    {formatSize(doc.file_size) && <p className="text-[11px] text-gray-400">{formatSize(doc.file_size)}</p>}
-                    <p className="text-[11px] text-gray-400">{formatDate(doc.createdAt)}</p>
-                </div>
-                <div className="flex items-center gap-1.5">
-                    <button onClick={e => { e.stopPropagation(); onOpen(doc); }}
-                        className="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-teal-500 text-teal-600 hover:bg-teal-50 transition">
-                        {isRichText ? 'Read' : 'View'}
-                    </button>
-                    {!isRichText && doc.url && (
-                        <a href={doc.url} target="_blank" rel="noopener noreferrer" download
-                            onClick={e => e.stopPropagation()}
-                            className="text-xs font-medium px-2.5 py-1.5 rounded-lg bg-teal-500 text-white hover:bg-teal-600 transition flex items-center gap-1">
-                            <Download size={11} />
-                        </a>
-                    )}
-                </div>
-                <ChevronRight size={13} className="text-gray-300" />
-            </div>
-        </motion.div>
-    );
-}
-
-function DocModal({ doc, showContent, setShowContent, onClose }: {
-    doc: LibraryDoc; showContent: boolean; setShowContent: (v: boolean) => void; onClose: () => void;
-}) {
-    const fileMeta = getFileMeta(doc.file_type);
-    const catMeta = getCategoryMeta(doc.category);
-    const CatIcon = catMeta.icon;
-    const isRichText = doc.file_type === 'rich-text' || doc.file_type === 'rich_text';
-
-    return (
-        <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={onClose}
-        >
-            <motion.div
-                initial={{ scale: 0.95, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-                className="bg-white rounded-2xl w-full max-w-xl max-h-[88vh] overflow-hidden flex flex-col shadow-2xl"
-                onClick={e => e.stopPropagation()}
-            >
-                <div className="px-6 pt-5 pb-4 border-b border-gray-100">
-                    <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-start gap-3">
-                            <div className={`w-9 h-9 rounded-xl ${fileMeta.bg} flex items-center justify-center flex-shrink-0`}>
-                                <FileText size={16} className={fileMeta.color} />
-                            </div>
-                            <div>
-                                <h2 className="font-bold text-gray-900 text-base leading-snug">{doc.title}</h2>
-                                <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                                    <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${catMeta.bg} ${catMeta.color}`}>
-                                        <CatIcon size={9} /> {doc.category}
-                                    </span>
-                                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${fileMeta.bg} ${fileMeta.color}`}>
-                                        {fileMeta.label}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <button onClick={onClose} className="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition flex-shrink-0">
-                            <X size={17} />
-                        </button>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 mt-4">
-                        {[
-                            { label: 'Added', value: formatDate(doc.createdAt) },
-                            { label: 'Size', value: formatSize(doc.file_size) || 'N/A' },
-                            { label: 'Version', value: doc.current_version ? `v${doc.current_version}` : 'v1' },
-                        ].map(item => (
-                            <div key={item.label} className="bg-gray-50 rounded-xl px-3 py-2 text-center">
-                                <p className="text-[9px] text-gray-400 uppercase tracking-wide mb-0.5">{item.label}</p>
-                                <p className="text-xs font-semibold text-gray-800">{item.value}</p>
-                            </div>
-                        ))}
-                    </div>
-
-                    {doc.description && <p className="mt-3 text-xs text-gray-600 leading-relaxed">{doc.description}</p>}
-                </div>
-
-                <div className="flex-1 overflow-y-auto px-6 py-4">
-                    {isRichText ? (
-                        showContent ? (
-                            <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: doc.content }} />
-                        ) : (
-                            <button onClick={() => setShowContent(true)}
-                                className="w-full py-3 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600 transition flex items-center justify-center gap-2 text-sm">
-                                <FileText size={15} /> Read Full Document
-                            </button>
-                        )
-                    ) : doc.url ? (
-                        <div className="flex flex-col gap-2.5">
-                            <a href={doc.url} target="_blank" rel="noopener noreferrer" download
-                                className="w-full py-3 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600 transition flex items-center justify-center gap-2 text-sm">
-                                <Download size={15} /> Download Document
-                            </a>
-                            <a href={doc.url} target="_blank" rel="noopener noreferrer"
-                                className="w-full py-2.5 border border-gray-200 rounded-xl text-xs text-gray-600 font-medium hover:bg-gray-50 transition flex items-center justify-center gap-2">
-                                Open in new tab
-                            </a>
-                        </div>
-                    ) : (
-                        <p className="text-center text-xs text-gray-400 py-5">No content available.</p>
-                    )}
-                </div>
-            </motion.div>
-        </motion.div>
-    );
-}

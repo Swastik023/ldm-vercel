@@ -6,7 +6,7 @@ export interface ILibraryDocument extends Document {
     title: string;
     content?: string; // For rich-text content
     file_path?: string; // For uploaded files
-    file_type: 'docx' | 'pptx' | 'xlsx' | 'pdf' | 'rich-text';
+    file_type: 'docx' | 'pptx' | 'xlsx' | 'pdf' | 'rich-text' | 'md';
     current_version: number;
     is_common: boolean; // If true, linked to all courses
     is_deleted: boolean; // Soft delete
@@ -24,7 +24,7 @@ const LibraryDocumentSchema = new Schema<ILibraryDocument>({
     file_path: { type: String },
     file_type: {
         type: String,
-        enum: ['docx', 'pptx', 'xlsx', 'pdf', 'rich-text'],
+        enum: ['docx', 'pptx', 'xlsx', 'pdf', 'rich-text', 'md'],
         required: true
     },
     current_version: { type: Number, default: 1 },

@@ -8,6 +8,8 @@ import {
     ArrowRight, SortAsc, LayoutList, ChevronRight, Clock,
     Database
 } from 'lucide-react';
+import PremiumBookReader from '@/components/library/PremiumBookReader';
+import ReactMarkdown from 'react-markdown';
 
 interface LibraryDoc {
     _id: string;
@@ -41,10 +43,14 @@ const CATEGORY_META: Record<string, { icon: React.ElementType; color: string; bg
 };
 
 function getFileMeta(type: string): { label: string; color: string; bg: string } {
-    if (type === 'rich-text' || type === 'rich_text') return { label: 'Rich Text', color: 'text-blue-700', bg: 'bg-blue-50' };
-    if (type?.includes('pdf')) return { label: 'PDF', color: 'text-red-700', bg: 'bg-red-50' };
-    if (type?.includes('word') || type?.includes('doc')) return { label: 'DOCX', color: 'text-blue-700', bg: 'bg-blue-50' };
-    return { label: type?.split('/')[1]?.toUpperCase() || 'FILE', color: 'text-gray-600', bg: 'bg-gray-100' };
+    const t = type?.toLowerCase();
+    if (t === 'rich-text' || t === 'rich_text') return { label: 'Academic Book', color: 'text-blue-700', bg: 'bg-blue-50' };
+    if (t === 'md' || t === 'markdown') return { label: 'Markdown', color: 'text-teal-700', bg: 'bg-teal-50' };
+    if (t?.includes('pdf')) return { label: 'PDF', color: 'text-red-700', bg: 'bg-red-50' };
+    if (t?.includes('word') || t?.includes('doc') || t === 'docx') return { label: 'Word', color: 'text-blue-700', bg: 'bg-blue-50' };
+    if (t === 'pptx' || t?.includes('powerpoint')) return { label: 'Slides', color: 'text-orange-700', bg: 'bg-orange-50' };
+    if (t === 'xlsx' || t?.includes('excel')) return { label: 'Spreadsheet', color: 'text-green-700', bg: 'bg-green-50' };
+    return { label: type?.toUpperCase() || 'FILE', color: 'text-gray-600', bg: 'bg-gray-100' };
 }
 
 function formatSize(bytes?: number) {
@@ -130,7 +136,24 @@ export default function PublicLibrary() {
 
     const openDoc = (doc: LibraryDoc) => {
         setSelected(doc);
-        setShowContent(false);
+        // Automatically open reader for rich-text/markdown, show modal for others
+        const t = doc.file_type?.toLowerCase();
+        const contentStr = (doc.content || '').trim();
+        const isMD = t === 'md' || t === 'markdown' ||
+            doc.url?.toLowerCase().endsWith('.md') ||
+            /^(#|---|\*|-|\d+\.|>|\[.*\]\(.*\))/.test(contentStr) ||
+            contentStr.includes('**') ||
+            contentStr.includes('##') ||
+            contentStr.includes('###');
+
+        const isPremiumDoc = t === 'rich-text' || t === 'rich_text' || isMD;
+
+        if (isPremiumDoc) {
+            setShowContent(true);
+        } else {
+            setShowContent(false);
+        }
+
         setRecentlyViewed(prev => {
             const without = prev.filter(d => d._id !== doc._id);
             return [doc, ...without].slice(0, 3);
@@ -330,10 +353,30 @@ export default function PublicLibrary() {
                 </div>
             </main>
 
-            {/* Document Details Modal */}
-            <AnimatePresence>
+            {/* Document Details & Reader Overlay */}
+            <AnimatePresence mode="wait">
                 {selected && (
-                    <DocModal doc={selected} showContent={showContent} setShowContent={setShowContent} onClose={() => { setSelected(null); setShowContent(false); }} />
+                    showContent ? (
+                        <PremiumBookReader
+                            key="reader"
+                            doc={selected as any}
+                            onClose={() => {
+                                setSelected(null);
+                                setShowContent(false);
+                            }}
+                        />
+                    ) : (
+                        <DocModal
+                            key="modal"
+                            doc={selected}
+                            showContent={showContent}
+                            setShowContent={setShowContent}
+                            onClose={() => {
+                                setSelected(null);
+                                setShowContent(false);
+                            }}
+                        />
+                    )
                 )}
             </AnimatePresence>
         </div>
@@ -445,6 +488,14 @@ function DocModal({ doc, showContent, setShowContent, onClose }: {
     const catMeta = getCategoryMeta(doc.category);
     const CatIcon = catMeta.icon;
     const isRichText = doc.file_type === 'rich-text' || doc.file_type === 'rich_text';
+    // Robust Markdown detection: Check file_type OR if content starts with a Markdown header
+    const contentStr = (doc.content || '').trim();
+    const isMarkdown = doc.file_type === 'md' || doc.file_type === 'markdown' ||
+        doc.url?.toLowerCase().endsWith('.md') ||
+        /^(#|---|\*|-|\d+\.|>|\[.*\]\(.*\))/.test(contentStr) ||
+        contentStr.includes('**') ||
+        contentStr.includes('##') ||
+        contentStr.includes('###');
 
     return (
         <motion.div
@@ -506,16 +557,27 @@ function DocModal({ doc, showContent, setShowContent, onClose }: {
                             </div>
                         )}
 
-                        {/* Rendering Area */}
-                        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden min-h-[100px]">
-                            {isRichText ? (
-                                showContent ? (
-                                    <div className="p-1 prose prose-teal max-w-none" dangerouslySetInnerHTML={{ __html: doc.content }} />
-                                ) : (
-                                    <div className="p-8 text-center italic text-gray-400 text-sm">
-                                        Click "Read Library Book" below to open the rich-text reader.
+                        {/* Rendering Area - High Quality Preview */}
+                        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden min-h-[120px]">
+                            {(isRichText || isMarkdown) ? (
+                                <div className="p-8 prose prose-teal max-w-none">
+                                    <div className="flex items-center gap-3 mb-4 text-teal-600">
+                                        <BookOpen size={18} />
+                                        <span className="text-xs font-bold uppercase tracking-widest">Immersive Reader Content</span>
                                     </div>
-                                )
+                                    <div className="line-clamp-6 text-gray-600 leading-relaxed font-serif">
+                                        {isMarkdown ? (
+                                            <ReactMarkdown>{doc.content.substring(0, 500) + '...'}</ReactMarkdown>
+                                        ) : (
+                                            <div dangerouslySetInnerHTML={{ __html: doc.content.substring(0, 800) + '...' }} />
+                                        )}
+                                    </div>
+                                    <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-center">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic text-center">
+                                            This is a premium scholarly book. Launch the immersive reader below to view the full content and navigation.
+                                        </p>
+                                    </div>
+                                </div>
                             ) : (
                                 <div className="p-12 text-center bg-gray-50/50">
                                     <FileText size={48} className="mx-auto text-gray-200 mb-4" />
@@ -527,14 +589,13 @@ function DocModal({ doc, showContent, setShowContent, onClose }: {
                     </div>
                 </div>
 
-                {/* Modal Footer Actions */}
                 <div className="px-8 py-6 border-t border-gray-50 flex items-center gap-3 bg-white">
-                    {isRichText ? (
+                    {(isRichText || isMarkdown) ? (
                         <button
-                            onClick={() => setShowContent(!showContent)}
+                            onClick={() => setShowContent(true)}
                             className="flex-1 py-4 bg-teal-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-teal-700 transition-all shadow-lg shadow-teal-500/20 active:scale-[0.98] flex items-center justify-center gap-2"
                         >
-                            <BookOpen size={16} /> {showContent ? 'Hide Content' : 'Read Library Book'}
+                            <BookOpen size={16} /> Launch Immersive Reader
                         </button>
                     ) : doc.url && (
                         <a

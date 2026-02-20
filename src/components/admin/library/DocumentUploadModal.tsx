@@ -143,6 +143,7 @@ export default function DocumentUploadModal({
                                 <option value="pptx">PowerPoint (.pptx)</option>
                                 <option value="xlsx">Excel (.xlsx)</option>
                                 <option value="rich-text">Rich Text Editor</option>
+                                <option value="md">Markdown Document (.md)</option>
                             </select>
                         </div>
                     </div>
@@ -159,9 +160,19 @@ export default function DocumentUploadModal({
                                 placeholder="<h1>Title</h1> <p>Content here...</p>"
                             />
                         </div>
+                    ) : fileType === 'md' ? (
+                        <div>
+                            <label className="text-sm font-medium mb-2 block">Markdown Content (Raw Text)</label>
+                            <textarea
+                                className="w-full min-h-[200px] p-3 border rounded-md font-mono text-sm"
+                                value={content}
+                                onChange={e => setContent(e.target.value)}
+                                placeholder="# Title\n\nContent here..."
+                            />
+                        </div>
                     ) : (
                         <div>
-                            <label className="text-sm font-medium mb-2 block">Upload File (PDF / DOCX / XLSX)</label>
+                            <label className="text-sm font-medium mb-2 block">Upload File (PDF / DOCX / XLSX / MD)</label>
                             <div className="flex items-center justify-center w-full">
                                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300">
                                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -175,15 +186,37 @@ export default function DocumentUploadModal({
                                             <>
                                                 <Upload className="w-8 h-8 mb-4 text-gray-500" />
                                                 <p className="mb-2 text-sm text-gray-500 font-semibold text-center">Click to upload or drag and drop</p>
-                                                <p className="text-xs text-gray-400">PDF, DOCX, PPTX or XLSX (Max 10MB)</p>
+                                                <p className="text-xs text-gray-400">PDF, DOCX, PPTX, XLSX or MD (Max 10MB)</p>
                                             </>
                                         )}
                                     </div>
                                     <input
                                         type="file"
                                         className="hidden"
-                                        onChange={e => setSelectedFile(e.target.files?.[0] || null)}
-                                        accept=".pdf,.docx,.doc,.pptx,.ppt,.xlsx,.xls"
+                                        onChange={e => {
+                                            const file = e.target.files?.[0] || null;
+                                            setSelectedFile(file);
+                                            if (file) {
+                                                const ext = file.name.split('.').pop()?.toLowerCase();
+                                                const matchesMD = ext === 'md' || ext === 'markdown';
+
+                                                if (matchesMD) {
+                                                    setFileType('md');
+                                                    // Automatically read the MD file content for the reader
+                                                    const reader = new FileReader();
+                                                    reader.onload = (event) => {
+                                                        const text = event.target?.result as string;
+                                                        if (text) setContent(text);
+                                                    };
+                                                    reader.readAsText(file);
+                                                }
+                                                else if (ext === 'pdf') setFileType('pdf');
+                                                else if (ext === 'docx' || ext === 'doc') setFileType('docx');
+                                                else if (ext === 'xlsx' || ext === 'xls') setFileType('xlsx');
+                                                else if (ext === 'pptx' || ext === 'ppt') setFileType('pptx');
+                                            }
+                                        }}
+                                        accept=".pdf,.docx,.doc,.pptx,.ppt,.xlsx,.xls,.md"
                                     />
                                 </label>
                             </div>
