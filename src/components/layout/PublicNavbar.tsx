@@ -1,37 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    FaHome,
-    FaUsers,
-    FaGraduationCap,
-    FaImages,
-    FaAward,
-    FaBuilding,
-    FaPhone,
-    FaChevronDown,
-    FaTimes,
-    FaBars,
-    FaHandshake,
-    FaBullhorn,
-    FaSignOutAlt,
-    FaUserShield,
-    FaBell,
-    FaBook,
+    FaHome, FaUsers, FaGraduationCap, FaImages, FaAward, FaBuilding,
+    FaPhone, FaChevronDown, FaTimes, FaBars, FaHandshake, FaBullhorn,
+    FaSignOutAlt, FaUserShield, FaBell, FaBook, FaLeaf, FaUserMd,
 } from 'react-icons/fa';
 import { useSession, signOut } from 'next-auth/react';
 import Marquee from '@/components/public/Marquee';
 
-// ─── Notification Bell ────────────────────────────────────────────────────────
-interface Notification {
-    id: number;
-    message: string;
-    is_read: number;
-    created_at: string;
-}
+// ─── Notification Bell ─────────────────────────────────────────────────────────
+interface Notification { id: number; message: string; is_read: number; created_at: string; }
 
 const NotificationBell = () => {
     const { data: session } = useSession();
@@ -44,10 +26,7 @@ const NotificationBell = () => {
         try {
             const res = await fetch('/api/notifications');
             const data = await res.json();
-            if (data.success) {
-                setUnreadCount(data.unread_count ?? 0);
-                setNotifications(data.notifications ?? []);
-            }
+            if (data.success) { setUnreadCount(data.unread_count ?? 0); setNotifications(data.notifications ?? []); }
         } catch { /* silent */ }
     };
 
@@ -60,54 +39,41 @@ const NotificationBell = () => {
 
     const markAsRead = async (id: number) => {
         try {
-            await fetch('/api/notifications', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id }),
-            });
+            await fetch('/api/notifications', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
             setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: 1 } : n));
             setUnreadCount(prev => Math.max(0, prev - 1));
         } catch { /* silent */ }
     };
 
     if (!session) return null;
-
     return (
         <div className="relative">
             <button onClick={() => setIsOpen(!isOpen)} className="relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none">
-                <FaBell className="h-6 w-6" />
+                <FaBell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                    <span className="absolute top-0 right-0 block h-4 w-4 rounded-full bg-red-500 ring-2 ring-white text-xs text-white flex items-center justify-center">
+                    <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-500 ring-2 ring-white text-xs text-white flex items-center justify-center">
                         {unreadCount}
                     </span>
                 )}
             </button>
-
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
                         className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden z-50 ring-1 ring-black ring-opacity-5"
                     >
                         <div className="py-2">
                             <h3 className="px-4 py-2 text-sm font-semibold text-gray-900 border-b">Notifications</h3>
                             <div className="max-h-64 overflow-y-auto">
-                                {notifications.length === 0 ? (
-                                    <div className="px-4 py-3 text-sm text-gray-500">No new notifications</div>
-                                ) : (
-                                    notifications.map(n => (
-                                        <div
-                                            key={n.id}
-                                            className={`px-4 py-3 border-b hover:bg-gray-50 cursor-pointer ${n.is_read ? 'opacity-50' : 'bg-blue-50'}`}
-                                            onClick={() => markAsRead(n.id)}
-                                        >
+                                {notifications.length === 0
+                                    ? <div className="px-4 py-3 text-sm text-gray-500">No new notifications</div>
+                                    : notifications.map(n => (
+                                        <div key={n.id} className={`px-4 py-3 border-b hover:bg-gray-50 cursor-pointer ${n.is_read ? 'opacity-50' : 'bg-blue-50'}`} onClick={() => markAsRead(n.id)}>
                                             <p className="text-sm text-gray-800">{n.message}</p>
                                             <p className="text-xs text-gray-500 mt-1">{new Date(n.created_at).toLocaleDateString()}</p>
                                         </div>
                                     ))
-                                )}
+                                }
                             </div>
                         </div>
                     </motion.div>
@@ -117,120 +83,68 @@ const NotificationBell = () => {
     );
 };
 
-// ─── Header (Logo Section) ────────────────────────────────────────────────────
+// ─── Slimmed Header ────────────────────────────────────────────────────────────
 const Header = () => (
     <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-white shadow-md py-4"
+        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+        className="bg-white border-b border-gray-100 py-3"
     >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-                {/* Left Logos */}
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2, duration: 0.5 }}
-                    className="flex items-center space-x-3"
-                >
-                    <Link href="/" aria-label="Home" className="hover:opacity-90 transition-opacity min-w-[5rem] sm:min-w-[5.5rem]">
-                        <div className="relative group">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-30 group-hover:opacity-70 transition duration-300" />
-                            <img
-                                src="/ldm-college-logo.jpeg"
-                                alt="LDM College Logo"
-                                className="h-20 w-20 sm:h-[5.5rem] sm:w-[5.5rem] rounded-full object-contain relative ring-2 ring-gray-700/30 group-hover:ring-blue-500/50 transition duration-300"
-                                loading="lazy"
-                            />
-                        </div>
-                    </Link>
+            <div className="flex items-center justify-between gap-4">
+                {/* Left — LDM Logo */}
+                <Link href="/" aria-label="Home" className="shrink-0">
+                    <div className="relative group">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
+                        <img src="/ldm-college-logo.jpeg" alt="LDM College" className="h-16 w-16 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-blue-400 transition duration-300" loading="lazy" />
+                    </div>
+                </Link>
 
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.6, duration: 0.5 }}
-                        className="relative group hidden sm:block"
-                    >
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-30 group-hover:opacity-70 transition duration-300" />
-                        <img
-                            src="/logo-side1.jpeg"
-                            alt="LDM College Secondary Logo"
-                            className="h-16 sm:h-20 w-16 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-700/30 group-hover:ring-purple-500/50 transition duration-300"
-                            loading="lazy"
-                        />
-                    </motion.div>
-                </motion.div>
-
-                {/* Title */}
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                    className="text-center flex-grow flex flex-col justify-center"
-                >
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 bg-clip-text text-transparent transition-all duration-700 ease-in-out">
-                            LDM College
+                {/* Centre — Title + Collaboration Badge */}
+                <div className="text-center flex-1">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            LDM College of Pharmacy
                         </span>
                     </h1>
-                    <p className="text-base sm:text-lg lg:text-xl text-gray-700 font-medium mt-1">
+                    {/* Styled collaboration badge — much more visible than plain text */}
+                    <div className="mt-1.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs sm:text-sm font-medium">
+                        <FaBuilding className="w-3 h-3 text-teal-500" />
                         In collaboration with Dr. Dharam Dev Hospital &amp; Institute
-                    </p>
-                </motion.div>
+                    </div>
+                </div>
 
-                {/* Right Logos */}
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4, duration: 0.5 }}
-                    className="flex items-center space-x-3"
-                >
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5, duration: 0.5 }}
-                        className="relative group hidden sm:block"
-                    >
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-green-600 to-blue-600 rounded-full blur opacity-30 group-hover:opacity-70 transition duration-300" />
-                        <img
-                            src="/logo-side.jpeg"
-                            alt="Dr. Dharam Dev Hospital Logo"
-                            className="h-16 sm:h-20 w-16 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-700/30 group-hover:ring-green-500/50 transition duration-300"
-                            loading="lazy"
-                        />
-                    </motion.div>
-
-                    <Link href="/hospital" className="relative group hidden sm:block" aria-label="Visit Hospital Page">
-                        <motion.img
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.6, duration: 0.5 }}
-                            src="/hospital.png"
-                            alt="Hospital Building"
-                            className="h-16 sm:h-20 w-auto hover:opacity-90 transition-opacity duration-300"
-                            loading="lazy"
-                        />
+                {/* Right — Hospital Logo + Apply Now CTA */}
+                <div className="flex items-center gap-3 shrink-0">
+                    <Link href="/hospital" aria-label="Hospital Partner" className="relative group hidden sm:block">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-teal-500 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
+                        <img src="/logo-side.jpeg" alt="Dr. Dharam Dev Hospital" className="h-14 w-14 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-teal-400 transition duration-300" loading="lazy" />
                     </Link>
-                </motion.div>
+                    <Link
+                        href="/collect-info"
+                        className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white rounded-full text-sm font-semibold shadow-md hover:shadow-violet-300 hover:from-violet-700 hover:to-blue-700 transition-all duration-200 whitespace-nowrap"
+                    >
+                        <FaGraduationCap className="w-4 h-4" />
+                        Apply Now
+                    </Link>
+                </div>
             </div>
         </div>
     </motion.header>
 );
 
-// ─── Nav Items ────────────────────────────────────────────────────────────────
-interface DropdownItem { title: string; path: string; }
-interface NavItem { title: string; path: string; dropdown?: DropdownItem[]; }
+// ─── Nav Data ──────────────────────────────────────────────────────────────────
+interface DropdownItem { title: string; path: string; desc?: string; icon?: React.ReactNode; }
+interface NavItem { title: string; path: string; dropdown?: DropdownItem[]; isMega?: boolean; }
 
 const navItems: NavItem[] = [
     { title: 'Home', path: '/' },
     {
-        title: 'About Us',
+        title: 'About',
         path: '/about',
         dropdown: [
-            { title: 'Overview', path: '/about' },
-            { title: 'Mission & Vision', path: '/mission' },
-            { title: 'Our Team', path: '/team' },
+            { title: 'Overview', path: '/about', desc: 'Our story & mission' },
+            { title: 'Our Team', path: '/team', desc: 'Faculty & staff' },
+            { title: 'Facilities', path: '/facilities', desc: 'Campus & labs' },
         ],
     },
     { title: 'Notices', path: '/notices' },
@@ -239,65 +153,56 @@ const navItems: NavItem[] = [
         title: 'Courses',
         path: '/courses',
         dropdown: [
-            { title: 'All Courses', path: '/courses' },
-            { title: 'Apply for Courses', path: '/collect-info' },
+            { title: 'All Courses', path: '/courses', desc: 'Browse all programs' },
+            { title: 'Apply Now', path: '/collect-info', desc: 'Start your application' },
         ],
     },
     { title: 'Gallery', path: '/gallery' },
-    { title: 'Facilities', path: '/facilities' },
     {
         title: 'Collaborations',
         path: '/collaborations',
+        isMega: true,
         dropdown: [
-            { title: 'Overview', path: '/collaborations' },
-            { title: 'Hospital Partners', path: '/hospital' },
-            { title: 'Ayurvedic Pharma', path: '/ayurvedic-pharma' },
-            { title: 'Vaidya Saurabh', path: '/vaid-saurabh' },
+            { title: 'All Partnerships', path: '/collaborations', desc: 'Overview of our network', icon: <FaHandshake className="w-5 h-5 text-teal-500" /> },
+            { title: 'Hospital Partners', path: '/hospital', desc: 'Clinical training at Dr. Dharam Dev Hospital', icon: <FaBuilding className="w-5 h-5 text-blue-500" /> },
+            { title: 'Ayurvedic Pharma', path: '/ayurvedic-pharma', desc: 'Research & manufacturing exposure', icon: <FaLeaf className="w-5 h-5 text-green-500" /> },
+            { title: 'Vaidya Saurabh', path: '/vaid-saurabh', desc: 'Expert Ayurvedic mentorship', icon: <FaUserMd className="w-5 h-5 text-purple-500" /> },
         ],
     },
-    {
-        title: 'Contact',
-        path: '/contact',
-        dropdown: [
-            { title: 'Contact Us', path: '/contact' },
-            { title: 'Apply for Courses', path: '/collect-info' },
-        ],
-    },
+    { title: 'Contact', path: '/contact' },
 ];
 
 const iconMap: Record<string, React.ReactNode> = {
-    'Home': <FaHome className="w-5 h-5 text-blue-600" />,
-    'About Us': <FaUsers className="w-5 h-5 text-green-600" />,
-    'Notices': <FaBullhorn className="w-5 h-5 text-red-500" />,
-    'E-Library': <FaBook className="w-5 h-5 text-indigo-600" />,
-    'Courses': <FaGraduationCap className="w-5 h-5 text-purple-600" />,
-    'Gallery': <FaImages className="w-5 h-5 text-pink-600" />,
-    'Facilities': <FaAward className="w-5 h-5 text-orange-600" />,
-    'Collaborations': <FaHandshake className="w-5 h-5 text-teal-600" />,
-    'Contact': <FaPhone className="w-5 h-5 rotate-180 text-teal-600" />,
+    'Home': <FaHome className="w-4 h-4 text-blue-600" />,
+    'About': <FaUsers className="w-4 h-4 text-green-600" />,
+    'Notices': <FaBullhorn className="w-4 h-4 text-red-500" />,
+    'E-Library': <FaBook className="w-4 h-4 text-indigo-600" />,
+    'Courses': <FaGraduationCap className="w-4 h-4 text-purple-600" />,
+    'Gallery': <FaImages className="w-4 h-4 text-pink-600" />,
+    'Collaborations': <FaHandshake className="w-4 h-4 text-teal-600" />,
+    'Contact': <FaPhone className="w-4 h-4 text-teal-600" />,
 };
 
-// ─── Main Navbar ──────────────────────────────────────────────────────────────
+// ─── Main Navbar ───────────────────────────────────────────────────────────────
 const PublicNavbar = () => {
     const pathname = usePathname();
-    const router = useRouter();
     const { data: session } = useSession();
     const [isOpen, setIsOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Close menu on route change
-    useEffect(() => {
-        setIsOpen(false);
-        setActiveDropdown(null);
-    }, [pathname]);
+    useEffect(() => { setIsOpen(false); setActiveDropdown(null); }, [pathname]);
 
-    const toggleMenu = () => { setIsOpen(p => !p); setActiveDropdown(null); };
-    const toggleDropdown = (title: string | null) => setActiveDropdown(p => p === title ? null : title);
-
-    const isActiveParent = (item: NavItem): boolean => {
-        if (pathname === item.path) return true;
-        return item.dropdown?.some(d => pathname === d.path) ?? false;
+    const openDropdown = (title: string) => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        setActiveDropdown(title);
     };
+    const scheduleClose = () => {
+        closeTimer.current = setTimeout(() => setActiveDropdown(null), 120);
+    };
+
+    const isActiveParent = (item: NavItem) =>
+        pathname === item.path || (item.dropdown?.some(d => pathname === d.path) ?? false);
 
     const dashboardPath =
         !session ? '/login'
@@ -308,76 +213,97 @@ const PublicNavbar = () => {
 
     return (
         <div className="bg-white w-full z-50">
-            {/* Top logo header */}
             <Header />
-
-            {/* Marquee / notice bar */}
             <Marquee />
 
-            {/* Sticky nav bar */}
-            <nav className="bg-white shadow-lg sticky top-0 z-50">
+            {/* ── Sticky Nav Bar ── */}
+            <nav className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-center h-16 relative">
-                        {/* Mobile: hamburger on right */}
-                        <div className="absolute right-0 top-0 h-full flex items-center md:hidden gap-3 pr-2">
-                            {session && <NotificationBell />}
-                            <button onClick={toggleMenu} className="text-gray-700 hover:text-blue-600 p-2">
-                                {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
-                            </button>
-                        </div>
+                    <div className="flex h-14 items-center justify-between">
 
                         {/* Desktop Nav */}
-                        <div className="hidden md:flex space-x-1 justify-center items-center">
+                        <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
                             {navItems.map(item => (
                                 <div
                                     key={item.title}
-                                    className="relative group"
-                                    onMouseEnter={() => item.dropdown && toggleDropdown(item.title)}
-                                    onMouseLeave={() => toggleDropdown(null)}
+                                    className="relative"
+                                    onMouseEnter={() => item.dropdown && openDropdown(item.title)}
+                                    onMouseLeave={scheduleClose}
                                 >
                                     <Link
                                         href={item.path}
-                                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                                        className={`inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors ${isActiveParent(item) ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
+                                        className={`inline-flex items-center gap-1.5 px-3 py-4 text-sm font-medium transition-colors border-b-2 ${isActiveParent(item)
+                                                ? 'text-blue-600 border-blue-600'
+                                                : 'text-gray-700 hover:text-blue-600 border-transparent hover:border-blue-300'
+                                            }`}
                                     >
                                         {iconMap[item.title]}
                                         {item.title}
                                         {item.dropdown && (
-                                            <motion.span
-                                                animate={{ rotate: activeDropdown === item.title ? 180 : 0 }}
-                                                transition={{ duration: 0.3 }}
-                                            >
-                                                <FaChevronDown className="h-3 w-3" />
+                                            <motion.span animate={{ rotate: activeDropdown === item.title ? 180 : 0 }} transition={{ duration: 0.25 }}>
+                                                <FaChevronDown className="h-2.5 w-2.5" />
                                             </motion.span>
                                         )}
                                     </Link>
 
-                                    {/* Dropdown */}
+                                    {/* ── Mega-Menu (Collaborations) ── */}
                                     <AnimatePresence>
-                                        {item.dropdown && activeDropdown === item.title && (
+                                        {item.dropdown && item.isMega && activeDropdown === item.title && (
                                             <motion.div
-                                                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                                initial={{ opacity: 0, y: -8, scale: 0.97 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                                transition={{ duration: 0.2 }}
-                                                className="absolute left-1/2 transform -translate-x-1/2 mt-0 w-max bg-white rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 overflow-hidden z-50"
+                                                exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="absolute left-1/2 -translate-x-1/2 mt-0 w-[520px] bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 overflow-hidden z-50"
+                                                onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current); }}
+                                                onMouseLeave={scheduleClose}
                                             >
-                                                <div className="py-2 px-1">
+                                                <div className="p-4 grid grid-cols-2 gap-2">
                                                     {item.dropdown.map((d, i) => (
-                                                        <motion.div
+                                                        <Link
                                                             key={d.title}
-                                                            initial={{ opacity: 0, x: -20 }}
-                                                            animate={{ opacity: 1, x: 0 }}
-                                                            transition={{ duration: 0.2, delay: i * 0.05 }}
-                                                            whileHover={{ x: 5 }}
+                                                            href={d.path}
+                                                            className={`flex items-start gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors group ${i === 0 ? 'col-span-2 bg-gray-50' : ''}`}
                                                         >
-                                                            <Link
-                                                                href={d.path}
-                                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors whitespace-nowrap"
-                                                            >
-                                                                {d.title}
-                                                            </Link>
-                                                        </motion.div>
+                                                            <div className="mt-0.5 shrink-0 p-2 rounded-lg bg-white shadow-sm group-hover:shadow-md transition-shadow">
+                                                                {d.icon}
+                                                            </div>
+                                                            <div>
+                                                                <p className="font-semibold text-gray-900 text-sm">{d.title}</p>
+                                                                <p className="text-xs text-gray-500 mt-0.5">{d.desc}</p>
+                                                            </div>
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                                <div className="px-4 py-3 bg-gradient-to-r from-teal-50 to-blue-50 border-t border-gray-100">
+                                                    <Link href="/collaborations" className="text-xs text-teal-700 font-semibold hover:underline">
+                                                        View all partnerships →
+                                                    </Link>
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {/* ── Regular Dropdown ── */}
+                                        {item.dropdown && !item.isMega && activeDropdown === item.title && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="absolute left-1/2 -translate-x-1/2 mt-0 w-52 bg-white rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden z-50"
+                                                onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current); }}
+                                                onMouseLeave={scheduleClose}
+                                            >
+                                                <div className="py-2">
+                                                    {item.dropdown.map(d => (
+                                                        <Link
+                                                            key={d.title}
+                                                            href={d.path}
+                                                            className="flex flex-col px-4 py-2.5 hover:bg-blue-50 transition-colors"
+                                                        >
+                                                            <span className="text-sm font-medium text-gray-800">{d.title}</span>
+                                                            {d.desc && <span className="text-xs text-gray-500">{d.desc}</span>}
+                                                        </Link>
                                                     ))}
                                                 </div>
                                             </motion.div>
@@ -385,88 +311,75 @@ const PublicNavbar = () => {
                                     </AnimatePresence>
                                 </div>
                             ))}
+                        </div>
 
-                            {/* Auth Controls */}
-                            <div className="flex items-center gap-2 ml-2">
-                                {session ? (
-                                    <>
-                                        <NotificationBell />
-                                        <Link
-                                            href={dashboardPath}
-                                            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                                        >
-                                            <FaUserShield />
-                                            Dashboard
-                                        </Link>
-                                        <button
-                                            onClick={() => signOut({ callbackUrl: '/' })}
-                                            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
-                                        >
-                                            <FaSignOutAlt />
-                                            Logout
-                                        </button>
-                                    </>
-                                ) : (
-                                    <Link
-                                        href="/login"
-                                        className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-medium hover:shadow-lg transition-shadow"
-                                    >
-                                        <FaUsers />
-                                        Login
+                        {/* Desktop Auth Controls */}
+                        <div className="hidden md:flex items-center gap-2">
+                            {session ? (
+                                <>
+                                    <NotificationBell />
+                                    <Link href={dashboardPath} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+                                        <FaUserShield className="w-4 h-4" /> Dashboard
                                     </Link>
-                                )}
-                            </div>
+                                    <button onClick={() => signOut({ callbackUrl: '/' })} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors">
+                                        <FaSignOutAlt className="w-4 h-4" /> Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <Link href="/login" className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-medium hover:shadow-lg transition-shadow">
+                                    <FaUsers className="w-4 h-4" /> Login
+                                </Link>
+                            )}
+                        </div>
+
+                        {/* Mobile — Hamburger */}
+                        <div className="md:hidden flex items-center gap-2">
+                            {session && <NotificationBell />}
+                            <button onClick={() => { setIsOpen(p => !p); setActiveDropdown(null); }} className="text-gray-700 hover:text-blue-600 p-2">
+                                {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
+                {/* ── Mobile Menu ── */}
                 <AnimatePresence>
                     {isOpen && (
                         <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
+                            initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
                             className="md:hidden border-t bg-white overflow-hidden"
                         >
-                            <div className="px-4 py-3 space-y-1">
+                            <div className="px-4 py-3 space-y-1 max-h-[75vh] overflow-y-auto">
+                                {/* Apply Now — prominent at top for mobile */}
+                                <Link href="/collect-info" className="flex items-center justify-center gap-2 py-3 mb-2 bg-gradient-to-r from-violet-600 to-blue-600 text-white rounded-xl font-semibold text-sm" onClick={() => setIsOpen(false)}>
+                                    <FaGraduationCap /> Apply Now
+                                </Link>
+
                                 {navItems.map(item => (
                                     <div key={item.title}>
                                         {item.dropdown ? (
                                             <>
                                                 <button
-                                                    onClick={() => toggleDropdown(item.title)}
-                                                    className="w-full flex items-center justify-between py-3 text-gray-700 font-medium"
+                                                    onClick={() => setActiveDropdown(p => p === item.title ? null : item.title)}
+                                                    className="w-full flex items-center justify-between py-3 text-gray-700 font-medium text-sm"
                                                 >
-                                                    <div className="flex items-center gap-2">
-                                                        {iconMap[item.title]}
-                                                        {item.title}
-                                                    </div>
-                                                    <FaChevronDown className={`transition-transform ${activeDropdown === item.title ? 'rotate-180' : ''}`} />
+                                                    <span className="flex items-center gap-2">{iconMap[item.title]}{item.title}</span>
+                                                    <FaChevronDown className={`transition-transform text-xs ${activeDropdown === item.title ? 'rotate-180' : ''}`} />
                                                 </button>
                                                 {activeDropdown === item.title && (
-                                                    <div className="pl-8 pb-2 space-y-1">
+                                                    <div className="pl-7 pb-2 space-y-0.5 border-l-2 border-blue-100 ml-2">
                                                         {item.dropdown.map(d => (
-                                                            <Link
-                                                                key={d.title}
-                                                                href={d.path}
-                                                                className="block py-2 text-sm text-gray-600 hover:text-blue-600"
-                                                                onClick={toggleMenu}
-                                                            >
+                                                            <Link key={d.title} href={d.path} className="block py-2 text-sm text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>
                                                                 {d.title}
+                                                                {d.desc && <span className="text-xs text-gray-400 block">{d.desc}</span>}
                                                             </Link>
                                                         ))}
                                                     </div>
                                                 )}
                                             </>
                                         ) : (
-                                            <Link
-                                                href={item.path}
-                                                className="flex items-center gap-2 py-3 text-gray-700 font-medium hover:text-blue-600"
-                                                onClick={toggleMenu}
-                                            >
-                                                {iconMap[item.title]}
-                                                {item.title}
+                                            <Link href={item.path} className="flex items-center gap-2 py-3 text-gray-700 font-medium text-sm hover:text-blue-600" onClick={() => setIsOpen(false)}>
+                                                {iconMap[item.title]}{item.title}
                                             </Link>
                                         )}
                                     </div>
@@ -475,20 +388,11 @@ const PublicNavbar = () => {
                                 <div className="border-t pt-3 mt-2 space-y-1">
                                     {session ? (
                                         <>
-                                            <Link href={dashboardPath} className="block py-2 text-blue-600 font-medium" onClick={toggleMenu}>
-                                                Dashboard
-                                            </Link>
-                                            <button
-                                                onClick={() => { signOut({ callbackUrl: '/' }); toggleMenu(); }}
-                                                className="block py-2 text-red-600 font-medium w-full text-left"
-                                            >
-                                                Logout
-                                            </button>
+                                            <Link href={dashboardPath} className="block py-2 text-blue-600 font-medium text-sm" onClick={() => setIsOpen(false)}>Dashboard</Link>
+                                            <button onClick={() => { signOut({ callbackUrl: '/' }); setIsOpen(false); }} className="block py-2 text-red-600 font-medium text-sm w-full text-left">Logout</button>
                                         </>
                                     ) : (
-                                        <Link href="/login" className="block py-2 text-blue-600 font-medium" onClick={toggleMenu}>
-                                            Login
-                                        </Link>
+                                        <Link href="/login" className="block py-2 text-blue-600 font-medium text-sm" onClick={() => setIsOpen(false)}>Login</Link>
                                     )}
                                 </div>
                             </div>
