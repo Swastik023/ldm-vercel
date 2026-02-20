@@ -1,6 +1,10 @@
 import PublicNavbar from '@/components/layout/PublicNavbar';
 import Footer from '@/components/layout/Footer';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
+
 export default function PublicLayout({
     children,
 }: {
