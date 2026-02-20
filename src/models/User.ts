@@ -5,6 +5,7 @@ export interface IUser extends Document {
     email: string;
     password?: string;
     role: 'admin' | 'teacher' | 'student' | 'employee';
+    is_root: boolean; // Ultimate superadmin with immutable audit bypass/view rights
     fullName: string;
     status: 'active' | 'inactive' | 'suspended';
     // Student-specific fields
@@ -18,6 +19,7 @@ const UserSchema = new Schema<IUser>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'teacher', 'student', 'employee'], default: 'student' },
+    is_root: { type: Boolean, default: false },
     fullName: { type: String, required: true },
     status: { type: String, enum: ['active', 'inactive', 'suspended'], default: 'active' },
     // Student-specific

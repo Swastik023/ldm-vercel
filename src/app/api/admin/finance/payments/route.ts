@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
     await dbConnect();
 
-    const query: Record<string, unknown> = {};
+    const query: Record<string, unknown> = { is_deleted: { $ne: true } };
     if (status) query.status = status;
 
     // If filtering by session, get fee structures for that session first

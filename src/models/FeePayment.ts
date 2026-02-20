@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export interface IPaymentTransaction {
+export interface IPaymentTransaction extends mongoose.Types.Subdocument {
+    _id: mongoose.Types.ObjectId;
     amount: number;
     paid_on: Date;
     mode: 'cash' | 'online' | 'cheque' | 'DD';
@@ -13,8 +14,19 @@ export interface IFeePayment extends Document {
     student: mongoose.Types.ObjectId;
     fee_structure: mongoose.Types.ObjectId;
     amount_paid: number;
-    payments: IPaymentTransaction[];
+    payments: mongoose.Types.DocumentArray<IPaymentTransaction>;
     status: 'unpaid' | 'partial' | 'paid';
+
+    // Audit & Security Fields
+    is_deleted: boolean;
+    deleted_by?: mongoose.Types.ObjectId;
+    deleted_at?: Date;
+    deletion_reason?: string;
+
+    is_locked: boolean;
+    locked_by?: mongoose.Types.ObjectId;
+    locked_at?: Date;
+
     createdAt: Date;
     updatedAt: Date;
 }
@@ -34,6 +46,15 @@ const FeePaymentSchema = new Schema<IFeePayment>({
     amount_paid: { type: Number, default: 0 },
     payments: [PaymentTransactionSchema],
     status: { type: String, enum: ['unpaid', 'partial', 'paid'], default: 'unpaid' },
+
+    is_deleted: { type: Boolean, default: false },
+    deleted_by: { type: Schema.Types.ObjectId, ref: 'User' },
+    deleted_at: { type: Date },
+    deletion_reason: { type: String },
+
+    is_locked: { type: Boolean, default: false },
+    locked_by: { type: Schema.Types.ObjectId, ref: 'User' },
+    locked_at: { type: Date },
 }, { timestamps: true });
 
 // Unique: one FeePayment document per student per fee structure

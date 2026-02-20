@@ -18,14 +18,18 @@ export async function GET(req: Request) {
 
     await dbConnect();
 
-    // --- Revenue: sum of all payments made ---
+    // --- Revenue: sum of all payments made (excluding deleted) ---
     const revenueAgg = await FeePayment.aggregate([
+        { $match: { is_deleted: { $ne: true } } },
         { $group: { _id: null, total: { $sum: '$amount_paid' } } }
     ]);
     const totalRevenue = revenueAgg[0]?.total ?? 0;
 
     // --- Pending fees: sum of (total_amount - amount_paid) for unpaid/partial ---
-    const pendingPayments = await FeePayment.find({ status: { $in: ['unpaid', 'partial'] } })
+    const pendingPayments = await FeePayment.find({
+        status: { $in: ['unpaid', 'partial'] },
+        is_deleted: { $ne: true }
+    })
         .populate('fee_structure', 'total_amount')
         .lean();
 
@@ -36,20 +40,21 @@ export async function GET(req: Request) {
 
     // --- Expenses ---
     const expenseAgg = await Expense.aggregate([
+        { $match: { is_deleted: { $ne: true } } },
         { $group: { _id: null, total: { $sum: '$amount' } } }
     ]);
     const totalExpenses = expenseAgg[0]?.total ?? 0;
 
     // --- Salary (paid) ---
     const salaryAgg = await Salary.aggregate([
-        { $match: { status: 'paid' } },
+        { $match: { status: 'paid', is_deleted: { $ne: true } } },
         { $group: { _id: null, total: { $sum: '$net_amount' } } }
     ]);
     const totalSalaryPaid = salaryAgg[0]?.total ?? 0;
 
     // --- Pending salaries ---
     const pendingSalaryAgg = await Salary.aggregate([
-        { $match: { status: 'pending' } },
+        { $match: { status: 'pending', is_deleted: { $ne: true } } },
         { $group: { _id: null, total: { $sum: '$net_amount' } } }
     ]);
     const totalSalaryPending = pendingSalaryAgg[0]?.total ?? 0;
@@ -66,6 +71,7 @@ export async function GET(req: Request) {
 
     // Fee payments have individual transactions inside payments[] array, aggregate those
     const monthlyRevenue = await FeePayment.aggregate([
+        { $match: { is_deleted: { $ne: true } } },
         { $unwind: '$payments' },
         { $match: { 'payments.paid_on': { $gte: sixMonthsAgo } } },
         {
@@ -81,7 +87,7 @@ export async function GET(req: Request) {
     ]);
 
     const monthlyExpenses = await Expense.aggregate([
-        { $match: { paid_on: { $gte: sixMonthsAgo } } },
+        { $match: { paid_on: { $gte: sixMonthsAgo }, is_deleted: { $ne: true } } },
         {
             $group: {
                 _id: { year: { $year: '$paid_on' }, month: { $month: '$paid_on' } },
@@ -92,7 +98,10 @@ export async function GET(req: Request) {
     ]);
 
     // --- Top 5 pending payments for the dashboard table ---
-    const pendingTop5 = await FeePayment.find({ status: { $in: ['unpaid', 'partial'] } })
+    const pendingTop5 = await FeePayment.find({
+        status: { $in: ['unpaid', 'partial'] },
+        is_deleted: { $ne: true }
+    })
         .populate('student', 'fullName username')
         .populate({ path: 'fee_structure', select: 'total_amount description semester', populate: { path: 'program', select: 'name' } })
         .sort({ updatedAt: 1 })
