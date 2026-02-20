@@ -18,7 +18,8 @@ import {
     FaHandshake,
     FaBullhorn,
     FaSignOutAlt,
-    FaUserShield
+    FaUserShield,
+    FaBook
 } from 'react-icons/fa';
 import Marquee from './Marquee';
 import { useAuth } from '@/context/AuthContext';
@@ -188,6 +189,8 @@ const Navbar = () => {
                 return <FaBuilding className="w-5 h-5 text-red-600" />;
             case 'Collaborations':
                 return <FaHandshake className="w-5 h-5 text-teal-600" />;
+            case 'E-Library':
+                return <FaBook className="w-5 h-5 text-indigo-600" />;
             case 'Contact':
                 return <FaPhone className="w-5 h-5 rotate-180 text-teal-600" />;
             case 'Login':
@@ -209,6 +212,7 @@ const Navbar = () => {
             ],
         },
         { title: 'Notices', path: '/notices' },
+        { title: 'E-Library', path: '/library' },
         {
             title: 'Courses',
             path: '/courses',
