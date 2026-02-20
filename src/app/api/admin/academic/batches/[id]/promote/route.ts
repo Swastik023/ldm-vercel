@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
-import { Batch, Program } from '@/models/Academic';
+import { Batch } from '@/models/Academic';
 
 export async function PUT(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== 'admin') {
@@ -15,7 +15,8 @@ export async function PUT(
 
     try {
         await dbConnect();
-        const batch = await Batch.findById(params.id).populate('program');
+        const { id } = await params;
+        const batch = await Batch.findById(id).populate('program');
 
         if (!batch) {
             return NextResponse.json({ success: false, message: 'Batch not found' }, { status: 404 });

@@ -10,13 +10,13 @@ import mongoose from 'mongoose';
 
 // PUT /api/admin/library/documents/[id]
 // Updates the file or rich-text and generates a version control history
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== 'admin') {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const { file_path, content, title } = await req.json();
 
     await dbConnect();
@@ -80,13 +80,13 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 // DELETE /api/admin/library/documents/[id]
 // Soft deletes document. Root Admin can bypass if permanently deleted.
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== 'admin') {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const url = new URL(req.url);
     const forceDelete = url.searchParams.get('force') === 'true'; // Used for testing or Root Admin hard wipes
 

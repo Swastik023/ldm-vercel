@@ -9,7 +9,7 @@ import '@/models/Academic';
 
 export async function GET(
     req: Request,
-    { params }: { params: { assignmentId: string } }
+    { params }: { params: Promise<{ assignmentId: string }> }
 ) {
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== 'teacher') return NextResponse.json({ success: false }, { status: 401 });
@@ -20,8 +20,9 @@ export async function GET(
     await dbConnect();
 
     // 1. Get Assignment
+    const { assignmentId } = await params;
     const assignment = await Assignment.findOne({
-        _id: params.assignmentId,
+        _id: assignmentId,
         teacher: session.user.id
     }).populate('batch').lean();
 
@@ -63,7 +64,7 @@ export async function GET(
 
 export async function POST(
     req: Request,
-    { params }: { params: { assignmentId: string } }
+    { params }: { params: Promise<{ assignmentId: string }> }
 ) {
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== 'teacher') return NextResponse.json({ success: false }, { status: 401 });
@@ -77,8 +78,9 @@ export async function POST(
 
     await dbConnect();
 
+    const { assignmentId } = await params;
     const assignment = await Assignment.findOne({
-        _id: params.assignmentId,
+        _id: assignmentId,
         teacher: session.user.id
     }).lean();
 

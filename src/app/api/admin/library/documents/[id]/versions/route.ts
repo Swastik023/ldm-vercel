@@ -6,13 +6,13 @@ import { DocumentVersion } from '@/models/DocumentVersion';
 
 // GET /api/admin/library/documents/[id]/versions
 // Fetches the version history of a specific document
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== 'admin') {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id: documentId } = params;
+    const { id: documentId } = await params;
 
     await dbConnect();
 
