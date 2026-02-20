@@ -16,8 +16,7 @@ export async function GET() {
 
     await dbConnect();
 
-    // BUG FIX: User model stores `batch` not `program`.
-    // We need to populate batch to get the program ID for program-specific document filtering.
+    // Get student's enrolled program via their batch
     const student = await User.findById(session.user.id).select('batch').lean();
     let programId: string | null = null;
 
@@ -26,14 +25,17 @@ export async function GET() {
         programId = batch?.program?.toString() ?? null;
     }
 
-    // Fetch documents that are common OR belong to this student's program
-    const orConditions: object[] = [{ is_common: true }];
-    if (programId) orConditions.push({ course_id: programId });
+    // If student has a program: show their program docs + common docs
+    // If student has NO batch/program (new student): show ALL docs so the library isn't blank
+    const query: Record<string, unknown> = programId
+        ? {
+            is_deleted: { $ne: true },
+            $or: [{ is_common: true }, { course_id: programId }]
+        }
+        : { is_deleted: { $ne: true } }; // fallback: show everything
 
-    const documents = await LibraryDocument.find({
-        is_deleted: { $ne: true },
-        $or: orConditions
-    })
+    const documents = await LibraryDocument.find(query)
+
         .populate('category_id', 'name')
         .sort({ updatedAt: -1 })
         .lean();
