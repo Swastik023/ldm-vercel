@@ -21,9 +21,8 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         .sort({ version_number: -1 })
         .lean();
 
-    if (!versions.length) {
-        return NextResponse.json({ success: false, message: 'No versions found for this document' }, { status: 404 });
-    }
-
+    // Return an empty array (not a 404) when there's no history yet.
+    // Seeded documents won't have version records, but that's a valid state —
+    // the frontend should show "No history found." gracefully.
     return NextResponse.json({ success: true, versions });
 }

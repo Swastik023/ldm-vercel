@@ -54,11 +54,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: 'Must supply course_id unless document is common' }, { status: 400 });
     }
 
+    // BUG FIX: dbConnect MUST be called before startSession 
+    // so Mongoose has an open connection to attach the session to
+    await dbConnect();
+
     const sessionObj = await mongoose.startSession();
     sessionObj.startTransaction();
 
     try {
-        await dbConnect();
 
         // 1. Create Base Document
         const doc = await LibraryDocument.create([{

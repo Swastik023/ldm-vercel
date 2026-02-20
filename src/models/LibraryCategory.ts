@@ -8,7 +8,7 @@ export interface ILibraryCategory extends Document {
 }
 
 const LibraryCategorySchema = new Schema<ILibraryCategory>({
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true, trim: true },
     semester_or_module: { type: Number },
 }, { timestamps: true });
 

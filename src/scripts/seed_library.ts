@@ -13,15 +13,27 @@ const DocumentSchema = new mongoose.Schema({
     category_id: mongoose.Schema.Types.ObjectId,
     title: String,
     content: String,
+    file_path: String,
     file_type: String,
     current_version: Number,
     is_common: Boolean,
     is_deleted: Boolean
 }, { timestamps: true });
 
+// Also need DocumentVersion schema to create v1 records
+const DocumentVersionSchema = new mongoose.Schema({
+    document_id: mongoose.Schema.Types.ObjectId,
+    file_path: String,
+    content: String,
+    version_number: Number,
+    updated_by: mongoose.Schema.Types.ObjectId,
+    previous_version_reference: mongoose.Schema.Types.ObjectId
+}, { timestamps: true });
+
 const Program = mongoose.models.Program || mongoose.model('Program', ProgramSchema);
 const LibraryCategory = mongoose.models.LibraryCategory || mongoose.model('LibraryCategory', CategorySchema);
 const LibraryDocument = mongoose.models.LibraryDocument || mongoose.model('LibraryDocument', DocumentSchema);
+const DocumentVersion = mongoose.models.DocumentVersion || mongoose.model('DocumentVersion', DocumentVersionSchema);
 
 async function seedLibrary() {
     await mongoose.connect(process.env.MONGODB_URI as string);
@@ -66,7 +78,7 @@ async function seedLibrary() {
                 continue;
             }
 
-            await LibraryDocument.create({
+            const newDoc = await LibraryDocument.create({
                 course_id: program._id,
                 category_id: syllabusCategory._id,
                 title: `${programCode} - Master Curriculum`,
@@ -76,6 +88,15 @@ async function seedLibrary() {
                 is_common: false,
                 is_deleted: false
             });
+
+            // BUG FIX: Create V1 DocumentVersion record so history viewer works
+            await DocumentVersion.create({
+                document_id: newDoc._id,
+                content: courseData.html_content,
+                version_number: 1,
+                // No updated_by since this is seeded — leave null
+            });
+
             console.log(`✅ Seeded curriculum for ${programCode}`);
         }
     }
