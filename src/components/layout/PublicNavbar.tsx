@@ -20,6 +20,7 @@ import {
     FaSignOutAlt,
     FaUserShield,
     FaBell,
+    FaBook,
 } from 'react-icons/fa';
 import { useSession, signOut } from 'next-auth/react';
 import Marquee from '@/components/public/Marquee';
@@ -233,6 +234,7 @@ const navItems: NavItem[] = [
         ],
     },
     { title: 'Notices', path: '/notices' },
+    { title: 'E-Library', path: '/library' },
     {
         title: 'Courses',
         path: '/courses',
@@ -267,6 +269,7 @@ const iconMap: Record<string, React.ReactNode> = {
     'Home': <FaHome className="w-5 h-5 text-blue-600" />,
     'About Us': <FaUsers className="w-5 h-5 text-green-600" />,
     'Notices': <FaBullhorn className="w-5 h-5 text-red-500" />,
+    'E-Library': <FaBook className="w-5 h-5 text-indigo-600" />,
     'Courses': <FaGraduationCap className="w-5 h-5 text-purple-600" />,
     'Gallery': <FaImages className="w-5 h-5 text-pink-600" />,
     'Facilities': <FaAward className="w-5 h-5 text-orange-600" />,
