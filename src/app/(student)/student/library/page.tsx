@@ -13,18 +13,13 @@ interface LibraryDoc {
     url: string;
     file_size: number;
     file_type: string;
-    category: string;
+    content: string;       // rich-text HTML content
+    category: string;      // now populated from category_id.name
+    is_common: boolean;
+    current_version: number;
     createdAt: string;
 }
 
-const CATEGORIES = [
-    { value: 'all', label: 'All Documents' },
-    { value: 'general', label: 'General' },
-    { value: 'syllabus', label: 'Syllabus' },
-    { value: 'study_material', label: 'Study Material' },
-    { value: 'reference', label: 'Reference Books' },
-    { value: 'assignment', label: 'Assignments' },
-];
 
 function formatSize(bytes: number) {
     if (!bytes) return '—';
@@ -42,6 +37,10 @@ export default function Library() {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('all');
     const [selected, setSelected] = useState<LibraryDoc | null>(null);
+    const [showContent, setShowContent] = useState(false); // For rich-text preview
+
+    // Derive dynamic categories from actual documents
+    const allCategories = ['all', ...Array.from(new Set(documents.map(d => d.category)))];
 
     useEffect(() => {
         if (status === 'unauthenticated') router.push('/login');
@@ -94,7 +93,7 @@ export default function Library() {
                     <Filter className="absolute left-3 top-2.5 text-gray-400" size={16} />
                     <select value={category} onChange={e => setCategory(e.target.value)}
                         className="pl-9 pr-8 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none">
-                        {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                        {allCategories.map(c => <option key={c} value={c}>{c === 'all' ? 'All Documents' : c}</option>)}
                     </select>
                 </div>
             </div>
@@ -139,27 +138,37 @@ export default function Library() {
 
             {/* Preview Modal */}
             {selected && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => { setSelected(null); setShowContent(false); }}>
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        className="bg-white rounded-xl max-w-lg w-full p-6 relative" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => setSelected(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700">
+                        className="bg-white rounded-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 relative" onClick={e => e.stopPropagation()}>
+                        <button onClick={() => { setSelected(null); setShowContent(false); }} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700">
                             <X size={20} />
                         </button>
                         <h2 className="text-xl font-bold text-gray-900 mb-1 pr-8">{selected.title}</h2>
-                        {selected.description && <p className="text-gray-500 text-sm mb-4">{selected.description}</p>}
                         <div className="grid grid-cols-2 gap-3 text-xs text-gray-500 mb-5 bg-gray-50 p-3 rounded-lg">
-                            <div><span className="font-medium">Category:</span> {selected.category.replace('_', ' ')}</div>
-                            <div><span className="font-medium">Size:</span> {formatSize(selected.file_size)}</div>
+                            <div><span className="font-medium">Category:</span> {selected.category}</div>
                             <div><span className="font-medium">Type:</span> {selected.file_type}</div>
+                            <div><span className="font-medium">Version:</span> v{selected.current_version}</div>
                             <div><span className="font-medium">Uploaded:</span> {new Date(selected.createdAt).toLocaleDateString()}</div>
                         </div>
-                        <div className="flex gap-3">
-                            <button onClick={() => setSelected(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition">Close</button>
+                        {/* Action section based on type */}
+                        {selected.file_type === 'rich-text' ? (
+                            showContent ? (
+                                <div className="prose max-w-none text-sm border-t pt-4 mt-2" dangerouslySetInnerHTML={{ __html: selected.content }} />
+                            ) : (
+                                <button onClick={() => setShowContent(true)}
+                                    className="w-full py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                                    <FileText size={15} /> Read Document
+                                </button>
+                            )
+                        ) : selected.url ? (
                             <a href={selected.url} target="_blank" rel="noopener noreferrer" download
-                                className="flex-1 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                                className="w-full py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2">
                                 <Download size={15} /> Download
                             </a>
-                        </div>
+                        ) : (
+                            <p className="text-center text-gray-400 text-sm">No downloadable content available.</p>
+                        )}
                     </motion.div>
                 </div>
             )}
