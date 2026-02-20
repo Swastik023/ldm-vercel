@@ -34,6 +34,7 @@ export interface IBatch extends Document {
     session: mongoose.Types.ObjectId;
     capacity: number;
     current_students: number;
+    current_semester: number;
     is_active: boolean;
 }
 
@@ -82,6 +83,7 @@ const BatchSchema = new Schema<IBatch>({
     session: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
     capacity: { type: Number, default: 60 },
     current_students: { type: Number, default: 0 },
+    current_semester: { type: Number, default: 1 },
     is_active: { type: Boolean, default: true },
 }, { timestamps: true });
 

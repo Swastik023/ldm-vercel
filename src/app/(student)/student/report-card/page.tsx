@@ -4,19 +4,34 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Download, AlertCircle, GraduationCap } from 'lucide-react';
 
-// Report card data is managed server-side and published by admin.
-// Until results are published this page shows an appropriate empty state.
-// If a /api/student/report-card endpoint is added later, swap the fetch here.
+interface ExamResult {
+    subject: string;
+    code: string;
+    teacher: string;
+    exam_type: string;
+    max_marks: number;
+    marks_obtained: number;
+    remarks: string;
+}
+
+interface SemesterReport {
+    semester: number;
+    results: ExamResult[];
+}
 
 export default function StudentReportCard() {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
+    const [reports, setReports] = useState<SemesterReport[]>([]);
 
-    // Simulate checking if report card is available
-    // Replace this fetch with a real API call when report card data is stored in DB
     useEffect(() => {
-        // No report card model exists yet — show empty state immediately
-        setLoading(false);
+        fetch('/api/student/report-card')
+            .then(res => res.json())
+            .then(d => {
+                if (d.success) setReports(d.report || []);
+            })
+            .catch(console.error)
+            .finally(() => setLoading(false));
     }, []);
 
     if (loading) return (
@@ -25,24 +40,74 @@ export default function StudentReportCard() {
         </div>
     );
 
-    // EMPTY STATE — no fake/random data
-    return (
-        <div className="max-w-2xl mx-auto space-y-4 py-4">
-            <h1 className="text-2xl font-bold text-gray-900">Report Card</h1>
-
-            <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-12 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-5">
-                    <GraduationCap size={36} className="text-gray-400" />
-                </div>
-                <h2 className="text-xl font-bold text-gray-800 mb-2">No Results Published Yet</h2>
-                <p className="text-gray-500 text-sm max-w-sm mx-auto">
-                    Your report card will appear here once your institution publishes examination results for the current semester.
-                </p>
-                <div className="mt-8 bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-700 text-left max-w-sm mx-auto">
-                    <p className="font-semibold mb-1">Student: {session?.user?.name || '—'}</p>
-                    <p className="text-blue-600">Contact the admin office for result enquiries.</p>
+    if (reports.length === 0) {
+        return (
+            <div className="max-w-4xl mx-auto space-y-4 py-4">
+                <h1 className="text-2xl font-bold text-gray-900">Report Card</h1>
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
+                    <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-5">
+                        <GraduationCap size={36} className="text-blue-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">No Results Published Yet</h2>
+                    <p className="text-gray-500 text-sm max-w-sm mx-auto">
+                        Your report card will appear here once your institution publishes examination results for the current semester.
+                    </p>
                 </div>
             </div>
+        );
+    }
+
+    return (
+        <div className="max-w-5xl mx-auto space-y-6 py-4">
+            <h1 className="text-2xl font-bold text-gray-900">My Report Cards</h1>
+
+            {reports.map((report) => (
+                <div key={report.semester} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+                    <div className="px-6 py-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                        <h2 className="text-lg font-bold text-gray-800">Semester {report.semester}</h2>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="border-b border-gray-100">
+                                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Subject</th>
+                                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Type</th>
+                                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Marks</th>
+                                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Percentage</th>
+                                    <th className="px-6 py-3 text-sm font-semibold text-gray-600">Instructor Feedback</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
+                                {report.results.map((res, idx) => {
+                                    const percentage = ((res.marks_obtained / res.max_marks) * 100).toFixed(1);
+                                    let textColor = 'text-green-600';
+                                    if (Number(percentage) < 40) textColor = 'text-red-600';
+
+                                    return (
+                                        <tr key={idx} className="hover:bg-gray-50/50">
+                                            <td className="px-6 py-4">
+                                                <p className="font-semibold text-gray-900">{res.subject}</p>
+                                                <p className="text-xs text-gray-500">{res.code} · {res.teacher}</p>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-700 capitalize">{res.exam_type}</td>
+                                            <td className="px-6 py-4 text-sm font-bold text-gray-800">
+                                                {res.marks_obtained} <span className="text-gray-400 font-normal">/ {res.max_marks}</span>
+                                            </td>
+                                            <td className={`px-6 py-4 text-sm font-bold ${textColor}`}>
+                                                {percentage}%
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-600 italic">
+                                                {res.remarks || '-'}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }
