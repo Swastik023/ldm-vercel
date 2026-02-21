@@ -91,13 +91,19 @@ const Header = () => (
     >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-4">
-                {/* Left — LDM Logo */}
-                <Link href="/" aria-label="Home" className="shrink-0">
-                    <div className="relative group">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
-                        <img src="/ldm-college-logo.jpeg" alt="LDM College" className="h-16 w-16 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-blue-400 transition duration-300" loading="lazy" />
+                {/* Left — LDM Logo + Secondary Logo */}
+                <div className="flex items-center gap-2 shrink-0">
+                    <Link href="/" aria-label="Home">
+                        <div className="relative group">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
+                            <img src="/ldm-college-logo.jpeg" alt="LDM College" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-blue-400 transition duration-300" loading="lazy" />
+                        </div>
+                    </Link>
+                    <div className="relative group hidden sm:block">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
+                        <img src="/logo-side1.jpeg" alt="LDM College Secondary Logo" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-purple-400 transition duration-300" loading="lazy" />
                     </div>
-                </Link>
+                </div>
 
                 {/* Centre — Title + Collaboration Badge */}
                 <div className="text-center flex-1">
@@ -113,11 +119,14 @@ const Header = () => (
                     </div>
                 </div>
 
-                {/* Right — Hospital Logo + Apply Now CTA */}
-                <div className="flex items-center gap-3 shrink-0">
+                {/* Right — Hospital Logo + Hospital Building Image + Apply Now CTA */}
+                <div className="flex items-center gap-2 shrink-0">
                     <Link href="/hospital" aria-label="Hospital Partner" className="relative group hidden sm:block">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-teal-500 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
-                        <img src="/logo-side.jpeg" alt="Dr. Dharam Dev Hospital" className="h-14 w-14 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-teal-400 transition duration-300" loading="lazy" />
+                        <img src="/logo-side.jpeg" alt="Dr. Dharam Dev Hospital" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-teal-400 transition duration-300" loading="lazy" />
+                    </Link>
+                    <Link href="/hospital" aria-label="Visit Hospital Page" className="hidden sm:block">
+                        <img src="/hospital.png" alt="Hospital Building" className="h-16 sm:h-20 w-auto hover:opacity-90 transition-opacity duration-300" loading="lazy" />
                     </Link>
                     <Link
                         href="/collect-info"
@@ -233,8 +242,8 @@ const PublicNavbar = () => {
                                     <Link
                                         href={item.path}
                                         className={`inline-flex items-center gap-1.5 px-3 py-4 text-sm font-medium transition-colors border-b-2 ${isActiveParent(item)
-                                                ? 'text-blue-600 border-blue-600'
-                                                : 'text-gray-700 hover:text-blue-600 border-transparent hover:border-blue-300'
+                                            ? 'text-blue-600 border-blue-600'
+                                            : 'text-gray-700 hover:text-blue-600 border-transparent hover:border-blue-300'
                                             }`}
                                     >
                                         {iconMap[item.title]}
