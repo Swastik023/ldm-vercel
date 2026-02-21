@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { courseData } from '@/data/courseData';
+import { CoursePricingBadge } from '@/components/public/CoursePricing';
 import {
     FaGraduationCap, FaClock, FaArrowRight, FaCheckCircle,
     FaHospital, FaAward, FaPhone, FaWhatsapp, FaDownload,
@@ -86,8 +87,8 @@ export default function CoursesPage() {
                             key={t.key}
                             onClick={() => setTab(t.key as 'diploma' | 'cert')}
                             className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${tab === t.key
-                                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-md shadow-violet-200'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-md shadow-violet-200'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                         >
                             {t.label}
@@ -138,7 +139,7 @@ export default function CoursesPage() {
                                     </p>
 
                                     {/* Chips */}
-                                    <div className="flex flex-wrap gap-2 mb-5">
+                                    <div className="flex flex-wrap gap-2 mb-3">
                                         <span className="inline-flex items-center gap-1 text-xs bg-violet-50 text-violet-700 px-3 py-1 rounded-full font-medium">
                                             <FaClock className="w-3 h-3" /> {course.duration}
                                         </span>
@@ -146,6 +147,9 @@ export default function CoursesPage() {
                                             <FaGraduationCap className="w-3 h-3" /> {course.eligibility}
                                         </span>
                                     </div>
+
+                                    {/* Pricing badge */}
+                                    <CoursePricingBadge courseId={course.id} className="mb-4" />
 
                                     {/* CTA */}
                                     <Link

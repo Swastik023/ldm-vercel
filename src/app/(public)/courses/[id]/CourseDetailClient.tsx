@@ -4,8 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { CourseData } from '@/data/courseData';
+import { CoursePricingBlock, CoursePricingBadge } from '@/components/public/CoursePricing';
 import {
-    FaArrowLeft, FaArrowRight, FaClock, FaGraduationCap, FaBriefcase,
+    FaArrowRight, FaClock, FaGraduationCap, FaBriefcase,
     FaFlask, FaHospital, FaAward, FaCheckCircle, FaPhone, FaWhatsapp,
     FaDownload, FaStar,
 } from 'react-icons/fa';
@@ -208,6 +209,9 @@ export default function CourseDetailClient({ course, related }: Props) {
                     {/* Right: Sticky Sidebar */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-20 space-y-5">
+                            {/* Pricing Block — shown first for marketing impact */}
+                            <CoursePricingBlock courseId={course.id} />
+
                             {/* Apply Card */}
                             <motion.div
                                 initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
@@ -287,11 +291,12 @@ export default function CourseDetailClient({ course, related }: Props) {
                                 </div>
                                 <div className="p-5 flex flex-col flex-1">
                                     <p className="font-bold text-gray-900 text-sm leading-snug mb-2 line-clamp-2">{c.title}</p>
-                                    <div className="flex gap-2 mt-auto">
+                                    <div className="flex gap-2 mb-3">
                                         <span className="text-xs bg-violet-50 text-violet-700 px-2 py-1 rounded-full">{c.duration}</span>
                                         <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full truncate">{c.eligibility}</span>
                                     </div>
-                                    <Link href={`/courses/${c.id}`} className="mt-3 text-center text-sm font-semibold text-violet-600 hover:text-violet-800 flex items-center justify-center gap-1 transition-colors">
+                                    <CoursePricingBadge courseId={c.id} className="mb-3" />
+                                    <Link href={`/courses/${c.id}`} className="mt-auto text-center text-sm font-semibold text-violet-600 hover:text-violet-800 flex items-center justify-center gap-1 transition-colors">
                                         View Course <FaArrowRight className="w-3 h-3" />
                                     </Link>
                                 </div>

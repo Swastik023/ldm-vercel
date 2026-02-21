@@ -125,6 +125,13 @@ export default async function AdminDashboard() {
             desc: 'View and reply to inquiries from the contact form.',
             iconColor: 'text-green-500',
         },
+        {
+            href: '/admin/course-pricing',
+            icon: GraduationCap,
+            label: 'Course Pricing',
+            desc: 'Set offer prices, discounts, validity & seat limits.',
+            iconColor: 'text-violet-500',
+        },
     ];
 
     return (
