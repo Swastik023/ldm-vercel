@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/components/public/Icons';
+import * as gtag from '@/lib/gtag';
+
 
 // ─── Contact Info ────────────────────────────────────────────────────────────
 
@@ -173,6 +175,8 @@ export default function ContactPage() {
 
             if (res.ok && data.success) {
                 setStatus('success');
+                gtag.event.contactFormSubmit();
+
             } else {
                 setStatus('error');
                 setServerError(data.message || 'Something went wrong. Please try again.');
@@ -552,7 +556,7 @@ export default function ContactPage() {
                         onClick={() => window.open("https://www.google.com/maps/dir/?api=1&destination=29.705499999999997,76.98641731744384", '_blank')}
                     >
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3470.5681886741766!2d76.98641731744384!3d29.705499999999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390e71c7c7c1a0b1%3A0x1c1c1c1c1c1c1c1c!2sDr.%20Dharam%20Dev%20Memorial%20Hospital!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3465.3816864176983!2d76.9398064755409!3d29.70870117509437!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390e6dfa0a1b9f51%3A0xead34e53a6b4d24b!2sLDM%20PARAMEDICAL%20COLLEGE!5e0!3m2!1sen!2sin!4v1771762877223!5m2!1sen!2sin"
                             className="w-full h-full"
                             style={{ border: 0 }}
                             allowFullScreen

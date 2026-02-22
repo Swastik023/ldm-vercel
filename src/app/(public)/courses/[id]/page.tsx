@@ -9,8 +9,9 @@ export async function generateStaticParams() {
 }
 
 // SEO metadata per course
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-    const course = courseData.find(c => c.id === params.id);
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const course = courseData.find(c => c.id === id);
     if (!course) return { title: 'Course Not Found' };
     return {
         title: `${course.title} | LDM College of Pharmacy`,
@@ -24,9 +25,14 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     };
 }
 
-export default function CourseDetailPage({ params }: { params: { id: string } }) {
-    const course = courseData.find(c => c.id === params.id);
-    if (!course) notFound();
+export default async function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const course = courseData.find(c => c.id === id);
+
+    if (!course) {
+        notFound();
+        return null;
+    }
 
     const related = courseData.filter(c => c.id !== course.id).slice(0, 3);
 

@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IAuditLog extends Document {
-    action: 'CREATE' | 'UPDATE' | 'DELETE' | 'SOFT_DELETE' | 'LOCK' | 'UNLOCK' | 'DOWNLOAD';
-    entityType: 'FeePayment' | 'Expense' | 'Salary' | 'FeeStructure' | 'LibraryCategory' | 'LibraryDocument' | 'DocumentVersion';
+    action: 'CREATE' | 'UPDATE' | 'DELETE' | 'SOFT_DELETE' | 'LOCK' | 'UNLOCK' | 'DOWNLOAD' | 'APPROVE' | 'REJECT' | 'UPLOAD' | 'BULK_DOWNLOAD';
+    entityType: 'FeePayment' | 'Expense' | 'Salary' | 'FeeStructure' | 'LibraryCategory' | 'LibraryDocument' | 'DocumentVersion' | 'DocumentRequirement' | 'DocumentSubmission';
     entityId: mongoose.Types.ObjectId;
     performedBy: mongoose.Types.ObjectId; // User ID
     changes: { field: string, old: any, new: any }[]; // Detailed delta
@@ -15,12 +15,12 @@ export interface IAuditLog extends Document {
 const AuditLogSchema = new Schema<IAuditLog>({
     action: {
         type: String,
-        enum: ['CREATE', 'UPDATE', 'DELETE', 'SOFT_DELETE', 'LOCK', 'UNLOCK', 'DOWNLOAD'],
+        enum: ['CREATE', 'UPDATE', 'DELETE', 'SOFT_DELETE', 'LOCK', 'UNLOCK', 'DOWNLOAD', 'APPROVE', 'REJECT', 'UPLOAD', 'BULK_DOWNLOAD'],
         required: true
     },
     entityType: {
         type: String,
-        enum: ['FeePayment', 'Expense', 'Salary', 'FeeStructure', 'LibraryCategory', 'LibraryDocument', 'DocumentVersion'],
+        enum: ['FeePayment', 'Expense', 'Salary', 'FeeStructure', 'LibraryCategory', 'LibraryDocument', 'DocumentVersion', 'DocumentRequirement', 'DocumentSubmission'],
         required: true
     },
     entityId: { type: Schema.Types.ObjectId, required: true },

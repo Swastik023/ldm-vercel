@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { CourseData } from '@/data/courseData';
@@ -10,6 +11,8 @@ import {
     FaFlask, FaHospital, FaAward, FaCheckCircle, FaPhone, FaWhatsapp,
     FaDownload, FaStar,
 } from 'react-icons/fa';
+import * as gtag from '@/lib/gtag';
+
 
 interface Props { course: CourseData; related: CourseData[]; }
 
@@ -30,6 +33,11 @@ const highlights = [
 
 export default function CourseDetailClient({ course, related }: Props) {
     const theme = getTheme(course.duration);
+
+    // 🔥 Track course view
+    useEffect(() => {
+        gtag.event.courseView(course.id, course.title);
+    }, [course.id, course.title]);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -87,10 +95,12 @@ export default function CourseDetailClient({ course, related }: Props) {
                                 <div className="flex flex-wrap gap-3">
                                     <Link
                                         href="/collect-info"
+                                        onClick={() => gtag.event.applyClick('course_detail')}
                                         className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-full shadow-lg hover:scale-105 hover:shadow-amber-400/40 transition-all duration-200"
                                     >
                                         Apply Now <FaArrowRight className="w-4 h-4" />
                                     </Link>
+
                                     <a
                                         href="/LDM-BROCHURE.pdf"
                                         target="_blank"
@@ -234,10 +244,12 @@ export default function CourseDetailClient({ course, related }: Props) {
                                 <a
                                     href={`https://wa.me/919896607010?text=Hi,%20I%20want%20to%20enquire%20about%20${encodeURIComponent(course.title)}%20at%20LDM%20College.`}
                                     target="_blank" rel="noopener noreferrer"
+                                    onClick={() => gtag.event.whatsappClick('course_detail')}
                                     className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-green-50 text-green-700 font-semibold text-sm border border-green-200 hover:bg-green-100 transition-colors"
                                 >
                                     <FaWhatsapp className="w-4 h-4" /> Chat on WhatsApp
                                 </a>
+
 
                                 <div className="border-t border-gray-100 mt-5 pt-4">
                                     <a href="tel:+919896607010" className="flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors">

@@ -10,6 +10,8 @@ import {
     FaGraduationCap, FaAward, FaBook, FaPhone, FaWhatsapp,
     FaArrowRight, FaClock, FaCheckCircle,
 } from 'react-icons/fa';
+import * as gtag from '@/lib/gtag';
+
 
 // ─── Animated Counter ──────────────────────────────────────────────────────────
 const Counter = ({ value }: { value: string }) => {
@@ -357,7 +359,7 @@ export default function HomePage() {
                         <a href="tel:+919896607010" className="inline-flex items-center justify-center gap-2 px-8 py-3.5 border-2 border-white/50 text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
                             <FaPhone /> Call Us
                         </a>
-                        <a href="https://wa.me/919896607010" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-400 transition-colors">
+                        <a href="https://wa.me/919896607010" target="_blank" rel="noopener noreferrer" onClick={() => gtag.event.whatsappClick('homepage_cta')} className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-400 transition-colors">
                             <FaWhatsapp /> WhatsApp
                         </a>
                     </div>
@@ -369,6 +371,7 @@ export default function HomePage() {
                 href="https://wa.me/919896607010"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => gtag.event.whatsappClick('homepage_float')}
                 className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-400 text-white p-4 rounded-full shadow-xl z-50 transition-transform hover:scale-110"
                 aria-label="Chat on WhatsApp"
             >

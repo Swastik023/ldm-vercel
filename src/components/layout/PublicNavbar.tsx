@@ -87,7 +87,7 @@ const NotificationBell = () => {
 const Header = () => (
     <motion.header
         initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="bg-white border-b border-gray-100 py-3"
+        className="bg-white/80 backdrop-blur-xl border-b border-white/20 py-3 shadow-sm relative z-50"
     >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-4">
@@ -107,8 +107,8 @@ const Header = () => (
 
                 {/* Centre — Title + Collaboration Badge */}
                 <div className="text-center flex-1">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
+                        <span className="bg-gradient-to-r from-[#0A192F] to-blue-800 bg-clip-text text-transparent drop-shadow-sm">
                             LDM College of Pharmacy
                         </span>
                     </h1>
@@ -129,8 +129,14 @@ const Header = () => (
                         <img src="/hospital.png" alt="Hospital Building" className="h-16 sm:h-20 w-auto hover:opacity-90 transition-opacity duration-300" loading="lazy" />
                     </Link>
                     <Link
+                        href="/register"
+                        className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 border-2 border-[#10B981] text-[#10B981] rounded-full text-sm font-bold hover:bg-[#10B981]/10 transition-all duration-300 whitespace-nowrap"
+                    >
+                        Register
+                    </Link>
+                    <Link
                         href="/collect-info"
-                        className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white rounded-full text-sm font-semibold shadow-md hover:shadow-violet-300 hover:from-violet-700 hover:to-blue-700 transition-all duration-200 whitespace-nowrap"
+                        className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#10B981] to-[#047857] text-white rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
                     >
                         <FaGraduationCap className="w-4 h-4" />
                         Apply Now
@@ -221,12 +227,12 @@ const PublicNavbar = () => {
                         : '/student';
 
     return (
-        <div className="bg-white w-full z-50">
+        <div className="fixed top-0 w-full z-50 left-0 right-0">
             <Header />
             <Marquee />
 
             {/* ── Sticky Nav Bar ── */}
-            <nav className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
+            <nav className="bg-white/60 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.05)] border-b border-white/30 transition-all duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex h-14 items-center justify-between">
 
@@ -241,9 +247,9 @@ const PublicNavbar = () => {
                                 >
                                     <Link
                                         href={item.path}
-                                        className={`inline-flex items-center gap-1.5 px-3 py-4 text-sm font-medium transition-colors border-b-2 ${isActiveParent(item)
-                                            ? 'text-blue-600 border-blue-600'
-                                            : 'text-gray-700 hover:text-blue-600 border-transparent hover:border-blue-300'
+                                        className={`inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 ${isActiveParent(item)
+                                            ? 'text-[#10B981] border-[#10B981]'
+                                            : 'text-[#0A192F] hover:text-[#10B981] border-transparent'
                                             }`}
                                     >
                                         {iconMap[item.title]}
@@ -259,20 +265,20 @@ const PublicNavbar = () => {
                                     <AnimatePresence>
                                         {item.dropdown && item.isMega && activeDropdown === item.title && (
                                             <motion.div
-                                                initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                                                initial={{ opacity: 0, y: 10, scale: 0.98 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                                                transition={{ duration: 0.18 }}
-                                                className="absolute left-1/2 -translate-x-1/2 mt-0 w-[520px] bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 overflow-hidden z-50"
+                                                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                                className="absolute left-1/2 -translate-x-1/2 mt-1 w-[520px] bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/40 overflow-hidden z-50"
                                                 onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current); }}
                                                 onMouseLeave={scheduleClose}
                                             >
-                                                <div className="p-4 grid grid-cols-2 gap-2">
+                                                <div className="p-5 grid grid-cols-2 gap-3">
                                                     {item.dropdown.map((d, i) => (
                                                         <Link
                                                             key={d.title}
                                                             href={d.path}
-                                                            className={`flex items-start gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors group ${i === 0 ? 'col-span-2 bg-gray-50' : ''}`}
+                                                            className={`flex items-start gap-4 p-4 rounded-2xl hover:bg-[#10B981]/10 transition-colors group ${i === 0 ? 'col-span-2 bg-[#0A192F]/5' : ''}`}
                                                         >
                                                             <div className="mt-0.5 shrink-0 p-2 rounded-lg bg-white shadow-sm group-hover:shadow-md transition-shadow">
                                                                 {d.icon}
@@ -295,11 +301,11 @@ const PublicNavbar = () => {
                                         {/* ── Regular Dropdown ── */}
                                         {item.dropdown && !item.isMega && activeDropdown === item.title && (
                                             <motion.div
-                                                initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                                                initial={{ opacity: 0, y: 10, scale: 0.98 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                                                transition={{ duration: 0.18 }}
-                                                className="absolute left-1/2 -translate-x-1/2 mt-0 w-52 bg-white rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden z-50"
+                                                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                                className="absolute left-1/2 -translate-x-1/2 mt-1 w-56 bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/40 overflow-hidden z-50"
                                                 onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current); }}
                                                 onMouseLeave={scheduleClose}
                                             >
@@ -330,13 +336,13 @@ const PublicNavbar = () => {
                                     <Link href={dashboardPath} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
                                         <FaUserShield className="w-4 h-4" /> Dashboard
                                     </Link>
-                                    <button onClick={() => signOut({ callbackUrl: '/' })} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors">
+                                    <button onClick={() => signOut({ callbackUrl: '/' })} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-[#0A192F] hover:text-red-500 transition-colors">
                                         <FaSignOutAlt className="w-4 h-4" /> Logout
                                     </button>
                                 </>
                             ) : (
-                                <Link href="/login" className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-medium hover:shadow-lg transition-shadow">
-                                    <FaUsers className="w-4 h-4" /> Login
+                                <Link href="/login" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#0A192F] to-[#1e3a5f] text-white rounded-full text-sm font-bold shadow-[0_4px_15px_rgba(10,25,47,0.3)] hover:shadow-[0_6px_20px_rgba(10,25,47,0.4)] hover:-translate-y-0.5 transition-all duration-300">
+                                    <FaUsers className="w-4 h-4" /> Student Portal
                                 </Link>
                             )}
                         </div>
@@ -359,10 +365,15 @@ const PublicNavbar = () => {
                             className="md:hidden border-t bg-white overflow-hidden"
                         >
                             <div className="px-4 py-3 space-y-1 max-h-[75vh] overflow-y-auto">
-                                {/* Apply Now — prominent at top for mobile */}
-                                <Link href="/collect-info" className="flex items-center justify-center gap-2 py-3 mb-2 bg-gradient-to-r from-violet-600 to-blue-600 text-white rounded-xl font-semibold text-sm" onClick={() => setIsOpen(false)}>
-                                    <FaGraduationCap /> Apply Now
-                                </Link>
+                                {/* Apply Now & Register — prominent at top for mobile */}
+                                <div className="flex gap-2 mb-2">
+                                    <Link href="/register" className="flex-1 flex items-center justify-center gap-2 py-3 border-2 border-[#10B981] text-[#10B981] rounded-xl font-semibold text-sm" onClick={() => setIsOpen(false)}>
+                                        Register
+                                    </Link>
+                                    <Link href="/collect-info" className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-[#10B981] to-[#047857] text-white rounded-xl font-semibold text-sm" onClick={() => setIsOpen(false)}>
+                                        <FaGraduationCap /> Apply Now
+                                    </Link>
+                                </div>
 
                                 {navItems.map(item => (
                                     <div key={item.title}>

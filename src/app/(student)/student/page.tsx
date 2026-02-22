@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { Book, Clock, Bell, User, TrendingUp, CheckCircle, XCircle } from 'lucide-react';
+import { Book, Clock, Bell, User, TrendingUp, CheckCircle, XCircle, FileText, Eye, Download, BookOpen, CreditCard } from 'lucide-react';
+
+import Link from 'next/link';
 
 interface DashboardData {
     profile: { id: string; name: string; email: string; username: string; session: string | null; batch: string | null };
@@ -100,6 +102,68 @@ export default function StudentDashboard() {
                             <Bell size={22} className="text-purple-600" />
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* ── Resume Builder Quick Actions ── */}
+            <div>
+                <h2 className="text-base font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <FileText size={16} className="text-emerald-600" /> Your Career Tools
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <Link href="/student/resume" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-emerald-400 hover:shadow-emerald-100 hover:shadow-lg transition-all">
+                        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 group-hover:bg-emerald-100 transition-colors">
+                            <FileText size={20} className="text-emerald-600" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-900 text-sm">Resume Builder</p>
+                            <p className="text-xs text-gray-500">Create your professional resume</p>
+                        </div>
+                    </Link>
+                    <Link href="/student/resume/preview" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-blue-400 hover:shadow-blue-100 hover:shadow-lg transition-all">
+                        <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 group-hover:bg-blue-100 transition-colors">
+                            <Eye size={20} className="text-blue-600" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-900 text-sm">Preview Resume</p>
+                            <p className="text-xs text-gray-500">See how your resume looks</p>
+                        </div>
+                    </Link>
+                    <Link href="/student/resume/preview" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-purple-400 hover:shadow-purple-100 hover:shadow-lg transition-all">
+                        <div className="p-3 rounded-xl bg-purple-50 border border-purple-200 group-hover:bg-purple-100 transition-colors">
+                            <Download size={20} className="text-purple-600" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-900 text-sm">Download PDF</p>
+                            <p className="text-xs text-gray-500">Save your resume as PDF</p>
+                        </div>
+                    </Link>
+                </div>
+            </div>
+
+            <div>
+                <h2 className="text-base font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <BookOpen size={16} className="text-blue-600" /> Academic &amp; Finance
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Link href="/student/tests" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-indigo-400 hover:shadow-indigo-100 hover:shadow-lg transition-all">
+                        <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-200 group-hover:bg-indigo-100 transition-colors">
+                            <BookOpen size={20} className="text-indigo-600" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-900 text-sm">MCQ Tests</p>
+                            <p className="text-xs text-gray-500">Take assigned tests and see results</p>
+                        </div>
+                    </Link>
+                    <Link href="/student/fees" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-orange-400 hover:shadow-orange-100 hover:shadow-lg transition-all">
+                        <div className="p-3 rounded-xl bg-orange-50 border border-orange-200 group-hover:bg-orange-100 transition-colors">
+                            <CreditCard size={20} className="text-orange-600" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-900 text-sm">Fee Details</p>
+                            <p className="text-xs text-gray-500">View your fees and payment history</p>
+                        </div>
+                    </Link>
                 </div>
             </div>
 

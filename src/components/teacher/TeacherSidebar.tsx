@@ -7,7 +7,8 @@ import {
     LayoutDashboard,
     ClipboardCheck,
     GraduationCap,
-    LogOut
+    LogOut,
+    FileCheck
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -18,6 +19,7 @@ const TeacherSidebar = () => {
         { title: 'Dashboard', path: '/teacher', icon: <LayoutDashboard size={20} /> },
         { title: 'Attendance', path: '/teacher/attendance', icon: <ClipboardCheck size={20} /> },
         { title: 'Marks Entry', path: '/teacher/marks', icon: <GraduationCap size={20} /> },
+        { title: 'Assignments', path: '/teacher/documents', icon: <FileCheck size={20} /> },
     ];
 
     return (
@@ -34,8 +36,8 @@ const TeacherSidebar = () => {
                         key={item.path}
                         href={item.path}
                         className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${pathname === item.path
-                                ? 'bg-amber-50 text-amber-600 font-medium shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-amber-50 text-amber-600 font-medium shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                             }`}
                     >
                         {item.icon}

@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import PremiumBookReader from '@/components/library/PremiumBookReader';
 import ReactMarkdown from 'react-markdown';
+import * as gtag from '@/lib/gtag';
+
 
 interface LibraryDoc {
     _id: string;
@@ -89,7 +91,12 @@ export default function PublicLibrary() {
         ]).then(([libData, progData]) => {
             if (libData.success) setDocuments(libData.documents || []);
             if (progData.success) setPrograms(progData.programs || []);
-        }).finally(() => setLoading(false));
+        }).finally(() => {
+            setLoading(false);
+            // 🔥 Track library page view
+            gtag.event.libraryView();
+        });
+
     }, []);
 
     const allCategories = useMemo(() => Array.from(new Set(documents.map(d => d.category))).filter(Boolean), [documents]);

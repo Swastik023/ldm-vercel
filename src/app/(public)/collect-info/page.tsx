@@ -8,6 +8,8 @@ import {
     FaBookOpen, FaCheckCircle, FaWhatsapp, FaArrowRight,
     FaSpinner
 } from 'react-icons/fa';
+import * as gtag from '@/lib/gtag';
+
 
 // ─── Course list ───────────────────────────────────────────────────────────────
 const COURSES = [
@@ -49,6 +51,7 @@ interface FormData {
     phone: string;
     course: string;
     qualification: string;
+    address: string;
     message: string;
 }
 interface FormErrors { name?: string; email?: string; phone?: string; course?: string; }
@@ -82,7 +85,7 @@ function FieldError({ msg }: { msg?: string }) {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function CollectInfo() {
-    const [form, setForm] = useState<FormData>({ name: '', email: '', phone: '', course: '', qualification: '', message: '' });
+    const [form, setForm] = useState<FormData>({ name: '', email: '', phone: '', course: '', qualification: '', address: '', message: '' });
     const [errors, setErrors] = useState<FormErrors>({});
     const [touched, setTouched] = useState<Partial<Record<keyof FormData, boolean>>>({});
     const [status, setStatus] = useState<Status>('idle');
@@ -120,6 +123,9 @@ export default function CollectInfo() {
             const data = await res.json();
             if (res.ok && data.success) {
                 setStatus('success');
+                gtag.event.admissionEnquiry(form.course);
+                gtag.event.applyClick('apply_form');
+
             } else {
                 setStatus('error');
                 setServerError(data.message || 'Something went wrong. Please try again.');
@@ -131,7 +137,7 @@ export default function CollectInfo() {
     };
 
     const handleReset = () => {
-        setForm({ name: '', email: '', phone: '', course: '', qualification: '', message: '' });
+        setForm({ name: '', email: '', phone: '', course: '', qualification: '', address: '', message: '' });
         setErrors({}); setTouched({}); setStatus('idle'); setServerError('');
     };
 
@@ -322,7 +328,17 @@ export default function CollectInfo() {
                                             </div>
                                         </div>
 
-                                        {/* Message */}
+                                        {/* Address */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                                Current Address <span className="text-gray-400 text-xs">(optional)</span>
+                                            </label>
+                                            <textarea name="address" rows={2} placeholder="Village/City, District, State"
+                                                value={form.address} onChange={handleChange} disabled={status === 'loading'}
+                                                className={`${inputCls()} resize-none`}
+                                            />
+                                        </div>
+
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                                 Any Questions / Comments <span className="text-gray-400 text-xs">(optional)</span>

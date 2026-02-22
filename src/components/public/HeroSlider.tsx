@@ -1,42 +1,22 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaChevronRight } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import * as gtag from '@/lib/gtag';
 
-const slides = [
-    {
-        image: '/home/home_4.jpeg',
-        title: 'Welcome to LDM Paramedical',
-        subtitle: 'Empowering Healthcare Professionals of Tomorrow',
-        color: 'from-blue-600 to-purple-600'
-    },
-    {
-        image: '/home/home_3.jpeg',
-        title: 'State-of-the-Art Campus',
-        subtitle: 'Modern Facilities for Hands-on Learning',
-        color: 'from-purple-600 to-pink-600'
-    },
-    {
-        image: '/home/img4.jpeg',
-        title: 'Expert Faculty',
-        subtitle: 'Learn from Experienced Healthcare Professionals',
-        color: 'from-pink-600 to-red-600'
-    },
-    {
-        image: '/home/img2.jpeg',
-        title: 'Practical Training',
-        subtitle: 'Real-world Healthcare Experience',
-        color: 'from-red-600 to-orange-600'
-    },
-    {
-        image: '/home/yoga.jpeg',
-        title: 'Holistic Development',
-        subtitle: 'Integrating Yoga and Wellness Practices',
-        color: 'from-orange-600 to-yellow-600'
-    }
+
+// ── Static fallback slides (used when DB has no slides) ──────────────────────
+const STATIC_SLIDES = [
+    { image: '/home/home_4.jpeg', title: 'Empowering the Next Generation of Healthcare Leaders', subtitle: 'Start your journey at LDM Paramedical College', color: 'from-[#10B981] to-[#047857]' },
+    { image: '/home/home_3.jpeg', title: 'State-of-the-Art Campus Space', subtitle: 'Modern Facilities built for Hands-on Learning', color: 'from-[#0A192F] to-[#1e3a5f]' },
+    { image: '/home/img4.jpeg', title: 'Learn from Expert Faculty', subtitle: 'Mentorship from Experienced Healthcare Professionals', color: 'from-[#10B981] to-[#047857]' },
+    { image: '/home/img2.jpeg', title: '100% Practical Training', subtitle: 'Real-world Clinical Experience', color: 'from-[#0A192F] to-[#1e3a5f]' },
+    { image: '/home/yoga.jpeg', title: 'Holistic Development', subtitle: 'Integrating Yoga and Allied Sciences', color: 'from-[#10B981] to-[#047857]' },
 ];
+
+interface SlideData { image: string; title: string; subtitle: string; color: string; }
 
 const slideVariants = {
     enter: (direction: number) => ({
@@ -54,12 +34,30 @@ const slideVariants = {
 };
 
 const HeroSlider = () => {
-    const router = useRouter(); // Changed from useNavigate
+    const router = useRouter();
+    const [slides, setSlides] = useState<SlideData[]>(STATIC_SLIDES);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [loadedImages, setLoadedImages] = useState(new Set());
-    const [direction, setDirection] = useState(1); // 1 for right, -1 for left
+    const [direction, setDirection] = useState(1);
     const [autoplayEnabled, setAutoplayEnabled] = useState(true);
     const autoplayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // Fetch slides from DB, fall back to static if empty or error
+    useEffect(() => {
+        fetch('/api/public/slider')
+            .then(r => r.json())
+            .then(data => {
+                if (data.success && data.slides.length > 0) {
+                    setSlides(data.slides.map((s: { url: string; title: string; subtitle?: string }) => ({
+                        image: s.url,
+                        title: s.title,
+                        subtitle: s.subtitle || '',
+                        color: 'from-[#10B981] to-[#047857]',
+                    })));
+                }
+            })
+            .catch(() => { /* keep static fallback silently */ });
+    }, []);
 
     const startAutoplay = useCallback(() => {
         if (autoplayTimeoutRef.current) {
@@ -140,7 +138,7 @@ const HeroSlider = () => {
 
     return (
         <div
-            className="relative w-full h-[calc(100vh-4rem)] sm:h-[calc(100vh-4rem)] overflow-hidden"
+            className="relative w-full h-[calc(100vh-4rem)] sm:h-[calc(100vh-4rem)] overflow-hidden bg-[#0A192F]"
             onMouseEnter={() => setAutoplayEnabled(false)}
             onMouseLeave={() => {
                 setAutoplayEnabled(true);
@@ -190,7 +188,7 @@ const HeroSlider = () => {
                         }}
                     >
                         <motion.div
-                            className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/70"
+                            className="absolute inset-0 bg-gradient-to-r from-[#0A192F]/90 via-[#0A192F]/40 to-transparent"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.8 }}
@@ -198,11 +196,11 @@ const HeroSlider = () => {
                     </motion.div>
 
                     {/* Content */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
+                    <div className="absolute inset-0 flex flex-col items-start justify-center px-6 sm:px-12 lg:px-24 py-8">
                         <motion.div
-                            className="text-center max-w-7xl mx-auto w-full"
-                            initial={{ y: 30, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
+                            className="text-left max-w-4xl"
+                            initial={{ x: -30, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
                             transition={{
                                 duration: 0.5,
                                 ease: "easeOut",
@@ -210,7 +208,7 @@ const HeroSlider = () => {
                             }}
                         >
                             <motion.h1
-                                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-3 sm:mb-4 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_50%)]"
+                                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6 text-white leading-tight"
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{
@@ -222,7 +220,7 @@ const HeroSlider = () => {
                                 {slides[currentSlide].title}
                             </motion.h1>
                             <motion.p
-                                className="text-lg sm:text-xl md:text-2xl text-center mb-6 sm:mb-8 max-w-3xl mx-auto text-white/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] [text-shadow:_1px_1px_2px_rgb(0_0_0_/_40%)]"
+                                className="text-lg sm:text-xl md:text-2xl mb-8 sm:mb-12 text-[#9ca3af] font-light max-w-2xl"
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{
@@ -237,47 +235,33 @@ const HeroSlider = () => {
 
                         {/* CTA Buttons */}
                         <motion.div
-                            className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0 mt-2"
-                            initial={{ y: 50, opacity: 0 }}
+                            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-2"
+                            initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
+                            transition={{ duration: 0.6, delay: 0.5 }}
                         >
                             <motion.button
                                 type="button"
-                                onClick={() => {
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    setTimeout(() => router.push('/courses'), 100);
-                                }}
-                                className={`group w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-4 text-lg sm:text-xl font-medium text-white rounded-full overflow-hidden transition-all duration-300 hover:scale-105 transform shadow-lg hover:shadow-xl bg-gradient-to-r ${slides[currentSlide].color}`}
+                                onClick={() => { gtag.event.applyClick('hero_slider'); router.push('/collect-info'); }}
+                                className="group w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-4 text-lg font-bold text-white rounded-full bg-gradient-to-r from-[#10B981] to-[#047857] hover:shadow-[0_8px_30px_rgba(16,185,129,0.4)] transition-all duration-300 hover:scale-105"
                             >
                                 <motion.span
-                                    className="relative z-10 flex items-center"
-                                    whileHover={{ x: 10 }}
+                                    className="relative flex items-center"
+                                    whileHover={{ x: 5 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                                 >
-                                    Explore Courses
-                                    <FaChevronRight className="ml-2 h-5 w-5" />
+                                    Apply Now
+                                    <FaChevronRight className="ml-2 h-4 w-4" />
                                 </motion.span>
                             </motion.button>
 
                             <motion.button
                                 type="button"
-                                onClick={() => {
-                                    window.open(
-                                        'https://wa.me/+919896607010?text=Hi,%20I%20would%20like%20to%20schedule%20an%20appointment%20for%20admission%20counseling.',
-                                        '_blank',
-                                        'noopener,noreferrer'
-                                    );
-                                }}
-                                className="w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-4 text-lg sm:text-xl font-medium text-white bg-green-600 rounded-full overflow-hidden transition-all duration-300 hover:bg-green-700 hover:scale-105 transform shadow-lg hover:shadow-xl group"
+                                onClick={() => router.push('/courses')}
+                                className="w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-4 text-lg font-bold text-white border-2 border-[#10B981] rounded-full transition-all duration-300 hover:bg-[#10B981]/10 hover:shadow-[0_4px_20px_rgba(16,185,129,0.2)] hover:scale-105 group"
                             >
-                                <motion.span
-                                    className="relative z-10 flex items-center"
-                                    whileHover={{ x: 10 }}
-                                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                                >
-                                    Contact Us
-                                    <FaChevronRight className="ml-2 h-5 w-5" />
+                                <motion.span className="relative flex items-center">
+                                    Explore Courses
                                 </motion.span>
                             </motion.button>
                         </motion.div>

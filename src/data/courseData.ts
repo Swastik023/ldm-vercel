@@ -13,8 +13,8 @@ export const courseData: CourseData[] = [
     {
         id: "dccm",
         title: "Diploma in Critical Care Management",
-        duration: "1 Years",
-        eligibility: "12th Pass with Science",
+        duration: "1 Year",
+        eligibility: "12th Pass",
         image: "/course_img/dccm.jpeg",
         description: "The Diploma in Critical Care Management provides comprehensive training in managing intensive care units and critical patients. Students learn advanced patient monitoring, ventilator management, emergency response protocols, and specialized care techniques. The program emphasizes hands-on training with modern ICU equipment, understanding critical care procedures, and developing quick decision-making skills in emergency situations.",
         syllabus: [
@@ -62,9 +62,9 @@ export const courseData: CourseData[] = [
     },
     {
         id: "dat",
-        title: "Diploma in Anaesthesia Technology (DAT)",
+        title: "Diploma in Anaesthesia (DAT)",
         duration: "2.5 Years",
-        eligibility: "12th Pass with Science",
+        eligibility: "12th SCI.",
         image: "/course_img/dat.jpeg",
         description: "The Diploma in Anaesthesia Technology equips students with the knowledge and technical skills to assist anesthesiologists during surgeries and medical procedures. The curriculum includes topics such as pharmacology, patient preparation, anesthetic equipment, monitoring vital signs, and managing emergencies during anesthesia administration. Graduates are trained to handle advanced machines like ventilators and monitors, ensuring patient safety.",
         syllabus: [
@@ -112,9 +112,9 @@ export const courseData: CourseData[] = [
     },
     {
         id: "detc",
-        title: "Diploma in Emergency & Trauma Care Technician",
-        duration: "1 Years",
-        eligibility: "12th Pass with Science",
+        title: "Diploma in Emer. & Trauma Care Technician",
+        duration: "1 Year",
+        eligibility: "12th Pass",
         image: "/course_img/detc.jpeg",
         description: "This program provides in-depth training in managing medical emergencies and trauma care. Students learn skills such as first aid, CPR, advanced life support, wound management, and handling emergency equipment. The course emphasizes rapid assessment and stabilization of critically ill or injured patients. Graduates find employment as emergency medical technicians (EMTs) in ambulance services, emergency rooms, and trauma centers, where quick decision-making is crucial.",
         syllabus: [
@@ -137,7 +137,7 @@ export const courseData: CourseData[] = [
     },
     {
         id: "dhsi",
-        title: "Diploma in Health & Sanitary Inspector",
+        title: "Diploma in Sanitary Health Inspector",
         duration: "1 Year",
         eligibility: "12th Pass",
         image: "/course_img/dhsi.jpg",
@@ -237,9 +237,9 @@ export const courseData: CourseData[] = [
     },
     {
         id: "dmlt",
-        title: "Diploma in Medical Laboratory Technology (DMLT)",
+        title: "Diploma in Medical Lab Technology (DMLT)",
         duration: "2.5 Years",
-        eligibility: "12th Pass with Science",
+        eligibility: "12th Pass",
         image: "/course_img/dmlt.jpeg",
         description: "The Diploma in Medical Laboratory Technology prepares students for careers in diagnostic laboratories. The program includes training in hematology, microbiology, clinical biochemistry, and pathology. Students learn to operate laboratory equipment, collect and analyze samples, and maintain accurate reports. Graduates work as lab technicians in hospitals, diagnostic centers, research labs, and blood banks, contributing to accurate diagnosis and treatment.",
         syllabus: [
@@ -264,7 +264,7 @@ export const courseData: CourseData[] = [
         id: "dnt",
         title: "Diploma in Nanny Training",
         duration: "1 Year",
-        eligibility: "10th Pass",
+        eligibility: "12th Pass",
         image: "/course_img/nanny.jpg",
         description: "The Diploma in Nanny Training is tailored for individuals aspiring to work as professional nannies or childcare providers. The program covers child psychology, early childhood education, nutrition, hygiene, and safety. Students also learn first aid and techniques to handle emergencies. Graduates find opportunities in childcare centers, schools, or private households, providing expert care and support for children.",
         syllabus: [
@@ -287,9 +287,9 @@ export const courseData: CourseData[] = [
     },
     {
         id: "dott",
-        title: "Diploma in Operation Theatre Technology (DOTT)",
+        title: "Diploma in Operation Theatre Technician",
         duration: "2.5 Years",
-        eligibility: "12th Pass with Science",
+        eligibility: "12th Pass",
         image: "/course_img/dott.jpg",
         description: "This diploma trains students to assist in surgical procedures by managing operation theater equipment, maintaining sterilized environments, and supporting surgeons during operations. The curriculum includes anatomy, surgical procedures, infection control, and anesthesia techniques. Graduates are employed as operation theater technicians in hospitals, where they play a critical role in ensuring successful surgeries.",
         syllabus: [
@@ -314,7 +314,7 @@ export const courseData: CourseData[] = [
         id: "dp",
         title: "Diploma in Panchkarma",
         duration: "1 Year",
-        eligibility: "12th Pass",
+        eligibility: "12th or equivalent in any Stream + English",
         image: "/course_img/Panchkarma.jpg",
         description: "The Diploma in Panchkarma focuses on the principles of Ayurveda, specifically the detoxification and rejuvenation therapy known as Panchkarma. Students learn about Ayurvedic treatments, herbal medicines, massage techniques, and lifestyle counseling. This program is ideal for those interested in natural healing practices. Graduates can work in wellness centers, Ayurvedic clinics, or as independent practitioners.",
         syllabus: [
@@ -337,9 +337,9 @@ export const courseData: CourseData[] = [
     },
     {
         id: "drit",
-        title: "Diploma in Radiology & Imaging Technology (DRIT)",
+        title: "Diploma in Radio Imaging Technology",
         duration: "2.5 Years",
-        eligibility: "12th Pass with Science",
+        eligibility: "12th Pass",
         image: "/course_img/drit.jpg",
         description: "This program provides comprehensive training in diagnostic imaging techniques such as X-rays, CT scans, MRIs, and ultrasound. Students are taught patient positioning, radiation safety, image interpretation, and equipment maintenance. The curriculum emphasizes accuracy and attention to detail. Graduates typically work as radiology technicians in hospitals, diagnostic centers, and imaging labs.",
         syllabus: [
@@ -362,8 +362,8 @@ export const courseData: CourseData[] = [
     },
     {
         id: "mphw",
-        title: "Multipurpose Health Worker (MPHW)",
-        duration: "2 Years",
+        title: "Diploma in Multipurpose Health Worker",
+        duration: "1 Year",
         eligibility: "12th Pass",
         image: "/course_img/mphw.jpg",
         description: "The Multipurpose Health Worker program is designed to train individuals to provide basic healthcare services in rural and urban areas. The course covers immunization, maternal and child health, communicable disease prevention, and health education. Graduates work in government healthcare programs, NGOs, and primary health centers, delivering essential health services to communities in need.",
@@ -388,8 +388,8 @@ export const courseData: CourseData[] = [
     {
         id: "caim",
         title: "Certificate in Ayurveda Infertility Management",
-        duration: "6 Months",
-        eligibility: "BAMS or equivalent",
+        duration: "1 Year",
+        eligibility: "12th or equivalent in any Stream + English",
         image: "/course_img/ayrveda-infertility.jpeg",
         description: "This certification course provides comprehensive training in Ayurvedic approaches to infertility management. Students learn traditional Ayurvedic principles and modern techniques for treating infertility, including dietary recommendations, herbal remedies, and therapeutic procedures.",
         syllabus: [
@@ -411,9 +411,9 @@ export const courseData: CourseData[] = [
     },
     {
         id: "cand",
-        title: "Certificate in Ayurveda Nutrition & Dietetics",
-        duration: "6 Months",
-        eligibility: "12th Pass with Science",
+        title: "Certificate in Ayurveda Nutrition and Dietetics",
+        duration: "1 Year",
+        eligibility: "12th or equivalent in any Stream + English",
         image: "/course_img/ayrvedic-nutrition.jpg",
         description: "This program focuses on Ayurvedic principles of nutrition and dietary management. Students learn about food properties, dietary recommendations for different body types, and therapeutic diet planning according to Ayurvedic principles.",
         syllabus: [
@@ -437,7 +437,7 @@ export const courseData: CourseData[] = [
         id: "cap",
         title: "Certificate in Ayurveda Parasurgery",
         duration: "1 Year",
-        eligibility: "BAMS or equivalent",
+        eligibility: "12th or equivalent in any Stream + English",
         image: "/course_img/ayurveda.jpg",
         description: "This certification provides specialized training in Ayurvedic parasurgical procedures. The course covers traditional surgical techniques, wound management, and post-operative care following Ayurvedic principles.",
         syllabus: [
@@ -459,9 +459,9 @@ export const courseData: CourseData[] = [
     },
     {
         id: "cacsbc",
-        title: "Certificate in Ayurvedic Cosmetology, Skin & Beauty Care",
-        duration: "6 Months",
-        eligibility: "12th Pass",
+        title: "Certificate in Ayurveda Cosmetology: Skin and Beauty",
+        duration: "1 Year",
+        eligibility: "12th or equivalent in any Stream + English",
         image: "/course_img/ayurvedic-cosmetology.jpeg",
         description: "This certification course focuses on Ayurvedic approaches to skincare and beauty treatments. Students learn about natural cosmetics, skin types according to Ayurveda, and traditional beauty enhancement techniques.",
         syllabus: [
@@ -479,6 +479,72 @@ export const courseData: CourseData[] = [
             "Natural Cosmetics Consultant",
             "Spa Therapist",
             "Wellness Center Specialist"
+        ]
+    },
+    {
+        id: "gda",
+        title: "GDA Nursing Course",
+        duration: "1 Year",
+        eligibility: "10th/12th Pass",
+        image: "/course_img/gda-nursing.jpg",
+        description: "The GDA (General Duty Assistant) Nursing Course focuses on training individuals to provide patient care and assist healthcare professionals in hospitals, clinics, and care facilities. Students learn basic nursing functions, patient hygiene, mobility assistance, and emergency protocols.",
+        syllabus: [
+            "Patient care fundamentals",
+            "Basic nursing procedures",
+            "Infection control",
+            "Emergency response",
+            "Patient hygiene and mobility",
+            "Medical ethics"
+        ],
+        career: [
+            "General Duty Assistant",
+            "Nursing Assistant",
+            "Patient Care Provider",
+            "Hospital Attendant"
+        ]
+    },
+    {
+        id: "nddy",
+        title: "Diploma in Naturopathy & Yoga (NDDY)",
+        duration: "1 Year",
+        eligibility: "12th in any stream",
+        image: "/course_img/naturopathy-yoga.jpg",
+        description: "The Diploma in Naturopathy & Yoga (NDDY) provides classical schooling in healthy living without medicines, bridging natural healing therapies and yogic sciences. Students are introduced to holistic health models, dietary interventions, and lifestyle management.",
+        syllabus: [
+            "Principles of Naturopathy",
+            "Anatomy and Physiology",
+            "Yoga philosophy and Asanas",
+            "Dietetics and Nutrition",
+            "Natural therapies and treatments",
+            "Holistic health management"
+        ],
+        career: [
+            "Naturopathy Consultant",
+            "Yoga Instructor",
+            "Wellness Coach",
+            "Therapist in Naturopathy Clinics"
+        ]
+    },
+    {
+        id: "mba-ha",
+        title: "Online MBA in Hospital Administration & Healthcare Management",
+        duration: "2 Years",
+        eligibility: "Graduation",
+        image: "/course_img/mba-healthcare.webp",
+        description: "This 100% online Post Graduate Program is designed to equip students with contemporary management skills specifically suited for the healthcare and hospital sector. Intelligent care models and leadership training are at the forefront of the curriculum.",
+        syllabus: [
+            "Healthcare regulations and policies",
+            "Hospital operations management",
+            "Financial management in healthcare",
+            "Healthcare quality management",
+            "Human resource management",
+            "Strategic management in hospitals"
+        ],
+        career: [
+            "Hospital Administrator",
+            "Healthcare Executive",
+            "Medical Practice Manager",
+            "Operations Manager in Healthcare"
         ]
     }
 ];

@@ -18,6 +18,7 @@ import {
     LogOut,
     Megaphone,
     Wallet,
+    FileCheck,
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -33,6 +34,7 @@ const Sidebar = () => {
         { name: 'Finance', href: '/admin/finance', icon: Wallet },
         { name: 'Library Docs', href: '/admin/library/documents', icon: Library },
         { name: 'Library Folder', href: '/admin/library/categories', icon: BookOpen },
+        { name: 'Documents', href: '/admin/documents', icon: FileCheck },
         { name: 'Scrolling Updates', href: '/admin/marquee', icon: Megaphone },
         { name: 'Notices', href: '/admin/notices', icon: Bell },
         { name: 'Gallery', href: '/admin/gallery', icon: Image },
