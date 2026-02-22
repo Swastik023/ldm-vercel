@@ -81,6 +81,7 @@ export default function PublicLibrary() {
     const [activeProgram, setActiveProgram] = useState<string | null>(null);
     const [selected, setSelected] = useState<LibraryDoc | null>(null);
     const [showContent, setShowContent] = useState(false);
+    const [contentLoading, setContentLoading] = useState(false);
     const [sort, setSort] = useState<'newest' | 'az'>('newest');
     const [recentlyViewed, setRecentlyViewed] = useState<LibraryDoc[]>([]);
 
@@ -141,24 +142,27 @@ export default function PublicLibrary() {
         return groups;
     }, [filtered, search]);
 
-    const openDoc = (doc: LibraryDoc) => {
-        setSelected(doc);
-        // Automatically open reader for rich-text/markdown, show modal for others
+    const openDoc = async (doc: LibraryDoc) => {
         const t = doc.file_type?.toLowerCase();
-        const contentStr = (doc.content || '').trim();
-        const isMD = t === 'md' || t === 'markdown' ||
-            doc.url?.toLowerCase().endsWith('.md') ||
-            /^(#|---|\*|-|\d+\.|>|\[.*\]\(.*\))/.test(contentStr) ||
-            contentStr.includes('**') ||
-            contentStr.includes('##') ||
-            contentStr.includes('###');
+        const isPremiumDoc = t === 'rich-text' || t === 'rich_text' || t === 'md' || t === 'markdown';
 
-        const isPremiumDoc = t === 'rich-text' || t === 'rich_text' || isMD;
-
-        if (isPremiumDoc) {
+        if (isPremiumDoc && !doc.content) {
+            // Lazy-fetch content on demand to avoid massive initial payload
+            setContentLoading(true);
+            setSelected({ ...doc });
             setShowContent(true);
+            try {
+                const res = await fetch(`/api/public/library/${doc._id}`);
+                const data = await res.json();
+                if (data.success && data.document.content) {
+                    setSelected({ ...doc, content: data.document.content });
+                }
+            } catch {/* silently ignore */ } finally {
+                setContentLoading(false);
+            }
         } else {
-            setShowContent(false);
+            setSelected(doc);
+            setShowContent(isPremiumDoc);
         }
 
         setRecentlyViewed(prev => {
