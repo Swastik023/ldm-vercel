@@ -8,16 +8,17 @@ import cloudinary from '@/lib/cloudinary';
 import mongoose from 'mongoose';
 
 // GET /api/admin/documents/submissions/[id]/download — Secure signed download
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id || !['admin', 'teacher'].includes(session.user.role)) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
+    const { id } = await params;
     const userId = new mongoose.Types.ObjectId(session.user.id);
 
-    const submission = await DocumentSubmission.findById(params.id);
+    const submission = await DocumentSubmission.findById(id);
     if (!submission || !submission.cloudinary_public_id) {
         return NextResponse.json({ success: false, message: 'Submission not found or no file' }, { status: 404 });
     }

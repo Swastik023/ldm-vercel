@@ -9,13 +9,14 @@ import { AuditLog } from '@/models/AuditLog';
 import mongoose from 'mongoose';
 
 // PUT /api/teacher/documents/submissions/[id]/review — Approve or reject
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id || session.user.role !== 'teacher') {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
+    const { id } = await params;
     const teacherId = new mongoose.Types.ObjectId(session.user.id);
     const body = await req.json();
     const { action, comment } = body;
