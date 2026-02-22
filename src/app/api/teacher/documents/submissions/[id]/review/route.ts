@@ -25,7 +25,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         return NextResponse.json({ success: false, message: 'Action must be approve or reject' }, { status: 400 });
     }
 
-    const submission = await DocumentSubmission.findById(params.id);
+    const submission = await DocumentSubmission.findById(id);
     if (!submission) {
         return NextResponse.json({ success: false, message: 'Submission not found' }, { status: 404 });
     }
