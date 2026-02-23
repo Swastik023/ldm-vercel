@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Bell, Calendar, AlertTriangle, Info, BookOpen } from 'lucide-react';
+import { Bell, Calendar, AlertTriangle, Info, BookOpen, Paperclip } from 'lucide-react';
 
 interface Notice {
     _id: string;
@@ -10,6 +10,8 @@ interface Notice {
     content: string;
     category: string;
     priority: 'low' | 'normal' | 'high';
+    attachmentUrl?: string;
+    attachmentName?: string;
     createdAt: string;
 }
 
@@ -81,8 +83,8 @@ const Notices: React.FC = () => {
                                 key={cat}
                                 onClick={() => setFilter(cat)}
                                 className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition border ${filter === cat
-                                        ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'
+                                    ? 'bg-blue-600 text-white border-blue-600'
+                                    : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'
                                     }`}
                             >
                                 {cat === 'all' ? 'All Notices' : cat}
@@ -131,6 +133,19 @@ const Notices: React.FC = () => {
                                     <div className="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed">
                                         {notice.content}
                                     </div>
+                                    {notice.attachmentUrl && (
+                                        <div className="mt-4">
+                                            <a
+                                                href={notice.attachmentUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-sm font-medium hover:bg-blue-100 transition-colors"
+                                            >
+                                                <Paperclip className="w-4 h-4" />
+                                                {notice.attachmentName || 'Download Attachment'}
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         ))}

@@ -9,6 +9,7 @@ export interface INotice extends Document {
     endDate?: Date;
     isActive: boolean;
     attachmentUrl?: string;
+    attachmentName?: string;
     views: number;
     createdAt: Date;
     updatedAt: Date;
@@ -32,6 +33,7 @@ const NoticeSchema: Schema = new Schema(
         endDate: { type: Date },
         isActive: { type: Boolean, default: true },
         attachmentUrl: { type: String },
+        attachmentName: { type: String },
         views: { type: Number, default: 0 },
     },
     { timestamps: true }
