@@ -16,7 +16,7 @@ export async function GET() {
     return NextResponse.json({ success: true, notices });
 }
 
-// POST /api/admin/notices — create notice with optional file attachment
+// POST /api/admin/notices — create notice with optional multi-format attachment
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user || session.user.role !== 'admin') {
@@ -29,6 +29,9 @@ export async function POST(req: Request) {
     const content = (formData.get('content') as string)?.trim();
     const category = (formData.get('category') as string) || 'general';
     const priority = (formData.get('priority') as string) || 'normal';
+    const file_type = (formData.get('file_type') as string) || 'none';
+    // For rich-text / md: content is stored in 'attachment_content'
+    const attachment_content = (formData.get('attachment_content') as string) || undefined;
     const file = formData.get('file') as File | null;
 
     if (!title || !content) {
@@ -38,8 +41,8 @@ export async function POST(req: Request) {
     let attachmentUrl: string | undefined;
     let attachmentName: string | undefined;
 
-    // Upload document attachment to Cloudinary if provided
-    if (file && file.size > 0) {
+    // Upload file to Cloudinary for binary formats
+    if (file && file.size > 0 && !['rich-text', 'md', 'none'].includes(file_type)) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
         const ext = file.name.split('.').pop()?.toLowerCase() || 'pdf';
@@ -64,6 +67,12 @@ export async function POST(req: Request) {
         attachmentName = file.name;
     }
 
+    // For markdown files: also read & store content inline
+    let inlineContent = attachment_content;
+    if (file && file.size > 0 && file_type === 'md' && !inlineContent) {
+        inlineContent = await file.text();
+    }
+
     const notice = await Notice.create({
         title,
         content,
@@ -71,6 +80,8 @@ export async function POST(req: Request) {
         priority,
         attachmentUrl,
         attachmentName,
+        file_type: file_type || 'none',
+        attachment_content: inlineContent,
         isActive: true,
     });
 
