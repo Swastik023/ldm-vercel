@@ -21,11 +21,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://ldm.edu.in";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "LDM College of Pharmacy | Diploma & Degree Pharmacy Programs",
-    template: "%s | LDM College of Pharmacy",
+    default: "LDM College | Diploma & Degree Pharmacy Programs",
+    template: "%s | LDM College",
   },
   description:
-    "LDM College of Pharmacy offers government-approved Diploma and Degree programs in Pharmacy. Experienced faculty, modern labs, and 100% placement support.",
+    "LDM College offers government-approved Diploma and Degree programs in Pharmacy. Experienced faculty, modern labs, and 100% placement support.",
   keywords: [
     "LDM pharmacy college",
     "pharmacy college India",
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     "pharmacy courses",
     "pharmacy admission",
   ],
-  authors: [{ name: "LDM College of Pharmacy" }],
-  creator: "LDM College of Pharmacy",
+  authors: [{ name: "LDM College" }],
+  creator: "LDM College",
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: BASE_URL,
-    siteName: "LDM College of Pharmacy",
-    title: "LDM College of Pharmacy | Diploma & Degree Pharmacy Programs",
+    siteName: "LDM College",
+    title: "LDM College | Diploma & Degree Pharmacy Programs",
     description:
       "Government-approved Pharmacy college offering D.Pharma, B.Pharma, and Ayurvedic Pharmacy programs with experienced faculty and modern infrastructure.",
     images: [
@@ -50,13 +50,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "LDM College of Pharmacy",
+        alt: "LDM College",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "LDM College of Pharmacy",
+    title: "LDM College",
     description:
       "Government-approved Pharmacy college offering D.Pharma, B.Pharma programs.",
     images: ["/og-image.jpg"],
@@ -83,9 +83,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <AuthProvider>
           {children}

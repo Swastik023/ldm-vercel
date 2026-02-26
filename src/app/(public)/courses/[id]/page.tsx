@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const course = courseData.find(c => c.id === id);
     if (!course) return { title: 'Course Not Found' };
     return {
-        title: `${course.title} | LDM College of Pharmacy`,
+        title: `${course.title} | LDM College`,
         description: course.description.slice(0, 160),
         keywords: [course.title, 'paramedical', 'LDM College', course.eligibility, 'Karnal'],
         openGraph: {

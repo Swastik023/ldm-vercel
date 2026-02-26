@@ -9,7 +9,7 @@ import * as gtag from '@/lib/gtag';
 
 // ── Static fallback slides (used when DB has no slides) ──────────────────────
 const STATIC_SLIDES = [
-    { image: '/home/home_4.jpeg', title: 'Empowering the Next Generation of Healthcare Leaders', subtitle: 'Start your journey at LDM Paramedical College', color: 'from-[#10B981] to-[#047857]' },
+    { image: '/home/home_4.jpeg', title: 'Empowering the Next Generation of Healthcare Leaders', subtitle: 'Start your journey at LDM College', color: 'from-[#10B981] to-[#047857]' },
     { image: '/home/home_3.jpeg', title: 'State-of-the-Art Campus Space', subtitle: 'Modern Facilities built for Hands-on Learning', color: 'from-[#0A192F] to-[#1e3a5f]' },
     { image: '/home/img4.jpeg', title: 'Learn from Expert Faculty', subtitle: 'Mentorship from Experienced Healthcare Professionals', color: 'from-[#10B981] to-[#047857]' },
     { image: '/home/img2.jpeg', title: '100% Practical Training', subtitle: 'Real-world Clinical Experience', color: 'from-[#0A192F] to-[#1e3a5f]' },

@@ -132,7 +132,7 @@ const Footer = () => {
                             onClick={() => window.open("https://www.google.com/maps/dir/?api=1&destination=29.733569974798775,76.98468427563566", '_blank')}
                         >
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3464.5348892926544!2d76.98468427563566!3d29.733569974798775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390e72fd27e13747%3A0xf6e9e5b2b85e4a0a!2sLDM%20College%20of%20Pharmacy!5e0!3m2!1sen!2sin!4v1705090168016!5m2!1sen!2sin"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3464.5348892926544!2d76.98468427563566!3d29.733569974798775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390e72fd27e13747%3A0xf6e9e5b2b85e4a0a!2sLDM%20College!5e0!3m2!1sen!2sin!4v1705090168016!5m2!1sen!2sin"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(80%) contrast(85%)' }}
@@ -158,7 +158,7 @@ const Footer = () => {
                 {/* Divider */}
                 <div className="border-t border-white/5 pt-6">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
-                        <p>&copy; {currentYear} LDM College of Pharmacy. All rights reserved.</p>
+                        <p>&copy; {currentYear} LDM College. All rights reserved.</p>
                         <div className="flex gap-4">
                             <Link href="/contact" className="hover:text-gray-400 transition-colors">Privacy Policy</Link>
                             <Link href="/contact" className="hover:text-gray-400 transition-colors">Terms of Service</Link>

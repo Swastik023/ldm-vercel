@@ -19,11 +19,11 @@ const StudentSidebar = () => {
 
     const menuItems = [
         { title: 'Dashboard', path: '/student', icon: <LayoutDashboard size={20} /> },
+        { title: 'Profile & Docs', path: '/student/profile', icon: <User size={20} /> },
         { title: 'Library', path: '/student/library', icon: <Library size={20} /> },
         { title: 'Report Card', path: '/student/report-card', icon: <FileText size={20} /> },
         { title: 'My Fees', path: '/student/fees', icon: <Wallet size={20} /> },
         { title: 'My Documents', path: '/student/documents', icon: <FileCheck size={20} /> },
-        // { title: 'Profile', path: '/student/profile', icon: <User size={20} /> },
     ];
 
     return (

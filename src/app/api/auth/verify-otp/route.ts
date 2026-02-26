@@ -48,10 +48,13 @@ export async function POST(req: Request) {
     // Mark as verified in EmailOTP
     await EmailOTP.findOneAndUpdate({ email: normalizedEmail }, { verified: true });
 
-    // Mark emailVerified in StudentProfile
+    // Mark emailVerified in StudentProfile and User
     const user = await User.findOne({ email: normalizedEmail });
     if (user) {
-        await StudentProfile.findOneAndUpdate({ userId: user._id }, { emailVerified: true });
+        await Promise.all([
+            StudentProfile.findOneAndUpdate({ userId: user._id }, { emailVerified: true }),
+            User.findByIdAndUpdate(user._id, { isEmailVerified: true }),
+        ]);
     }
 
     return NextResponse.json({ success: true, message: 'Email verified successfully! 🎉' });

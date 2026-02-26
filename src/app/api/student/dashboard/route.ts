@@ -18,11 +18,12 @@ export async function GET() {
 
     const studentId = new mongoose.Types.ObjectId(session.user.id);
 
-    // Fetch user profile (with session+batch populated)
+    // Fetch user profile (with session+batch+class populated)
     const userDoc = await User.findById(studentId)
         .select('-password')
         .populate('session', 'name')
         .populate('batch', 'name')
+        .populate('classId', 'className sessionFrom sessionTo')
         .lean();
 
     // Fetch attendance records where this student appears
@@ -61,8 +62,13 @@ export async function GET() {
             name: userDoc?.fullName || session.user.name || '',
             email: userDoc?.email || session.user.email || '',
             username: userDoc?.username || '',
+            mobileNumber: (userDoc as any)?.mobileNumber || null,
             session: (userDoc?.session as any)?.name || null,
             batch: (userDoc?.batch as any)?.name || null,
+            className: (userDoc?.classId as any)?.className || null,
+            sessionFrom: (userDoc as any)?.sessionFrom || null,
+            sessionTo: (userDoc as any)?.sessionTo || null,
+            rollNumber: (userDoc as any)?.rollNumber || null,
             role: userDoc?.role || 'student',
         },
         attendance: {

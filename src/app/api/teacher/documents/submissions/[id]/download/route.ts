@@ -6,10 +6,9 @@ import { DocumentSubmission } from '@/models/DocumentSubmission';
 import { DocumentRequirement } from '@/models/DocumentRequirement';
 import { Assignment } from '@/models/Academic';
 import { AuditLog } from '@/models/AuditLog';
-import cloudinary from '@/lib/cloudinary';
 import mongoose from 'mongoose';
 
-// GET /api/teacher/documents/submissions/[id]/download — Secure temp download link
+// GET /api/teacher/documents/submissions/[id]/download — Secure download link
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id || session.user.role !== 'teacher') {
@@ -45,15 +44,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         return NextResponse.json({ success: false, message: 'Access denied' }, { status: 403 });
     }
 
-    // Generate signed URL with 15-minute expiry
-    const signedUrl = cloudinary.url(submission.cloudinary_public_id, {
-        resource_type: 'raw',
-        type: 'authenticated',
-        sign_url: true,
-        expires_at: Math.floor(Date.now() / 1000) + 900 // 15 min
-    });
-
-    // Audit log the download
+    // Return file URL directly — security is enforced above (teacher session + access check)
     await AuditLog.create({
         action: 'DOWNLOAD',
         entityType: 'DocumentSubmission',
@@ -65,9 +56,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({
         success: true,
         download: {
-            url: signedUrl,
+            url: submission.file_url,
             file_name: submission.file_name,
-            expires_in: '15 minutes'
         }
     });
 }

@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import connectDB from "@/lib/db";
 import { User } from "@/models/User";
 import bcrypt from "bcryptjs";
@@ -19,7 +20,15 @@ export const authOptions: NextAuthOptions = {
 
                 await connectDB();
 
-                const user = await User.findOne({ username: credentials.username });
+                // Accept login by username OR email — students register with email
+                // and are assigned an auto-generated username they may not know.
+                const identifier = credentials.username.trim().toLowerCase();
+                const user = await User.findOne({
+                    $or: [
+                        { username: identifier },
+                        { email: identifier },
+                    ],
+                });
 
                 if (!user || !user.password) {
                     throw new Error("User not found");
@@ -36,17 +45,91 @@ export const authOptions: NextAuthOptions = {
                     name: user.fullName,
                     email: user.email,
                     role: user.role,
-                    username: user.username
+                    username: user.username,
+                    isProfileComplete: user.isProfileComplete,  // ← must come from DB
                 };
             }
-        })
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
     ],
     callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
+        async signIn({ user, account }) {
+            if (account?.provider === 'google') {
+                await connectDB();
+                const email = user.email?.toLowerCase().trim();
+                if (!email) return false;
+
+                let dbUser = await User.findOne({ email });
+                if (!dbUser) {
+                    // New user — auto-register as verified student
+                    let baseUsername = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
+                    if (!baseUsername) baseUsername = 'user';
+                    let username = baseUsername;
+                    let counter = 0;
+                    while (await User.findOne({ username })) {
+                        counter++;
+                        username = `${baseUsername}${counter}`;
+                    }
+
+                    dbUser = await User.create({
+                        username,
+                        email,
+                        fullName: user.name || email.split('@')[0],
+                        role: 'student',
+                        provider: 'google',
+                        image: user.image || undefined,
+                        status: 'active',
+                        isEmailVerified: true,
+                    });
+                } else {
+                    // Existing user — link Google, mark verified (account linking)
+                    await User.findByIdAndUpdate(dbUser._id, {
+                        isEmailVerified: true,
+                        ...(dbUser.provider === 'credentials' && { provider: 'google' }),
+                        ...(user.image && !dbUser.image && { image: user.image }),
+                    });
+                    // Also sync StudentProfile if it exists
+                    const { StudentProfile } = await import('@/models/StudentProfile');
+                    await StudentProfile.findOneAndUpdate(
+                        { userId: dbUser._id },
+                        { emailVerified: true }
+                    );
+                }
+            }
+            return true;
+        },
+        async jwt({ token, user, account, trigger }) {
+            // ── Initial sign-in via credentials ─────────────────────────────
+            if (user && account?.provider === 'credentials') {
                 token.role = user.role;
                 token.username = user.username;
                 token.id = user.id;
+                token.isProfileComplete = user.isProfileComplete ?? false; // comes from authorize()
+            }
+            // ── Initial sign-in via Google ───────────────────────────────────
+            if (account?.provider === 'google' && user?.email) {
+                await connectDB();
+                const dbUser = await User.findOne({ email: user.email.toLowerCase().trim() });
+                if (dbUser) {
+                    token.role = dbUser.role;
+                    token.username = dbUser.username;
+                    token.id = dbUser._id.toString();
+                    token.isProfileComplete = dbUser.isProfileComplete;
+                }
+            }
+            // ── Token refresh / session.update() call ────────────────────────
+            // Re-read from DB so that calling update() on the client actually
+            // propagates the new isProfileComplete value into the JWT.
+            if (trigger === 'update' && token.id) {
+                await connectDB();
+                const dbUser = await User.findById(token.id).select('isProfileComplete role username').lean();
+                if (dbUser) {
+                    token.isProfileComplete = dbUser.isProfileComplete;
+                    token.role = dbUser.role;
+                }
             }
             return token;
         },
@@ -55,6 +138,7 @@ export const authOptions: NextAuthOptions = {
                 session.user.role = token.role as string;
                 session.user.username = token.username as string;
                 session.user.id = token.id as string;
+                session.user.isProfileComplete = token.isProfileComplete as boolean;
             }
             return session;
         }

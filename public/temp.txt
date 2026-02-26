@@ -1,0 +1,101 @@
+🖥️ Page 1 – Website Content & UI Updates
+
+
+B Homepage Updates
+
+Homepage content needs revision.
+
+Updates/Announcements should be limited.
+
+Only 3 key highlights should be displayed (avoid information overload).
+
+C. Partnerships Section
+Strategic Partners
+
+Add new strategic partners.
+
+Example mentioned: EduConnect.
+
+Hospital Partners
+
+Dr. Sharan (to be included/updated)
+
+New hospital to be added
+
+Other institutes to be listed
+
+D. Trust & Contact Information
+
+Add Customer Care Number.
+
+Update Map Location.
+
+About Us section must include: “Since 2022”.
+
+Director’s photo needs replacement.
+
+🛠️ Page 2 – Admin, Courses & System Fixes
+A. Admin Panel
+
+Admin credentials exist.
+
+Implies functional backend/dashboard available.
+
+Requires review and usability check.
+
+B. Notices & Documents
+
+PDFs must be uploadable.
+
+“Latest Notices” section should be active and functional.
+
+C. Learning & Academic Section
+
+Add E-Library section.
+
+Add courses (course listing not complete).
+
+Create and upload Brochure.
+
+D. University Affiliations Section
+
+Create/Update section for Officially Recognized Universities.
+
+Examples mentioned:
+
+Saurashtra
+
+Yedhavi
+
+DBU
+
+(Needs structured listing format.)
+
+E. Enquiry & Messaging System (Critical Fixes)
+
+Current Issues:
+
+Wrong messages being displayed.
+
+Mobile numbers not showing (bug).
+
+Form data not properly transmitted.
+
+Required Fixes:
+
+Enquiry form must include:
+
+Course enquiry
+
+Student qualification
+
+All submitted details must appear in admin/email messages.
+
+Enrollment details section required.
+
+Proper confirmation messages needed.
+
+
+
+
+

@@ -123,7 +123,7 @@ async function upgradeLibrary() {
                 </section>
 
                 <footer class="mt-12 pt-8 border-t border-slate-200">
-                    <p class="text-xs text-slate-400 italic">This academic volume is part of the LDM Paramedical College Excellence Initiative. v2.0</p>
+                    <p class="text-xs text-slate-400 italic">This academic volume is part of the LDM College Excellence Initiative. v2.0</p>
                 </footer>
             </div>
         `;

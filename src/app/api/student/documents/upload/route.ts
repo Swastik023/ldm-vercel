@@ -124,7 +124,8 @@ export async function POST(req: NextRequest) {
                         resource_type: 'raw',
                         folder: `ldm-documents/${session.user.id}`,
                         public_id: `${Date.now()}-${file.name.replace(/\s+/g, '_')}`,
-                        access_mode: 'authenticated'
+                        // No access_mode:'authenticated' — security enforced at API level.
+                        // Signed download routes require admin/teacher session before returning URL.
                     },
                     (error, result) => {
                         if (error) reject(error);
@@ -177,7 +178,7 @@ export async function POST(req: NextRequest) {
                         resource_type: 'raw',
                         folder: `ldm-documents/${session.user.id}/fields`,
                         public_id: `${Date.now()}-${field.field_id}-${additionalFile.name.replace(/\s+/g, '_')}`,
-                        access_mode: 'authenticated'
+                        // No access_mode:'authenticated' — security enforced at API level.
                     },
                     (error, result) => {
                         if (error) reject(error);

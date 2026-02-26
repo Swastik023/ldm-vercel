@@ -45,14 +45,20 @@ export async function POST(req: Request) {
     if (file && file.size > 0 && !['rich-text', 'md', 'none'].includes(file_type)) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        const ext = file.name.split('.').pop()?.toLowerCase() || 'pdf';
-        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+        const ext = file.name.split('.').pop()?.toLowerCase() || '';
+
+        // Only true image formats go as 'image' resource type.
+        // PDFs MUST stay as 'raw' — Cloudinary with resource_type:'image' rasterizes
+        // the PDF into a JPEG (first page only), destroying the original document.
+        const resourceType: 'image' | 'raw' = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)
+            ? 'image'
+            : 'raw';
 
         const uploadResult = await new Promise<{ secure_url: string; public_id: string }>((resolve, reject) => {
             cloudinary.uploader.upload_stream(
                 {
                     folder: 'ldm_notices',
-                    resource_type: isImage ? 'image' : 'raw',
+                    resource_type: resourceType,
                     use_filename: true,
                     unique_filename: true,
                 },

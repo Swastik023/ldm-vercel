@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     description: 'LDM College offers specialized Ayurvedic Pharmacy programs blending traditional Ayurvedic knowledge with modern pharmaceutical sciences.',
     keywords: ["Ayurvedic pharmacy","Ayurveda course","herbal pharmacy","ayurvedic medicine"],
     openGraph: {
-        title: 'Ayurvedic Pharmacy | LDM College of Pharmacy',
+        title: 'Ayurvedic Pharmacy | LDM College',
         description: 'LDM College offers specialized Ayurvedic Pharmacy programs blending traditional Ayurvedic knowledge with modern pharmaceutical sciences.',
         type: 'website',
     },

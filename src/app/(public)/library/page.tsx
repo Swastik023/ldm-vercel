@@ -325,7 +325,7 @@ export default function PublicLibrary() {
                         <span className="w-1 h-1 rounded-full bg-white/30" />
                         <span className="flex items-center gap-1.5"><span className="font-bold text-teal-300">{activeProgram ? 1 : programs.length}</span> {activeProgram ? 'Program' : 'Programs'} Selected</span>
                         <span className="w-1 h-1 rounded-full bg-white/30" />
-                        <span className="text-white/50 text-xs">Access provided by LDM Paramedical College</span>
+                        <span className="text-white/50 text-xs">Access provided by LDM College</span>
                     </div>
                 </div>
 

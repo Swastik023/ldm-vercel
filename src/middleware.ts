@@ -7,6 +7,11 @@ export default withAuth(
         const path = req.nextUrl.pathname;
         const role = token?.role;
 
+        // If profile is incomplete, redirect to complete-profile (except if already there or calling the API)
+        if (token && !token.isProfileComplete && path !== '/complete-profile' && !path.startsWith('/api/')) {
+            return NextResponse.redirect(new URL('/complete-profile', req.url));
+        }
+
         // Role-based redirection
         if (path.startsWith("/admin") && role !== "admin") {
             return NextResponse.redirect(new URL("/", req.url));
@@ -34,5 +39,7 @@ export const config = {
         "/teacher/:path*",
         "/student/:path*",
         "/employee/:path*",
+        "/complete-profile",
     ],
 };
+

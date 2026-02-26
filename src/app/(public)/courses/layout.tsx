@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     description: 'Explore Diploma and Degree pharmacy programs at LDM College — D.Pharma, B.Pharma, and Ayurvedic Pharmacy with expert faculty.',
     keywords: ["D.Pharma course","B.Pharma course","pharmacy programs","pharmacy admission"],
     openGraph: {
-        title: 'Courses & Programs | LDM College of Pharmacy',
+        title: 'Courses & Programs | LDM College',
         description: 'Explore Diploma and Degree pharmacy programs at LDM College — D.Pharma, B.Pharma, and Ayurvedic Pharmacy with expert faculty.',
         type: 'website',
     },

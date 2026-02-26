@@ -43,16 +43,25 @@ export default function NoticeReader({ notice, onClose }: NoticeReaderProps) {
     const isPdf = ft === 'pdf' || notice.attachmentUrl?.toLowerCase().endsWith('.pdf');
     const isFile = ['pdf', 'docx', 'pptx', 'xlsx'].includes(ft);
 
+    // Cloudinary serves PDFs as application/octet-stream (/raw/) or as rasterized images (/image/).
+    // Neither works with native browser PDF embedding.
+    // Google Docs Viewer reliably proxies any publicly accessible URL and renders it as a PDF.
+    const pdfIframeSrc = notice.attachmentUrl
+        ? `https://docs.google.com/viewer?url=${encodeURIComponent(notice.attachmentUrl)}&embedded=true`
+        : '';
+
     // The secondary (attachment) content for rich / md
     const baseContent = (notice.attachment_content || '').trim();
     const activeContent = (fetchedContent || baseContent).trim();
 
     const isMarkdown = useMemo(() => {
+        if (isPdf || ['docx', 'pptx', 'xlsx'].includes(ft || '')) return false;
+
         const hasMDPattern = /^(#|---|\\*|-|\\d+\\.|\>|\\[.*\\]\\(.*\\))/.test(activeContent) ||
             activeContent.includes('**') || activeContent.includes('##') || activeContent.includes('###');
         return ft === 'md' || ft === 'markdown' ||
             notice.attachmentUrl?.toLowerCase().endsWith('.md') || hasMDPattern;
-    }, [ft, notice.attachmentUrl, activeContent]);
+    }, [ft, notice.attachmentUrl, activeContent, isPdf]);
 
     // Fetch MD from URL if we don't have inline content
     useEffect(() => {
@@ -256,12 +265,25 @@ export default function NoticeReader({ notice, onClose }: NoticeReaderProps) {
                                 <div dangerouslySetInnerHTML={{ __html: activeContent }} />
                             </div>
                         ) : isPdf && notice.attachmentUrl ? (
-                            <div className="w-full h-[75vh] bg-slate-100 rounded-2xl overflow-hidden shadow-inner border border-slate-200">
-                                <iframe
-                                    src={`${notice.attachmentUrl}#toolbar=0`}
-                                    className="w-full h-full border-none"
-                                    title={notice.title}
-                                />
+                            <div className="w-full flex flex-col gap-4">
+                                <div className="w-full h-[80vh] bg-slate-100 rounded-2xl overflow-hidden shadow-inner border border-slate-200">
+                                    <iframe
+                                        src={pdfIframeSrc}
+                                        className="w-full h-full border-none"
+                                        title={notice.title}
+                                    />
+                                </div>
+                                <div className="flex justify-center">
+                                    <a
+                                        href={notice.attachmentUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        download
+                                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-xl border border-red-500/20 text-sm font-semibold transition-all"
+                                    >
+                                        <Download size={15} /> Download PDF
+                                    </a>
+                                </div>
                             </div>
                         ) : notice.attachmentUrl ? (
                             <div className="flex flex-col items-center justify-center py-16 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200">

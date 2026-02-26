@@ -134,7 +134,7 @@ const About = () => {
                                     {directorMessage || (
                                         <>
                                             <p>
-                                                Welcome to LDM Paramedical Institute. As the Director, it gives me immense pleasure to lead an institution that has been at the forefront of paramedical education for years.
+                                                Welcome to LDM College. As the Director, it gives me immense pleasure to lead an institution that has been at the forefront of paramedical education for years.
                                             </p>
                                             <p>
                                                 Our mission is to nurture skilled healthcare professionals who will contribute significantly to the medical field. We believe in providing not just education, but a transformative learning experience that prepares our students for the real world of healthcare.

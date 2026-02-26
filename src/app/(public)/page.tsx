@@ -277,7 +277,7 @@ export default function HomePage() {
                     >
                         <div>
                             <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">About Us</p>
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5">Welcome to LDM Paramedical College</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5">Welcome to LDM College</h2>
                             <p className="text-gray-600 mb-4 leading-relaxed">
                                 We are committed to providing quality education in the field of paramedical sciences and skill development courses.
                                 Our state-of-the-art facilities and experienced faculty ensure that students receive the best possible training for their future careers.

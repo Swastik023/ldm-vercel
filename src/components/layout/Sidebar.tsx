@@ -26,6 +26,7 @@ const Sidebar = () => {
 
     const navItems = [
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+        { name: 'Students', href: '/admin/students', icon: Users },
         { name: 'Manage Users', href: '/admin/users', icon: Users },
         { name: 'Academic Config', href: '/admin/academic', icon: Settings },
         { name: 'Batches', href: '/admin/batches', icon: Calendar },

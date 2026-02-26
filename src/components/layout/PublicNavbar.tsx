@@ -109,7 +109,7 @@ const Header = () => (
                 <div className="text-center flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
                         <span className="bg-gradient-to-r from-[#0A192F] to-blue-800 bg-clip-text text-transparent drop-shadow-sm">
-                            LDM College of Pharmacy
+                            LDM College
                         </span>
                     </h1>
                     {/* Styled collaboration badge — much more visible than plain text */}
