@@ -226,6 +226,11 @@ const PublicNavbar = () => {
                     : session.user?.role === 'employee' ? '/employee'
                         : '/student';
 
+    // Hide E-Library from guests — it requires login
+    const visibleNavItems = navItems.filter((item: NavItem) =>
+        item.title !== 'E-Library' || !!session
+    );
+
     return (
         <div className="fixed top-0 w-full z-50 left-0 right-0">
             <Header />
@@ -238,7 +243,7 @@ const PublicNavbar = () => {
 
                         {/* Desktop Nav */}
                         <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
-                            {navItems.map(item => (
+                            {visibleNavItems.map(item => (
                                 <div
                                     key={item.title}
                                     className="relative"
@@ -375,7 +380,7 @@ const PublicNavbar = () => {
                                     </Link>
                                 </div>
 
-                                {navItems.map(item => (
+                                {visibleNavItems.map(item => (
                                     <div key={item.title}>
                                         {item.dropdown ? (
                                             <>

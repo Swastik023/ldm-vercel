@@ -46,7 +46,8 @@ export const authOptions: NextAuthOptions = {
                     email: user.email,
                     role: user.role,
                     username: user.username,
-                    isProfileComplete: user.isProfileComplete,  // ← must come from DB
+                    isProfileComplete: user.isProfileComplete,
+                    status: user.status,
                 };
             }
         }),
@@ -64,7 +65,7 @@ export const authOptions: NextAuthOptions = {
 
                 let dbUser = await User.findOne({ email });
                 if (!dbUser) {
-                    // New user — auto-register as verified student
+                    // New Google user — start as pending, admin must approve
                     let baseUsername = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
                     if (!baseUsername) baseUsername = 'user';
                     let username = baseUsername;
@@ -81,17 +82,20 @@ export const authOptions: NextAuthOptions = {
                         role: 'student',
                         provider: 'google',
                         image: user.image || undefined,
-                        status: 'active',
+                        status: 'pending',
                         isEmailVerified: true,
                     });
                 } else {
-                    // Existing user — link Google, mark verified (account linking)
+                    // Existing user — block if rejected
+                    if (dbUser.status === 'rejected') {
+                        return '/login?error=AccountRejected';
+                    }
+                    // Link Google, mark verified
                     await User.findByIdAndUpdate(dbUser._id, {
                         isEmailVerified: true,
                         ...(dbUser.provider === 'credentials' && { provider: 'google' }),
                         ...(user.image && !dbUser.image && { image: user.image }),
                     });
-                    // Also sync StudentProfile if it exists
                     const { StudentProfile } = await import('@/models/StudentProfile');
                     await StudentProfile.findOneAndUpdate(
                         { userId: dbUser._id },
@@ -104,11 +108,14 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user, account, trigger }) {
             // ── Initial sign-in via credentials ─────────────────────────────
             if (user && account?.provider === 'credentials') {
+                // Block rejected accounts at token level too
+                if ((user as any).status === 'rejected') throw new Error('AccountRejected');
                 token.role = user.role;
                 token.username = user.username;
                 token.id = user.id;
-                token.isProfileComplete = user.isProfileComplete ?? false; // comes from authorize()
+                token.isProfileComplete = user.isProfileComplete ?? false;
                 token.provider = 'credentials';
+                token.status = (user as any).status ?? 'pending';
             }
             // ── Initial sign-in via Google ───────────────────────────────────
             if (account?.provider === 'google' && user?.email) {
@@ -120,6 +127,7 @@ export const authOptions: NextAuthOptions = {
                     token.id = dbUser._id.toString();
                     token.isProfileComplete = dbUser.isProfileComplete;
                     token.provider = dbUser.provider || 'google';
+                    token.status = dbUser.status;
                 }
             }
             // ── Token refresh / session.update() call ────────────────────────
@@ -127,11 +135,12 @@ export const authOptions: NextAuthOptions = {
             // propagates the new isProfileComplete value into the JWT.
             if (trigger === 'update' && token.id) {
                 await connectDB();
-                const dbUser = await User.findById(token.id).select('isProfileComplete role username provider').lean();
+                const dbUser = await User.findById(token.id).select('isProfileComplete role username provider status').lean();
                 if (dbUser) {
                     token.isProfileComplete = dbUser.isProfileComplete;
                     token.role = dbUser.role;
                     token.provider = dbUser.provider;
+                    token.status = dbUser.status;
                 }
             }
             return token;
@@ -143,6 +152,7 @@ export const authOptions: NextAuthOptions = {
                 session.user.id = token.id as string;
                 session.user.isProfileComplete = token.isProfileComplete as boolean;
                 session.user.provider = token.provider as string;
+                session.user.status = token.status as string;
             }
             return session;
         }

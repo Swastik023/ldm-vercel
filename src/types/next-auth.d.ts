@@ -8,6 +8,7 @@ declare module "next-auth" {
             id: string
             isProfileComplete: boolean
             provider?: string
+            status: string
         } & DefaultSession["user"]
     }
 
@@ -17,6 +18,7 @@ declare module "next-auth" {
         id: string
         isProfileComplete?: boolean
         provider?: string
+        status?: string
     }
 }
 
@@ -27,5 +29,6 @@ declare module "next-auth/jwt" {
         id: string
         isProfileComplete: boolean
         provider?: string
+        status: string
     }
 }

@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
         sessionFrom: sfInt,
         sessionTo: stInt,
         role: 'student',
-        status: 'active',
+        status: 'pending',
         isProfileComplete: false,
     });
 

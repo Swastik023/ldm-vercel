@@ -6,6 +6,14 @@ export default withAuth(
         const token = req.nextauth.token;
         const path = req.nextUrl.pathname;
         const role = token?.role;
+        const status = token?.status;
+
+        // Blocked / pending users → pending-approval page (except API and the page itself)
+        if (token && !path.startsWith('/api/') && path !== '/pending-approval') {
+            if (status === 'rejected' || status === 'pending') {
+                return NextResponse.redirect(new URL('/pending-approval', req.url));
+            }
+        }
 
         // If profile is incomplete, redirect to complete-profile (except if already there or calling the API)
         if (token && !token.isProfileComplete && path !== '/complete-profile' && !path.startsWith('/api/')) {
@@ -40,6 +48,7 @@ export const config = {
         "/student/:path*",
         "/employee/:path*",
         "/complete-profile",
+        "/pending-approval",
+        "/library",
     ],
 };
-

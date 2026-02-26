@@ -8,7 +8,7 @@ export interface IUser extends Document {
     is_root: boolean;
     fullName: string;
     mobileNumber?: string;
-    status: 'active' | 'inactive' | 'suspended';
+    status: 'active' | 'inactive' | 'suspended' | 'pending' | 'rejected';
     provider: 'credentials' | 'google';
     image?: string;
     isEmailVerified: boolean;
@@ -36,7 +36,7 @@ const UserSchema = new Schema<IUser>({
     role: { type: String, enum: ['admin', 'teacher', 'student', 'employee'], default: 'student' },
     is_root: { type: Boolean, default: false },
     fullName: { type: String, required: true },
-    status: { type: String, enum: ['active', 'inactive', 'suspended'], default: 'active' },
+    status: { type: String, enum: ['active', 'inactive', 'suspended', 'pending', 'rejected'], default: 'pending' },
     // Legacy academic refs (teacher/attendance system)
     session: { type: Schema.Types.ObjectId, ref: 'Session', default: null },
     batch: { type: Schema.Types.ObjectId, ref: 'Batch', default: null },
