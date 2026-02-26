@@ -147,9 +147,8 @@ export default function CompleteProfilePage() {
     const [done, setDone] = useState(false);
     const [fieldError, setFieldError] = useState<string | null>(null);
 
-    // Google users need to fill academic info — detect by absence of a username
-    // (credentials users always get a username at registration; Google users may not have one yet)
-    const isGoogleUser = !session?.user?.username;
+    // Google users need to fill academic info
+    const isGoogleUser = session?.user?.provider === 'google';
     const needsExtraInfo = !session?.user?.isProfileComplete;
 
     // Live class preview
