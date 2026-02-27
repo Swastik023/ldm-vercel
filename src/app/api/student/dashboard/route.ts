@@ -6,6 +6,9 @@ import { Attendance } from '@/models/Attendance';
 import Notice from '@/models/Notice';
 import { User } from '@/models/User';
 import mongoose from 'mongoose';
+// Register models needed for populate()
+import '@/models/Class';
+import { Batch, Session } from '@/models/Academic';
 
 // GET /api/student/dashboard — returns real data for the logged-in student
 export async function GET() {
