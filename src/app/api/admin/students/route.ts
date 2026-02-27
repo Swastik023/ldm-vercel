@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
+// Must import these so Mongoose registers the schemas before populate() runs
+import '@/models/Class';
+import { Batch } from '@/models/Academic';
 
 // GET /api/admin/students?batchId=&classId=&sessionFrom=&sessionTo=&rollNumber=&page=&limit=
 export async function GET(req: NextRequest) {
