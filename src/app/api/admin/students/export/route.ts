@@ -27,12 +27,12 @@ export async function GET(req: NextRequest) {
         const studentIds = students.map(s => s._id);
         const allFees = await StudentFee.find({ studentId: { $in: studentIds } }).lean();
 
-        // Build fee map: studentId → { totalFee, amountPaid }
-        const feeMap: Record<string, { totalFee: number; amountPaid: number }> = {};
+        // Build fee map: studentId → { finalFee, amountPaid }
+        const feeMap: Record<string, { finalFee: number; amountPaid: number }> = {};
         for (const fee of allFees) {
             const sid = fee.studentId.toString();
-            if (!feeMap[sid]) feeMap[sid] = { totalFee: 0, amountPaid: 0 };
-            feeMap[sid].totalFee += fee.totalFee;
+            if (!feeMap[sid]) feeMap[sid] = { finalFee: 0, amountPaid: 0 };
+            feeMap[sid].finalFee += (fee as any).finalFee ?? 0;
             feeMap[sid].amountPaid += fee.amountPaid;
         }
 
@@ -46,8 +46,8 @@ export async function GET(req: NextRequest) {
 
         const rows = students.map(s => {
             const sid = s._id.toString();
-            const fee = feeMap[sid] || { totalFee: 0, amountPaid: 0 };
-            const left = Math.max(0, fee.totalFee - fee.amountPaid);
+            const fee = feeMap[sid] || { finalFee: 0, amountPaid: 0 };
+            const left = Math.max(0, fee.finalFee - fee.amountPaid);
             return [
                 s.rollNumber || '',
                 s.fullName || '',
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
                 s.isProfileComplete ? 'Yes' : 'No',
                 (s as any).provider || 'credentials',
                 new Date(s.createdAt as Date).toLocaleDateString('en-IN'),
-                fee.totalFee,
+                fee.finalFee,
                 fee.amountPaid,
                 left,
             ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
