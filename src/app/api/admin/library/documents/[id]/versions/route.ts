@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { DocumentVersion } from '@/models/DocumentVersion';
+import { User } from '@/models/User'; // Register User for updated_by populate()
 
 // GET /api/admin/library/documents/[id]/versions
 // Fetches the version history of a specific document

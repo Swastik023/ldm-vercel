@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
-import { Batch } from '@/models/Academic';
+import { Batch, Program, Session } from '@/models/Academic'; // Register all for populate()
 
 // GET /api/public/batches — fetch active batches for the registration form dropdown
 export async function GET() {

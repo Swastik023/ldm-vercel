@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { FeePayment } from '@/models/FeePayment';
+import { FeeStructure } from '@/models/FeeStructure'; // Register for populate()
+import { User } from '@/models/User'; // Register for populate()
 
 // GET /api/student/finance/payments — student views their own fee status
 export async function GET() {

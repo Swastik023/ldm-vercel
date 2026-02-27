@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { Test } from '@/models/Test';
 import { TestAttempt } from '@/models/TestAttempt';
+import { User } from '@/models/User'; // Register User for studentId populate()
 
 // GET /api/admin/tests/[id] — test detail + all attempts
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {

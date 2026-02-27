@@ -4,8 +4,9 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { LibraryDocument } from '@/models/LibraryDocument';
 import { User } from '@/models/User';
-import { Batch } from '@/models/Academic';
+import { Batch, Program } from '@/models/Academic'; // Register Batch+Program for populate()
 import '@/models/LibraryCategory'; // Register LibraryCategory for populate()
+
 
 // GET /api/student/library — returns all library documents for the student's program + common docs
 export async function GET() {
