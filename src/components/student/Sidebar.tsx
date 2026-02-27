@@ -11,6 +11,7 @@ import {
     LogOut,
     Wallet,
     FileCheck,
+    HelpCircle,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -24,6 +25,7 @@ const StudentSidebar = () => {
         { title: 'Report Card', path: '/student/report-card', icon: <FileText size={20} /> },
         { title: 'My Fees', path: '/student/fees', icon: <Wallet size={20} /> },
         { title: 'My Documents', path: '/student/documents', icon: <FileCheck size={20} /> },
+        { title: 'Help & SOP', path: '/student/help', icon: <HelpCircle size={20} /> },
     ];
 
     return (

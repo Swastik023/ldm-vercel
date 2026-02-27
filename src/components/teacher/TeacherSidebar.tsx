@@ -8,7 +8,8 @@ import {
     ClipboardCheck,
     GraduationCap,
     LogOut,
-    FileCheck
+    FileCheck,
+    HelpCircle,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -20,6 +21,7 @@ const TeacherSidebar = () => {
         { title: 'Attendance', path: '/teacher/attendance', icon: <ClipboardCheck size={20} /> },
         { title: 'Marks Entry', path: '/teacher/marks', icon: <GraduationCap size={20} /> },
         { title: 'Assignments', path: '/teacher/documents', icon: <FileCheck size={20} /> },
+        { title: 'Help & SOP', path: '/teacher/help', icon: <HelpCircle size={20} /> },
     ];
 
     return (

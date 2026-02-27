@@ -10,7 +10,7 @@ import {
     Wallet, IndianRupee, Receipt,
     Library, FolderOpen, FileCheck,
     Bell, Megaphone, Image, MessageSquare,
-    LogOut, ChevronDown, ChevronRight,
+    LogOut, ChevronDown, ChevronRight, HelpCircle,
 } from 'lucide-react';
 
 type NavItem = { name: string; href: string; icon: React.ElementType };
@@ -154,8 +154,17 @@ const Sidebar = () => {
                 })}
             </nav>
 
-            {/* Logout */}
-            <div className="p-3 border-t border-gray-800/80">
+            {/* Help & Sign Out */}
+            <div className="p-3 border-t border-gray-800/80 space-y-1.5">
+                <Link href="/admin/help">
+                    <div className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${pathname.startsWith('/admin/help')
+                            ? 'bg-blue-600 text-white'
+                            : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                        }`}>
+                        <HelpCircle className="w-4 h-4 flex-shrink-0" />
+                        Help & SOP
+                    </div>
+                </Link>
                 <button
                     onClick={() => signOut({ callbackUrl: '/login' })}
                     className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-red-600/10 text-red-400 hover:bg-red-600 hover:text-white transition-all text-sm font-semibold"
