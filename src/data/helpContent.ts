@@ -4,8 +4,10 @@ export type Step = {
     step: number;
     title: string;
     description: string;
+    detail?: string;      // extra paragraph below description
     tip?: string;
     warning?: string;
+    note?: string;        // neutral info box
 };
 
 export type Article = {
@@ -13,6 +15,8 @@ export type Article = {
     title: string;
     lastUpdated: string;
     summary: string;
+    overview?: string[];  // bullet-point key facts shown before steps
+    flowDiagram?: string; // Mermaid graph definition
     steps: Step[];
     relatedIds?: string[];
 };
@@ -39,11 +43,24 @@ export const adminCategories: Category[] = [
                 title: 'How to Log In as Admin',
                 lastUpdated: '2026-02-27',
                 summary: 'Log into the LDM admin panel using your admin credentials.',
+                overview: [
+                    'Admin accounts are pre-created — no self-registration is allowed.',
+                    'The login page is at /login for all roles.',
+                    'After login you are redirected to /admin automatically.',
+                ],
+                flowDiagram: `flowchart TD
+    A([Open Browser]) --> B[Go to /login]
+    B --> C[Enter Admin Email + Password]
+    C --> D{Credentials valid?}
+    D -- Yes --> E[Redirected to /admin Dashboard]
+    D -- No --> F[Error shown on form]
+    F --> C
+    E --> G([Admin Dashboard Loaded ✓])`,
                 steps: [
-                    { step: 1, title: 'Go to the Login Page', description: 'Navigate to /login in your browser. You will see the LDM College login screen with email and password fields.' },
-                    { step: 2, title: 'Enter Admin Credentials', description: 'Type your registered admin email address and password. Admin accounts are created by the system owner — they cannot self-register.', tip: 'If you forgot your password, contact the system owner to reset it in the database.' },
-                    { step: 3, title: 'Click Sign In', description: 'Click the "Sign In" button. If credentials are correct, you will be redirected to /admin (the admin dashboard).' },
-                    { step: 4, title: 'Verify Dashboard Loads', description: 'The admin dashboard shows total students, revenue, pending approvals, and recent activity. If it loads, you are successfully logged in.', tip: 'Bookmark /admin for quick access.' },
+                    { step: 1, title: 'Navigate to the Login Page', description: 'Open your browser and go to https://www.ldmcollege.com/login. You will see the LDM College sign-in screen with Email and Password fields plus a Google Sign-In option.', note: 'Use a modern browser (Chrome, Firefox, Edge). The system does not support Internet Explorer.' },
+                    { step: 2, title: 'Enter Your Admin Credentials', description: 'Type your registered admin email address in the Email field and your password in the Password field.', detail: 'Admin accounts are created by the system owner directly in the database. Only users with role=admin can access /admin. If you have never logged in before, ask the system owner for your initial credentials.', tip: 'If you forgot your password, contact the system owner to reset it directly in the database or via the MongoDB Atlas UI.' },
+                    { step: 3, title: 'Click Sign In', description: 'Click the blue "Sign In" button. The system validates your email/password against the database.', detail: 'If validation succeeds, NextAuth creates a secure session cookie. You are then automatically redirected to /admin.' },
+                    { step: 4, title: 'Confirm the Dashboard Loads', description: 'The admin dashboard shows 4 green stat cards at the top: Total Students, Total Revenue, Pending Approvals, and a system status indicator. If you see these, you are fully logged in.', tip: 'Bookmark /admin/dashboard (Ctrl+D) for quick daily access.', warning: 'If you see a "403 Forbidden" or are redirected back to /login, your account role may not be set to admin. Contact the system owner.' },
                 ],
                 relatedIds: ['admin-dashboard-overview'],
             },
@@ -71,12 +88,37 @@ export const adminCategories: Category[] = [
                 title: 'Approving Student Registrations',
                 lastUpdated: '2026-02-27',
                 summary: 'Review and approve students who have registered and submitted their documents.',
+                overview: [
+                    'Students register themselves — admin must manually approve each one.',
+                    'A student with "Pending" status cannot use any ERP features until approved.',
+                    'Documents must be verified before approval: Photo, 10th, 12th, Aadhaar.',
+                    'Rejected students see the reason and can re-upload and resubmit.',
+                ],
+                flowDiagram: `flowchart TD
+    A([Student Registers]) --> B[Status = Pending]
+    B --> C[Admin opens Students page]
+    C --> D[Filter: Status = Pending]
+    D --> E[Click student row]
+    E --> F[Open Documents tab]
+    F --> G{All docs uploaded\nand legible?}
+    G -- Yes --> H[Go to Edit tab]
+    H --> I[Set Status = approved]
+    I --> J[Click Save]
+    J --> K([Student Activated ✓])
+    G -- No --> L[Note missing/bad docs]
+    L --> M[Go to Edit tab]
+    M --> N[Set Status = rejected]
+    N --> O[Add rejection reasons per doc]
+    O --> P[Click Save]
+    P --> Q([Student notified — can resubmit])`,
                 steps: [
-                    { step: 1, title: 'Open Students Page', description: 'Click "Students" in the sidebar (under the People group). You will see a searchable, filterable list of all students.' },
-                    { step: 2, title: 'Filter Pending Students', description: 'Use the Status filter dropdown and select "Pending". This shows only students awaiting approval.' },
-                    { step: 3, title: 'Click on a Student Row', description: 'Click the eye icon or the student row to open their detail modal. You can view their profile, uploaded documents, and submitted information.' },
-                    { step: 4, title: 'Review Documents Tab', description: 'Switch to the "Documents" tab inside the student modal. Verify that passport photo, 10th marksheet, 12th marksheet, and Aadhaar are uploaded correctly.' },
-                    { step: 5, title: 'Approve or Reject', description: 'Inside the modal, go to the "Edit" tab. Set the Status field to "approved" and click Save. Or set to "rejected" and provide a rejection reason.', warning: 'Rejected students will receive a notification and can re-submit. Verify all documents before rejecting.' },
+                    { step: 1, title: 'Open the Students Page', description: 'Click "Students" in the left sidebar (under the People group). A paginated table of all registered students loads, showing name, email, roll number, batch, and status badge.', detail: 'The page fetches 25 students per page by default. Use the pagination controls at the bottom to navigate.' },
+                    { step: 2, title: 'Filter to Pending Students Only', description: 'Click the Status dropdown (top-right of the table) and select "Pending". The list now shows only students awaiting review.', tip: 'You can also search by name or roll number using the search box to find a specific student quickly.' },
+                    { step: 3, title: 'Open the Student Detail Modal', description: 'Click the eye/view icon on the right side of any student row, or click anywhere on the row. A full-screen modal opens with 3 tabs: Overview, Documents, and Edit.' },
+                    { step: 4, title: 'Review the Documents Tab', description: 'Click the "Documents" tab inside the modal. A grid shows all 4 mandatory document slots: Passport Photo, 10th Marksheet, 12th Marksheet, and Aadhaar Card.', detail: 'For each slot: if the student uploaded a file, you will see a thumbnail or a PDF icon with a Download button. If the slot shows "Not Uploaded", the student has not submitted that document yet.', warning: 'Do not approve a student if any mandatory document slot is empty or the uploaded file is blurry/incorrect.' },
+                    { step: 5, title: 'Verify Each Document', description: 'For images (Passport Photo, Aadhaar), click the thumbnail to open a full-screen preview. Check that the photo is clear, recent, and shows the student\'s face. For marksheets, click Download and open the PDF to check it is the correct document and all markings are legible.' },
+                    { step: 6, title: 'Approve the Student', description: 'If all documents are correct, switch to the "Edit" tab. Change the Status dropdown from "Pending" to "active". Click Save. The student\'s account is now active and they can log in and use the ERP.', tip: 'The student will see their status change to Active on their dashboard immediately after you save.' },
+                    { step: 7, title: 'Reject with Reasons (if needed)', description: 'If documents are missing or incorrect, set the Status dropdown to "rejected" in the Edit tab. In the Rejection Reasons text area, type specific reasons (e.g., "Passport photo is blurry — please resubmit a clear photo"). Click Save.', warning: 'Be clear and specific in rejection reasons. Vague reasons like "documents incomplete" cause confusion and delays.' },
                 ],
                 relatedIds: ['reject-students', 'view-student-docs'],
             },
@@ -111,14 +153,38 @@ export const adminCategories: Category[] = [
                 title: 'Managing Student Fees (Fee Records)',
                 lastUpdated: '2026-02-27',
                 summary: 'Add, edit, and track fee records and payments for individual students.',
+                overview: [
+                    'Each student can have multiple fee records (one per semester/year).',
+                    'Final Fee = Base Fee − (Base Fee × Discount%). You can override Final Fee directly.',
+                    'Payment history is kept per fee record with date and notes.',
+                    'Deleting a fee record also deletes its payment history — irreversible.',
+                ],
+                flowDiagram: `flowchart TD
+    A([Open Student Modal]) --> B[Click Fees Tab]
+    B --> C{Action?}
+    C -- Add new fee --> D[Fill Label + Year + Base Fee + Disc%]
+    D --> E[System previews Final Fee]
+    E --> F[Click Add]
+    F --> G([Fee record created ✓])
+    C -- Record payment --> H[Click + Payment on record]
+    H --> I[Enter Amount + Note]
+    I --> J[Click Save]
+    J --> K([Paid & Left updated ✓])
+    C -- Edit fee --> L[Click Edit on record]
+    L --> M[Change Base/Disc%/Final Fee]
+    M --> N[Click Save]
+    N --> O([Fee record updated ✓])
+    C -- Delete fee --> P[Click trash icon]
+    P --> Q[Confirm deletion]
+    Q --> R([Record + payments deleted])`,
                 steps: [
-                    { step: 1, title: 'Open Student Modal', description: 'Go to Admin → Students, find the student, and click their row to open the detail modal.' },
-                    { step: 2, title: 'Switch to Fees Tab', description: 'Click the "Fees" tab inside the modal.' },
-                    { step: 3, title: 'Add a Fee Record', description: 'At the top of the Fees tab, fill in: Fee Label (e.g. "Semester 1"), Academic Year (e.g. "2024-25"), Base Fee (₹ amount from course pricing), and Discount % (0 for no discount). The system automatically shows the computed Final Fee preview.' },
-                    { step: 4, title: 'Click Add', description: 'Click the blue Add button. The new fee record appears in the list below with 5 chips: Base | Disc% | Final | Paid | Left.' },
-                    { step: 5, title: 'Edit an Existing Fee Record', description: 'Click the grey "Edit" button on any fee record. An inline form appears allowing you to change Base Fee, Discount %, or Final Fee directly. Set either Discount % or Final Fee — the system calculates the other automatically.' },
-                    { step: 6, title: 'Record a Payment', description: 'Click the green "+ Payment" button on a fee record. Enter the amount and an optional note (e.g. "Cash payment"). Click Save. The Paid and Left amounts update instantly.' },
-                    { step: 7, title: 'Delete a Fee Record', description: 'Click the red trash icon on a fee record to permanently delete it along with all its payment history.', warning: 'Deletion cannot be undone. Make sure you are removing the correct record.' },
+                    { step: 1, title: 'Open the Student Detail Modal', description: 'Go to Admin → Students. Find the student using the search box or scroll the list. Click their row to open the detail modal.' },
+                    { step: 2, title: 'Switch to the Fees Tab', description: 'Inside the modal, click the "Fees" tab (third tab). You will see the Add Fee form at the top and any existing fee records listed below.' },
+                    { step: 3, title: 'Add a Fee Record — Fill the Form', description: 'Fill in: Fee Label (e.g. "Semester 1 Fee" or "Annual Fee 2024-25"), Academic Year (e.g. "2024-25"), Base Fee (₹ amount — this is the course fee before discount), and Discount % (enter 0 if no discount applies).', detail: 'As you type Base Fee and Discount %, the form shows a live preview of the Final Fee. For example: Base ₹60,000 with 10% discount = Final ₹54,000.', tip: 'Use the Course Pricing page to check the standard base fee for each course before entering manually.' },
+                    { step: 4, title: 'Click Add to Create the Record', description: 'Click the blue "Add" button. The new fee record appears in the list below with 5 data chips: Base | Disc % | Final | Paid | Left.', note: 'The Paid chip starts at ₹0 and the Left chip equals the Final Fee until payments are recorded.' },
+                    { step: 5, title: 'Record a Payment', description: 'Click the green "+ Payment" button on any fee record. A small form appears: enter the Payment Amount (₹) and an optional Note (e.g. "Cash — 15 Feb 2026" or "Online transfer #TXN123"). Click Save.', detail: 'The Paid chip increases and the Left chip decreases instantly. A timestamped entry is added to the payment history of that record.' },
+                    { step: 6, title: 'Edit an Existing Fee Record', description: 'Click the grey "Edit" button on a fee record to open an inline edit form. You can change Base Fee, Discount %, or Final Fee. The system recalculates the other values automatically when you change one.', warning: 'Changing the Final Fee manually overrides the discount calculation. Be careful not to accidentally lower a student\'s fee without authorization.' },
+                    { step: 7, title: 'Delete a Fee Record', description: 'Click the red trash/bin icon on a fee record. A confirmation prompt appears. Confirm to permanently delete the record and ALL its payment history.', warning: 'Deletion is permanent and cannot be undone. Only delete test records or genuine errors.' },
                 ],
                 relatedIds: ['bulk-fee-assignment', 'course-fee-management'],
             },
@@ -312,13 +378,33 @@ export const studentCategories: Category[] = [
                 title: 'How to Register as a Student',
                 lastUpdated: '2026-02-27',
                 summary: 'Create your student account and complete your registration with the college.',
+                overview: [
+                    'Registration is self-service — go to /register and fill the form.',
+                    'After submitting, your status is "Pending" until the admin approves you.',
+                    'You must upload documents (Photo, 10th, 12th, Aadhaar) after registering.',
+                    'You cannot use ERP features until the admin activates your account.',
+                ],
+                flowDiagram: `flowchart TD
+    A([Visit /register]) --> B[Fill personal details]
+    B --> C[Set username + roll number]
+    C --> D[Select Program + Session]
+    D --> E[Click Register]
+    E --> F[Account created — Status: Pending]
+    F --> G[Upload Documents]
+    G --> H[Admin Reviews]
+    H --> I{Decision}
+    I -- Approved --> J([Account Active ✓ — Login works])
+    I -- Rejected --> K[See rejection reasons]
+    K --> L[Fix and re-upload docs]
+    L --> H`,
                 steps: [
-                    { step: 1, title: 'Go to the Registration Page', description: 'Open your browser and go to /register. You will see a student registration form.' },
-                    { step: 2, title: 'Fill Personal Details', description: 'Enter: Full Name, Email Address, Mobile Number, and choose a Password (minimum 8 characters).' },
-                    { step: 3, title: 'Set Username & Roll Number', description: 'Enter a unique username (letters and numbers only) and your Roll Number if already issued.' },
-                    { step: 4, title: 'Select Program & Batch', description: 'Choose your Program (e.g. B.Pharm) and Academic Session from the dropdown. This links you to your batch.' },
-                    { step: 5, title: 'Submit Registration', description: 'Click "Register". Your account is created with "Pending" status. You will be redirected to your dashboard.' },
-                    { step: 6, title: 'Wait for Admin Approval', description: 'An admin will review your registration and documents. You will see a banner on your dashboard showing your current status.', tip: 'You can log in any time to check your approval status and upload required documents.' },
+                    { step: 1, title: 'Go to the Registration Page', description: 'Open your browser and navigate to https://www.ldmcollege.com/register. You will see the student registration form.', note: 'You must use your own email address. One account per email is allowed.' },
+                    { step: 2, title: 'Fill Personal Details', description: 'Enter: Full Name (as on your documents), Email Address, Mobile Number (10 digits, no country code), and a Password of at least 8 characters including a number.', detail: 'Your email becomes your login ID. Use a personal email you check regularly, not a college/shared email.' },
+                    { step: 3, title: 'Set Username and Roll Number', description: 'Enter a unique username (only letters and numbers, no spaces). Enter your Roll Number if it has already been issued by the college.', tip: 'If your roll number has not been issued yet, leave that field blank — admin can add it later.' },
+                    { step: 4, title: 'Select Your Program and Session', description: 'Choose your Program (e.g. B.Pharm, D.Pharm) from the dropdown. Then select the Academic Session (e.g. 2024-2025). These fields link your account to the correct batch.', warning: 'Selecting the wrong program or session will place you in the wrong batch. Double-check before submitting.' },
+                    { step: 5, title: 'Submit Registration', description: 'Click the "Register" button. The system creates your account with a status of "Pending" and redirects you to your student dashboard where a status banner is visible.' },
+                    { step: 6, title: 'Upload Your Documents', description: 'Without closing the browser, click "Profile & Docs" in the sidebar. Upload: Passport Photo (clear face photo, JPG/PNG), 10th Marksheet (PDF or image), 12th Marksheet (PDF or image), and Aadhaar Card (scan of both sides).', tip: 'Upload all documents immediately after registering. The admin needs them to approve your account.' },
+                    { step: 7, title: 'Wait for Admin Approval', description: 'Check your dashboard daily. A status banner shows your current state: Pending / Under Review / Active / Rejected. Once set to Active, all ERP features unlock automatically.', note: 'Approval usually takes 1-3 working days. Contact the college office if you have been waiting longer than a week.' },
                 ],
                 relatedIds: ['upload-profile-docs', 'student-login'],
             },
@@ -490,12 +576,29 @@ export const teacherCategories: Category[] = [
                 title: 'Marking Student Attendance',
                 lastUpdated: '2026-02-27',
                 summary: 'Record daily attendance for your batch.',
+                overview: [
+                    'You must mark attendance separately for each batch you teach.',
+                    'Attendance defaults to today — you can change the date in the dropdown.',
+                    'Past attendance records cannot be edited. Contact admin for corrections.',
+                    'Students can see their own attendance from their dashboard.',
+                ],
+                flowDiagram: `flowchart TD
+    A([Go to Attendance]) --> B[Select Batch]
+    B --> C[Confirm or change Date]
+    C --> D[Student list loads]
+    D --> E[Mark each student: Present / Absent / Late]
+    E --> F[Click Save Attendance]
+    F --> G{All students marked?}
+    G -- Yes --> H([Records saved ✓])
+    G -- No --> I[Warning: unmarked students]
+    I --> E`,
                 steps: [
-                    { step: 1, title: 'Go to Attendance', description: 'Click "Attendance" in the sidebar.' },
-                    { step: 2, title: 'Select Batch and Date', description: 'Choose the Batch from the dropdown and confirm or change the date (defaults to today).' },
-                    { step: 3, title: 'Mark Each Student', description: 'A list of all students in the batch appears. Click "Present" or "Absent" for each student. You can also mark as "Late".' },
-                    { step: 4, title: 'Save Attendance', description: 'Click "Save Attendance". The records are saved and visible to the admin and each student.', warning: 'You can edit today\'s attendance but not past records. Contact admin for corrections.' },
-                    { step: 5, title: 'View Attendance Summary', description: 'The summary at the bottom shows the count of Present, Absent, and Late for today\'s session.', tip: 'Mark attendance as early as possible to ensure accurate records.' },
+                    { step: 1, title: 'Go to the Attendance Page', description: 'Click "Attendance" in the left sidebar. The attendance marking interface loads.' },
+                    { step: 2, title: 'Select Your Batch', description: 'Use the Batch dropdown at the top to select the class/section you want to mark attendance for. Only batches assigned to your account appear here.', note: 'If a batch is missing, ask the admin to assign it to your teacher account.' },
+                    { step: 3, title: 'Confirm the Date', description: 'The date picker defaults to today. If you are marking for a previous session (allowed only for today), change it using the date input. Click the calendar icon to open the date picker.', warning: 'You can only mark or edit attendance for today. Past records are locked. Contact the admin to correct historical errors.' },
+                    { step: 4, title: 'Mark Each Student', description: 'The student list shows every enrolled student in the batch. For each student, click one of: ✅ Present, ❌ Absent, or ⏰ Late. The selected button is highlighted. You must mark every student before saving.', tip: 'Use "Mark All Present" at the top to quickly mark everyone present, then individually change the absent/late students.' },
+                    { step: 5, title: 'Save the Attendance', description: 'Once all students are marked, click the blue "Save Attendance" button at the bottom. A confirmation toast appears: "Attendance saved successfully".', detail: 'The saved records are immediately visible to: (a) each student in their attendance section, (b) the admin in the Finance/Academic reports.' },
+                    { step: 6, title: 'Verify the Summary', description: 'After saving, a summary panel shows: Total Students, Present count, Absent count, Late count, and the Attendance % for that session.', tip: 'Screenshot the summary for your personal records before navigating away.' },
                 ],
             },
             {
