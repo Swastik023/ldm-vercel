@@ -8,7 +8,7 @@ export interface IUser extends Document {
     is_root: boolean;
     fullName: string;
     mobileNumber?: string;
-    status: 'active' | 'inactive' | 'suspended' | 'pending' | 'rejected';
+    status: 'active' | 'inactive' | 'suspended' | 'pending' | 'under_review' | 'rejected';
     provider: 'credentials' | 'google';
     image?: string;
     isEmailVerified: boolean;
@@ -21,6 +21,8 @@ export interface IUser extends Document {
     rollNumber?: string;
     sessionFrom?: number;
     sessionTo?: number;
+    // Admin review — per-field rejection reasons
+    rejectionReasons?: Record<string, string>;
     createdAt: Date;
 }
 
@@ -36,7 +38,7 @@ const UserSchema = new Schema<IUser>({
     role: { type: String, enum: ['admin', 'teacher', 'student', 'employee'], default: 'student' },
     is_root: { type: Boolean, default: false },
     fullName: { type: String, required: true },
-    status: { type: String, enum: ['active', 'inactive', 'suspended', 'pending', 'rejected'], default: 'pending' },
+    status: { type: String, enum: ['active', 'inactive', 'suspended', 'pending', 'under_review', 'rejected'], default: 'pending' },
     // Legacy academic refs (teacher/attendance system)
     session: { type: Schema.Types.ObjectId, ref: 'Session', default: null },
     batch: { type: Schema.Types.ObjectId, ref: 'Batch', default: null },
@@ -45,6 +47,8 @@ const UserSchema = new Schema<IUser>({
     rollNumber: { type: String, default: null },
     sessionFrom: { type: Number, default: null },
     sessionTo: { type: Number, default: null },
+    // Admin review
+    rejectionReasons: { type: Schema.Types.Mixed, default: null },
 }, { timestamps: true });
 
 // Compound unique index: same roll number cannot exist in the same class
@@ -52,4 +56,3 @@ const UserSchema = new Schema<IUser>({
 UserSchema.index({ classId: 1, rollNumber: 1 }, { unique: true, sparse: true });
 
 export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
-

@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Download, Search, Filter, ChevronLeft, ChevronRight, FileText, Image as ImageIcon, X, User, Phone, Mail, BookOpen, Hash, CalendarDays, CheckCircle2, XCircle, Eye, Clock } from 'lucide-react';
+import { Download, Search, Filter, ChevronLeft, ChevronRight, FileText, Image as ImageIcon, X, User, Phone, Mail, BookOpen, Hash, CalendarDays, CheckCircle2, XCircle, Eye, Clock, AlertTriangle } from 'lucide-react';
 
 interface Student {
     _id: string; fullName: string; email: string; mobileNumber?: string;
     username: string; rollNumber?: string; sessionFrom?: number; sessionTo?: number;
     isProfileComplete: boolean; status: string; createdAt: string; provider?: string;
+    rejectionReasons?: Record<string, string>;
     batch: { _id: string; name: string } | null;
     classId: { _id: string; className: string; sessionFrom: number; sessionTo: number } | null;
 }
@@ -20,21 +21,21 @@ interface StudentDocs {
 }
 
 const DOC_SLOTS = [
-    { urlKey: 'passportPhotoUrl', typeKey: 'passportPhotoType', label: 'Passport Photo' },
-    { urlKey: 'marksheet10Url', typeKey: 'marksheet10Type', label: '10th Marksheet' },
-    { urlKey: 'marksheet12Url', typeKey: 'marksheet12Type', label: '12th Marksheet' },
-    { urlKey: 'aadhaarFamilyIdUrl', typeKey: 'aadhaarFamilyIdType', label: 'Aadhaar/Family ID' },
+    { urlKey: 'passportPhotoUrl', typeKey: 'passportPhotoType', label: 'Passport Photo', fieldKey: 'passportPhoto' },
+    { urlKey: 'marksheet10Url', typeKey: 'marksheet10Type', label: '10th Marksheet', fieldKey: 'marksheet10' },
+    { urlKey: 'marksheet12Url', typeKey: 'marksheet12Type', label: '12th Marksheet', fieldKey: 'marksheet12' },
+    { urlKey: 'aadhaarFamilyIdUrl', typeKey: 'aadhaarFamilyIdType', label: 'Aadhaar/Family ID', fieldKey: 'aadhaarFamilyId' },
 ] as const;
 
 const CURRENT_YEAR = new Date().getFullYear();
 const SESSION_YEARS = Array.from({ length: 12 }, (_, i) => CURRENT_YEAR - 5 + i);
 
-type TabType = 'all' | 'pending' | 'rejected';
+type TabType = 'all' | 'pending' | 'under_review' | 'rejected';
 
 export default function AdminStudentsPage() {
     const [activeTab, setActiveTab] = useState<TabType>('all');
 
-    // ── All Students tab state ──────────────────────────────
+    // ── All Students tab ─────────────────────────────────
     const [students, setStudents] = useState<Student[]>([]);
     const [batches, setBatches] = useState<Batch[]>([]);
     const [total, setTotal] = useState(0);
@@ -50,10 +51,15 @@ export default function AdminStudentsPage() {
     const [studentDocs, setStudentDocs] = useState<StudentDocs | null>(null);
     const [docsLoading, setDocsLoading] = useState(false);
 
-    // ── Pending / Rejected tab state ────────────────────────
-    const [pendingStudents, setPendingStudents] = useState<Student[]>([]);
-    const [pendingLoading, setPendingLoading] = useState(false);
-    const [approveLoading, setApproveLoading] = useState<string | null>(null);
+    // ── Pending / Under Review / Rejected tabs ──────────
+    const [tabStudents, setTabStudents] = useState<Student[]>([]);
+    const [tabLoading, setTabLoading] = useState(false);
+    const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+    // ── Reject modal ────────────────────────────────────
+    const [rejectTarget, setRejectTarget] = useState<Student | null>(null);
+    const [rejectReasons, setRejectReasons] = useState<Record<string, string>>({});
+    const [rejectFields, setRejectFields] = useState<Set<string>>(new Set());
 
     const fetchStudents = useCallback(async () => {
         setLoading(true);
@@ -68,12 +74,12 @@ export default function AdminStudentsPage() {
         setLoading(false);
     }, [page, selectedBatch, sessionFrom, sessionTo, rollSearch]);
 
-    const fetchPending = useCallback(async (status: 'pending' | 'rejected') => {
-        setPendingLoading(true);
+    const fetchTabStudents = useCallback(async (status: string) => {
+        setTabLoading(true);
         const res = await fetch(`/api/admin/users/approve?status=${status}`);
         const data = await res.json();
-        if (data.success) setPendingStudents(data.users);
-        setPendingLoading(false);
+        if (data.success) setTabStudents(data.users);
+        setTabLoading(false);
     }, []);
 
     useEffect(() => { fetchStudents(); }, [fetchStudents]);
@@ -83,21 +89,64 @@ export default function AdminStudentsPage() {
     }, []);
 
     useEffect(() => {
-        if (activeTab === 'pending') fetchPending('pending');
-        else if (activeTab === 'rejected') fetchPending('rejected');
-    }, [activeTab, fetchPending]);
+        if (activeTab !== 'all') fetchTabStudents(activeTab);
+    }, [activeTab, fetchTabStudents]);
 
-    const handleApproveAction = async (userId: string, action: 'approve' | 'reject') => {
-        setApproveLoading(userId);
+    const handleApprove = async (userId: string) => {
+        setActionLoading(userId);
         const res = await fetch('/api/admin/users/approve', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, action }),
+            body: JSON.stringify({ userId, action: 'approve' }),
         });
         if (res.ok) {
-            setPendingStudents(prev => prev.filter(s => s._id !== userId));
+            setTabStudents(prev => prev.filter(s => s._id !== userId));
         }
-        setApproveLoading(null);
+        setActionLoading(null);
+    };
+
+    const openRejectModal = (student: Student) => {
+        setRejectTarget(student);
+        setRejectFields(new Set());
+        setRejectReasons({});
+    };
+
+    const toggleRejectField = (field: string) => {
+        setRejectFields(prev => {
+            const next = new Set(prev);
+            if (next.has(field)) {
+                next.delete(field);
+                const r = { ...rejectReasons };
+                delete r[field];
+                setRejectReasons(r);
+            } else {
+                next.add(field);
+            }
+            return next;
+        });
+    };
+
+    const submitReject = async () => {
+        if (!rejectTarget || rejectFields.size === 0) return;
+        // Validate all checked fields have reasons
+        for (const field of rejectFields) {
+            if (!rejectReasons[field]?.trim()) return;
+        }
+        setActionLoading(rejectTarget._id);
+        const res = await fetch('/api/admin/users/approve', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: rejectTarget._id,
+                action: 'reject',
+                rejectionReasons: rejectReasons,
+            }),
+        });
+        if (res.ok) {
+            setTabStudents(prev => prev.filter(s => s._id !== rejectTarget._id));
+            setRejectTarget(null);
+        }
+        setActionLoading(null);
     };
 
     const openStudentModal = async (student: Student) => {
@@ -129,10 +178,11 @@ export default function AdminStudentsPage() {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
+            <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit flex-wrap">
                 {([
                     { key: 'all', label: 'All Students' },
-                    { key: 'pending', label: '⏳ Pending Approval' },
+                    { key: 'pending', label: '📝 Pending' },
+                    { key: 'under_review', label: '⏳ Under Review' },
                     { key: 'rejected', label: '❌ Rejected' },
                 ] as { key: TabType; label: string }[]).map(tab => (
                     <button
@@ -145,18 +195,17 @@ export default function AdminStudentsPage() {
                 ))}
             </div>
 
-            {/* ── Pending / Rejected Tab ─────────────────────────────── */}
+            {/* ── Tab Content: Pending / Under Review / Rejected ─── */}
             {activeTab !== 'all' && (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    {pendingLoading ? (
+                    {tabLoading ? (
                         <div className="flex items-center justify-center py-20">
                             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500" />
                         </div>
-                    ) : pendingStudents.length === 0 ? (
+                    ) : tabStudents.length === 0 ? (
                         <div className="text-center py-16 text-gray-400">
                             <CheckCircle2 className="w-10 h-10 mx-auto mb-3 text-green-400 opacity-60" />
-                            <p className="font-medium">No {activeTab} students</p>
-                            <p className="text-sm mt-1">{activeTab === 'pending' ? 'All registrations have been reviewed.' : 'No rejected accounts.'}</p>
+                            <p className="font-medium">No {activeTab.replace('_', ' ')} students</p>
                         </div>
                     ) : (
                         <div className="overflow-x-auto">
@@ -165,17 +214,18 @@ export default function AdminStudentsPage() {
                                     <tr className="bg-gray-50 border-b border-gray-100">
                                         <th className="text-left px-5 py-3.5 font-semibold text-gray-600">Student</th>
                                         <th className="text-left px-5 py-3.5 font-semibold text-gray-600">Phone</th>
-                                        <th className="text-left px-5 py-3.5 font-semibold text-gray-600">Sign-in</th>
+                                        <th className="text-left px-5 py-3.5 font-semibold text-gray-600">Class</th>
+                                        <th className="text-left px-5 py-3.5 font-semibold text-gray-600">Profile</th>
                                         <th className="text-left px-5 py-3.5 font-semibold text-gray-600">Registered</th>
                                         <th className="text-left px-5 py-3.5 font-semibold text-gray-600">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
-                                    {pendingStudents.map(student => (
+                                    {tabStudents.map(student => (
                                         <tr key={student._id} className="hover:bg-gray-50/50 transition-colors">
                                             <td className="px-5 py-3.5">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
+                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 ${activeTab === 'rejected' ? 'bg-gradient-to-br from-red-400 to-red-600' : activeTab === 'under_review' ? 'bg-gradient-to-br from-blue-400 to-blue-600' : 'bg-gradient-to-br from-amber-400 to-orange-500'}`}>
                                                         {student.fullName.charAt(0)}
                                                     </div>
                                                     <div>
@@ -186,42 +236,48 @@ export default function AdminStudentsPage() {
                                             </td>
                                             <td className="px-5 py-3.5 text-gray-600 text-sm">{student.mobileNumber || '—'}</td>
                                             <td className="px-5 py-3.5">
-                                                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${student.provider === 'google' ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-600'}`}>
-                                                    {student.provider === 'google' ? '🔵 Google' : '📧 Email'}
-                                                </span>
+                                                {student.classId ? (
+                                                    <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-lg">{student.classId.className}</span>
+                                                ) : '—'}
+                                            </td>
+                                            <td className="px-5 py-3.5">
+                                                {student.isProfileComplete ? (
+                                                    <span className="text-xs text-green-600 font-semibold flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> Complete</span>
+                                                ) : (
+                                                    <span className="text-xs text-amber-600 font-semibold flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Incomplete</span>
+                                                )}
                                             </td>
                                             <td className="px-5 py-3.5 text-gray-400 text-xs">
                                                 {new Date(student.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                                             </td>
                                             <td className="px-5 py-3.5">
-                                                {activeTab === 'pending' ? (
-                                                    <div className="flex items-center gap-2">
-                                                        <button
-                                                            onClick={() => handleApproveAction(student._id, 'approve')}
-                                                            disabled={approveLoading === student._id}
-                                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
-                                                        >
-                                                            <CheckCircle2 className="w-3.5 h-3.5" />
-                                                            {approveLoading === student._id ? 'Saving…' : 'Approve'}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleApproveAction(student._id, 'reject')}
-                                                            disabled={approveLoading === student._id}
-                                                            className="flex items-center gap-1.5 px-3 py-1.5 bg-red-100 text-red-600 text-xs font-semibold rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50"
-                                                        >
-                                                            <XCircle className="w-3.5 h-3.5" /> Reject
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => handleApproveAction(student._id, 'approve')}
-                                                        disabled={approveLoading === student._id}
-                                                        className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
-                                                    >
-                                                        <CheckCircle2 className="w-3.5 h-3.5" />
-                                                        {approveLoading === student._id ? 'Saving…' : 'Re-Approve'}
+                                                <div className="flex items-center gap-2">
+                                                    {/* View docs */}
+                                                    <button onClick={() => openStudentModal(student)}
+                                                        className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                                                        <Eye className="w-3 h-3" /> View
                                                     </button>
-                                                )}
+                                                    {/* Approve button (for under_review and rejected) */}
+                                                    {(activeTab === 'under_review' || activeTab === 'rejected') && (
+                                                        <button
+                                                            onClick={() => handleApprove(student._id)}
+                                                            disabled={actionLoading === student._id}
+                                                            className="flex items-center gap-1 px-2.5 py-1.5 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                                                        >
+                                                            <CheckCircle2 className="w-3 h-3" />
+                                                            {actionLoading === student._id ? '…' : 'Approve'}
+                                                        </button>
+                                                    )}
+                                                    {/* Reject button (for under_review) */}
+                                                    {activeTab === 'under_review' && (
+                                                        <button
+                                                            onClick={() => openRejectModal(student)}
+                                                            className="flex items-center gap-1 px-2.5 py-1.5 bg-red-100 text-red-600 text-xs font-semibold rounded-lg hover:bg-red-200 transition-colors"
+                                                        >
+                                                            <XCircle className="w-3 h-3" /> Reject
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -232,7 +288,7 @@ export default function AdminStudentsPage() {
                 </div>
             )}
 
-            {/* ── All Students Tab ───────────────────────────────────── */}
+            {/* ── All Students Tab ───────────────────────────────── */}
             {activeTab === 'all' && (
                 <>
                     {/* Filters */}
@@ -274,7 +330,6 @@ export default function AdminStudentsPage() {
                         </div>
                     </div>
 
-                    {/* Table */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                         {loading ? (
                             <div className="flex items-center justify-center py-20">
@@ -316,16 +371,10 @@ export default function AdminStudentsPage() {
                                                 </td>
                                                 <td className="px-5 py-3.5">
                                                     {student.classId ? (
-                                                        <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">
-                                                            {student.classId.className}
-                                                        </span>
+                                                        <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">{student.classId.className}</span>
                                                     ) : student.batch ? (
-                                                        <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg">
-                                                            {student.batch.name}
-                                                        </span>
-                                                    ) : (
-                                                        <span className="text-gray-400 text-xs">—</span>
-                                                    )}
+                                                        <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg">{student.batch.name}</span>
+                                                    ) : '—'}
                                                 </td>
                                                 <td className="px-5 py-3.5">
                                                     {student.rollNumber
@@ -335,18 +384,14 @@ export default function AdminStudentsPage() {
                                                 <td className="px-5 py-3.5 text-gray-600 text-sm">{student.mobileNumber || '—'}</td>
                                                 <td className="px-5 py-3.5">
                                                     {student.isProfileComplete ? (
-                                                        <span className="flex items-center gap-1 text-green-600 text-xs font-semibold">
-                                                            <CheckCircle2 className="w-3.5 h-3.5" /> Complete
-                                                        </span>
+                                                        <span className="flex items-center gap-1 text-green-600 text-xs font-semibold"><CheckCircle2 className="w-3.5 h-3.5" /> Complete</span>
                                                     ) : (
-                                                        <span className="flex items-center gap-1 text-amber-600 text-xs font-semibold">
-                                                            <XCircle className="w-3.5 h-3.5" /> Pending
-                                                        </span>
+                                                        <span className="flex items-center gap-1 text-amber-600 text-xs font-semibold"><XCircle className="w-3.5 h-3.5" /> Pending</span>
                                                     )}
                                                 </td>
                                                 <td className="px-5 py-3.5">
-                                                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${student.status === 'active' ? 'bg-green-50 text-green-700' : student.status === 'pending' ? 'bg-amber-50 text-amber-700' : student.status === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
-                                                        {student.status}
+                                                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize ${student.status === 'active' ? 'bg-green-50 text-green-700' : student.status === 'under_review' ? 'bg-blue-50 text-blue-700' : student.status === 'pending' ? 'bg-amber-50 text-amber-700' : student.status === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
+                                                        {student.status === 'under_review' ? 'Under Review' : student.status}
                                                     </span>
                                                 </td>
                                                 <td className="px-5 py-3.5 text-gray-400 text-xs">
@@ -384,7 +429,7 @@ export default function AdminStudentsPage() {
                 </>
             )}
 
-            {/* ── Student Detail Modal ── */}
+            {/* ── Student Detail / Docs Modal ── */}
             {selectedStudent && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
@@ -401,12 +446,8 @@ export default function AdminStudentsPage() {
                                 </div>
                                 <div>
                                     <p className="font-bold text-gray-900 text-lg">{selectedStudent.fullName}</p>
-                                    {selectedStudent.classId && (
-                                        <p className="text-indigo-600 text-sm font-semibold">🎓 {selectedStudent.classId.className}</p>
-                                    )}
-                                    {selectedStudent.rollNumber && (
-                                        <p className="text-gray-400 text-xs">Roll: <span className="font-mono font-bold text-gray-700">{selectedStudent.rollNumber}</span></p>
-                                    )}
+                                    {selectedStudent.classId && <p className="text-indigo-600 text-sm font-semibold">🎓 {selectedStudent.classId.className}</p>}
+                                    {selectedStudent.rollNumber && <p className="text-gray-400 text-xs">Roll: <span className="font-mono font-bold text-gray-700">{selectedStudent.rollNumber}</span></p>}
                                 </div>
                             </div>
 
@@ -417,22 +458,21 @@ export default function AdminStudentsPage() {
                                 <InfoChip
                                     icon={<CalendarDays className="w-4 h-4 text-orange-500" />}
                                     label="Session"
-                                    value={selectedStudent.sessionFrom && selectedStudent.sessionTo
-                                        ? `${selectedStudent.sessionFrom}–${selectedStudent.sessionTo}`
-                                        : '—'}
+                                    value={selectedStudent.sessionFrom && selectedStudent.sessionTo ? `${selectedStudent.sessionFrom}–${selectedStudent.sessionTo}` : '—'}
                                 />
                                 <InfoChip icon={<Hash className="w-4 h-4 text-pink-500" />} label="Roll Number" value={selectedStudent.rollNumber || '—'} />
                                 <InfoChip
                                     icon={selectedStudent.status === 'active'
                                         ? <CheckCircle2 className="w-4 h-4 text-green-500" />
-                                        : selectedStudent.status === 'pending'
-                                            ? <Clock className="w-4 h-4 text-amber-500" />
-                                            : <XCircle className="w-4 h-4 text-red-500" />}
+                                        : selectedStudent.status === 'under_review' ? <Clock className="w-4 h-4 text-blue-500" />
+                                            : selectedStudent.status === 'rejected' ? <XCircle className="w-4 h-4 text-red-500" />
+                                                : <Clock className="w-4 h-4 text-amber-500" />}
                                     label="Account Status"
-                                    value={selectedStudent.status}
+                                    value={selectedStudent.status === 'under_review' ? 'Under Review' : selectedStudent.status}
                                 />
                             </div>
 
+                            {/* Documents */}
                             <div>
                                 <h4 className="font-bold text-gray-900 text-sm mb-3 flex items-center gap-2">
                                     <FileText className="w-4 h-4 text-blue-600" /> Documents
@@ -471,6 +511,70 @@ export default function AdminStudentsPage() {
                                         })}
                                     </div>
                                 )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Reject Modal (per-field rejection) ── */}
+            {rejectTarget && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                            <div>
+                                <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                                    <AlertTriangle className="w-5 h-5 text-red-500" /> Reject Documents
+                                </h3>
+                                <p className="text-gray-500 text-xs mt-1">Select which documents to reject and provide reasons</p>
+                            </div>
+                            <button onClick={() => setRejectTarget(null)} className="p-2 hover:bg-gray-100 rounded-lg">
+                                <X className="w-5 h-5 text-gray-500" />
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div className="mb-2">
+                                <p className="text-sm font-semibold text-gray-900">{rejectTarget.fullName}</p>
+                                <p className="text-xs text-gray-400">{rejectTarget.email}</p>
+                            </div>
+
+                            {DOC_SLOTS.map(({ fieldKey, label }) => (
+                                <div key={fieldKey} className="space-y-2">
+                                    <label className="flex items-center gap-3 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={rejectFields.has(fieldKey)}
+                                            onChange={() => toggleRejectField(fieldKey)}
+                                            className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                                        />
+                                        <span className="text-sm font-semibold text-gray-700">{label}</span>
+                                    </label>
+                                    {rejectFields.has(fieldKey) && (
+                                        <input
+                                            type="text"
+                                            placeholder={`Reason for rejecting ${label}…`}
+                                            value={rejectReasons[fieldKey] || ''}
+                                            onChange={e => setRejectReasons(prev => ({ ...prev, [fieldKey]: e.target.value }))}
+                                            className="w-full px-3 py-2 text-sm border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-400 bg-red-50/50 placeholder-red-300"
+                                        />
+                                    )}
+                                </div>
+                            ))}
+
+                            <div className="flex gap-3 pt-2">
+                                <button
+                                    onClick={() => setRejectTarget(null)}
+                                    className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={submitReject}
+                                    disabled={rejectFields.size === 0 || [...rejectFields].some(f => !rejectReasons[f]?.trim()) || actionLoading === rejectTarget._id}
+                                    className="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {actionLoading === rejectTarget._id ? 'Rejecting…' : `Reject ${rejectFields.size} Document${rejectFields.size !== 1 ? 's' : ''}`}
+                                </button>
                             </div>
                         </div>
                     </div>

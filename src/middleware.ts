@@ -8,15 +8,26 @@ export default withAuth(
         const role = token?.role;
         const status = token?.status;
 
-        // Blocked / pending users → pending-approval page (except API and the page itself)
+        // Pending / under_review / rejected users → pending-approval page
+        // (except API calls, the page itself, and complete-profile for rejected users doing re-upload)
         if (token && !path.startsWith('/api/') && path !== '/pending-approval') {
-            if (status === 'rejected' || status === 'pending') {
-                return NextResponse.redirect(new URL('/pending-approval', req.url));
+            if (status === 'pending' || status === 'under_review') {
+                // Allow pending users to access complete-profile to upload their docs
+                if (path !== '/complete-profile') {
+                    return NextResponse.redirect(new URL('/pending-approval', req.url));
+                }
+            }
+            if (status === 'rejected') {
+                // Rejected users can access complete-profile to re-upload rejected docs
+                if (path !== '/complete-profile') {
+                    return NextResponse.redirect(new URL('/pending-approval', req.url));
+                }
             }
         }
 
-        // If profile is incomplete, redirect to complete-profile (except if already there or calling the API)
-        if (token && !token.isProfileComplete && path !== '/complete-profile' && !path.startsWith('/api/')) {
+        // If profile is incomplete, redirect to complete-profile
+        // Only for active users (pending users go to pending-approval first, then complete-profile)
+        if (token && !token.isProfileComplete && status === 'active' && path !== '/complete-profile' && path !== '/pending-approval' && !path.startsWith('/api/')) {
             return NextResponse.redirect(new URL('/complete-profile', req.url));
         }
 

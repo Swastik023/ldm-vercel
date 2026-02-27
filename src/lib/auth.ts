@@ -86,10 +86,6 @@ export const authOptions: NextAuthOptions = {
                         isEmailVerified: true,
                     });
                 } else {
-                    // Existing user — block if rejected
-                    if (dbUser.status === 'rejected') {
-                        return '/login?error=AccountRejected';
-                    }
                     // Link Google, mark verified
                     await User.findByIdAndUpdate(dbUser._id, {
                         isEmailVerified: true,
@@ -108,8 +104,6 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user, account, trigger }) {
             // ── Initial sign-in via credentials ─────────────────────────────
             if (user && account?.provider === 'credentials') {
-                // Block rejected accounts at token level too
-                if ((user as any).status === 'rejected') throw new Error('AccountRejected');
                 token.role = user.role;
                 token.username = user.username;
                 token.id = user.id;

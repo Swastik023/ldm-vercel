@@ -30,6 +30,7 @@ async function uploadToCloudinary(
     });
 }
 
+// POST — initial submission OR re-upload of rejected fields
 export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -38,8 +39,13 @@ export async function POST(req: NextRequest) {
 
     await dbConnect();
     const userId = session.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+        return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+    }
 
     const formData = await req.formData();
+    const isReupload = formData.get('isReupload') === 'true';
 
     // Academic fields (required for Google users who didn't fill them at registration)
     const mobileNumber = formData.get('mobileNumber') as string | null;
@@ -54,7 +60,83 @@ export async function POST(req: NextRequest) {
     const marksheet12 = formData.get('marksheet12') as File | null;
     const aadhaarFamilyId = formData.get('aadhaarFamilyId') as File | null;
 
-    // All 4 docs mandatory
+    const extOf = (f: File) => f.name.split('.').pop()?.toLowerCase() || '';
+
+    // ── Re-upload flow: only validate & upload the fields that were rejected ──
+    if (isReupload) {
+        const folder = `ldm-student-docs/${userId}`;
+        const ts = Date.now();
+        const docUpdates: Record<string, unknown> = {};
+        const filesToUpload: { key: string; file: File; ext: string }[] = [];
+
+        // Collect only the files that were re-submitted
+        if (passportPhoto) {
+            const ext = extOf(passportPhoto);
+            if (!PHOTO_TYPES.includes(ext))
+                return NextResponse.json({ success: false, message: 'Passport photo must be an image.' }, { status: 400 });
+            if (passportPhoto.size / (1024 * 1024) > MAX_SIZE_MB)
+                return NextResponse.json({ success: false, message: `Passport Photo exceeds ${MAX_SIZE_MB}MB.` }, { status: 400 });
+            filesToUpload.push({ key: 'passportPhoto', file: passportPhoto, ext });
+        }
+        if (marksheet10) {
+            const ext = extOf(marksheet10);
+            if (!DOC_TYPES.includes(ext))
+                return NextResponse.json({ success: false, message: '10th Marksheet must be PDF or image.' }, { status: 400 });
+            if (marksheet10.size / (1024 * 1024) > MAX_SIZE_MB)
+                return NextResponse.json({ success: false, message: `10th Marksheet exceeds ${MAX_SIZE_MB}MB.` }, { status: 400 });
+            filesToUpload.push({ key: 'marksheet10', file: marksheet10, ext });
+        }
+        if (marksheet12) {
+            const ext = extOf(marksheet12);
+            if (!DOC_TYPES.includes(ext))
+                return NextResponse.json({ success: false, message: '12th Marksheet must be PDF or image.' }, { status: 400 });
+            if (marksheet12.size / (1024 * 1024) > MAX_SIZE_MB)
+                return NextResponse.json({ success: false, message: `12th Marksheet exceeds ${MAX_SIZE_MB}MB.` }, { status: 400 });
+            filesToUpload.push({ key: 'marksheet12', file: marksheet12, ext });
+        }
+        if (aadhaarFamilyId) {
+            const ext = extOf(aadhaarFamilyId);
+            if (!DOC_TYPES.includes(ext))
+                return NextResponse.json({ success: false, message: 'Aadhaar/Family ID must be PDF or image.' }, { status: 400 });
+            if (aadhaarFamilyId.size / (1024 * 1024) > MAX_SIZE_MB)
+                return NextResponse.json({ success: false, message: `Aadhaar/Family ID exceeds ${MAX_SIZE_MB}MB.` }, { status: 400 });
+            filesToUpload.push({ key: 'aadhaarFamilyId', file: aadhaarFamilyId, ext });
+        }
+
+        // Upload re-submitted files
+        for (const { key, file, ext } of filesToUpload) {
+            const resourceType = ext === 'pdf' ? 'raw' as const : 'image' as const;
+            const keyMap: Record<string, string> = {
+                passportPhoto: 'passport-photo',
+                marksheet10: 'marksheet-10',
+                marksheet12: 'marksheet-12',
+                aadhaarFamilyId: 'aadhaar-family-id',
+            };
+            const result = await uploadToCloudinary(
+                Buffer.from(await file.arrayBuffer()),
+                folder,
+                `${ts}-${keyMap[key]}`,
+                resourceType
+            );
+            docUpdates[`${key}Url`] = result.secure_url;
+            docUpdates[`${key}Type`] = ext;
+        }
+
+        // Update documents in DB
+        if (Object.keys(docUpdates).length > 0) {
+            await StudentDocuments.findOneAndUpdate({ userId }, docUpdates);
+        }
+
+        // Clear rejection reasons and set back to under_review
+        await User.findByIdAndUpdate(userId, {
+            status: 'under_review',
+            rejectionReasons: null,
+        });
+
+        return NextResponse.json({ success: true, message: 'Documents resubmitted for review!' });
+    }
+
+    // ── Initial submission: All 4 docs mandatory ──────────────────────────────
     if (!passportPhoto || !marksheet10 || !marksheet12 || !aadhaarFamilyId) {
         return NextResponse.json({
             success: false,
@@ -62,8 +144,7 @@ export async function POST(req: NextRequest) {
         }, { status: 400 });
     }
 
-    // Validate file types explicitly (never guessed from URL)
-    const extOf = (f: File) => f.name.split('.').pop()?.toLowerCase() || '';
+    // Validate file types
     const ppExt = extOf(passportPhoto);
     const m10Ext = extOf(marksheet10);
     const m12Ext = extOf(marksheet12);
@@ -88,7 +169,11 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Handle academic fields for Google users ────────────────────────────────
-    const updateFields: Record<string, unknown> = { isProfileComplete: true };
+    const updateFields: Record<string, unknown> = {
+        isProfileComplete: true,
+        status: 'under_review', // After docs submitted → waiting for admin review
+        rejectionReasons: null,
+    };
 
     if (batchId && sessionFrom && sessionTo && rollNumber) {
         const sfInt = parseInt(sessionFrom);
@@ -160,5 +245,5 @@ export async function POST(req: NextRequest) {
     // Mark profile complete + update academic fields
     await (User.findByIdAndUpdate as any)(userId, updateFields);
 
-    return NextResponse.json({ success: true, message: 'Profile completed successfully!' });
+    return NextResponse.json({ success: true, message: 'Documents submitted for review! Admin will approve shortly.' });
 }

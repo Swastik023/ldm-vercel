@@ -200,7 +200,7 @@ export default function CompleteProfilePage() {
             if (!data.success) { setError(data.message); return; }
             await update();
             setDone(true);
-            setTimeout(() => { window.location.href = '/student'; }, 1500);
+            setTimeout(() => { window.location.href = '/pending-approval'; }, 1500);
         } catch {
             setError('Upload failed. Please check your connection and try again.');
         } finally { setLoading(false); }
