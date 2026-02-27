@@ -9,6 +9,7 @@ import { AuditLog } from '@/models/AuditLog';
 import cloudinary from '@/lib/cloudinary';
 import mongoose from 'mongoose';
 import { Batch, Program } from '@/models/Academic'; // Register for batch.program populate()
+import '@/models/Academic';
 
 // POST /api/student/documents/upload — Upload document + form responses
 export async function POST(req: NextRequest) {

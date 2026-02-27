@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { StudentFee } from '@/models/StudentFee';
 import CoursePricing from '@/models/CoursePricing';
 import { Batch, Program } from '@/models/Academic';
+import '@/models/Academic';
 import { User } from '@/models/User';
 
 const round2 = (n: number) => Math.round(n * 100) / 100;

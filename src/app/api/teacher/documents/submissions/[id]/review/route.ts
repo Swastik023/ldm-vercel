@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { DocumentSubmission } from '@/models/DocumentSubmission';
 import { DocumentRequirement } from '@/models/DocumentRequirement';
 import { Assignment } from '@/models/Academic';
+import '@/models/Academic';
 import { AuditLog } from '@/models/AuditLog';
 import mongoose from 'mongoose';
 

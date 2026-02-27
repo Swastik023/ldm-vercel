@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 
 export async function PUT(
     req: Request,

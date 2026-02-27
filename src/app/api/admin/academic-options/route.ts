@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { Session, Batch, Program } from '@/models/Academic';
+import '@/models/Academic';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 

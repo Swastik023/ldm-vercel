@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 // Register models needed for populate()
 import '@/models/Class';
 import { Batch, Session } from '@/models/Academic';
+import '@/models/Academic';
 
 // GET /api/student/dashboard — returns real data for the logged-in student
 export async function GET() {

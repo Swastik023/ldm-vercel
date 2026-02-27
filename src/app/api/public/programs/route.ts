@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { Program } from '@/models/Academic';
+import '@/models/Academic';
 
 export async function GET() {
     try {

@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { StudentDocuments } from '@/models/StudentDocuments';
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 import { Class } from '@/models/Class';
 import cloudinary from '@/lib/cloudinary';
 

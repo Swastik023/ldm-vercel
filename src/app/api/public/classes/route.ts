@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { Class } from '@/models/Class';
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 
 // GET /api/public/classes?batchId=X
 // Returns existing classes for a given batch (so registration form can show previews)

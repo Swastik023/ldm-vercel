@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { StudentFee } from '@/models/StudentFee';
 import { Batch, Session } from '@/models/Academic';
+import '@/models/Academic';
 import '@/models/Class';
 
 // GET /api/admin/students/export — download all students as CSV

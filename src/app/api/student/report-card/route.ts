@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { Result } from '@/models/Result';
 import { User } from '@/models/User';
 import { Subject } from '@/models/Academic'; // Register Subject for populate()
+import '@/models/Academic';
 
 export async function GET(req: Request) {
     const session = await getServerSession(authOptions);

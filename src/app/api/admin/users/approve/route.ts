@@ -6,6 +6,7 @@ import { User } from '@/models/User';
 // Must import so Mongoose registers schemas before populate() runs
 import '@/models/Class';
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 
 // PATCH /api/admin/users/approve
 // Approve:  { userId, action: 'approve' }

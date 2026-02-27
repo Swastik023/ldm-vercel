@@ -7,6 +7,7 @@ import { DocumentSubmission } from '@/models/DocumentSubmission';
 import { User } from '@/models/User';
 import mongoose from 'mongoose';
 import { Subject } from '@/models/Academic'; // Register Subject for populate()
+import '@/models/Academic';
 
 // GET /api/student/documents — List all requirements applicable to this student with submission status
 export async function GET() {

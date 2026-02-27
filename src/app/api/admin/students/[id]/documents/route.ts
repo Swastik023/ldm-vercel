@@ -7,6 +7,7 @@ import { User } from '@/models/User';
 import mongoose from 'mongoose';
 // Register models needed for populate()
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 
 // GET /api/admin/students/[id]/documents — admin views a specific student's documents
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

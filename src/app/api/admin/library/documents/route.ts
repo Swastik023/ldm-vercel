@@ -8,6 +8,7 @@ import { AuditLog } from '@/models/AuditLog';
 import { User } from '@/models/User';
 import mongoose from 'mongoose';
 import { Program } from '@/models/Academic'; // Register Program for course_id populate()
+import '@/models/Academic';
 import '@/models/LibraryCategory'; // Register LibraryCategory for category_id populate()
 
 // GET /api/admin/library/documents

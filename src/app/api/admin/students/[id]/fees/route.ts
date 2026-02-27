@@ -6,6 +6,7 @@ import { StudentFee } from '@/models/StudentFee';
 import mongoose from 'mongoose';
 import CoursePricing from '@/models/CoursePricing';
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers

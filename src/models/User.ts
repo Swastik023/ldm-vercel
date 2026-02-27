@@ -1,4 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import './Academic';
+import './Class';
 
 export interface IUser extends Document {
     username: string;

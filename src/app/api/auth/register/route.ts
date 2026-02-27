@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 import { Class } from '@/models/Class';
 
 export async function POST(req: NextRequest) {

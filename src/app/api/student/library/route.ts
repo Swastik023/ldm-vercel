@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { LibraryDocument } from '@/models/LibraryDocument';
 import { User } from '@/models/User';
 import { Batch, Program } from '@/models/Academic'; // Register Batch+Program for populate()
+import '@/models/Academic';
 import '@/models/LibraryCategory'; // Register LibraryCategory for populate()
 
 

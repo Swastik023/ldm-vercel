@@ -7,6 +7,7 @@ import { StudentDocuments } from '@/models/StudentDocuments';
 import { StudentFee } from '@/models/StudentFee';
 import mongoose from 'mongoose';
 import { Batch } from '@/models/Academic';
+import '@/models/Academic';
 import '@/models/Class';
 
 // PATCH /api/admin/students/[id] — edit student details
