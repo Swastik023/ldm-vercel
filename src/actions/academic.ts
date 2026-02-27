@@ -28,6 +28,18 @@ export async function createProgram(data: any) {
     }
 }
 
+export async function updateProgram(id: string, data: any) {
+    await dbConnect();
+    try {
+        const program = await Program.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        if (!program) throw new Error('Program not found');
+        revalidatePath('/admin/academic');
+        return { success: true, data: JSON.parse(JSON.stringify(program)) };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
 export async function deleteProgram(id: string) {
     await dbConnect();
     try {
@@ -56,6 +68,18 @@ export async function createSession(data: any) {
     try {
         // Default is_active to true so sessions show up immediately in student creation
         const session = await Session.create({ ...data, is_active: true });
+        revalidatePath('/admin/academic');
+        return { success: true, data: JSON.parse(JSON.stringify(session)) };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
+export async function updateSession(id: string, data: any) {
+    await dbConnect();
+    try {
+        const session = await Session.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        if (!session) throw new Error('Session not found');
         revalidatePath('/admin/academic');
         return { success: true, data: JSON.parse(JSON.stringify(session)) };
     } catch (error: any) {
@@ -105,6 +129,18 @@ export async function createBatch(data: any) {
     }
 }
 
+export async function updateBatch(id: string, data: any) {
+    await dbConnect();
+    try {
+        const batch = await Batch.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        if (!batch) throw new Error('Batch not found');
+        revalidatePath('/admin/batches');
+        return { success: true, data: JSON.parse(JSON.stringify(batch)) };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
 export async function deleteBatch(id: string) {
     await dbConnect();
     try {
@@ -136,6 +172,18 @@ export async function createSubject(data: any) {
     await dbConnect();
     try {
         const subject = await Subject.create(data);
+        revalidatePath('/admin/academic');
+        return { success: true, data: JSON.parse(JSON.stringify(subject)) };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
+export async function updateSubject(id: string, data: any) {
+    await dbConnect();
+    try {
+        const subject = await Subject.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        if (!subject) throw new Error('Subject not found');
         revalidatePath('/admin/academic');
         return { success: true, data: JSON.parse(JSON.stringify(subject)) };
     } catch (error: any) {

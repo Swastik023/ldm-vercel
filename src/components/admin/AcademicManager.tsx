@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { createProgram, createSession, deleteProgram, deleteSession } from '@/actions/academic';
+import { createProgram, createSession, deleteProgram, deleteSession, updateProgram, updateSession } from '@/actions/academic';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { toast } from 'react-hot-toast';
-import { Calendar, BookOpen, Plus, Trash2 } from 'lucide-react';
+import { Calendar, BookOpen, Plus, Trash2, Edit2, X, CheckSquare } from 'lucide-react';
 
 interface Program {
     _id: string;
@@ -47,6 +47,13 @@ export default function AcademicManager({
     const [sessName, setSessName] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
+    // Edit States
+    const [editProgramId, setEditProgramId] = useState<string | null>(null);
+    const [editProgForm, setEditProgForm] = useState({ name: '', code: '', duration_years: 3, total_semesters: 6 });
+    const [editSessionId, setEditSessionId] = useState<string | null>(null);
+    const [editSessForm, setEditSessForm] = useState({ name: '', start_date: '', end_date: '', is_active: false });
+    const [editLoading, setEditLoading] = useState(false);
 
     const handleProgramSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -110,6 +117,36 @@ export default function AcademicManager({
         finally { setDeletingId(null); }
     };
 
+    const handleEditProgramSave = async (id: string) => {
+        setEditLoading(true);
+        try {
+            const result = await updateProgram(id, editProgForm);
+            if (result.success) {
+                toast.success('Program updated');
+                setPrograms(programs.map(p => p._id === id ? result.data : p));
+                setEditProgramId(null);
+            } else {
+                toast.error(result.error || 'Failed to update program');
+            }
+        } catch { toast.error('An error occurred'); }
+        finally { setEditLoading(false); }
+    };
+
+    const handleEditSessionSave = async (id: string) => {
+        setEditLoading(true);
+        try {
+            const result = await updateSession(id, editSessForm);
+            if (result.success) {
+                toast.success('Session updated');
+                setSessions(sessions.map(s => s._id === id ? result.data : s));
+                setEditSessionId(null);
+            } else {
+                toast.error(result.error || 'Failed to update session');
+            }
+        } catch { toast.error('An error occurred'); }
+        finally { setEditLoading(false); }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex space-x-4 border-b pb-2">
@@ -155,22 +192,34 @@ export default function AcademicManager({
                         {programs.length === 0 && <p className="text-gray-400 text-sm py-4">No programs created yet.</p>}
                         {programs.map((prog) => (
                             <Card key={prog._id} className="bg-gray-50">
-                                <CardContent className="p-4 flex justify-between items-center">
-                                    <div>
-                                        <h4 className="font-bold">{prog.name} <span className="font-mono text-xs text-gray-500">({prog.code})</span></h4>
-                                        <p className="text-sm text-gray-500">{prog.duration_years} Years • {prog.total_semesters} Semesters</p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <BookOpen className="text-gray-300 h-5 w-5" />
-                                        <button
-                                            onClick={() => handleDeleteProgram(prog._id)}
-                                            disabled={deletingId === prog._id}
-                                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-40"
-                                            title="Delete program"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
+                                <CardContent className="p-4">
+                                    {editProgramId === prog._id ? (
+                                        <div className="space-y-3">
+                                            <h4 className="font-bold text-sm">Edit Program</h4>
+                                            <Input placeholder="Name" value={editProgForm.name} onChange={e => setEditProgForm({ ...editProgForm, name: e.target.value })} />
+                                            <Input placeholder="Code" value={editProgForm.code} onChange={e => setEditProgForm({ ...editProgForm, code: e.target.value })} />
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <Input type="number" placeholder="Years" value={editProgForm.duration_years} onChange={e => setEditProgForm({ ...editProgForm, duration_years: Number(e.target.value) })} />
+                                                <Input type="number" placeholder="Semesters" value={editProgForm.total_semesters} onChange={e => setEditProgForm({ ...editProgForm, total_semesters: Number(e.target.value) })} />
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <Button size="sm" onClick={() => handleEditProgramSave(prog._id)} disabled={editLoading || !editProgForm.name || !editProgForm.code} className="flex-1 bg-blue-600 hover:bg-blue-700">{editLoading ? 'Saving...' : 'Save'}</Button>
+                                                <Button size="sm" variant="outline" onClick={() => setEditProgramId(null)} className="flex-1">Cancel</Button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <h4 className="font-bold">{prog.name} <span className="font-mono text-xs text-gray-500">({prog.code})</span></h4>
+                                                <p className="text-sm text-gray-500">{prog.duration_years} Years • {prog.total_semesters} Semesters</p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <BookOpen className="text-gray-300 h-5 w-5 mr-1" />
+                                                <button onClick={() => { setEditProgramId(prog._id); setEditProgForm({ name: prog.name, code: prog.code, duration_years: prog.duration_years, total_semesters: prog.total_semesters }); }} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit program"><Edit2 size={16} /></button>
+                                                <button onClick={() => handleDeleteProgram(prog._id)} disabled={deletingId === prog._id} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-40" title="Delete program"><Trash2 size={16} /></button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
                         ))}
@@ -209,29 +258,44 @@ export default function AcademicManager({
                         {sessions.length === 0 && <p className="text-gray-400 text-sm py-4">No sessions created yet.</p>}
                         {sessions.map((sess) => (
                             <Card key={sess._id} className="bg-gray-50">
-                                <CardContent className="p-4 flex justify-between items-center">
-                                    <div>
-                                        <h4 className="font-bold flex items-center gap-2">
-                                            {sess.name}
-                                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sess.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
-                                                {sess.is_active ? 'Active' : 'Inactive'}
-                                            </span>
-                                        </h4>
-                                        <p className="text-sm text-gray-500">
-                                            {new Date(sess.start_date).toLocaleDateString()} – {new Date(sess.end_date).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Calendar className="text-gray-300 h-5 w-5" />
-                                        <button
-                                            onClick={() => handleDeleteSession(sess._id)}
-                                            disabled={deletingId === sess._id}
-                                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-40"
-                                            title="Delete session"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
+                                <CardContent className="p-4">
+                                    {editSessionId === sess._id ? (
+                                        <div className="space-y-3">
+                                            <h4 className="font-bold text-sm">Edit Session</h4>
+                                            <Input placeholder="Session Name" value={editSessForm.name} onChange={e => setEditSessForm({ ...editSessForm, name: e.target.value })} />
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <Input type="date" value={editSessForm.start_date.split('T')[0]} onChange={e => setEditSessForm({ ...editSessForm, start_date: e.target.value })} />
+                                                <Input type="date" value={editSessForm.end_date.split('T')[0]} onChange={e => setEditSessForm({ ...editSessForm, end_date: e.target.value })} />
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm">
+                                                <input type="checkbox" id={`active-${sess._id}`} checked={editSessForm.is_active} onChange={e => setEditSessForm({ ...editSessForm, is_active: e.target.checked })} className="rounded text-blue-600" />
+                                                <label htmlFor={`active-${sess._id}`}>Is Active currently?</label>
+                                            </div>
+                                            <div className="flex gap-2 mt-2">
+                                                <Button size="sm" onClick={() => handleEditSessionSave(sess._id)} disabled={editLoading || !editSessForm.name || !editSessForm.start_date || !editSessForm.end_date} className="flex-1 bg-blue-600 hover:bg-blue-700">{editLoading ? 'Saving...' : 'Save'}</Button>
+                                                <Button size="sm" variant="outline" onClick={() => setEditSessionId(null)} className="flex-1">Cancel</Button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <h4 className="font-bold flex items-center gap-2">
+                                                    {sess.name}
+                                                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sess.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
+                                                        {sess.is_active ? 'Active' : 'Inactive'}
+                                                    </span>
+                                                </h4>
+                                                <p className="text-sm text-gray-500">
+                                                    {new Date(sess.start_date).toLocaleDateString()} – {new Date(sess.end_date).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="text-gray-300 h-5 w-5 mr-1" />
+                                                <button onClick={() => { setEditSessionId(sess._id); setEditSessForm({ name: sess.name, start_date: sess.start_date, end_date: sess.end_date, is_active: sess.is_active }); }} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit session"><Edit2 size={16} /></button>
+                                                <button onClick={() => handleDeleteSession(sess._id)} disabled={deletingId === sess._id} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-40" title="Delete session"><Trash2 size={16} /></button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
                         ))}

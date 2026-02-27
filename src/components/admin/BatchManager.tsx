@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { createBatch, deleteBatch } from '@/actions/academic';
+import { createBatch, deleteBatch, updateBatch } from '@/actions/academic';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { toast } from 'react-hot-toast';
-import { Trash2, Users, Plus } from 'lucide-react';
+import { Trash2, Users, Plus, Edit2, X, CheckSquare } from 'lucide-react';
 
 interface Program {
     _id: string;
@@ -43,6 +43,11 @@ export default function BatchManager({
     const [sessionId, setSessionId] = useState('');
     const [capacity, setCapacity] = useState(60);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Edit states
+    const [editBatchId, setEditBatchId] = useState<string | null>(null);
+    const [editForm, setEditForm] = useState<{ name: string; programId: string; sessionId: string }>({ name: '', programId: '', sessionId: '' });
+    const [editLoading, setEditLoading] = useState(false);
 
     // Filter states
     const [filterProgram, setFilterProgram] = useState('');
@@ -106,6 +111,33 @@ export default function BatchManager({
             }
         } catch (error) {
             toast.error('An error occurred');
+        }
+    };
+
+    const handleEditSave = async (id: string) => {
+        setEditLoading(true);
+        try {
+            const result = await updateBatch(id, {
+                name: editForm.name,
+                program: editForm.programId,
+                session: editForm.sessionId
+            });
+
+            if (result.success) {
+                toast.success('Batch updated');
+                const prog = programs.find(p => p._id === editForm.programId);
+                const sess = sessions.find(s => s._id === editForm.sessionId);
+                if (prog && sess) {
+                    setBatches(batches.map(b => b._id === id ? { ...b, name: editForm.name, program: prog, session: sess } : b));
+                }
+                setEditBatchId(null);
+            } else {
+                toast.error(result.error || 'Failed to update batch');
+            }
+        } catch (error) {
+            toast.error('An error occurred');
+        } finally {
+            setEditLoading(false);
         }
     };
 
@@ -192,19 +224,45 @@ export default function BatchManager({
                 {filteredBatches.map((batch) => (
                     <Card key={batch._id} className="hover:shadow-md transition-shadow">
                         <CardContent className="p-5">
-                            <div className="flex justify-between items-start mb-2">
-                                <div>
-                                    <h3 className="font-bold text-lg">{batch.name}</h3>
-                                    <p className="text-sm text-gray-500">{batch.program?.code} • {batch.session?.name}</p>
+                            {editBatchId === batch._id ? (
+                                <div className="space-y-3">
+                                    <h3 className="text-sm font-bold text-gray-700">Edit Batch</h3>
+                                    <Input value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} placeholder="Batch Name" />
+                                    <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editForm.programId} onChange={e => setEditForm({ ...editForm, programId: e.target.value })}>
+                                        <option value="">Select Program</option>
+                                        {programs.map(p => <option key={p._id} value={p._id}>{p.name}</option>)}
+                                    </select>
+                                    <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editForm.sessionId} onChange={e => setEditForm({ ...editForm, sessionId: e.target.value })}>
+                                        <option value="">Select Session</option>
+                                        {sessions.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                                    </select>
+                                    <div className="flex gap-2">
+                                        <Button size="sm" onClick={() => handleEditSave(batch._id)} disabled={editLoading || !editForm.name || !editForm.programId || !editForm.sessionId} className="flex-1 bg-blue-600 hover:bg-blue-700">{editLoading ? 'Saving...' : 'Save'}</Button>
+                                        <Button size="sm" variant="outline" onClick={() => setEditBatchId(null)} className="flex-1">Cancel</Button>
+                                    </div>
                                 </div>
-                                <button onClick={() => handleDelete(batch._id)} className="text-red-500 hover:text-red-700">
-                                    <Trash2 className="h-4 w-4" />
-                                </button>
-                            </div>
-                            <div className="flex items-center gap-2 text-gray-600 mt-4">
-                                <Users className="h-4 w-4" />
-                                <span className="text-sm">{batch.current_students} / {batch.capacity} Students</span>
-                            </div>
+                            ) : (
+                                <>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h3 className="font-bold text-lg">{batch.name}</h3>
+                                            <p className="text-sm text-gray-500">{batch.program?.code} • {batch.session?.name}</p>
+                                        </div>
+                                        <div className="flex gap-2 text-gray-400">
+                                            <button onClick={() => { setEditBatchId(batch._id); setEditForm({ name: batch.name, programId: batch.program._id, sessionId: batch.session._id }); }} className="hover:text-blue-600 transition-colors">
+                                                <Edit2 className="h-4 w-4" />
+                                            </button>
+                                            <button onClick={() => handleDelete(batch._id)} className="hover:text-red-600 transition-colors">
+                                                <Trash2 className="h-4 w-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-gray-600 mt-4">
+                                        <Users className="h-4 w-4" />
+                                        <span className="text-sm">{batch.current_students} / {batch.capacity} Students</span>
+                                    </div>
+                                </>
+                            )}
                         </CardContent>
                     </Card>
                 ))}

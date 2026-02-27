@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { createSubject, deleteSubject } from '@/actions/academic';
+import { createSubject, deleteSubject, updateSubject } from '@/actions/academic';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { toast } from 'react-hot-toast';
-import { Book, Plus, Trash2 } from 'lucide-react';
+import { Book, Plus, Trash2, Edit2, X, CheckSquare } from 'lucide-react';
 
 interface Program {
     _id: string;
@@ -43,6 +43,11 @@ export default function SubjectManager({
     const [programId, setProgramId] = useState('');
     const [semester, setSemester] = useState(1);
     const [type, setType] = useState('theory');
+
+    // Edit states
+    const [editSubjectId, setEditSubjectId] = useState<string | null>(null);
+    const [editSubForm, setEditSubForm] = useState({ name: '', code: '', credits: 3, programId: '', semester: 1, type: 'theory' });
+    const [editLoading, setEditLoading] = useState(false);
 
     // Filter
     const [filterProgram, setFilterProgram] = useState('');
@@ -90,6 +95,32 @@ export default function SubjectManager({
             }
         } catch { toast.error('An error occurred'); }
         finally { setDeletingId(null); }
+    };
+
+    const handleEditSave = async (id: string) => {
+        setEditLoading(true);
+        try {
+            const result = await updateSubject(id, {
+                name: editSubForm.name,
+                code: editSubForm.code,
+                credits: editSubForm.credits,
+                program: editSubForm.programId,
+                semester: editSubForm.semester,
+                type: editSubForm.type
+            });
+
+            if (result.success) {
+                toast.success('Subject updated');
+                const prog = programs.find(p => p._id === editSubForm.programId);
+                if (prog) {
+                    setSubjects(subjects.map(s => s._id === id ? { ...result.data, program: prog } : s));
+                }
+                setEditSubjectId(null);
+            } else {
+                toast.error(result.error || 'Failed to update subject');
+            }
+        } catch { toast.error('An error occurred'); }
+        finally { setEditLoading(false); }
     };
 
     return (
@@ -174,27 +205,57 @@ export default function SubjectManager({
                 <div className="grid gap-3 md:grid-cols-2">
                     {filteredSubjects.map((sub) => (
                         <Card key={sub._id} className="bg-gray-50">
-                            <CardContent className="p-4 flex gap-3 items-start">
-                                <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5">
-                                    <Book className="h-4 w-4" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h4 className="font-bold text-sm truncate">{sub.name}</h4>
-                                    <div className="text-xs text-gray-500 space-y-0.5 mt-0.5">
-                                        <p>{sub.code} • {sub.credits} Credits • {sub.type}</p>
-                                        <span className="bg-gray-200 inline-block px-2 py-0.5 rounded text-xs">
-                                            {sub.program?.code} – Sem {sub.semester}
-                                        </span>
+                            <CardContent className="p-4">
+                                {editSubjectId === sub._id ? (
+                                    <div className="space-y-3">
+                                        <h4 className="font-bold text-sm">Edit Subject</h4>
+                                        <Input placeholder="Subject Name" value={editSubForm.name} onChange={e => setEditSubForm({ ...editSubForm, name: e.target.value })} />
+                                        <Input placeholder="Subject Code" value={editSubForm.code} onChange={e => setEditSubForm({ ...editSubForm, code: e.target.value })} />
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editSubForm.programId} onChange={e => setEditSubForm({ ...editSubForm, programId: e.target.value, semester: 1 })}>
+                                                {programs.map(p => <option key={p._id} value={p._id}>{p.name}</option>)}
+                                            </select>
+                                            <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editSubForm.semester} onChange={e => setEditSubForm({ ...editSubForm, semester: Number(e.target.value) })}>
+                                                {getSemesterOptions(editSubForm.programId).map(s => <option key={s} value={s}>Sem {s}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <Input type="number" placeholder="Credits" value={editSubForm.credits} onChange={e => setEditSubForm({ ...editSubForm, credits: Number(e.target.value) })} />
+                                            <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editSubForm.type} onChange={e => setEditSubForm({ ...editSubForm, type: e.target.value })}>
+                                                <option value="theory">Theory</option>
+                                                <option value="practical">Practical</option>
+                                                <option value="elective">Elective</option>
+                                            </select>
+                                        </div>
+                                        <div className="flex gap-2 mt-2">
+                                            <Button size="sm" onClick={() => handleEditSave(sub._id)} disabled={editLoading || !editSubForm.name || !editSubForm.code || !editSubForm.programId} className="flex-1 bg-blue-600 hover:bg-blue-700">{editLoading ? 'Saving...' : 'Save'}</Button>
+                                            <Button size="sm" variant="outline" onClick={() => setEditSubjectId(null)} className="flex-1">Cancel</Button>
+                                        </div>
                                     </div>
-                                </div>
-                                <button
-                                    onClick={() => handleDelete(sub._id)}
-                                    disabled={deletingId === sub._id}
-                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-40 shrink-0"
-                                    title="Delete subject"
-                                >
-                                    <Trash2 size={15} />
-                                </button>
+                                ) : (
+                                    <div className="flex gap-3 items-start">
+                                        <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5">
+                                            <Book className="h-4 w-4" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="font-bold text-sm truncate">{sub.name}</h4>
+                                            <div className="text-xs text-gray-500 space-y-0.5 mt-0.5">
+                                                <p>{sub.code} • {sub.credits} Credits • {sub.type}</p>
+                                                <span className="bg-gray-200 inline-block px-2 py-0.5 rounded text-xs">
+                                                    {sub.program?.code} – Sem {sub.semester}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex shrink-0">
+                                            <button onClick={() => { setEditSubjectId(sub._id); setEditSubForm({ name: sub.name, code: sub.code, credits: sub.credits, programId: sub.program?._id || '', semester: sub.semester, type: sub.type }); }} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit subject">
+                                                <Edit2 size={15} />
+                                            </button>
+                                            <button onClick={() => handleDelete(sub._id)} disabled={deletingId === sub._id} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-40" title="Delete subject">
+                                                <Trash2 size={15} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     ))}
