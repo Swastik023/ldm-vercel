@@ -90,14 +90,23 @@ export default function HelpPage({ role, categories, roleLabel }: Props) {
             const html2pdf = (await import('html2pdf.js')).default;
             const el = printRef.current;
             if (!el) return;
-            await html2pdf().set({
-                margin: [12, 14, 12, 14],
-                filename: `${selectedArticle.title.replace(/[^a-z0-9]/gi, '_')}_LDM_Help.pdf`,
-                image: { type: 'jpeg', quality: 0.95 },
-                html2canvas: { scale: 2, useCORS: true, logging: false },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
-            }).from(el).save();
+            // Temporarily hide elements that crash html2canvas (e.g. Mermaid SVGs with oklch colors)
+            const diagramEls = el.querySelectorAll('[data-pdf-ignore]');
+            diagramEls.forEach(d => ((d as HTMLElement).style.display = 'none'));
+            try {
+                await html2pdf().set({
+                    margin: [12, 14, 12, 14],
+                    filename: `${selectedArticle.title.replace(/[^a-z0-9]/gi, '_')}_LDM_Help.pdf`,
+                    image: { type: 'jpeg', quality: 0.92 },
+                    html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: false },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+                }).from(el).save();
+            } finally {
+                diagramEls.forEach(d => ((d as HTMLElement).style.display = ''));
+            }
+        } catch (err) {
+            console.error('PDF generation failed:', err);
         } finally {
             setPdfLoading(false);
         }
@@ -242,9 +251,9 @@ export default function HelpPage({ role, categories, roleLabel }: Props) {
                                 </div>
                             )}
 
-                            {/* Flow diagram */}
+                            {/* Flow diagram — hidden from PDF to prevent html2canvas freeze on oklch colors */}
                             {selectedArticle.flowDiagram && showDiagram && (
-                                <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+                                <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm" data-pdf-ignore>
                                     <div className="flex items-center gap-2 mb-4 text-sm font-bold text-gray-700">
                                         <GitBranch className="w-4 h-4 text-gray-500" />Process Flow Diagram
                                     </div>

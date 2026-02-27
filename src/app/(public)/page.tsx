@@ -6,9 +6,10 @@ import HeroSlider from '@/components/public/HeroSlider';
 import WhyChooseUs from '@/components/public/WhyChooseUs';
 import Link from 'next/link';
 import {
-    FaHospital, FaLeaf, FaUserMd, FaHandshake,
+    FaHospital, FaUserMd, FaHandshake,
     FaGraduationCap, FaAward, FaBook, FaPhone, FaWhatsapp,
-    FaArrowRight, FaClock, FaCheckCircle,
+    FaArrowRight, FaClock, FaCheckCircle, FaFlask, FaBriefcaseMedical,
+    FaGlobeAsia, FaStethoscope, FaStore, FaQuoteLeft, FaLeaf,
 } from 'react-icons/fa';
 import * as gtag from '@/lib/gtag';
 
@@ -40,10 +41,60 @@ const Counter = ({ value }: { value: string }) => {
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 const stats = [
-    { number: '100+', label: 'Students Enrolled', icon: <FaGraduationCap className="w-8 h-8" /> },
-    { number: '98%', label: 'Placement Rate', icon: <FaAward className="w-8 h-8" /> },
-    { number: '23+', label: 'Years Experience', icon: <FaClock className="w-8 h-8" /> },
+    { number: '15+', label: 'Courses Offered', icon: <FaBook className="w-8 h-8" /> },
+    { number: '100%', label: 'Placement Support', icon: <FaBriefcaseMedical className="w-8 h-8" /> },
+    { number: '2022', label: 'Established', icon: <FaAward className="w-8 h-8" /> },
     { number: '5+', label: 'Partner Hospitals', icon: <FaHospital className="w-8 h-8" /> },
+];
+
+const careerOpportunities = [
+    {
+        num: '01',
+        title: 'Govt & Private Hospitals',
+        desc: 'Secure stable and respectable positions in top-tier government and private medical facilities across the nation.',
+        icon: <FaHospital className="w-7 h-7" />,
+        accent: 'from-blue-500 to-blue-700',
+    },
+    {
+        num: '02',
+        title: 'Medical Tourism Abroad',
+        desc: 'Leverage your skills globally. High demand for Indian paramedical professionals in international healthcare markets.',
+        icon: <FaGlobeAsia className="w-7 h-7" />,
+        accent: 'from-cyan-500 to-blue-600',
+    },
+    {
+        num: '03',
+        title: 'Diagnostic Labs & Emergency',
+        desc: 'Join leading diagnostic chains and emergency services as a skilled technician with strong career growth.',
+        icon: <FaFlask className="w-7 h-7" />,
+        accent: 'from-indigo-500 to-blue-700',
+    },
+    {
+        num: '04',
+        title: 'Entrepreneurship',
+        desc: 'Gain the knowledge and confidence to open your own diagnostic centre, lab, clinic, or healthcare facility.',
+        icon: <FaStore className="w-7 h-7" />,
+        accent: 'from-blue-600 to-indigo-700',
+    },
+];
+
+const testimonials = [
+    {
+        name: 'Miss Priya',
+        course: 'DMLT',
+        placement: 'Dr Dharam Dev Hospital & Institute',
+        quote: 'The practical training at LDM was a game-changer. The labs are equipped with the latest technology, which made my transition to a real hospital environment seamless.',
+        initials: 'MP',
+        color: 'bg-blue-600',
+    },
+    {
+        name: 'Mr. Nishant Kumar',
+        course: 'DMLT',
+        placement: 'Lifecell Lab, Karnal',
+        quote: 'Placement support is 100% genuine. The faculty guided me through interviews, and today I am working as a skilled lab technician with a great future ahead.',
+        initials: 'NK',
+        color: 'bg-indigo-600',
+    },
 ];
 
 const collaborations = [
@@ -80,10 +131,10 @@ const collaborations = [
 ];
 
 const popularCourses = [
-    { id: 'dmlt', title: 'Diploma in Medical Laboratory Technology', abbr: 'DMLT', duration: '2.5 Years', eligibility: '12th Pass Science', borderColor: 'border-blue-500', badgeColor: 'bg-blue-100 text-blue-700' },
-    { id: 'dott', title: 'Diploma in Operation Theatre Technology', abbr: 'DOTT', duration: '2.5 Years', eligibility: '12th Pass Science', borderColor: 'border-purple-500', badgeColor: 'bg-purple-100 text-purple-700' },
-    { id: 'dat', title: 'Diploma in Anaesthesia Technology', abbr: 'DAT', duration: '2.5 Years', eligibility: '12th Pass Science', borderColor: 'border-teal-500', badgeColor: 'bg-teal-100 text-teal-700' },
-    { id: 'drit', title: 'Diploma in Radiology & Imaging Technology', abbr: 'DRIT', duration: '2.5 Years', eligibility: '12th Pass Science', borderColor: 'border-orange-500', badgeColor: 'bg-orange-100 text-orange-700' },
+    { id: 'dmlt', title: 'B.Voc in Medical Laboratory Technology', abbr: 'B.Voc MLT', duration: '3 Years', eligibility: '12th Pass (Science)', borderColor: 'border-blue-600', badgeColor: 'bg-blue-100 text-blue-700' },
+    { id: 'drit', title: 'B.Voc in Radiology & Imaging Technology', abbr: 'B.Voc RIT', duration: '3 Years', eligibility: '12th Pass (Science)', borderColor: 'border-indigo-500', badgeColor: 'bg-indigo-100 text-indigo-700' },
+    { id: 'dott', title: 'B.Voc in Operation Theatre Technology', abbr: 'B.Voc OT', duration: '3 Years', eligibility: '12th Pass (Science)', borderColor: 'border-cyan-500', badgeColor: 'bg-cyan-100 text-cyan-700' },
+    { id: 'dpt', title: 'Diploma in Physiotherapy (DPT)', abbr: 'DPT', duration: '2 Years', eligibility: '12th Pass (Science)', borderColor: 'border-teal-500', badgeColor: 'bg-teal-100 text-teal-700' },
 ];
 
 const certificates = [
@@ -266,7 +317,45 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* ── Welcome Section ── */}
+            {/* ── Career Opportunities ── */}
+            <section className="py-20 bg-gradient-to-br from-[#0a1628] via-[#0d2a54] to-[#0f1f4a]" aria-label="Career Opportunities">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-14"
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-blue-300 text-sm font-medium mb-4 border border-white/10">
+                            <FaBriefcaseMedical className="w-4 h-4" />
+                            Career Pathways
+                        </div>
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Unlock Diverse <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300">Career Paths</span></h2>
+                        <p className="text-white/60 text-lg max-w-2xl mx-auto">Our comprehensive curriculum prepares you for various roles in the rapidly growing healthcare sector.</p>
+                    </motion.div>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {careerOpportunities.map((c, i) => (
+                            <motion.div
+                                key={c.num}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.12, duration: 0.5 }}
+                                className="relative group p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:scale-[1.03] transition-all duration-300"
+                            >
+                                <div className="absolute top-4 right-4 text-5xl font-black text-white/5 select-none">{c.num}</div>
+                                <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${c.accent} text-white mb-5 shadow-lg`}>
+                                    {c.icon}
+                                </div>
+                                <h3 className="text-lg font-bold text-white mb-2">{c.title}</h3>
+                                <p className="text-white/55 text-sm leading-relaxed">{c.desc}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ── Welcome / About Section ── */}
             <section className="py-16 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
@@ -277,20 +366,23 @@ export default function HomePage() {
                     >
                         <div>
                             <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">About Us</p>
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5">Welcome to LDM College</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5">Building the Future of Healthcare</h2>
+                            <p className="text-gray-600 mb-2 leading-relaxed">
+                                <strong>Mission:</strong> To create competent healthcare professionals who are industry-ready, ethically strong, and community-focused.
+                            </p>
                             <p className="text-gray-600 mb-4 leading-relaxed">
-                                We are committed to providing quality education in the field of paramedical sciences and skill development courses.
-                                Our state-of-the-art facilities and experienced faculty ensure that students receive the best possible training for their future careers.
+                                <strong>Vision:</strong> To bridge the gap between demand and supply in healthcare services by skilling the youth of India.
                             </p>
                             <ul className="space-y-2 mb-7">
-                                {['Industry-aligned curriculum', 'Hands-on clinical training', 'Expert medical faculty', '98% placement support'].map(pt => (
+                                {['Industry-aligned curriculum', 'Hands-on clinical training', 'Expert medical faculty', '100% Placement Support'].map(pt => (
                                     <li key={pt} className="flex items-center gap-2 text-sm text-gray-700">
                                         <FaCheckCircle className="w-4 h-4 text-green-500 shrink-0" /> {pt}
                                     </li>
                                 ))}
                             </ul>
-                            <Link href="/courses" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-200 transition-shadow">
-                                Explore Courses <FaArrowRight className="w-4 h-4" />
+                            <p className="text-blue-700 font-semibold italic mb-6">&ldquo;Skilling Youth, Serving Society.&rdquo;</p>
+                            <Link href="/courses" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-200 transition-shadow">
+                                Explore All 15 Courses <FaArrowRight className="w-4 h-4" />
                             </Link>
                         </div>
                         <motion.div
@@ -303,7 +395,7 @@ export default function HomePage() {
                                 <img src="/home/Home-about.jpeg" alt="LDM Campus" className="object-cover w-full h-72 md:h-96" />
                             </div>
                             <div className="absolute -bottom-5 -right-5 w-28 h-28 bg-blue-100 rounded-full -z-10" />
-                            <div className="absolute -top-5 -left-5 w-20 h-20 bg-purple-100 rounded-full -z-10" />
+                            <div className="absolute -top-5 -left-5 w-20 h-20 bg-indigo-100 rounded-full -z-10" />
                         </motion.div>
                     </motion.div>
                 </div>
@@ -339,6 +431,49 @@ export default function HomePage() {
                 </div>
             </section>
 
+            {/* ── Testimonials ── */}
+            <section className="py-20 bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50" aria-label="Student Testimonials">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-12"
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-4">
+                            <FaStethoscope className="w-4 h-4" />
+                            Student Success Stories
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">What Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Alumni Say</span></h2>
+                    </motion.div>
+                    <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        {testimonials.map((t, i) => (
+                            <motion.div
+                                key={t.name}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.15 }}
+                                className="bg-white rounded-2xl p-8 shadow-lg border border-blue-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                            >
+                                <FaQuoteLeft className="w-8 h-8 text-blue-200 mb-4" />
+                                <p className="text-gray-600 italic leading-relaxed mb-6">&ldquo;{t.quote}&rdquo;</p>
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-12 h-12 rounded-full ${t.color} flex items-center justify-center text-white font-bold text-lg shrink-0`}>
+                                        {t.initials}
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-gray-900">{t.name}</p>
+                                        <p className="text-sm text-blue-600 font-medium">{t.course} Graduate</p>
+                                        <p className="text-xs text-gray-500 mt-0.5">Working at {t.placement}</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* ── Why Choose Us ── */}
             <WhyChooseUs />
 
@@ -352,14 +487,15 @@ export default function HomePage() {
                 >
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Ready to Start Your Journey?</h2>
                     <p className="text-white/70 mb-8 max-w-xl mx-auto">Join hundreds of students building successful careers in healthcare</p>
+                    <p className="text-white/80 text-lg font-medium mb-2">Dr. Dharam Dev Hospital &amp; Institute, Kachhwa, Karnal-132001</p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/collect-info" className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-blue-700 font-bold rounded-xl hover:bg-gray-50 transition-colors shadow-lg">
                             <FaGraduationCap /> Apply Now
                         </Link>
-                        <a href="tel:+919896607010" className="inline-flex items-center justify-center gap-2 px-8 py-3.5 border-2 border-white/50 text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
-                            <FaPhone /> Call Us
+                        <a href="tel:+918957570000" className="inline-flex items-center justify-center gap-2 px-8 py-3.5 border-2 border-white/50 text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
+                            <FaPhone /> +91 8957570000
                         </a>
-                        <a href="https://wa.me/919896607010" target="_blank" rel="noopener noreferrer" onClick={() => gtag.event.whatsappClick('homepage_cta')} className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-400 transition-colors">
+                        <a href="https://wa.me/918957570000" target="_blank" rel="noopener noreferrer" onClick={() => gtag.event.whatsappClick('homepage_cta')} className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-400 transition-colors">
                             <FaWhatsapp /> WhatsApp
                         </a>
                     </div>
@@ -368,7 +504,7 @@ export default function HomePage() {
 
             {/* Floating WhatsApp Button */}
             <a
-                href="https://wa.me/919896607010"
+                href="https://wa.me/918957570000"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => gtag.event.whatsappClick('homepage_float')}

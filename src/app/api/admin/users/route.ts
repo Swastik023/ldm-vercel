@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
-import { Batch, Session } from '@/models/Academic';
+import { Batch } from '@/models/Academic';
 import '@/models/Academic';
 import bcrypt from 'bcryptjs';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { autoCreateStudentFee } from '@/lib/autoCreateStudentFee';
 
 // GET /api/admin/users - list all users
 export async function GET(request: NextRequest) {
@@ -61,8 +62,21 @@ export async function POST(request: NextRequest) {
         await Batch.findByIdAndUpdate(batchId, { $inc: { current_students: 1 } });
     }
 
+    // Auto-create default fee record from CoursePricing (best-effort — never blocks user creation)
+    let feeAutoCreated = false;
+    let feeAutoMessage = 'No batch assigned — fee not auto-created.';
+    if (role === 'student' && batchId) {
+        try {
+            const result = await autoCreateStudentFee(newUser._id, batchId);
+            feeAutoCreated = result.created;
+            feeAutoMessage = result.reason;
+        } catch (feeErr: any) {
+            feeAutoMessage = `Fee auto-creation failed: ${feeErr?.message}`;
+        }
+    }
+
     const { password: _pw, ...userWithoutPw } = newUser.toObject();
-    return NextResponse.json({ success: true, user: userWithoutPw }, { status: 201 });
+    return NextResponse.json({ success: true, user: userWithoutPw, feeAutoCreated, feeAutoMessage }, { status: 201 });
 }
 
 

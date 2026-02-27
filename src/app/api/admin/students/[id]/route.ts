@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import { Batch } from '@/models/Academic';
 import '@/models/Academic';
 import '@/models/Class';
+import { autoCreateStudentFee } from '@/lib/autoCreateStudentFee';
 
 // PATCH /api/admin/students/[id] — edit student details
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -35,6 +36,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
             .populate('batch', 'name')
             .populate('classId', 'className')
             .lean();
+
+        // Auto-create default fee if a batch is being assigned for the first time (best-effort)
+        if (update.batch) {
+            try {
+                await autoCreateStudentFee(id, update.batch as string);
+            } catch {
+                // Silent — fee auto-creation failure never blocks the PATCH
+            }
+        }
 
         return NextResponse.json({ success: true, student: updated });
     } catch (err: any) {

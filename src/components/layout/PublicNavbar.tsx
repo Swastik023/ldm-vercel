@@ -95,8 +95,8 @@ const Header = () => (
                 <div className="flex items-center gap-2 shrink-0">
                     <Link href="/" aria-label="Home">
                         <div className="relative group">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
-                            <img src="/ldm-college-logo.jpeg" alt="LDM College" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-blue-400 transition duration-300" loading="lazy" />
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
+                            <img src="/newlogo.png" alt="LDM College" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-blue-400 transition duration-300" loading="lazy" />
                         </div>
                     </Link>
                     <div className="relative group hidden sm:block">

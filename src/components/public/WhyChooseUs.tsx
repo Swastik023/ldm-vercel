@@ -7,8 +7,8 @@ import IconWrapper from '@/components/public/IconWrapper';
 
 const features = [
     {
-        name: 'Experienced Faculty',
-        description: 'Learn from highly qualified and experienced medical professionals',
+        name: 'Skilled Healthcare Demand',
+        description: 'India faces an acute shortage of trained paramedical professionals — your skills will always be in demand.',
         icon: (
             <IconWrapper color="blue">
                 <Icons.Users className="h-6 w-6 text-white" />
@@ -16,8 +16,8 @@ const features = [
         ),
     },
     {
-        name: 'Practical Training',
-        description: 'Hands-on experience with modern medical equipment',
+        name: 'Modern Lab Facilities',
+        description: 'State-of-the-art Pathology, Radiology & Physiotherapy labs for hands-on, real-world training.',
         icon: (
             <IconWrapper color="purple">
                 <Icons.BookOpen className="h-6 w-6 text-white" />
@@ -25,8 +25,8 @@ const features = [
         ),
     },
     {
-        name: 'Industry Recognition',
-        description: 'Courses recognized by leading healthcare institutions',
+        name: 'NAAC & UGC Accredited',
+        description: 'Our programs are recognized by NAAC, UGC, NCTE, and NABH — ensuring national credibility.',
         icon: (
             <IconWrapper color="green">
                 <Icons.Award className="h-6 w-6 text-white" />
@@ -34,8 +34,8 @@ const features = [
         ),
     },
     {
-        name: 'Flexible Schedule',
-        description: 'Convenient class timings for working professionals',
+        name: 'Hospital Tie-Ups',
+        description: 'Clinical training at Dr. Dharam Dev Hospital & Institute — real patient exposure from day one.',
         icon: (
             <IconWrapper color="red">
                 <Icons.Clock className="h-6 w-6 text-white" />
@@ -43,21 +43,19 @@ const features = [
         ),
     },
     {
-        name: 'Quality Education',
-        description: 'Comprehensive curriculum with focus on practical skills',
+        name: 'Respectable Profession',
+        description: 'A career in paramedical is a respected, essential, and high-growth field with job security.',
         icon: (
             <IconWrapper color="orange">
-                {/* Using Award as Star replacement if needed, or check Icons export */}
                 <Icons.Award className="h-6 w-6 text-white" />
             </IconWrapper>
         ),
     },
     {
-        name: 'Placement Support',
-        description: 'Career guidance and placement assistance',
+        name: 'Placement Cell Support',
+        description: 'Dedicated placement cell offering career guidance, internship opportunities, and scholarships.',
         icon: (
             <IconWrapper color="teal">
-                {/* Using GraduationCap or Handshake as Shield replacement if needed */}
                 <Icons.Handshake className="h-6 w-6 text-white" />
             </IconWrapper>
         ),

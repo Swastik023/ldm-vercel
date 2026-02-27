@@ -9,12 +9,12 @@ import * as gtag from '@/lib/gtag';
 // ─── Contact Info ────────────────────────────────────────────────────────────
 
 const contactInfo = {
-    address: "Dr. Dharam Dev Memorial Hospital, Kachhwa, Karnal-132001 (Haryana)",
-    phone: ["+91 941-698-8804", "+91 941-625-7057"],
-    email: "devhospital08@gmail.com",
-    hours: "24/7 Emergency Services",
-    emergencyNumber: "+91 989-660-7010",
-    whatsapp: "https://wa.me/+919896607010?text=Hi,%20I%20would%20like%20to%20get%20more%20information%20about%20LDM%20College.",
+    address: "Dr. Dharam Dev Hospital & Institute, Kachhwa, Karnal-132001 (Haryana)",
+    phone: ["+91 8957570000"],
+    email: "ldmparamedical@gmail.com",
+    hours: "Mon–Sat: 9:00 AM – 5:00 PM",
+    emergencyNumber: "+91 8957570000",
+    whatsapp: "https://wa.me/918957570000?text=Hi,%20I%20would%20like%20to%20get%20more%20information%20about%20LDM%20College.",
 };
 
 const SUBJECT_OPTIONS = [
