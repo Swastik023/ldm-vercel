@@ -21,9 +21,12 @@ interface StudentDocs {
     customDocuments?: { _id: string; title: string; fileUrl: string; fileType: string; }[];
 }
 interface FeeRecord {
-    _id: string; feeLabel: string; academicYear: string;
-    totalFee: number; amountPaid: number; amountLeft: number;
-    notes?: string;
+    _id: string; feeLabel: string; academicYear: string; notes?: string;
+    baseFee: number;       // From course pricing
+    discountPct: number;   // 0–100
+    finalFee: number;      // baseFee - (baseFee * discountPct / 100)
+    amountPaid: number;    // sum of payments
+    amountRemaining: number; // finalFee - amountPaid
     payments: { _id: string; amount: number; date: string; note?: string; }[];
 }
 
@@ -83,7 +86,9 @@ export default function AdminStudentsPage() {
     const [editLoading, setEditLoading] = useState(false);
 
     // Fee form
-    const [newFee, setNewFee] = useState({ totalFee: '', feeLabel: 'Course Fee', academicYear: `${CURRENT_YEAR}-${CURRENT_YEAR + 1}`, notes: '' });
+    const [newFee, setNewFee] = useState({ baseFee: '', discountPct: '0', feeLabel: 'Course Fee', academicYear: `${CURRENT_YEAR}-${CURRENT_YEAR + 1}`, notes: '' });
+    const [editFeeId, setEditFeeId] = useState<string | null>(null);
+    const [editFeeForm, setEditFeeForm] = useState<{ baseFee: string; discountPct: string; finalFee: string; notes: string }>({ baseFee: '', discountPct: '0', finalFee: '', notes: '' });
     const [paymentForm, setPaymentForm] = useState<{ feeId: string; amount: string; note: string } | null>(null);
     const [feeLoading, setFeeLoading] = useState(false);
 
@@ -159,11 +164,32 @@ export default function AdminStudentsPage() {
     };
 
     const addFee = async () => {
-        if (!selectedStudent || !newFee.totalFee) return;
+        if (!selectedStudent || !newFee.baseFee) return;
         setFeeLoading(true);
-        const res = await fetch(`/api/admin/students/${selectedStudent._id}/fees`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newFee) });
+        const res = await fetch(`/api/admin/students/${selectedStudent._id}/fees`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...newFee, baseFee: Number(newFee.baseFee), discountPct: Number(newFee.discountPct) }),
+        });
         const d = await res.json();
-        if (d.success) { setStudentFees(prev => [d.fee, ...prev]); setNewFee({ totalFee: '', feeLabel: 'Course Fee', academicYear: `${CURRENT_YEAR}-${CURRENT_YEAR + 1}`, notes: '' }); }
+        if (d.success) { setStudentFees(prev => [d.fee, ...prev]); setNewFee({ baseFee: '', discountPct: '0', feeLabel: 'Course Fee', academicYear: `${CURRENT_YEAR}-${CURRENT_YEAR + 1}`, notes: '' }); }
+        setFeeLoading(false);
+    };
+
+    const saveFeeEdit = async (feeId: string) => {
+        if (!selectedStudent) return;
+        setFeeLoading(true);
+        const res = await fetch(`/api/admin/students/${selectedStudent._id}/fees`, {
+            method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                feeId, action: 'update_fee',
+                baseFee: Number(editFeeForm.baseFee),
+                discountPct: editFeeForm.discountPct !== '' ? Number(editFeeForm.discountPct) : undefined,
+                finalFee: editFeeForm.finalFee !== '' && editFeeForm.discountPct === '' ? Number(editFeeForm.finalFee) : undefined,
+                notes: editFeeForm.notes,
+            }),
+        });
+        const d = await res.json();
+        if (d.success) { setStudentFees(prev => prev.map(f => f._id === feeId ? d.fee : f)); setEditFeeId(null); }
         setFeeLoading(false);
     };
 
@@ -438,13 +464,20 @@ export default function AdminStudentsPage() {
                                         <div className="flex gap-2">
                                             <div className="relative flex-1">
                                                 <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                                                <input className={`${inputCls} pl-8`} placeholder="Total Fee Amount" type="number" value={newFee.totalFee} onChange={e => setNewFee(p => ({ ...p, totalFee: e.target.value }))} />
+                                                <input className={`${inputCls} pl-8`} placeholder="Base Fee" type="number" value={newFee.baseFee} onChange={e => setNewFee(p => ({ ...p, baseFee: e.target.value }))} />
                                             </div>
-                                            <button onClick={addFee} disabled={feeLoading || !newFee.totalFee}
+                                            <input className={`${inputCls} w-28`} placeholder="Discount %" type="number" min="0" max="100" value={newFee.discountPct} onChange={e => setNewFee(p => ({ ...p, discountPct: e.target.value }))} />
+                                            <button onClick={addFee} disabled={feeLoading || !newFee.baseFee}
                                                 className="px-4 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1.5">
                                                 <Plus className="w-4 h-4" /> Add
                                             </button>
                                         </div>
+                                        {newFee.baseFee && (
+                                            <p className="text-xs text-blue-600">
+                                                Final Fee: ₹{Math.round(Number(newFee.baseFee) - (Number(newFee.baseFee) * Number(newFee.discountPct || 0)) / 100).toLocaleString('en-IN')}
+                                                {Number(newFee.discountPct) > 0 && ` (${newFee.discountPct}% discount)`}
+                                            </p>
+                                        )}
                                         <input className={inputCls} placeholder="Notes (optional)" value={newFee.notes} onChange={e => setNewFee(p => ({ ...p, notes: e.target.value }))} />
                                     </div>
 
@@ -452,7 +485,8 @@ export default function AdminStudentsPage() {
                                     {studentFees.length === 0 ? (
                                         <div className="text-center py-8 text-gray-400"><IndianRupee className="w-8 h-8 mx-auto mb-2 opacity-40" /><p className="text-sm">No fee records yet</p></div>
                                     ) : studentFees.map(fee => {
-                                        const pct = fee.totalFee > 0 ? Math.round((fee.amountPaid / fee.totalFee) * 100) : 0;
+                                        const pct = fee.finalFee > 0 ? Math.min(100, Math.round((fee.amountPaid / fee.finalFee) * 100)) : 0;
+                                        const remaining = fee.amountRemaining ?? Math.max(0, fee.finalFee - fee.amountPaid);
                                         return (
                                             <div key={fee._id} className="border border-gray-200 rounded-xl overflow-hidden">
                                                 <div className="p-4 space-y-3">
@@ -462,6 +496,10 @@ export default function AdminStudentsPage() {
                                                             <p className="text-gray-400 text-xs">{fee.academicYear}</p>
                                                         </div>
                                                         <div className="flex gap-2 items-center">
+                                                            <button onClick={() => { setEditFeeId(fee._id); setEditFeeForm({ baseFee: String(fee.baseFee), discountPct: String(fee.discountPct), finalFee: String(fee.finalFee), notes: fee.notes || '' }); }}
+                                                                className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-200 flex items-center gap-1">
+                                                                <Edit2 className="w-3 h-3" /> Edit
+                                                            </button>
                                                             <button onClick={() => setPaymentForm({ feeId: fee._id, amount: '', note: '' })}
                                                                 className="px-2.5 py-1 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 flex items-center gap-1">
                                                                 <Plus className="w-3 h-3" /> Payment
@@ -469,21 +507,58 @@ export default function AdminStudentsPage() {
                                                             <button onClick={() => deleteFee(fee._id)} className="p-1 text-gray-300 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
                                                         </div>
                                                     </div>
-                                                    {/* Summary chips */}
-                                                    <div className="grid grid-cols-3 gap-2 text-center">
+
+                                                    {/* Inline edit form */}
+                                                    {editFeeId === fee._id && (
+                                                        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 space-y-2">
+                                                            <p className="text-xs font-bold text-blue-700">Edit Fee Figures</p>
+                                                            <div className="grid grid-cols-3 gap-2">
+                                                                <div>
+                                                                    <label className="text-xs text-gray-500 mb-0.5 block">Base Fee (₹)</label>
+                                                                    <input className={inputCls} type="number" value={editFeeForm.baseFee} onChange={e => setEditFeeForm(p => ({ ...p, baseFee: e.target.value, finalFee: '' }))} />
+                                                                </div>
+                                                                <div>
+                                                                    <label className="text-xs text-gray-500 mb-0.5 block">Discount %</label>
+                                                                    <input className={inputCls} type="number" min="0" max="100" placeholder="0" value={editFeeForm.discountPct} onChange={e => setEditFeeForm(p => ({ ...p, discountPct: e.target.value, finalFee: '' }))} />
+                                                                </div>
+                                                                <div>
+                                                                    <label className="text-xs text-gray-500 mb-0.5 block">Final Fee (₹)</label>
+                                                                    <input className={inputCls} type="number" placeholder="auto" value={editFeeForm.finalFee} onChange={e => setEditFeeForm(p => ({ ...p, finalFee: e.target.value, discountPct: '' }))} />
+                                                                </div>
+                                                            </div>
+                                                            <input className={inputCls} placeholder="Notes" value={editFeeForm.notes} onChange={e => setEditFeeForm(p => ({ ...p, notes: e.target.value }))} />
+                                                            <p className="text-xs text-blue-500">Set either Discount % or Final Fee — the other auto-calculates.</p>
+                                                            <div className="flex gap-2">
+                                                                <button onClick={() => saveFeeEdit(fee._id)} disabled={feeLoading} className="px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 disabled:opacity-50">Save</button>
+                                                                <button onClick={() => setEditFeeId(null)} className="px-3 py-1.5 bg-white border border-gray-200 text-gray-600 text-xs font-bold rounded-lg">Cancel</button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* 5-field summary */}
+                                                    <div className="grid grid-cols-5 gap-1.5 text-center">
                                                         <div className="bg-gray-50 rounded-lg p-2">
-                                                            <p className="text-xs text-gray-400">Total</p>
-                                                            <p className="font-bold text-gray-900 text-sm">₹{fee.totalFee.toLocaleString('en-IN')}</p>
+                                                            <p className="text-xs text-gray-400">Base</p>
+                                                            <p className="font-bold text-gray-700 text-xs">₹{fee.baseFee.toLocaleString('en-IN')}</p>
+                                                        </div>
+                                                        <div className="bg-amber-50 rounded-lg p-2">
+                                                            <p className="text-xs text-amber-400">Disc %</p>
+                                                            <p className="font-bold text-amber-700 text-xs">{fee.discountPct}%</p>
+                                                        </div>
+                                                        <div className="bg-blue-50 rounded-lg p-2">
+                                                            <p className="text-xs text-blue-400">Final</p>
+                                                            <p className="font-bold text-blue-700 text-xs">₹{fee.finalFee.toLocaleString('en-IN')}</p>
                                                         </div>
                                                         <div className="bg-green-50 rounded-lg p-2">
                                                             <p className="text-xs text-green-500">Paid</p>
-                                                            <p className="font-bold text-green-700 text-sm">₹{fee.amountPaid.toLocaleString('en-IN')}</p>
+                                                            <p className="font-bold text-green-700 text-xs">₹{fee.amountPaid.toLocaleString('en-IN')}</p>
                                                         </div>
-                                                        <div className={`rounded-lg p-2 ${(fee.amountLeft ?? fee.totalFee - fee.amountPaid) > 0 ? 'bg-red-50' : 'bg-green-50'}`}>
-                                                            <p className={`text-xs ${(fee.amountLeft ?? fee.totalFee - fee.amountPaid) > 0 ? 'text-red-400' : 'text-green-500'}`}>Left</p>
-                                                            <p className={`font-bold text-sm ${(fee.amountLeft ?? fee.totalFee - fee.amountPaid) > 0 ? 'text-red-600' : 'text-green-700'}`}>₹{(fee.amountLeft ?? fee.totalFee - fee.amountPaid).toLocaleString('en-IN')}</p>
+                                                        <div className={`rounded-lg p-2 ${remaining > 0 ? 'bg-red-50' : 'bg-green-50'}`}>
+                                                            <p className={`text-xs ${remaining > 0 ? 'text-red-400' : 'text-green-500'}`}>Left</p>
+                                                            <p className={`font-bold text-xs ${remaining > 0 ? 'text-red-600' : 'text-green-700'}`}>₹{remaining.toLocaleString('en-IN')}</p>
                                                         </div>
                                                     </div>
+
                                                     {/* Progress bar */}
                                                     <div className="bg-gray-100 rounded-full h-1.5">
                                                         <div className="bg-green-500 h-1.5 rounded-full transition-all" style={{ width: `${pct}%` }} />

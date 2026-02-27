@@ -6,6 +6,7 @@ import { FeePayment } from '@/models/FeePayment';
 import { FeeStructure } from '@/models/FeeStructure'; // MUST import to register model for nested populate
 import { Expense } from '@/models/Expense';
 import { Salary } from '@/models/Salary';
+import { StudentFee } from '@/models/StudentFee';
 // Register Academic models so Program/Session are available for populate()
 import '@/models/Academic';
 
@@ -109,6 +110,34 @@ export async function GET(req: Request) {
             .limit(5)
             .lean();
 
+        // --- StudentFee system: aggregate totals ---
+        const studentFeeAgg = await StudentFee.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalBaseFee: { $sum: '$baseFee' },
+                    totalFinalFee: { $sum: '$finalFee' },
+                    totalDiscountGiven: { $sum: { $subtract: ['$baseFee', '$finalFee'] } },
+                    totalCollected: { $sum: '$amountPaid' },
+                }
+            }
+        ]);
+        const sfStats = studentFeeAgg[0] ?? { totalBaseFee: 0, totalFinalFee: 0, totalDiscountGiven: 0, totalCollected: 0 };
+        const sfTotalOutstanding = Math.max(0, sfStats.totalFinalFee - sfStats.totalCollected);
+
+        // Monthly collected from StudentFee (last 6 months)
+        const sfMonthlyCollected = await StudentFee.aggregate([
+            { $unwind: '$payments' },
+            { $match: { 'payments.date': { $gte: sixMonthsAgo } } },
+            {
+                $group: {
+                    _id: { year: { $year: '$payments.date' }, month: { $month: '$payments.date' } },
+                    total: { $sum: '$payments.amount' }
+                }
+            },
+            { $sort: { '_id.year': 1, '_id.month': 1 } }
+        ]);
+
         return NextResponse.json({
             success: true,
             stats: {
@@ -119,10 +148,19 @@ export async function GET(req: Request) {
                 netBalance,
                 totalPendingFees,
                 totalSalaryPending,
+                // New StudentFee system stats
+                sf: {
+                    totalBaseFee: sfStats.totalBaseFee,
+                    totalDiscountGiven: sfStats.totalDiscountGiven,
+                    totalFinalFee: sfStats.totalFinalFee,
+                    totalCollected: sfStats.totalCollected,
+                    totalOutstanding: sfTotalOutstanding,
+                },
             },
-            charts: { monthlyRevenue, monthlyExpenses },
+            charts: { monthlyRevenue, monthlyExpenses, sfMonthlyCollected },
             pendingTop5,
         });
+
     } catch (err: any) {
         console.error('[Finance Dashboard Error]', err);
         return NextResponse.json({ success: false, message: err.message ?? 'Internal server error' }, { status: 500 });
