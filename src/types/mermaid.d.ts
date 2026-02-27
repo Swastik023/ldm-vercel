@@ -1,5 +1,5 @@
-// Type shim for mermaid — the package ships its own types but the project's
-// tsconfig moduleResolution doesn't follow the 'exports' condition.
+// Minimal ambient shim for mermaid — used when tsconfig moduleResolution
+// cannot follow the package 'exports' condition during Next.js type-check.
 declare module 'mermaid' {
     interface MermaidConfig {
         startOnLoad?: boolean;
@@ -13,17 +13,11 @@ declare module 'mermaid' {
         bindFunctions?: (el: Element) => void;
     }
 
-    interface MermaidAPI {
+    interface MermaidStatic {
         initialize(config: MermaidConfig): void;
         render(id: string, text: string): Promise<RenderResult>;
     }
 
-    const mermaid: MermaidAPI & {
-        default: MermaidAPI;
-        initialize: MermaidAPI['initialize'];
-        render: MermaidAPI['render'];
-    };
-
-    export = mermaid;
+    const mermaid: MermaidStatic;
     export default mermaid;
 }
