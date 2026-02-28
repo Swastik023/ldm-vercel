@@ -13,7 +13,8 @@ function adminOnly(session: any) {
 }
 
 // PATCH /api/admin/courses/[id] — update a course
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
     const deny = adminOnly(session);
     if (deny) return deny;
@@ -29,14 +30,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
 
     await dbConnect();
-    const course = await Program.findByIdAndUpdate(params.id, { $set: body }, { new: true });
+    const course = await Program.findByIdAndUpdate(id, { $set: body }, { new: true });
     if (!course) return NextResponse.json({ success: false, message: 'Course not found.' }, { status: 404 });
 
     return NextResponse.json({ success: true, course });
 }
 
 // DELETE /api/admin/courses/[id] — soft-disable or hard delete if no students
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
     const deny = adminOnly(session);
     if (deny) return deny;
@@ -44,11 +46,10 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     await dbConnect();
 
     // Check if students are linked
-    const studentCount = await User.countDocuments({ programId: params.id, role: 'student' });
+    const studentCount = await User.countDocuments({ programId: id, role: 'student' });
 
     if (studentCount > 0) {
-        // Soft-disable instead of delete
-        await Program.findByIdAndUpdate(params.id, { is_active: false });
+        await Program.findByIdAndUpdate(id, { is_active: false });
         return NextResponse.json({
             success: true,
             message: `Course has ${studentCount} enrolled students. Deactivated instead of deleted.`,
@@ -56,6 +57,6 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         });
     }
 
-    await Program.findByIdAndDelete(params.id);
+    await Program.findByIdAndDelete(id);
     return NextResponse.json({ success: true, message: 'Course deleted.' });
 }
