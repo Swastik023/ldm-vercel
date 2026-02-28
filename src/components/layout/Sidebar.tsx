@@ -10,7 +10,7 @@ import {
     Wallet, IndianRupee, Receipt,
     Library, FolderOpen, FileCheck,
     Bell, Megaphone, Image, MessageSquare,
-    LogOut, ChevronDown, ChevronRight, HelpCircle,
+    LogOut, ChevronDown, ChevronRight, HelpCircle, Briefcase,
 } from 'lucide-react';
 
 type NavItem = { name: string; href: string; icon: React.ElementType };
@@ -58,6 +58,13 @@ const NAV_GROUPS: NavGroup[] = [
             { name: 'Library Docs', href: '/admin/library/documents', icon: Library },
             { name: 'Categories', href: '/admin/library/categories', icon: FolderOpen },
             { name: 'Documents', href: '/admin/documents', icon: FileCheck },
+        ],
+    },
+    {
+        label: 'Placement',
+        icon: Briefcase,
+        items: [
+            { name: 'Job Portal', href: '/admin/jobs', icon: Briefcase },
         ],
     },
     {
@@ -158,8 +165,8 @@ const Sidebar = () => {
             <div className="p-3 border-t border-gray-800/80 space-y-1.5">
                 <Link href="/admin/help">
                     <div className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${pathname.startsWith('/admin/help')
-                            ? 'bg-blue-600 text-white'
-                            : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-400 hover:bg-gray-800 hover:text-white'
                         }`}>
                         <HelpCircle className="w-4 h-4 flex-shrink-0" />
                         Help & SOP
