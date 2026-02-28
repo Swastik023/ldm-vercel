@@ -4,9 +4,8 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { StudentDocuments } from '@/models/StudentDocuments';
-import { Batch } from '@/models/Academic';
+import { Program } from '@/models/Academic';
 import '@/models/Academic';
-import { Class } from '@/models/Class';
 import cloudinary from '@/lib/cloudinary';
 
 const PHOTO_TYPES = ['jpg', 'jpeg', 'png', 'webp'];
@@ -20,17 +19,25 @@ async function uploadToCloudinary(
     resourceType: 'image' | 'raw'
 ): Promise<{ secure_url: string }> {
     return new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream(
-            { resource_type: resourceType, folder, public_id: publicId },
-            (error, result) => {
-                if (error || !result) reject(error || new Error('Upload failed'));
+        const stream = cloudinary.uploader.upload_stream(
+            { folder, public_id: publicId, resource_type: resourceType },
+            (error: any, result: any) => {
+                if (error) reject(error);
                 else resolve({ secure_url: result.secure_url });
             }
-        ).end(buffer);
+        );
+        stream.end(buffer);
     });
 }
 
-const extOf = (f: File) => f.name.split('.').pop()?.toLowerCase() || '';
+function extOf(f: File) { return f.name.split('.').pop()?.toLowerCase() ?? ''; }
+
+function computeCourseEndDate(joiningMonth: 'January' | 'July', joiningYear: number, durationYears: number): Date {
+    if (joiningMonth === 'January') {
+        return new Date(joiningYear + durationYears - 1, 11, 31);
+    }
+    return new Date(joiningYear + durationYears, 5, 30);
+}
 
 // POST — initial submission OR re-upload of rejected fields
 export async function POST(req: NextRequest) {
@@ -48,17 +55,25 @@ export async function POST(req: NextRequest) {
 
     // Academic fields
     const mobileNumber = formData.get('mobileNumber') as string | null;
-    const batchId = formData.get('batchId') as string | null;
-    const sessionFrom = formData.get('sessionFrom') as string | null;
-    const sessionTo = formData.get('sessionTo') as string | null;
+    const programId = formData.get('programId') as string | null;
+    const joiningMonth = formData.get('joiningMonth') as string | null;
+    const joiningYear = formData.get('joiningYear') as string | null;
     const rollNumber = formData.get('rollNumber') as string | null;
 
     // Standard docs
     const passportPhoto = formData.get('passportPhoto') as File | null;
     const marksheet10 = formData.get('marksheet10') as File | null;
     const marksheet12 = formData.get('marksheet12') as File | null;
-    const aadhaarId = formData.get('aadhaarId') as File | null;
+    const aadhaarFront = formData.get('aadhaarFront') as File | null;
+    const aadhaarBack = formData.get('aadhaarBack') as File | null;
     const familyId = formData.get('familyId') as File | null;
+
+    // Document metadata (JSON string)
+    const docMetaRaw = formData.get('documentMeta') as string | null;
+    let documentMeta: { docType: string; docNumber?: string; docRollNumber?: string; docPercentage?: string }[] = [];
+    if (docMetaRaw) {
+        try { documentMeta = JSON.parse(docMetaRaw); } catch { /* ignore parse errors */ }
+    }
 
     // Custom docs (title0, file0, title1, file1, ...)
     const customDocs: { title: string; file: File }[] = [];
@@ -94,7 +109,8 @@ export async function POST(req: NextRequest) {
             push('passportPhoto', passportPhoto, PHOTO_TYPES);
             push('marksheet10', marksheet10, DOC_TYPES);
             push('marksheet12', marksheet12, DOC_TYPES);
-            push('aadhaarId', aadhaarId, DOC_TYPES);
+            push('aadhaarFront', aadhaarFront, DOC_TYPES);
+            push('aadhaarBack', aadhaarBack, DOC_TYPES);
             push('familyId', familyId, DOC_TYPES);
         } catch (e: any) {
             return NextResponse.json({ success: false, message: e.message }, { status: 400 });
@@ -107,6 +123,8 @@ export async function POST(req: NextRequest) {
             docUpdates[`${key}Type`] = ext;
         }
 
+        if (documentMeta.length > 0) docUpdates.documentMeta = documentMeta;
+
         if (Object.keys(docUpdates).length > 0)
             await StudentDocuments.findOneAndUpdate({ userId }, docUpdates);
 
@@ -115,14 +133,45 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Initial submission ─────────────────────────────────────────────────────
-    // Only passportPhoto + marksheet10 + marksheet12 are strictly required
-    if (!passportPhoto || !marksheet10 || !marksheet12)
-        return NextResponse.json({ success: false, message: 'Passport photo, 10th and 12th marksheets are required.' }, { status: 400 });
+    // Required: passportPhoto + marksheet10 + marksheet12 + aadhaarFront + aadhaarBack
+    if (!passportPhoto || !marksheet10 || !marksheet12 || !aadhaarFront || !aadhaarBack)
+        return NextResponse.json({
+            success: false,
+            message: 'Passport photo, 10th marksheet, 12th marksheet, and Aadhaar Card (front + back) are all required.'
+        }, { status: 400 });
+
+    // Validate Aadhaar number from metadata
+    const aadhaarMeta = documentMeta.find(m => m.docType === 'Aadhaar');
+    if (!aadhaarMeta?.docNumber || !/^\d{4}[\s-]?\d{4}[\s-]?\d{4}$/.test(aadhaarMeta.docNumber.trim())) {
+        return NextResponse.json({
+            success: false,
+            message: 'Aadhaar Card Number is required and must be 12 digits (format: 1234 5678 9012).'
+        }, { status: 400 });
+    }
+
+    // Validate 10th metadata
+    const meta10 = documentMeta.find(m => m.docType === '10th');
+    if (!meta10?.docRollNumber || !meta10?.docPercentage) {
+        return NextResponse.json({
+            success: false,
+            message: '10th Marksheet: Roll Number and Percentage are required.'
+        }, { status: 400 });
+    }
+
+    // Validate 12th metadata
+    const meta12 = documentMeta.find(m => m.docType === '12th');
+    if (!meta12?.docRollNumber || !meta12?.docPercentage) {
+        return NextResponse.json({
+            success: false,
+            message: '12th Marksheet: Roll Number and Percentage are required.'
+        }, { status: 400 });
+    }
 
     const ppExt = extOf(passportPhoto);
     const m10Ext = extOf(marksheet10);
     const m12Ext = extOf(marksheet12);
-    const aaExt = aadhaarId ? extOf(aadhaarId) : null;
+    const afExt = extOf(aadhaarFront);
+    const abExt = extOf(aadhaarBack);
     const fiExt = familyId ? extOf(familyId) : null;
 
     if (!PHOTO_TYPES.includes(ppExt))
@@ -131,15 +180,17 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, message: '10th Marksheet must be PDF or image.' }, { status: 400 });
     if (!DOC_TYPES.includes(m12Ext))
         return NextResponse.json({ success: false, message: '12th Marksheet must be PDF or image.' }, { status: 400 });
-    if (aaExt && !DOC_TYPES.includes(aaExt))
-        return NextResponse.json({ success: false, message: 'Aadhaar ID must be PDF or image.' }, { status: 400 });
+    if (!DOC_TYPES.includes(afExt))
+        return NextResponse.json({ success: false, message: 'Aadhaar Front must be PDF or image.' }, { status: 400 });
+    if (!DOC_TYPES.includes(abExt))
+        return NextResponse.json({ success: false, message: 'Aadhaar Back must be PDF or image.' }, { status: 400 });
     if (fiExt && !DOC_TYPES.includes(fiExt))
         return NextResponse.json({ success: false, message: 'Family ID must be PDF or image.' }, { status: 400 });
 
     // Size checks
     for (const [label, file] of [
         ['Passport Photo', passportPhoto], ['10th Marksheet', marksheet10], ['12th Marksheet', marksheet12],
-        ...(aadhaarId ? [['Aadhaar ID', aadhaarId]] : []),
+        ['Aadhaar Front', aadhaarFront], ['Aadhaar Back', aadhaarBack],
         ...(familyId ? [['Family ID', familyId]] : []),
     ] as [string, File][]) {
         if (file.size / (1024 * 1024) > MAX_SIZE_MB)
@@ -149,29 +200,30 @@ export async function POST(req: NextRequest) {
     // ── Academic fields (Google users) ─────────────────────────────────────────
     const updateFields: Record<string, unknown> = { isProfileComplete: true, status: 'under_review', rejectionReasons: null };
 
-    if (batchId && sessionFrom && sessionTo && rollNumber) {
-        const sfInt = parseInt(sessionFrom);
-        const stInt = parseInt(sessionTo);
-        if (isNaN(sfInt) || isNaN(stInt) || sfInt >= stInt)
-            return NextResponse.json({ success: false, message: 'Session From must be earlier than Session To.' }, { status: 400 });
+    if (programId && joiningMonth && joiningYear && rollNumber) {
+        if (!['January', 'July'].includes(joiningMonth))
+            return NextResponse.json({ success: false, message: 'Joining month must be January or July.' }, { status: 400 });
 
-        const batch = await Batch.findOne({ _id: batchId, is_active: true });
-        if (!batch) return NextResponse.json({ success: false, message: 'Selected batch is invalid.' }, { status: 400 });
+        const jyInt = parseInt(joiningYear);
+        if (isNaN(jyInt) || jyInt < 2020 || jyInt > 2040)
+            return NextResponse.json({ success: false, message: 'Joining year is invalid.' }, { status: 400 });
+
+        const program = await Program.findOne({ _id: programId, is_active: true });
+        if (!program) return NextResponse.json({ success: false, message: 'Selected program is invalid.' }, { status: 400 });
 
         const roll = String(rollNumber).trim();
-        const className = `${batch.name} (${sfInt}-${stInt})`;
-        let classDoc = await Class.findOne({ batchId, sessionFrom: sfInt, sessionTo: stInt });
-        if (!classDoc) classDoc = await Class.create({ batchId, sessionFrom: sfInt, sessionTo: stInt, className });
-
-        const existingRoll = await User.findOne({ classId: classDoc._id, rollNumber: roll, _id: { $ne: userId } });
+        const existingRoll = await User.findOne({ rollNumber: roll, _id: { $ne: userId } });
         if (existingRoll)
-            return NextResponse.json({ success: false, message: `Roll Number "${roll}" is already taken in ${className}.` }, { status: 409 });
+            return NextResponse.json({ success: false, message: `Roll Number "${roll}" is already taken.` }, { status: 409 });
 
-        updateFields.batch = batchId;
-        updateFields.classId = classDoc._id;
+        const courseEndDate = computeCourseEndDate(joiningMonth as 'January' | 'July', jyInt, program.duration_years);
+
+        updateFields.programId = programId;
+        updateFields.joiningMonth = joiningMonth;
+        updateFields.joiningYear = jyInt;
+        updateFields.courseEndDate = courseEndDate;
         updateFields.rollNumber = roll;
-        updateFields.sessionFrom = sfInt;
-        updateFields.sessionTo = stInt;
+        updateFields.username = roll.toLowerCase(); // Roll number = username
     }
 
     if (mobileNumber && /^\d{10}$/.test(mobileNumber)) updateFields.mobileNumber = mobileNumber;
@@ -181,8 +233,9 @@ export async function POST(req: NextRequest) {
         uploadToCloudinary(Buffer.from(await passportPhoto.arrayBuffer()), folder, `${ts}-passport-photo`, 'image'),
         uploadToCloudinary(Buffer.from(await marksheet10.arrayBuffer()), folder, `${ts}-marksheet-10`, m10Ext === 'pdf' ? 'raw' : 'image'),
         uploadToCloudinary(Buffer.from(await marksheet12.arrayBuffer()), folder, `${ts}-marksheet-12`, m12Ext === 'pdf' ? 'raw' : 'image'),
+        uploadToCloudinary(Buffer.from(await aadhaarFront.arrayBuffer()), folder, `${ts}-aadhaar-front`, afExt === 'pdf' ? 'raw' : 'image'),
+        uploadToCloudinary(Buffer.from(await aadhaarBack.arrayBuffer()), folder, `${ts}-aadhaar-back`, abExt === 'pdf' ? 'raw' : 'image'),
     ];
-    if (aadhaarId && aaExt) uploads.push(uploadToCloudinary(Buffer.from(await aadhaarId.arrayBuffer()), folder, `${ts}-aadhaar-id`, aaExt === 'pdf' ? 'raw' : 'image'));
     if (familyId && fiExt) uploads.push(uploadToCloudinary(Buffer.from(await familyId.arrayBuffer()), folder, `${ts}-family-id`, fiExt === 'pdf' ? 'raw' : 'image'));
 
     const results = await Promise.all(uploads);
@@ -205,12 +258,14 @@ export async function POST(req: NextRequest) {
         passportPhotoUrl: results[0].secure_url, passportPhotoType: ppExt,
         marksheet10Url: results[1].secure_url, marksheet10Type: m10Ext,
         marksheet12Url: results[2].secure_url, marksheet12Type: m12Ext,
+        aadhaarFrontUrl: results[3].secure_url, aadhaarFrontType: afExt,
+        aadhaarBackUrl: results[4].secure_url, aadhaarBackType: abExt,
         uploadedAt: new Date(),
     };
-    let ri = 3;
-    if (aadhaarId && aaExt) { docData.aadhaarIdUrl = results[ri].secure_url; docData.aadhaarIdType = aaExt; ri++; }
+    let ri = 5;
     if (familyId && fiExt) { docData.familyIdUrl = results[ri].secure_url; docData.familyIdType = fiExt; }
     if (uploadedCustomDocs.length > 0) docData.customDocuments = uploadedCustomDocs;
+    if (documentMeta.length > 0) docData.documentMeta = documentMeta;
 
     await StudentDocuments.findOneAndUpdate({ userId }, docData, { upsert: true, new: true });
     await (User.findByIdAndUpdate as any)(userId, updateFields);

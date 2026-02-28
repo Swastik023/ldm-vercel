@@ -8,16 +8,21 @@ interface Student {
     username: string; rollNumber?: string; sessionFrom?: number; sessionTo?: number;
     isProfileComplete: boolean; status: string; createdAt: string; provider?: string;
     rejectionReasons?: Record<string, string>;
+    joiningMonth?: string; joiningYear?: number; courseEndDate?: string;
     batch: { _id: string; name: string } | null;
     classId: { _id: string; className: string } | null;
+    programId?: { _id: string; name: string } | null;
 }
 interface Batch { _id: string; name: string; }
 interface StudentDocs {
     passportPhotoUrl: string; passportPhotoType: string;
     marksheet10Url: string; marksheet10Type: string;
     marksheet12Url: string; marksheet12Type: string;
-    aadhaarIdUrl?: string; aadhaarIdType?: string;
+    aadhaarFrontUrl?: string; aadhaarFrontType?: string;
+    aadhaarBackUrl?: string; aadhaarBackType?: string;
+    aadhaarIdUrl?: string; aadhaarIdType?: string; // Legacy
     familyIdUrl?: string; familyIdType?: string;
+    documentMeta?: { docType: string; docNumber?: string; docRollNumber?: string; docPercentage?: string; }[];
     customDocuments?: { _id: string; title: string; fileUrl: string; fileType: string; }[];
 }
 interface FeeRecord {
@@ -34,7 +39,9 @@ const STANDARD_DOC_SLOTS = [
     { urlKey: 'passportPhotoUrl', typeKey: 'passportPhotoType', label: 'Passport Photo' },
     { urlKey: 'marksheet10Url', typeKey: 'marksheet10Type', label: '10th Marksheet' },
     { urlKey: 'marksheet12Url', typeKey: 'marksheet12Type', label: '12th Marksheet' },
-    { urlKey: 'aadhaarIdUrl', typeKey: 'aadhaarIdType', label: 'Aadhaar Card' },
+    { urlKey: 'aadhaarFrontUrl', typeKey: 'aadhaarFrontType', label: 'Aadhaar Card (Front)' },
+    { urlKey: 'aadhaarBackUrl', typeKey: 'aadhaarBackType', label: 'Aadhaar Card (Back)' },
+    { urlKey: 'aadhaarIdUrl', typeKey: 'aadhaarIdType', label: 'Aadhaar Card (Legacy)' },
     { urlKey: 'familyIdUrl', typeKey: 'familyIdType', label: 'Family ID' },
 ] as const;
 
@@ -42,7 +49,8 @@ const DOC_SLOTS_FOR_REJECT = [
     { fieldKey: 'passportPhoto', label: 'Passport Photo' },
     { fieldKey: 'marksheet10', label: '10th Marksheet' },
     { fieldKey: 'marksheet12', label: '12th Marksheet' },
-    { fieldKey: 'aadhaarId', label: 'Aadhaar Card' },
+    { fieldKey: 'aadhaarFront', label: 'Aadhaar Card (Front)' },
+    { fieldKey: 'aadhaarBack', label: 'Aadhaar Card (Back)' },
     { fieldKey: 'familyId', label: 'Family ID' },
 ] as const;
 

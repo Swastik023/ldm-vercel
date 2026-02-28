@@ -9,21 +9,37 @@ interface DashboardProfile {
     batch: string | null; session: string | null;
     className: string | null; sessionFrom: number | null; sessionTo: number | null;
     rollNumber: string | null; username: string;
+    programName?: string | null;
+    joiningMonth?: string | null; joiningYear?: number | null;
+    courseEndDate?: string | null;
+}
+interface DocMeta {
+    docType: string;
+    docNumber?: string;
+    docRollNumber?: string;
+    docPercentage?: string;
 }
 interface DocumentsData {
     passportPhotoUrl: string; passportPhotoType: string;
     marksheet10Url: string; marksheet10Type: string;
     marksheet12Url: string; marksheet12Type: string;
-    aadhaarFamilyIdUrl: string; aadhaarFamilyIdType: string;
+    aadhaarFrontUrl?: string; aadhaarFrontType?: string;
+    aadhaarBackUrl?: string; aadhaarBackType?: string;
+    aadhaarIdUrl?: string; aadhaarIdType?: string; // Legacy
+    familyIdUrl?: string; familyIdType?: string;
+    documentMeta?: DocMeta[];
     uploadedAt: string;
 }
 
-const DOC_LABELS = [
+const DOC_LABELS: { urlKey: string; typeKey: string; label: string; icon: React.ReactNode }[] = [
     { urlKey: 'passportPhotoUrl', typeKey: 'passportPhotoType', label: 'Passport Size Photo', icon: <ImageIcon className="w-5 h-5" /> },
     { urlKey: 'marksheet10Url', typeKey: 'marksheet10Type', label: '10th Marksheet', icon: <FileText className="w-5 h-5" /> },
     { urlKey: 'marksheet12Url', typeKey: 'marksheet12Type', label: '12th Marksheet', icon: <FileText className="w-5 h-5" /> },
-    { urlKey: 'aadhaarFamilyIdUrl', typeKey: 'aadhaarFamilyIdType', label: 'Aadhaar + Family ID', icon: <FileText className="w-5 h-5" /> },
-] as const;
+    { urlKey: 'aadhaarFrontUrl', typeKey: 'aadhaarFrontType', label: 'Aadhaar Card (Front)', icon: <FileText className="w-5 h-5" /> },
+    { urlKey: 'aadhaarBackUrl', typeKey: 'aadhaarBackType', label: 'Aadhaar Card (Back)', icon: <FileText className="w-5 h-5" /> },
+    { urlKey: 'aadhaarIdUrl', typeKey: 'aadhaarIdType', label: 'Aadhaar Card (Legacy)', icon: <FileText className="w-5 h-5" /> },
+    { urlKey: 'familyIdUrl', typeKey: 'familyIdType', label: 'Family ID', icon: <FileText className="w-5 h-5" /> },
+];
 
 export default function StudentProfilePage() {
     const { data: session } = useSession();
@@ -46,6 +62,11 @@ export default function StudentProfilePage() {
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
         </div>
     );
+
+    // Format course end date
+    const courseEnd = profile?.courseEndDate
+        ? new Date(profile.courseEndDate).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })
+        : null;
 
     return (
         <div className="space-y-6 max-w-4xl">
@@ -76,16 +97,18 @@ export default function StudentProfilePage() {
                 <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <InfoRow icon={<Mail className="w-4 h-4 text-blue-500" />} label="Email" value={profile?.email || session?.user?.email || '—'} />
                     <InfoRow icon={<Phone className="w-4 h-4 text-green-500" />} label="Phone" value={profile?.mobileNumber || 'Not provided'} />
-                    <InfoRow icon={<BookOpen className="w-4 h-4 text-purple-500" />} label="Batch" value={profile?.batch || 'Not assigned'} />
-                    <InfoRow
-                        icon={<CalendarDays className="w-4 h-4 text-orange-500" />}
-                        label="Session"
-                        value={profile?.sessionFrom && profile?.sessionTo
-                            ? `${profile.sessionFrom} – ${profile.sessionTo}`
-                            : profile?.session || '—'}
-                    />
-                    <InfoRow icon={<BookOpen className="w-4 h-4 text-indigo-500" />} label="Class" value={profile?.className || '—'} />
+                    <InfoRow icon={<BookOpen className="w-4 h-4 text-purple-500" />} label="Program" value={profile?.programName || profile?.batch || 'Not assigned'} />
                     <InfoRow icon={<Hash className="w-4 h-4 text-pink-500" />} label="Roll Number" value={profile?.rollNumber || '—'} />
+                    {profile?.joiningMonth && profile?.joiningYear && (
+                        <InfoRow icon={<CalendarDays className="w-4 h-4 text-orange-500" />} label="Joining" value={`${profile.joiningMonth} ${profile.joiningYear}`} />
+                    )}
+                    {courseEnd && (
+                        <InfoRow icon={<CalendarDays className="w-4 h-4 text-red-500" />} label="Course End" value={courseEnd} />
+                    )}
+                    {/* Legacy session if no joining fields */}
+                    {!profile?.joiningMonth && profile?.sessionFrom && profile?.sessionTo && (
+                        <InfoRow icon={<CalendarDays className="w-4 h-4 text-orange-500" />} label="Session" value={`${profile.sessionFrom} – ${profile.sessionTo}`} />
+                    )}
                     <InfoRow icon={<User className="w-4 h-4 text-gray-400" />} label="Username" value={profile?.username || '—'} />
                     <InfoRow
                         icon={session?.user?.isProfileComplete
@@ -97,6 +120,25 @@ export default function StudentProfilePage() {
                     />
                 </div>
             </div>
+
+            {/* ── Document Metadata ── */}
+            {docs?.documentMeta && docs.documentMeta.length > 0 && (
+                <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-5 flex items-center gap-2">
+                        <Hash className="w-5 h-5 text-purple-600" /> Document Details
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {docs.documentMeta.map((meta, i) => (
+                            <div key={i} className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <p className="text-xs text-gray-500 font-medium">{meta.docType}</p>
+                                {meta.docRollNumber && <p className="text-sm text-gray-900">Roll: <strong>{meta.docRollNumber}</strong></p>}
+                                {meta.docPercentage && <p className="text-sm text-gray-900">Percentage: <strong>{meta.docPercentage}%</strong></p>}
+                                {meta.docNumber && <p className="text-sm text-gray-900">Number: <strong>{meta.docNumber}</strong></p>}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* ── My Documents ── */}
             <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
@@ -116,6 +158,7 @@ export default function StudentProfilePage() {
                         {DOC_LABELS.map(({ urlKey, typeKey, label, icon }) => {
                             const url = (docs as any)[urlKey] as string;
                             const type = (docs as any)[typeKey] as string;
+                            if (!url) return null; // Skip if empty (e.g. legacy aadhaar on new records)
                             return (
                                 <div key={urlKey} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100 group">
                                     <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">

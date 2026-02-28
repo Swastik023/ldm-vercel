@@ -20,13 +20,13 @@ export const authOptions: NextAuthOptions = {
 
                 await connectDB();
 
-                // Accept login by username OR email — students register with email
-                // and are assigned an auto-generated username they may not know.
+                // Accept login by username, email, OR roll number
                 const identifier = credentials.username.trim().toLowerCase();
                 const user = await User.findOne({
                     $or: [
                         { username: identifier },
                         { email: identifier },
+                        { rollNumber: identifier },
                     ],
                 });
 

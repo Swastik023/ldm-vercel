@@ -28,6 +28,7 @@ export async function GET() {
         .populate('session', 'name')
         .populate('batch', 'name')
         .populate('classId', 'className sessionFrom sessionTo')
+        .populate('programId', 'name')
         .lean();
 
     // Fetch attendance records where this student appears
@@ -73,6 +74,10 @@ export async function GET() {
             sessionFrom: (userDoc as any)?.sessionFrom || null,
             sessionTo: (userDoc as any)?.sessionTo || null,
             rollNumber: (userDoc as any)?.rollNumber || null,
+            programName: (userDoc?.programId as any)?.name || null,
+            joiningMonth: (userDoc as any)?.joiningMonth || null,
+            joiningYear: (userDoc as any)?.joiningYear || null,
+            courseEndDate: (userDoc as any)?.courseEndDate || null,
             role: userDoc?.role || 'student',
         },
         attendance: {

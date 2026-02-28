@@ -93,7 +93,7 @@ const Login: React.FC = () => {
                     <form className="space-y-5" onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Username or Email
+                                Roll Number / Email
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -107,7 +107,7 @@ const Login: React.FC = () => {
                                     required
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="Enter your username or email"
+                                    placeholder="Enter your Roll Number or Email"
                                     className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
                                 />
                             </div>

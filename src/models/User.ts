@@ -21,8 +21,13 @@ export interface IUser extends Document {
     // Student registration fields
     classId?: mongoose.Types.ObjectId;
     rollNumber?: string;
-    sessionFrom?: number;
-    sessionTo?: number;
+    sessionFrom?: number;  // Legacy — kept for backward compat
+    sessionTo?: number;    // Legacy — kept for backward compat
+    // New intake/joining fields
+    programId?: mongoose.Types.ObjectId;
+    joiningMonth?: 'January' | 'July';
+    joiningYear?: number;
+    courseEndDate?: Date;
     // Admin review — per-field rejection reasons
     rejectionReasons?: Record<string, string>;
     createdAt: Date;
@@ -47,8 +52,13 @@ const UserSchema = new Schema<IUser>({
     // Student registration academic fields
     classId: { type: Schema.Types.ObjectId, ref: 'Class', default: null },
     rollNumber: { type: String, default: null },
-    sessionFrom: { type: Number, default: null },
-    sessionTo: { type: Number, default: null },
+    sessionFrom: { type: Number, default: null },  // Legacy
+    sessionTo: { type: Number, default: null },    // Legacy
+    // New intake/joining fields
+    programId: { type: Schema.Types.ObjectId, ref: 'Program', default: null },
+    joiningMonth: { type: String, enum: ['January', 'July'], default: null },
+    joiningYear: { type: Number, default: null },
+    courseEndDate: { type: Date, default: null },
     // Admin review
     rejectionReasons: { type: Schema.Types.Mixed, default: null },
 }, { timestamps: true });
@@ -56,5 +66,8 @@ const UserSchema = new Schema<IUser>({
 // Compound unique index: same roll number cannot exist in the same class
 // sparse:true so null classId/rollNumber (teachers, admins) don't collide
 UserSchema.index({ classId: 1, rollNumber: 1 }, { unique: true, sparse: true });
+
+// Roll number used as primary login — unique globally (sparse so non-students don't collide)
+UserSchema.index({ rollNumber: 1 }, { unique: true, sparse: true });
 
 export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

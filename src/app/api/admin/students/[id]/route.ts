@@ -63,7 +63,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
         const { id } = await params;
 
         const [student, docs, fees] = await Promise.all([
-            User.findById(id).select('-password').populate('batch', 'name').populate('classId', 'className').lean(),
+            User.findById(id).select('-password').populate('batch', 'name').populate('classId', 'className').populate('programId', 'name').lean(),
             StudentDocuments.findOne({ userId: id }).lean(),
             StudentFee.find({ studentId: id }).sort({ createdAt: -1 }).lean(),
         ]);
