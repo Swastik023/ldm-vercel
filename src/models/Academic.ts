@@ -2,6 +2,18 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 // --- Interfaces ---
 
+export interface IProgramPricing {
+    totalFee: number;
+    paymentType: 'one-time' | 'semester-wise' | 'installments';
+    offerPrice: number | null;
+    isOfferActive: boolean;
+    offerValidUntil: Date | null;
+    offerLabel: string;
+    seatLimit: number | null;
+    currency: string;
+    scholarshipAvailable: boolean;
+}
+
 export interface IProgram extends Document {
     name: string;
     code: string;
@@ -10,6 +22,15 @@ export interface IProgram extends Document {
     total_semesters: number;
     course_type: 'diploma' | 'certificate';
     is_active: boolean;
+    // Website display fields
+    shortDescription: string;
+    image: string;
+    eligibilitySummary: string;
+    syllabus: string[];
+    careerOptions: string[];
+    displayOrder: number;
+    // Embedded pricing
+    pricing: IProgramPricing;
 }
 
 export interface ISession extends Document {
@@ -50,6 +71,18 @@ export interface IAssignment extends Document {
 
 // --- Schemas ---
 
+const PricingSubSchema = new Schema({
+    totalFee: { type: Number, default: 0, min: 0 },
+    paymentType: { type: String, enum: ['one-time', 'semester-wise', 'installments'], default: 'one-time' },
+    offerPrice: { type: Number, default: null },
+    isOfferActive: { type: Boolean, default: false },
+    offerValidUntil: { type: Date, default: null },
+    offerLabel: { type: String, default: 'Limited Time Offer', maxlength: 60 },
+    seatLimit: { type: Number, default: null },
+    currency: { type: String, default: 'INR' },
+    scholarshipAvailable: { type: Boolean, default: false },
+}, { _id: false });
+
 const ProgramSchema = new Schema<IProgram>({
     name: { type: String, required: true },
     code: { type: String, required: true, unique: true },
@@ -58,6 +91,15 @@ const ProgramSchema = new Schema<IProgram>({
     total_semesters: { type: Number, required: true },
     course_type: { type: String, enum: ['diploma', 'certificate'], default: 'diploma' },
     is_active: { type: Boolean, default: true },
+    // Website display
+    shortDescription: { type: String, default: '' },
+    image: { type: String, default: '' },
+    eligibilitySummary: { type: String, default: '' },
+    syllabus: [{ type: String }],
+    careerOptions: [{ type: String }],
+    displayOrder: { type: Number, default: 0 },
+    // Embedded pricing
+    pricing: { type: PricingSubSchema, default: () => ({}) },
 }, { timestamps: true });
 
 const SessionSchema = new Schema<ISession>({

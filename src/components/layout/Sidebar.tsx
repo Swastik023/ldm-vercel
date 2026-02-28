@@ -48,7 +48,7 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
             { name: 'Finance Dashboard', href: '/admin/finance', icon: Wallet },
             { name: 'Fee Management', href: '/admin/fees', icon: IndianRupee },
-            { name: 'Course Pricing', href: '/admin/course-pricing', icon: Receipt },
+            { name: 'Courses', href: '/admin/courses', icon: Receipt },
         ],
     },
     {
