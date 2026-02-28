@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -201,10 +201,13 @@ const iconMap: Record<string, React.ReactNode> = {
 // ─── Main Navbar ───────────────────────────────────────────────────────────────
 const PublicNavbar = () => {
     const pathname = usePathname();
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [isOpen, setIsOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Suppress auth-dependent UI until client-side hydration is complete
+    const [mounted, setMounted] = useState(false);
+    useLayoutEffect(() => { setMounted(true); }, []);
 
     useEffect(() => { setIsOpen(false); setActiveDropdown(null); }, [pathname]);
 
@@ -335,7 +338,8 @@ const PublicNavbar = () => {
 
                         {/* Desktop Auth Controls */}
                         <div className="hidden md:flex items-center gap-2">
-                            {session ? (
+                            {/* Suppress until mounted to prevent hydration mismatch */}
+                            {mounted && status !== 'loading' && (session ? (
                                 <>
                                     <NotificationBell />
                                     <Link href={dashboardPath} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
@@ -349,12 +353,12 @@ const PublicNavbar = () => {
                                 <Link href="/login" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#0A192F] to-[#1e3a5f] text-white rounded-full text-sm font-bold shadow-[0_4px_15px_rgba(10,25,47,0.3)] hover:shadow-[0_6px_20px_rgba(10,25,47,0.4)] hover:-translate-y-0.5 transition-all duration-300">
                                     <FaUsers className="w-4 h-4" /> Student Portal
                                 </Link>
-                            )}
+                            ))}
                         </div>
 
                         {/* Mobile — Hamburger */}
                         <div className="md:hidden flex items-center gap-2">
-                            {session && <NotificationBell />}
+                            {mounted && session && <NotificationBell />}
                             <button onClick={() => { setIsOpen(p => !p); setActiveDropdown(null); }} className="text-gray-700 hover:text-blue-600 p-2">
                                 {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
                             </button>

@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaCheckCircle, FaChevronRight } from 'react-icons/fa';
+import { FaCheckCircle, FaChevronRight, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 interface Batch { _id: string; name: string; program?: { name: string }; }
 
 const inputCls = 'w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:border-transparent transition-all text-sm';
+const inputErrCls = 'w-full bg-red-500/10 border border-red-500/40 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all text-sm';
 const selectCls = `${inputCls} appearance-none cursor-pointer`;
+const selectErrCls = `${inputErrCls} appearance-none cursor-pointer`;
 
 const OTP_RESEND_SECONDS = 60;
 const STEPS = ['Your Details', 'Verify Email', 'Done!'];
@@ -29,20 +31,19 @@ const StepIndicator = ({ current }: { current: number }) => (
     </div>
 );
 
-const stepVariants = { enter: { x: 40, opacity: 0 }, center: { x: 0, opacity: 1 }, exit: { x: -40, opacity: 0 } };
-
 const CURRENT_YEAR = new Date().getFullYear();
-const YEARS = Array.from({ length: 15 }, (_, i) => CURRENT_YEAR - 3 + i); // 3 years back, 12 forward
+const YEARS = Array.from({ length: 15 }, (_, i) => CURRENT_YEAR - 3 + i);
 
 export default function RegisterPage() {
     const router = useRouter();
-    const [step, setStep] = useState(-1);
+    const [step, setStep] = useState<-1 | 0 | 1 | 2>(-1);
     const [batches, setBatches] = useState<Batch[]>([]);
     const [form, setForm] = useState({
         fullName: '', email: '', mobileNumber: '',
         batchId: '', sessionFrom: '', sessionTo: '',
         rollNumber: '', password: '',
     });
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [showPassword, setShowPassword] = useState(false);
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [otpTimer, setOtpTimer] = useState(0);
@@ -51,7 +52,6 @@ export default function RegisterPage() {
     const [registeredEmail, setRegisteredEmail] = useState('');
     const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-    // Derived class name preview
     const selectedBatch = batches.find(b => b._id === form.batchId);
     const classPreview = selectedBatch && form.sessionFrom && form.sessionTo && parseInt(form.sessionFrom) < parseInt(form.sessionTo)
         ? `${selectedBatch.name} (${form.sessionFrom}–${form.sessionTo})`
@@ -67,8 +67,11 @@ export default function RegisterPage() {
         return () => clearInterval(t);
     }, [otpTimer]);
 
-    const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setForm(prev => ({ ...prev, [field]: e.target.value }));
+        // Clear field error on change
+        if (fieldErrors[field]) setFieldErrors(prev => { const n = { ...prev }; delete n[field]; return n; });
+    };
 
     const sendOTP = async () => {
         const res = await fetch('/api/auth/send-otp', {
@@ -81,25 +84,30 @@ export default function RegisterPage() {
     };
 
     const handleRegister = async () => {
-        // Client-side validation
-        if (!form.fullName || !form.email || !form.mobileNumber || !form.batchId ||
-            !form.sessionFrom || !form.sessionTo || !form.rollNumber || !form.password) {
-            setError('Please fill in all fields.'); return;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-            setError('Please enter a valid email.'); return;
-        }
-        if (!/^\d{10}$/.test(form.mobileNumber)) {
-            setError('Mobile number must be 10 digits.'); return;
-        }
-        if (parseInt(form.sessionFrom) >= parseInt(form.sessionTo)) {
-            setError('Session "From" year must be before Session "To" year.'); return;
-        }
-        if (form.password.length < 8) {
-            setError('Password must be at least 8 characters.'); return;
+        // Per-field validation with inline errors
+        const errs: Record<string, string> = {};
+        if (!form.fullName.trim()) errs.fullName = 'Full name is required.';
+        if (!form.email.trim()) errs.email = 'Email is required.';
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Enter a valid email.';
+        if (!form.mobileNumber.trim()) errs.mobileNumber = 'Mobile number is required.';
+        else if (!/^\d{10}$/.test(form.mobileNumber)) errs.mobileNumber = 'Must be 10 digits.';
+        if (!form.batchId) errs.batchId = 'Please select a batch.';
+        if (!form.sessionFrom) errs.sessionFrom = 'Select session start year.';
+        if (!form.sessionTo) errs.sessionTo = 'Select session end year.';
+        if (form.sessionFrom && form.sessionTo && parseInt(form.sessionFrom) >= parseInt(form.sessionTo)) errs.sessionTo = '"To" must be after "From".';
+        if (!form.rollNumber.trim()) errs.rollNumber = 'Roll number is required.';
+        if (!form.password) errs.password = 'Password is required.';
+        else if (form.password.length < 8) errs.password = 'Must be at least 8 characters.';
+
+        if (Object.keys(errs).length > 0) {
+            setFieldErrors(errs);
+            setError('Please fix the errors below.');
+            return;
         }
 
-        setError(''); setLoading(true);
+        setFieldErrors({});
+        setError('');
+        setLoading(true);
         try {
             const res = await fetch('/api/auth/register', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -110,7 +118,7 @@ export default function RegisterPage() {
             setRegisteredEmail(form.email);
             await sendOTP();
             setStep(1);
-        } catch { setError('Something went wrong.'); }
+        } catch { setError('Something went wrong. Please try again.'); }
         finally { setLoading(false); }
     };
 
@@ -143,6 +151,12 @@ export default function RegisterPage() {
         finally { setLoading(false); }
     };
 
+    const ic = (field: string) => fieldErrors[field] ? inputErrCls : inputCls;
+    const sc = (field: string) => fieldErrors[field] ? selectErrCls : selectCls;
+
+    const FieldErr = ({ field }: { field: string }) =>
+        fieldErrors[field] ? <p className="text-red-400 text-xs mt-1">{fieldErrors[field]}</p> : null;
+
     return (
         <div className="min-h-screen bg-[#0A192F] flex flex-col items-center justify-center px-4 py-12">
             <Link href="/" className="flex items-center gap-2 mb-8">
@@ -165,11 +179,11 @@ export default function RegisterPage() {
                 )}
 
                 <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="wait" initial={false}>
 
                         {/* ── Method chooser ─────────────────────────────── */}
                         {step === -1 && (
-                            <motion.div key="method" variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }} className="space-y-4">
+                            <motion.div key="method" initial={{ x: 0, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="space-y-4">
                                 <div className="text-center mb-4">
                                     <h2 className="text-lg font-bold text-white">Create your account</h2>
                                     <p className="text-white/40 text-sm mt-1">Choose how you&apos;d like to register</p>
@@ -201,27 +215,34 @@ export default function RegisterPage() {
 
                         {/* ── Step 0: Registration form ─────────────────── */}
                         {step === 0 && (
-                            <motion.div key="step0" variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }} className="space-y-4">
+                            <motion.div key="step0" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.2 }} className="space-y-4">
                                 <h2 className="text-base font-bold text-white">Your Details</h2>
 
                                 {/* Full Name */}
-                                <Field label="Full Name">
-                                    <input className={inputCls} placeholder="e.g. Priya Sharma" value={form.fullName} onChange={set('fullName')} />
-                                </Field>
+                                <div>
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Full Name</label>
+                                    <input className={ic('fullName')} placeholder="e.g. Priya Sharma" value={form.fullName} onChange={set('fullName')} />
+                                    <FieldErr field="fullName" />
+                                </div>
 
                                 {/* Email */}
-                                <Field label="Email Address">
-                                    <input type="email" className={inputCls} placeholder="you@example.com" value={form.email} onChange={set('email')} />
-                                </Field>
+                                <div>
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Email Address</label>
+                                    <input type="email" className={ic('email')} placeholder="you@example.com" value={form.email} onChange={set('email')} />
+                                    <FieldErr field="email" />
+                                </div>
 
                                 {/* Phone */}
-                                <Field label="Phone Number">
-                                    <input className={inputCls} placeholder="10-digit mobile" value={form.mobileNumber} onChange={set('mobileNumber')} maxLength={10} inputMode="tel" />
-                                </Field>
+                                <div>
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Phone Number</label>
+                                    <input className={ic('mobileNumber')} placeholder="10-digit mobile" value={form.mobileNumber} onChange={set('mobileNumber')} maxLength={10} inputMode="tel" />
+                                    <FieldErr field="mobileNumber" />
+                                </div>
 
                                 {/* Batch */}
-                                <Field label={<>Batch <RequiredStar /></>}>
-                                    <select className={selectCls} value={form.batchId} onChange={set('batchId')}>
+                                <div>
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Batch <span className="text-red-400">*</span></label>
+                                    <select className={sc('batchId')} value={form.batchId} onChange={set('batchId')}>
                                         <option value="" className="bg-[#0A192F]">— Select Batch —</option>
                                         {batches.map(b => (
                                             <option key={b._id} value={b._id} className="bg-[#0A192F]">
@@ -229,24 +250,29 @@ export default function RegisterPage() {
                                             </option>
                                         ))}
                                     </select>
-                                </Field>
+                                    <FieldErr field="batchId" />
+                                </div>
 
                                 {/* Session From / To */}
                                 <div className="grid grid-cols-2 gap-3">
-                                    <Field label={<>Session From <RequiredStar /></>}>
-                                        <select className={selectCls} value={form.sessionFrom} onChange={set('sessionFrom')}>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Session From <span className="text-red-400">*</span></label>
+                                        <select className={sc('sessionFrom')} value={form.sessionFrom} onChange={set('sessionFrom')}>
                                             <option value="" className="bg-[#0A192F]">Year</option>
                                             {YEARS.map(y => <option key={y} value={y} className="bg-[#0A192F]">{y}</option>)}
                                         </select>
-                                    </Field>
-                                    <Field label={<>Session To <RequiredStar /></>}>
-                                        <select className={selectCls} value={form.sessionTo} onChange={set('sessionTo')}>
+                                        <FieldErr field="sessionFrom" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Session To <span className="text-red-400">*</span></label>
+                                        <select className={sc('sessionTo')} value={form.sessionTo} onChange={set('sessionTo')}>
                                             <option value="" className="bg-[#0A192F]">Year</option>
                                             {YEARS.filter(y => !form.sessionFrom || y > parseInt(form.sessionFrom)).map(y => (
                                                 <option key={y} value={y} className="bg-[#0A192F]">{y}</option>
                                             ))}
                                         </select>
-                                    </Field>
+                                        <FieldErr field="sessionTo" />
+                                    </div>
                                 </div>
 
                                 {/* Class preview */}
@@ -258,23 +284,29 @@ export default function RegisterPage() {
                                 )}
 
                                 {/* Roll Number */}
-                                <Field label={<>Roll Number <RequiredStar /> <span className="text-white/30 font-normal text-xs">(unique within class)</span></>}>
-                                    <input className={inputCls} placeholder="e.g. 01, A-12" value={form.rollNumber} onChange={set('rollNumber')} />
-                                </Field>
+                                <div>
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">
+                                        Roll Number <span className="text-red-400">*</span> <span className="text-white/30 font-normal text-xs">(unique within class)</span>
+                                    </label>
+                                    <input className={ic('rollNumber')} placeholder="e.g. 01, A-12" value={form.rollNumber} onChange={set('rollNumber')} />
+                                    <FieldErr field="rollNumber" />
+                                </div>
 
                                 {/* Password */}
-                                <Field label="Password">
+                                <div>
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Password</label>
                                     <div className="relative">
-                                        <input type={showPassword ? 'text' : 'password'} className={inputCls + ' pr-10'} placeholder="Min. 8 characters" value={form.password} onChange={set('password')} />
-                                        <button type="button" onClick={() => setShowPassword(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40">
-                                            {showPassword ? '🙈' : '👁'}
+                                        <input type={showPassword ? 'text' : 'password'} className={ic('password') + ' pr-10'} placeholder="Min. 8 characters" value={form.password} onChange={set('password')} />
+                                        <button type="button" onClick={() => setShowPassword(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
+                                            {showPassword ? <FaEyeSlash size={15} /> : <FaEye size={15} />}
                                         </button>
                                     </div>
-                                </Field>
+                                    <FieldErr field="password" />
+                                </div>
 
                                 <button
                                     onClick={handleRegister}
-                                    disabled={loading || !form.batchId || !form.sessionFrom || !form.sessionTo || !form.rollNumber}
+                                    disabled={loading}
                                     className="w-full py-3.5 bg-gradient-to-r from-[#10B981] to-[#047857] text-white rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-50 hover:shadow-[0_4px_20px_rgba(16,185,129,0.4)] transition-all"
                                 >
                                     {loading ? 'Creating account…' : <><span>Continue</span><FaChevronRight size={12} /></>}
@@ -284,7 +316,7 @@ export default function RegisterPage() {
 
                         {/* ── Step 1: OTP ───────────────────────────────── */}
                         {step === 1 && (
-                            <motion.div key="step1" variants={stepVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.2 }} className="space-y-5">
+                            <motion.div key="step1" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.2 }} className="space-y-5">
                                 <div className="text-center">
                                     <h2 className="text-lg font-bold text-white">Verify your email</h2>
                                     <p className="text-white/50 text-sm mt-1">6-digit code sent to <span className="text-[#10B981]">{form.email}</span></p>
@@ -347,18 +379,6 @@ export default function RegisterPage() {
                     </p>
                 )}
             </div>
-        </div>
-    );
-}
-
-// ── Small helpers ─────────────────────────────────────────────────────────────
-function RequiredStar() { return <span className="text-red-400">*</span>; }
-
-function Field({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
-    return (
-        <div>
-            <label className="block text-sm font-semibold text-white/80 mb-1.5">{label}</label>
-            {children}
         </div>
     );
 }

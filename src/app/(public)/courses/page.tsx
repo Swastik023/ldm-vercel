@@ -102,10 +102,10 @@ export default function CoursesPage() {
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={tab}
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -16 }}
-                        transition={{ duration: 0.25 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.15 }}
                         className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7"
                     >
                         {courses.map((course, i) => (

@@ -34,6 +34,11 @@ const Login: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        // Custom validation — no native HTML5 popups
+        if (!username.trim() || !password) {
+            setError('Please enter your Roll Number / Email and password.');
+            return;
+        }
         setIsSubmitting(true);
         setError('');
 
@@ -104,7 +109,6 @@ const Login: React.FC = () => {
                                     name="username"
                                     type="text"
                                     autoComplete="username"
-                                    required
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                     placeholder="Enter your Roll Number or Email"
@@ -126,7 +130,6 @@ const Login: React.FC = () => {
                                     name="password"
                                     type={showPassword ? 'text' : 'password'}
                                     autoComplete="current-password"
-                                    required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Enter your password"
