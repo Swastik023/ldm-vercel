@@ -1,31 +1,32 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
-import CoursePricing from '@/models/CoursePricing';
+import { Program } from '@/models/Academic';
 
-// GET /api/public/course-pricing  — returns all active pricing (used by course pages)
+// GET /api/public/course-pricing — returns pricing for all active courses (from Program model)
 export async function GET() {
     try {
         await dbConnect();
         const now = new Date();
-        const pricings = await CoursePricing.find({}).lean();
+        const programs = await Program.find({ is_active: true }).lean();
 
-        // Compute effective values before sending to client
-        const result = pricings.map(p => {
-            const offerActive = p.isOfferActive && (!p.offerValidUntil || new Date(p.offerValidUntil) > now);
-            const effectivePrice = offerActive ? p.offerPrice : p.originalPrice;
-            const discountPercent = p.originalPrice > 0
-                ? Math.round(((p.originalPrice - p.offerPrice) / p.originalPrice) * 100)
+        const result = programs.map((p: any) => {
+            const pr = p.pricing || {};
+            const offerActive = pr.isOfferActive && (!pr.offerValidUntil || new Date(pr.offerValidUntil) > now);
+            const effectivePrice = offerActive && pr.offerPrice ? pr.offerPrice : (pr.totalFee || 0);
+            const discountPercent = pr.totalFee && pr.totalFee > 0 && pr.offerPrice
+                ? Math.round(((pr.totalFee - pr.offerPrice) / pr.totalFee) * 100)
                 : 0;
+
             return {
-                courseId: p.courseId,
-                originalPrice: p.originalPrice,
-                offerPrice: p.offerPrice,
+                courseId: p.code,
+                originalPrice: pr.totalFee || 0,
+                offerPrice: pr.offerPrice || 0,
                 effectivePrice,
                 offerActive,
-                offerValidUntil: p.offerValidUntil,
-                offerLabel: p.offerLabel,
+                offerValidUntil: pr.offerValidUntil || null,
+                offerLabel: pr.offerLabel || 'Limited Time Offer',
                 discountPercent,
-                seatLimit: p.seatLimit,
+                seatLimit: pr.seatLimit || null,
             };
         });
 

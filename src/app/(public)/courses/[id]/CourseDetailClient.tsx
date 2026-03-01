@@ -4,7 +4,17 @@ import React, { useEffect } from 'react';
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import type { CourseData } from '@/data/courseData';
+// Course shape returned by server component (from Program model)
+interface CourseData {
+    id: string;
+    title: string;
+    duration: string;
+    eligibility: string;
+    image: string;
+    description: string;
+    syllabus: string[];
+    career: string[];
+}
 import { CoursePricingBlock, CoursePricingBadge } from '@/components/public/CoursePricing';
 import {
     FaArrowRight, FaClock, FaGraduationCap, FaBriefcase,

@@ -1,40 +1,60 @@
 import { notFound } from 'next/navigation';
-import { courseData } from '@/data/courseData';
+import dbConnect from '@/lib/db';
+import { Program } from '@/models/Academic';
 import CourseDetailClient from './CourseDetailClient';
 import type { Metadata } from 'next';
-
-// Generate static paths for all courses
-export async function generateStaticParams() {
-    return courseData.map(c => ({ id: c.id }));
-}
 
 // SEO metadata per course
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
-    const course = courseData.find(c => c.id === id);
-    if (!course) return { title: 'Course Not Found' };
+    await dbConnect();
+    const program = await Program.findOne({ code: id, is_active: true }).lean() as any;
+    if (!program) return { title: 'Course Not Found' };
     return {
-        title: `${course.title} | LDM College`,
-        description: course.description.slice(0, 160),
-        keywords: [course.title, 'paramedical', 'LDM College', course.eligibility, 'Karnal'],
+        title: `${program.name} | LDM College`,
+        description: (program.description || '').slice(0, 160),
+        keywords: [program.name, 'paramedical', 'LDM College', program.eligibilitySummary || '', 'Karnal'],
         openGraph: {
-            title: course.title,
-            description: course.description.slice(0, 160),
-            images: [course.image],
+            title: program.name,
+            description: (program.description || '').slice(0, 160),
+            images: program.image ? [program.image] : [],
         },
+    };
+}
+
+function toClientCourse(p: any) {
+    return {
+        id: p.code,
+        title: p.name,
+        duration: p.duration_years >= 1
+            ? `${p.duration_years} Year${p.duration_years > 1 ? 's' : ''}`
+            : `${Math.round(p.duration_years * 12)} Months`,
+        eligibility: p.eligibilitySummary || '12th Pass',
+        image: p.image || '/course_img/default.jpeg',
+        description: p.description || p.shortDescription || '',
+        syllabus: p.syllabus || [],
+        career: p.careerOptions || [],
     };
 }
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const course = courseData.find(c => c.id === id);
+    await dbConnect();
 
-    if (!course) {
+    const program = await Program.findOne({ code: id, is_active: true }).lean() as any;
+    if (!program) {
         notFound();
         return null;
     }
 
-    const related = courseData.filter(c => c.id !== course.id).slice(0, 3);
+    // Get related courses (same type, different code, max 3)
+    const relatedPrograms = await Program.find({
+        code: { $ne: id },
+        is_active: true,
+    }).sort({ displayOrder: 1 }).limit(3).lean();
+
+    const course = toClientCourse(program);
+    const related = relatedPrograms.map(toClientCourse);
 
     return <CourseDetailClient course={course} related={related} />;
 }
