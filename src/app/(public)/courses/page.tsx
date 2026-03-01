@@ -42,7 +42,7 @@ export default function CoursesPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    const diplomaCourses = allCourses.filter(c => c.course_type === 'diploma');
+    const diplomaCourses = allCourses.filter(c => c.course_type === 'diploma' || !c.course_type);
     const certCourses = allCourses.filter(c => c.course_type === 'certificate');
     const courses = tab === 'diploma' ? diplomaCourses : certCourses;
 

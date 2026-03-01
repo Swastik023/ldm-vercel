@@ -29,7 +29,7 @@ export async function GET() {
                 description: p.description || p.shortDescription || '',
                 syllabus: p.syllabus || [],
                 career: p.careerOptions || [],
-                course_type: p.course_type,
+                course_type: p.course_type || 'diploma', // default to diploma if not set
                 // Pricing
                 pricing: {
                     courseId: p.code,
