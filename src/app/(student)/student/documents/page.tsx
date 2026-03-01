@@ -356,14 +356,22 @@ export default function StudentDocuments() {
 
                                                     {/* Action */}
                                                     <div className="ml-auto">
-                                                        {(doc.submissionStatus === 'not_submitted' || doc.submissionStatus === 'rejected') && !doc.isOverdue && (
-                                                            <button
-                                                                onClick={() => { setUploadingFor(doc); setSelectedFile(null); setFormResponses({}); setAdditionalFiles({}); }}
-                                                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-blue-600 text-white rounded-xl text-xs font-semibold hover:from-violet-700 hover:to-blue-700 transition-all"
-                                                            >
-                                                                <FaUpload className="w-3 h-3" />
-                                                                {doc.submissionStatus === 'rejected' ? 'Re-upload' : 'Submit'}
-                                                            </button>
+                                                        {(doc.submissionStatus === 'not_submitted' || doc.submissionStatus === 'rejected') && (
+                                                            <div className="flex flex-col items-end gap-1">
+                                                                {doc.isOverdue && (
+                                                                    <span className="text-[10px] text-amber-600 font-semibold">⚠ Late submission</span>
+                                                                )}
+                                                                <button
+                                                                    onClick={() => { setUploadingFor(doc); setSelectedFile(null); setFormResponses({}); setAdditionalFiles({}); }}
+                                                                    className={`flex items-center gap-2 px-4 py-2 text-white rounded-xl text-xs font-semibold transition-all ${doc.isOverdue
+                                                                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
+                                                                        : 'bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700'
+                                                                        }`}
+                                                                >
+                                                                    <FaUpload className="w-3 h-3" />
+                                                                    {doc.submissionStatus === 'rejected' ? 'Re-upload' : 'Submit'}
+                                                                </button>
+                                                            </div>
                                                         )}
                                                         {doc.submissionStatus === 'pending' || doc.submissionStatus === 'resubmitted' ? (
                                                             <span className="text-xs text-yellow-600 font-medium">Awaiting review…</span>

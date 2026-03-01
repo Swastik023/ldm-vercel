@@ -11,6 +11,7 @@ import {
     FileCheck,
     HelpCircle,
     BookOpen,
+    Bell,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -23,6 +24,7 @@ const TeacherSidebar = () => {
         { title: 'Marks Entry', path: '/teacher/marks', icon: <GraduationCap size={20} /> },
         { title: 'MCQ Tests', path: '/teacher/tests', icon: <BookOpen size={20} /> },
         { title: 'Assignments', path: '/teacher/documents', icon: <FileCheck size={20} /> },
+        { title: 'Notices', path: '/teacher/notices', icon: <Bell size={20} /> },
         { title: 'Help & SOP', path: '/teacher/help', icon: <HelpCircle size={20} /> },
     ];
 

@@ -249,11 +249,12 @@ export default function AdminFeesPage() {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Batch (leave empty for all active students)</label>
+                                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Batch <span className="text-red-400">*</span> (required)</label>
                                 <select className={inputCls} value={assignForm.batchId} onChange={e => setAssignForm(p => ({ ...p, batchId: e.target.value }))}>
-                                    <option value="">All Active Students</option>
+                                    <option value="">— Select a batch —</option>
                                     {batches.map(b => <option key={b._id} value={b._id}>{b.name}</option>)}
                                 </select>
+                                {!assignForm.batchId && <p className="text-xs text-amber-600 mt-1">⚠ You must select a batch to avoid assigning fees to all students.</p>}
                             </div>
                             <div>
                                 <label className="block text-xs font-semibold text-gray-600 mb-1.5">Scholarship / Discount % (optional)</label>
@@ -272,7 +273,7 @@ export default function AdminFeesPage() {
                             )}
                             <div className="flex gap-3">
                                 <button onClick={() => setAssignCourse(null)} className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50">Cancel</button>
-                                <button onClick={handleBulkAssign} disabled={assignLoading}
+                                <button onClick={handleBulkAssign} disabled={assignLoading || !assignForm.batchId}
                                     className="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50">
                                     {assignLoading ? 'Assigning…' : 'Assign Fees'}
                                 </button>

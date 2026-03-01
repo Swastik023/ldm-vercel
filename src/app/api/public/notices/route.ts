@@ -2,12 +2,33 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Notice from '@/models/Notice';
 
-// GET /api/public/notices - returns active public notices
+// GET /api/public/notices - returns active notices respecting startDate / endDate
 export async function GET() {
     try {
         await dbConnect();
-        const notices = await Notice.find({ isActive: true })
-            .sort({ createdAt: -1 })
+        const now = new Date();
+        const notices = await Notice.find({
+            isActive: true,
+            // Respect scheduled startDate
+            $and: [
+                {
+                    $or: [
+                        { startDate: { $exists: false } },
+                        { startDate: null },
+                        { startDate: { $lte: now } },
+                    ],
+                },
+                {
+                    $or: [
+                        { endDate: { $exists: false } },
+                        { endDate: null },
+                        { endDate: { $gte: now } },
+                    ],
+                },
+            ],
+        })
+            .select('title content category priority startDate endDate attachmentUrl attachmentName file_type createdAt')
+            .sort({ priority: -1, createdAt: -1 })
             .lean();
 
         return NextResponse.json({ success: true, notices });

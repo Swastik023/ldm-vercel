@@ -80,7 +80,7 @@ export default function StudentReportCard() {
                             </thead>
                             <tbody className="divide-y divide-gray-50">
                                 {report.results.map((res, idx) => {
-                                    const percentage = ((res.marks_obtained / res.max_marks) * 100).toFixed(1);
+                                    const percentage = res.max_marks > 0 ? ((res.marks_obtained / res.max_marks) * 100).toFixed(1) : '0.0';
                                     let textColor = 'text-green-600';
                                     if (Number(percentage) < 40) textColor = 'text-red-600';
 
@@ -104,6 +104,29 @@ export default function StudentReportCard() {
                                     );
                                 })}
                             </tbody>
+                            <tfoot className="bg-gray-50 border-t-2 border-gray-200">
+                                {(() => {
+                                    const validResults = report.results.filter(r => r.max_marks > 0);
+                                    const avgPct = validResults.length
+                                        ? validResults.reduce((sum, r) => sum + (r.marks_obtained / r.max_marks) * 100, 0) / validResults.length
+                                        : 0;
+                                    const passed = validResults.every(r => (r.marks_obtained / r.max_marks) * 100 >= 40);
+                                    return (
+                                        <tr>
+                                            <td className="px-6 py-3 font-bold text-gray-700 text-sm" colSpan={2}>Semester Summary</td>
+                                            <td className="px-6 py-3 text-sm text-gray-500">{validResults.length} subject{validResults.length !== 1 ? 's' : ''}</td>
+                                            <td className="px-6 py-3 font-black text-sm">
+                                                <span className={avgPct >= 40 ? 'text-green-600' : 'text-red-600'}>{avgPct.toFixed(1)}% avg</span>
+                                            </td>
+                                            <td className="px-6 py-3">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                    {passed ? '✓ PASS' : '✗ FAIL'}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                })()}
+                            </tfoot>
                         </table>
                     </div>
                 </div>

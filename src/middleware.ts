@@ -21,10 +21,14 @@ export default withAuth(
             }
         }
         if (path.startsWith('/api/student/') && role !== 'student') {
-            return NextResponse.json(
-                { success: false, message: 'Unauthorized — student access required' },
-                { status: 401 }
-            );
+            // /api/student/notices is shared with teacher (route handler checks both roles)
+            const isSharedStudentRoute = path === '/api/student/notices';
+            if (!(isSharedStudentRoute && role === 'teacher')) {
+                return NextResponse.json(
+                    { success: false, message: 'Unauthorized — student access required' },
+                    { status: 401 }
+                );
+            }
         }
         if (path.startsWith('/api/teacher/') && role !== 'teacher') {
             return NextResponse.json(
