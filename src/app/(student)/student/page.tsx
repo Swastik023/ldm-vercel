@@ -145,7 +145,7 @@ export default function StudentDashboard() {
                 <h2 className="text-base font-bold text-gray-700 mb-3 flex items-center gap-2">
                     <BookOpen size={16} className="text-blue-600" /> Academic &amp; Finance
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Link href="/student/tests" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-indigo-400 hover:shadow-indigo-100 hover:shadow-lg transition-all">
                         <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-200 group-hover:bg-indigo-100 transition-colors">
                             <BookOpen size={20} className="text-indigo-600" />
@@ -153,6 +153,15 @@ export default function StudentDashboard() {
                         <div>
                             <p className="font-bold text-gray-900 text-sm">MCQ Tests</p>
                             <p className="text-xs text-gray-500">Take assigned tests and see results</p>
+                        </div>
+                    </Link>
+                    <Link href="/student/attendance" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-teal-400 hover:shadow-teal-100 hover:shadow-lg transition-all">
+                        <div className="p-3 rounded-xl bg-teal-50 border border-teal-200 group-hover:bg-teal-100 transition-colors">
+                            <TrendingUp size={20} className="text-teal-600" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-900 text-sm">Attendance Details</p>
+                            <p className="text-xs text-gray-500">View subject-wise attendance records</p>
                         </div>
                     </Link>
                     <Link href="/student/fees" className="group flex items-center gap-4 bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:border-orange-400 hover:shadow-orange-100 hover:shadow-lg transition-all">
