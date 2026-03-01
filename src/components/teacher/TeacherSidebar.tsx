@@ -10,6 +10,7 @@ import {
     LogOut,
     FileCheck,
     HelpCircle,
+    BookOpen,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -20,6 +21,7 @@ const TeacherSidebar = () => {
         { title: 'Dashboard', path: '/teacher', icon: <LayoutDashboard size={20} /> },
         { title: 'Attendance', path: '/teacher/attendance', icon: <ClipboardCheck size={20} /> },
         { title: 'Marks Entry', path: '/teacher/marks', icon: <GraduationCap size={20} /> },
+        { title: 'MCQ Tests', path: '/teacher/tests', icon: <BookOpen size={20} /> },
         { title: 'Assignments', path: '/teacher/documents', icon: <FileCheck size={20} /> },
         { title: 'Help & SOP', path: '/teacher/help', icon: <HelpCircle size={20} /> },
     ];

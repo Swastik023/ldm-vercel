@@ -12,11 +12,36 @@ export async function GET() {
     }
     await dbConnect();
     const fees = await StudentFee.find({ studentId: session.user.id }).sort({ createdAt: -1 }).lean();
-    // Add virtual amountRemaining
-    const records = fees.map(f => ({
-        ...f,
-        amountRemaining: Math.max(0, f.finalFee - f.amountPaid),
-    }));
-    return NextResponse.json({ success: true, fees: records, record: records[0] || null });
-}
 
+    // Map DB fields → frontend-expected field names
+    const records = fees.map((f: any) => {
+        const discountAmount = Math.round((f.baseFee * f.discountPct) / 100);
+        const remaining = Math.max(0, f.finalFee - f.amountPaid);
+        return {
+            _id: f._id,
+            course: f.feeLabel || f.courseId || 'Course Fee',
+            academicYear: f.academicYear,
+            baseCoursePrice: f.baseFee,
+            discountPercent: f.discountPct,
+            discountAmount,
+            finalFees: f.finalFee,
+            amountPaid: f.amountPaid,
+            remainingAmount: remaining,
+            globalOfferApplied: f.discountPct > 0 ? `${f.discountPct}% discount applied` : null,
+            payments: (f.payments || []).map((p: any) => ({
+                amount: p.amount,
+                date: p.date,
+                method: 'Payment',
+                note: p.note || '',
+            })),
+            notes: f.notes,
+        };
+    });
+
+    return NextResponse.json({
+        success: true,
+        fees: records,
+        record: records[0] || null,
+        message: records.length === 0 ? 'No fee records found for your account.' : undefined,
+    });
+}

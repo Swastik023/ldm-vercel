@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
         fullName,
         role,
         status: 'active',
+        isProfileComplete: true, // Admin-created users don't need to go through complete-profile
         ...(role === 'student' && sessionId ? { session: sessionId } : {}),
         ...(role === 'student' && batchId ? { batch: batchId } : {}),
     });

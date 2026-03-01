@@ -103,8 +103,8 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { courseId, batchId, feeLabel, academicYear, discountPct = 0 } = body;
 
-        if (!courseId || !feeLabel || !academicYear)
-            return NextResponse.json({ success: false, message: 'courseId, feeLabel and academicYear are required' }, { status: 400 });
+        if (!courseId || !feeLabel || !academicYear || !batchId)
+            return NextResponse.json({ success: false, message: 'courseId, batchId, feeLabel and academicYear are required. Please select a batch to avoid assigning fees to all students.' }, { status: 400 });
 
         // Look up pricing from Program
         const program = await Program.findOne({ code: courseId }).lean() as any;
@@ -122,8 +122,7 @@ export async function POST(req: NextRequest) {
         const pct = Math.min(100, Math.max(0, Number(discountPct)));
         const finalFee = round2(baseFee - (baseFee * pct) / 100);
 
-        const query: Record<string, unknown> = { role: 'student', status: 'active' };
-        if (batchId) query.batch = batchId;
+        const query: Record<string, unknown> = { role: 'student', status: 'active', batch: batchId };
 
         const students = await User.find(query).select('_id batch').lean();
 

@@ -76,6 +76,10 @@ export async function POST(
         return NextResponse.json({ success: false, message: 'Invalid data' }, { status: 400 });
     }
 
+    if (max_marks <= 0) {
+        return NextResponse.json({ success: false, message: 'Max marks must be greater than 0.' }, { status: 400 });
+    }
+
     await dbConnect();
 
     const { assignmentId } = await params;
@@ -86,12 +90,26 @@ export async function POST(
 
     if (!assignment) return NextResponse.json({ success: false, message: 'Assignment not found' }, { status: 404 });
 
-    // Ensure numeric marks
-    const formattedMarks = marks.map((m: any) => ({
-        student: m.student,
-        marks_obtained: Number(m.marks_obtained) || 0,
-        remarks: m.remarks || ''
-    }));
+    // Validate + format marks — reject if any student exceeds max_marks
+    const invalidEntries: string[] = [];
+    const formattedMarks = marks.map((m: any) => {
+        const val = Number(m.marks_obtained) || 0;
+        if (val < 0 || val > max_marks) {
+            invalidEntries.push(m.student);
+        }
+        return {
+            student: m.student,
+            marks_obtained: Math.max(0, val),
+            remarks: m.remarks || ''
+        };
+    });
+
+    if (invalidEntries.length > 0) {
+        return NextResponse.json({
+            success: false,
+            message: `Marks for ${invalidEntries.length} student(s) are outside the valid range (0 – ${max_marks}). Please correct and try again.`,
+        }, { status: 400 });
+    }
 
     try {
         const result = await Result.findOneAndUpdate(

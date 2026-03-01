@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 
 interface Payment { amount: number; date: string; method: string; note?: string; }
 interface FeeRecord {
+    _id: string;
     course: string;
+    academicYear?: string;
     baseCoursePrice: number;
     discountPercent: number;
     discountAmount: number;
@@ -18,26 +20,35 @@ interface FeeRecord {
 const INR = (n: number) => `₹${n.toLocaleString('en-IN')}`;
 
 export default function StudentFeesPage() {
-    const [record, setRecord] = useState<FeeRecord | null>(null);
+    const [records, setRecords] = useState<FeeRecord[]>([]);
+    const [selectedIdx, setSelectedIdx] = useState(0);
     const [loading, setLoading] = useState(true);
     const [msg, setMsg] = useState('');
 
     useEffect(() => {
         fetch('/api/student/fees')
             .then(r => r.json())
-            .then(d => { if (d.success) setRecord(d.record); if (!d.record) setMsg(d.message || 'No fee record found.'); setLoading(false); })
+            .then(d => {
+                if (d.success && d.fees?.length > 0) {
+                    setRecords(d.fees);
+                } else {
+                    setMsg(d.message || 'No fee records found.');
+                }
+                setLoading(false);
+            })
             .catch(() => { setMsg('Failed to load. Please try again.'); setLoading(false); });
     }, []);
 
     if (loading) return <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" /></div>;
-    if (!record) return (
+    if (records.length === 0) return (
         <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
             <p className="text-4xl mb-3">💳</p>
             <p className="text-gray-600 font-medium">{msg}</p>
         </div>
     );
 
-    const paidPercent = Math.min(100, Math.round((record.amountPaid / record.finalFees) * 100));
+    const record = records[selectedIdx];
+    const paidPercent = record.finalFees > 0 ? Math.min(100, Math.round((record.amountPaid / record.finalFees) * 100)) : 0;
     const status = record.remainingAmount === 0 ? 'Fully Paid' : record.amountPaid === 0 ? 'Unpaid' : 'Partial';
     const statusCls = status === 'Fully Paid' ? 'bg-green-100 text-green-700' : status === 'Unpaid' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-700';
 
@@ -47,6 +58,25 @@ export default function StudentFeesPage() {
                 <h1 className="text-2xl font-bold text-gray-900">My Fee Details</h1>
                 <p className="text-gray-500 text-sm mt-1">Your fee structure and payment history.</p>
             </div>
+
+            {/* Fee record selector (only if multiple) */}
+            {records.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                    {records.map((r, i) => (
+                        <button
+                            key={r._id}
+                            onClick={() => setSelectedIdx(i)}
+                            className={`shrink-0 px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${i === selectedIdx
+                                ? 'bg-blue-600 text-white border-blue-600'
+                                : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'
+                                }`}
+                        >
+                            {r.course}{r.academicYear ? ` · ${r.academicYear}` : ''}
+                        </button>
+                    ))}
+                </div>
+            )}
+
             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white">
                 <div className="flex items-start justify-between mb-4">
                     <div><p className="text-white/70 text-sm">Course</p><p className="font-bold text-lg leading-snug mt-0.5">{record.course}</p></div>

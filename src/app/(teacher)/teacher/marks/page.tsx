@@ -67,6 +67,7 @@ export default function MarksEntry() {
     };
 
     const handleSave = async () => {
+        if (!confirm(`Save ${examType} marks for ${students.length} students? This will overwrite any previously saved marks for this exam type.`)) return;
         setSaving(true);
         try {
             const res = await fetch(`/api/teacher/marks/${selectedClass}`, {

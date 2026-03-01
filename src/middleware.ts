@@ -10,11 +10,15 @@ export default withAuth(
 
         // ── API route protection ─────────────────────────────────────────
         // Block unauthenticated or wrong-role API calls at the edge
+        // Note: /api/admin/tests is shared between admin and teacher (route handler checks both roles)
         if (path.startsWith('/api/admin/') && role !== 'admin') {
-            return NextResponse.json(
-                { success: false, message: 'Unauthorized — admin access required' },
-                { status: 401 }
-            );
+            const isSharedRoute = path.startsWith('/api/admin/tests');
+            if (!(isSharedRoute && role === 'teacher')) {
+                return NextResponse.json(
+                    { success: false, message: 'Unauthorized — admin access required' },
+                    { status: 401 }
+                );
+            }
         }
         if (path.startsWith('/api/student/') && role !== 'student') {
             return NextResponse.json(
