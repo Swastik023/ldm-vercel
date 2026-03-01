@@ -39,23 +39,26 @@ export default withAuth(
 
         // ── Page protection below ────────────────────────────────────────
 
-        // Pending / under_review / rejected users → pending-approval page
-        if (token && !path.startsWith('/api/') && path !== '/pending-approval') {
-            if (status === 'pending' || status === 'under_review') {
-                if (path !== '/complete-profile') {
-                    return NextResponse.redirect(new URL('/pending-approval', req.url));
+        // Profile completion and pending approval flows are ONLY for students
+        if (role === 'student') {
+            // Pending / under_review / rejected users → pending-approval page
+            if (token && !path.startsWith('/api/') && path !== '/pending-approval') {
+                if (status === 'pending' || status === 'under_review') {
+                    if (path !== '/complete-profile') {
+                        return NextResponse.redirect(new URL('/pending-approval', req.url));
+                    }
+                }
+                if (status === 'rejected') {
+                    if (path !== '/complete-profile') {
+                        return NextResponse.redirect(new URL('/pending-approval', req.url));
+                    }
                 }
             }
-            if (status === 'rejected') {
-                if (path !== '/complete-profile') {
-                    return NextResponse.redirect(new URL('/pending-approval', req.url));
-                }
-            }
-        }
 
-        // If profile is incomplete, redirect to complete-profile
-        if (token && !token.isProfileComplete && status === 'active' && path !== '/complete-profile' && path !== '/pending-approval' && !path.startsWith('/api/')) {
-            return NextResponse.redirect(new URL('/complete-profile', req.url));
+            // If profile is incomplete, redirect to complete-profile
+            if (token && !token.isProfileComplete && status === 'active' && path !== '/complete-profile' && path !== '/pending-approval' && !path.startsWith('/api/')) {
+                return NextResponse.redirect(new URL('/complete-profile', req.url));
+            }
         }
 
         // Role-based page redirection
