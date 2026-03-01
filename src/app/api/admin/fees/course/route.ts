@@ -5,8 +5,7 @@ import dbConnect from '@/lib/db';
 import { StudentFee } from '@/models/StudentFee';
 import { Program } from '@/models/Academic';
 import { User } from '@/models/User';
-
-const round2 = (n: number) => Math.round(n * 100) / 100;
+import { round2 } from '@/lib/math';
 
 // GET /api/admin/fees/course — list all Programs with their embedded pricing + student fee counts
 export async function GET(_req: NextRequest) {

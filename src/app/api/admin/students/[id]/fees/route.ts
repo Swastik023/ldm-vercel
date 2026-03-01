@@ -4,16 +4,14 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { StudentFee } from '@/models/StudentFee';
 import mongoose from 'mongoose';
-import CoursePricing from '@/models/CoursePricing';
-import { Batch } from '@/models/Academic';
+import { Program } from '@/models/Academic';
 import '@/models/Academic';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Round to 2 decimal places */
-const round2 = (n: number) => Math.round(n * 100) / 100;
+import { round2 } from '@/lib/math';
 
 /**
  * Given baseFee + one of { finalFee | discountPct }, derive the other.
@@ -76,10 +74,15 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         if (!feeLabel || !academicYear)
             return NextResponse.json({ success: false, message: 'feeLabel and academicYear are required' }, { status: 400 });
 
-        // Auto-populate baseFee from CoursePricing if courseId provided
+        // Auto-populate baseFee from Program.pricing if courseId provided
         if (!baseFee && courseId) {
-            const pricing = await CoursePricing.findOne({ courseId });
-            if (pricing) baseFee = pricing.isOfferActive ? pricing.offerPrice : pricing.originalPrice;
+            const program = await Program.findOne({ code: courseId }).lean() as any;
+            if (program?.pricing) {
+                const pr = program.pricing;
+                const now = new Date();
+                const offerActive = pr.isOfferActive && (!pr.offerValidUntil || new Date(pr.offerValidUntil) > now);
+                baseFee = offerActive && pr.offerPrice ? pr.offerPrice : pr.totalFee;
+            }
         }
 
         if (!baseFee || Number(baseFee) <= 0)
