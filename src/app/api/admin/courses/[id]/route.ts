@@ -30,7 +30,20 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
 
     await dbConnect();
-    const course = await Program.findByIdAndUpdate(id, { $set: body }, { new: true });
+
+    // Build a flat $set object using dot-notation for pricing to avoid wiping sub-document
+    const flatSet: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(body)) {
+        if (k === 'pricing' && typeof v === 'object' && v !== null) {
+            for (const [pk, pv] of Object.entries(v as Record<string, unknown>)) {
+                flatSet[`pricing.${pk}`] = pv;
+            }
+        } else {
+            flatSet[k] = v;
+        }
+    }
+
+    const course = await Program.findByIdAndUpdate(id, { $set: flatSet }, { new: true });
     if (!course) return NextResponse.json({ success: false, message: 'Course not found.' }, { status: 404 });
 
     return NextResponse.json({ success: true, course });

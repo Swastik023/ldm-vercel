@@ -3,6 +3,59 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { Program } from '@/models/Academic';
+import CoursePricing from '@/models/CoursePricing';
+
+// GET /api/admin/courses/migrate — sync existing CoursePricing collection → Program.pricing
+// Run once after switching from CoursePricing model to Program.pricing
+export async function GET() {
+    const session = await getServerSession(authOptions);
+    if (!session || (session as any).user?.role !== 'admin') {
+        return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    await dbConnect();
+
+    const pricings = await CoursePricing.find({}).lean();
+    let synced = 0;
+    let skipped = 0;
+
+    for (const cp of pricings) {
+        // Only sync if CoursePricing has actual fee data
+        if (!cp.originalPrice || cp.originalPrice <= 0) { skipped++; continue; }
+
+        const program = await Program.findOne({ code: cp.courseId });
+        if (!program) { skipped++; continue; }
+
+        // Only update if Program doesn't already have a fee set
+        const currentFee = program.pricing?.totalFee ?? 0;
+        if (currentFee > 0) { skipped++; continue; }
+
+        await Program.findOneAndUpdate(
+            { code: cp.courseId },
+            {
+                $set: {
+                    'pricing.totalFee': cp.originalPrice,
+                    'pricing.offerPrice': cp.offerPrice ?? null,
+                    'pricing.isOfferActive': cp.isOfferActive ?? false,
+                    'pricing.offerValidUntil': cp.offerValidUntil ?? null,
+                    'pricing.offerLabel': cp.offerLabel ?? 'Limited Time Offer',
+                    'pricing.seatLimit': cp.seatLimit ?? null,
+                    'pricing.paymentType': 'one-time',
+                    'pricing.currency': 'INR',
+                    'pricing.scholarshipAvailable': false,
+                }
+            }
+        );
+        synced++;
+    }
+
+    return NextResponse.json({
+        success: true,
+        message: `Sync complete: ${synced} CoursePricing entries copied to Program.pricing, ${skipped} skipped (no data or already set).`,
+        synced,
+        skipped,
+    });
+}
 
 // POST /api/admin/courses/migrate — populate/update all 31 known programs with full content
 export async function POST() {

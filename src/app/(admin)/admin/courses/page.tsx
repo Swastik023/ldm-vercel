@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     BookOpen, Plus, Search, Edit2, Trash2, X,
     GraduationCap, Award, Users, ToggleLeft, ToggleRight,
-    Save, AlertCircle, Tag, Upload, CheckCircle2, ChevronDown
+    Save, AlertCircle, Tag, Upload, CheckCircle2, ChevronDown, RefreshCw
 } from 'lucide-react';
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
@@ -79,6 +79,7 @@ export default function AdminCoursesPage() {
     const [editCourse, setEditCourse] = useState<Course | null>(null);
     const [migrating, setMigrating] = useState(false);
     const [migrateMsg, setMigrateMsg] = useState('');
+    const [syncing, setSyncing] = useState(false);
 
     const fetchCourses = useCallback(async () => {
         setLoading(true);
@@ -108,12 +109,22 @@ export default function AdminCoursesPage() {
     };
 
     const handleMigrate = async () => {
-        if (!confirm('Import all legacy hardcoded courses into the database? Existing records will be skipped.')) return;
+        if (!confirm('Populate all 31 programs with full descriptions, syllabus and career data?')) return;
         setMigrating(true); setMigrateMsg('');
         const res = await fetch('/api/admin/courses/migrate', { method: 'POST' });
         const d = await res.json();
         setMigrateMsg(d.message || 'Done');
         setMigrating(false);
+        fetchCourses();
+    };
+
+    const handleSyncPricing = async () => {
+        if (!confirm('Copy existing fee data from the old pricing system into Program records?')) return;
+        setSyncing(true); setMigrateMsg('');
+        const res = await fetch('/api/admin/courses/migrate', { method: 'GET' });
+        const d = await res.json();
+        setMigrateMsg(d.message || 'Done');
+        setSyncing(false);
         fetchCourses();
     };
 
@@ -148,9 +159,13 @@ export default function AdminCoursesPage() {
                         <p className="text-blue-100 text-sm ml-[52px]">Add, edit & configure courses shown on the website</p>
                     </div>
                     <div className="flex gap-2">
+                        <button onClick={handleSyncPricing} disabled={syncing}
+                            className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 border border-white/20">
+                            <RefreshCw className="w-4 h-4" /> {syncing ? 'Syncing…' : 'Sync Pricing'}
+                        </button>
                         <button onClick={handleMigrate} disabled={migrating}
                             className="px-4 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 border border-white/20">
-                            <Upload className="w-4 h-4" /> {migrating ? 'Importing…' : 'Import Legacy'}
+                            <Upload className="w-4 h-4" /> {migrating ? 'Populating…' : 'Populate Content'}
                         </button>
                         <button onClick={() => { setEditCourse(null); setShowForm(true); }}
                             className="px-5 py-2.5 bg-white text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-50 transition-colors flex items-center gap-2 shadow-lg">
