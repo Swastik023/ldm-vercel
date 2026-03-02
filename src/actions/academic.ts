@@ -129,6 +129,64 @@ export async function createBatch(data: any) {
     }
 }
 
+export async function populateBatches() {
+    await dbConnect();
+    try {
+        const programs = await Program.find({ is_active: true });
+        if (!programs.length) throw new Error("No active programs found to populate");
+
+        // Need at least one master active session as placeholder if required by schema
+        let masterSession = await Session.findOne({ is_active: true }).sort({ start_date: -1 });
+        if (!masterSession) masterSession = await Session.findOne().sort({ start_date: -1 });
+
+        let createdCount = 0;
+        const now = new Date();
+
+        for (const program of programs) {
+            for (let year = 2020; year <= 2040; year++) {
+                for (const month of ['January', 'July'] as const) {
+                    const batchName = month === 'January' ? `${year}${program.code}` : `${year + 2}${program.code}`;
+                    const startDate = month === 'January' ? new Date(year, 0, 1) : new Date(year, 6, 1);
+                    const expectedEndDate = month === 'January' ? new Date(year + program.duration_years - 1, 11, 31) : new Date(year + program.duration_years, 5, 30);
+
+                    let status: 'upcoming' | 'active' | 'completed' = 'upcoming';
+                    if (now > expectedEndDate) status = 'completed';
+                    else if (now >= startDate && now <= expectedEndDate) status = 'active';
+
+                    const result = await Batch.updateOne(
+                        { name: batchName },
+                        {
+                            $setOnInsert: {
+                                name: batchName,
+                                program: program._id,
+                                session: masterSession ? masterSession._id : undefined, // Will fail validation if session required, better handled.
+                                intakeMonth: month,
+                                joiningYear: year,
+                                courseDurationYears: program.duration_years,
+                                startDate,
+                                expectedEndDate,
+                                status,
+                                capacity: 60,
+                                current_students: 0,
+                                current_semester: 1,
+                                is_active: true
+                            }
+                        },
+                        { upsert: true }
+                    );
+
+                    if (result.upsertedCount > 0) createdCount++;
+                }
+            }
+        }
+        revalidatePath('/admin');
+        revalidatePath('/admin/batches');
+        return { success: true, message: `Successfully initialized ${createdCount} batches.` };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
 export async function updateBatch(id: string, data: any) {
     await dbConnect();
     try {

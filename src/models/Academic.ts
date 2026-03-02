@@ -51,9 +51,16 @@ export interface ISubject extends Document {
 }
 
 export interface IBatch extends Document {
-    name: string; // e.g., "Batch A"
+    name: string; // e.g., "2025BTECH"
     program: mongoose.Types.ObjectId;
     session: mongoose.Types.ObjectId;
+    intakeMonth: 'January' | 'July';
+    joiningYear: number;
+    courseDurationYears: number;
+    startDate: Date;
+    expectedEndDate: Date;
+    actualEndDate?: Date;
+    status: 'upcoming' | 'active' | 'completed';
     capacity: number;
     current_students: number;
     current_semester: number;
@@ -125,11 +132,20 @@ const BatchSchema = new Schema<IBatch>({
     name: { type: String, required: true },
     program: { type: Schema.Types.ObjectId, ref: 'Program', required: true },
     session: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+    intakeMonth: { type: String, enum: ['January', 'July'], required: true },
+    joiningYear: { type: Number, required: true },
+    courseDurationYears: { type: Number, required: true },
+    startDate: { type: Date, required: true },
+    expectedEndDate: { type: Date, required: true },
+    actualEndDate: { type: Date },
+    status: { type: String, enum: ['upcoming', 'active', 'completed'], default: 'upcoming' },
     capacity: { type: Number, default: 60 },
     current_students: { type: Number, default: 0 },
     current_semester: { type: Number, default: 1 },
     is_active: { type: Boolean, default: true },
 }, { timestamps: true });
+
+BatchSchema.index({ name: 1 }, { unique: true });
 
 const AssignmentSchema = new Schema<IAssignment>({
     teacher: { type: Schema.Types.ObjectId, ref: 'User', required: true },

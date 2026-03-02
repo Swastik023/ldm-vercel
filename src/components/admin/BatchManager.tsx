@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createBatch, deleteBatch, updateBatch } from '@/actions/academic';
+import { createBatch, deleteBatch, updateBatch, populateBatches } from '@/actions/academic';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -23,7 +23,13 @@ interface Batch {
     _id: string;
     name: string;
     program: Program;
-    session: Session;
+    session?: Session;
+    intakeMonth: 'January' | 'July';
+    joiningYear: number;
+    courseDurationYears: number;
+    startDate: string;
+    expectedEndDate: string;
+    status: 'upcoming' | 'active' | 'completed';
     capacity: number;
     current_students: number;
 }
@@ -44,6 +50,7 @@ export default function BatchManager({
     const [sessionId, setSessionId] = useState('');
     const [capacity, setCapacity] = useState(60);
     const [isLoading, setIsLoading] = useState(false);
+    const [isPopulating, setIsPopulating] = useState(false);
 
     // Edit states
     const [editBatchId, setEditBatchId] = useState<string | null>(null);
@@ -158,9 +165,33 @@ export default function BatchManager({
             setEditLoading(false);
         }
     };
+    const handlePopulate = async () => {
+        if (!confirm('This will auto-generate all batches from 2020 to 2040 for all active programs. It is safe to run multiple times. Proceed?')) return;
+        setIsPopulating(true);
+        try {
+            const result = await populateBatches();
+            if (result.success) {
+                toast.success(result.message || 'Batches populated successfully');
+                // The page needs to refresh to show new data, router.refresh() works or let nextjs handle.
+                window.location.reload();
+            } else {
+                toast.error(result.error || 'Failed to populate batches');
+            }
+        } catch (error) {
+            toast.error('An error occurred');
+        } finally {
+            setIsPopulating(false);
+        }
+    };
 
     return (
         <div className="space-y-6">
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Batch Management</h2>
+                <Button onClick={handlePopulate} disabled={isPopulating} variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50">
+                    {isPopulating ? 'Populating...' : 'Initialize/Sync Batches (2020-2040)'}
+                </Button>
+            </div>
             {/* Create Batch Card */}
             <Card>
                 <CardContent className="pt-6">
@@ -289,11 +320,18 @@ export default function BatchManager({
                                 <>
                                     <div className="flex justify-between items-start mb-2">
                                         <div>
-                                            <h3 className="font-bold text-lg">{batch.name}</h3>
-                                            <p className="text-sm text-gray-500">{batch.program?.code} • {batch.session?.name}</p>
+                                            <h3 className="font-bold text-lg flex items-center gap-2">
+                                                {batch.name}
+                                                <span className={`px-2 py-0.5 rounded text-xs text-white ${batch.status === 'active' ? 'bg-green-500' : batch.status === 'completed' ? 'bg-gray-400' : 'bg-blue-500'}`}>
+                                                    {batch.status.toUpperCase()}
+                                                </span>
+                                            </h3>
+                                            <p className="text-sm text-gray-500">
+                                                {batch.program?.name} • {batch.intakeMonth === 'January' ? '❄️ Jan' : '☀️ Jul'} {batch.joiningYear}
+                                            </p>
                                         </div>
                                         <div className="flex gap-2 text-gray-400">
-                                            <button onClick={() => { setEditBatchId(batch._id); setEditForm({ name: batch.name, programId: batch.program._id, sessionId: batch.session._id }); }} className="hover:text-blue-600 transition-colors">
+                                            <button onClick={() => { setEditBatchId(batch._id); setEditForm({ name: batch.name, programId: batch.program._id, sessionId: batch.session?._id || '' }); }} className="hover:text-blue-600 transition-colors">
                                                 <Edit2 className="h-4 w-4" />
                                             </button>
                                             <button onClick={() => handleDelete(batch._id)} className="hover:text-red-600 transition-colors">
@@ -301,7 +339,11 @@ export default function BatchManager({
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-600 mt-4">
+                                    <div className="mt-3 text-xs text-gray-500 space-y-1">
+                                        <p><strong>Start:</strong> {new Date(batch.startDate).toLocaleDateString()}</p>
+                                        <p><strong>Est. Graduation:</strong> {new Date(batch.expectedEndDate).toLocaleDateString()}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-gray-600 mt-4 pt-3 border-t">
                                         <Users className="h-4 w-4" />
                                         <span className="text-sm">{batch.current_students} / {batch.capacity} Students</span>
                                     </div>
