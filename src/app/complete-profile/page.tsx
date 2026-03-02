@@ -97,6 +97,16 @@ export default function CompleteProfilePage() {
         return `June ${jy + selectedProgram.duration_years}`;
     })();
 
+    const classPreview = (() => {
+        if (!selectedProgram || !joiningMonth || !joiningYear) return null;
+        const jy = parseInt(joiningYear);
+        if (isNaN(jy)) return null;
+        if (joiningMonth === 'January') {
+            return `${jy}${selectedProgram.code}`;
+        }
+        return `${jy + 2}${selectedProgram.code}`;
+    })();
+
     useEffect(() => {
         // Kick out non-students if they somehow land here
         if (session?.user && session.user.role !== 'student') {
@@ -247,8 +257,15 @@ export default function CompleteProfilePage() {
                                         </div>
                                     </div>
                                     {courseEndPreview && (
-                                        <div className="flex items-center gap-2 bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl px-3 py-2 text-sm text-[#10B981]">
-                                            📅 Course End: <strong>{courseEndPreview}</strong>
+                                        <div className="flex flex-col gap-1 bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl px-3 py-2 text-sm text-[#10B981]">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-base">🎓</span>
+                                                <span>Your generated Batch: <strong>{classPreview}</strong></span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-[#10B981]/80 text-xs">
+                                                <span className="text-transparent">🎓</span>
+                                                <span>Est. Graduation: <strong>{courseEndPreview}</strong></span>
+                                            </div>
                                         </div>
                                     )}
                                     <div>

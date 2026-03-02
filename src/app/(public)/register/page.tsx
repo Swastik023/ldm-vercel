@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCheckCircle, FaChevronRight, FaEye, FaEyeSlash } from 'react-icons/fa';
 
-interface Batch { _id: string; name: string; program?: { name: string }; }
+interface Program { _id: string; name: string; duration_years: number; code: string; }
 
 const inputCls = 'w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:border-transparent transition-all text-sm';
 const inputErrCls = 'w-full bg-red-500/10 border border-red-500/40 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all text-sm';
@@ -37,10 +37,10 @@ const YEARS = Array.from({ length: 15 }, (_, i) => CURRENT_YEAR - 3 + i);
 export default function RegisterPage() {
     const router = useRouter();
     const [step, setStep] = useState<-1 | 0 | 1 | 2>(-1);
-    const [batches, setBatches] = useState<Batch[]>([]);
+    const [programs, setPrograms] = useState<Program[]>([]);
     const [form, setForm] = useState({
         fullName: '', email: '', mobileNumber: '',
-        batchId: '', sessionFrom: '', sessionTo: '',
+        programId: '', joiningMonth: '', joiningYear: '',
         rollNumber: '', password: '',
     });
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -52,13 +52,31 @@ export default function RegisterPage() {
     const [registeredEmail, setRegisteredEmail] = useState('');
     const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-    const selectedBatch = batches.find(b => b._id === form.batchId);
-    const classPreview = selectedBatch && form.sessionFrom && form.sessionTo && parseInt(form.sessionFrom) < parseInt(form.sessionTo)
-        ? `${selectedBatch.name} (${form.sessionFrom}–${form.sessionTo})`
-        : null;
+    const selectedProgram = programs.find(p => p._id === form.programId);
+
+    // Auto-calculate course end date preview
+    const courseEndPreview = (() => {
+        if (!selectedProgram || !form.joiningMonth || !form.joiningYear) return null;
+        const jy = parseInt(form.joiningYear);
+        if (isNaN(jy)) return null;
+        if (form.joiningMonth === 'January') {
+            return `December ${jy + selectedProgram.duration_years - 1}`;
+        }
+        return `June ${jy + selectedProgram.duration_years}`;
+    })();
+
+    const classPreview = (() => {
+        if (!selectedProgram || !form.joiningMonth || !form.joiningYear) return null;
+        const jy = parseInt(form.joiningYear);
+        if (isNaN(jy)) return null;
+        if (form.joiningMonth === 'January') {
+            return `${jy}${selectedProgram.code}`;
+        }
+        return `${jy + 2}${selectedProgram.code}`;
+    })();
 
     useEffect(() => {
-        fetch('/api/public/batches').then(r => r.json()).then(d => { if (d.success) setBatches(d.batches); });
+        fetch('/api/public/programs').then(r => r.json()).then(d => { if (d.success) setPrograms(d.programs); });
     }, []);
 
     useEffect(() => {
@@ -91,10 +109,9 @@ export default function RegisterPage() {
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Enter a valid email.';
         if (!form.mobileNumber.trim()) errs.mobileNumber = 'Mobile number is required.';
         else if (!/^\d{10}$/.test(form.mobileNumber)) errs.mobileNumber = 'Must be 10 digits.';
-        if (!form.batchId) errs.batchId = 'Please select a batch.';
-        if (!form.sessionFrom) errs.sessionFrom = 'Select session start year.';
-        if (!form.sessionTo) errs.sessionTo = 'Select session end year.';
-        if (form.sessionFrom && form.sessionTo && parseInt(form.sessionFrom) >= parseInt(form.sessionTo)) errs.sessionTo = '"To" must be after "From".';
+        if (!form.programId) errs.programId = 'Please select a program.';
+        if (!form.joiningMonth) errs.joiningMonth = 'Select joining month.';
+        if (!form.joiningYear) errs.joiningYear = 'Select joining year.';
         if (!form.rollNumber.trim()) errs.rollNumber = 'Roll number is required.';
         if (!form.password) errs.password = 'Password is required.';
         else if (form.password.length < 8) errs.password = 'Must be at least 8 characters.';
@@ -239,47 +256,52 @@ export default function RegisterPage() {
                                     <FieldErr field="mobileNumber" />
                                 </div>
 
-                                {/* Batch */}
+                                {/* Program */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Batch <span className="text-red-400">*</span></label>
-                                    <select className={sc('batchId')} value={form.batchId} onChange={set('batchId')}>
-                                        <option value="" className="bg-[#0A192F]">— Select Batch —</option>
-                                        {batches.map(b => (
-                                            <option key={b._id} value={b._id} className="bg-[#0A192F]">
-                                                {b.name}{b.program ? ` · ${b.program.name}` : ''}
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Program <span className="text-red-400">*</span></label>
+                                    <select className={sc('programId')} value={form.programId} onChange={set('programId')}>
+                                        <option value="" className="bg-[#0A192F]">— Select Program —</option>
+                                        {programs.map(p => (
+                                            <option key={p._id} value={p._id} className="bg-[#0A192F]">
+                                                {p.name} ({p.duration_years}yr)
                                             </option>
                                         ))}
                                     </select>
-                                    <FieldErr field="batchId" />
+                                    <FieldErr field="programId" />
                                 </div>
 
-                                {/* Session From / To */}
+                                {/* Intake / Joining */}
                                 <div className="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Session From <span className="text-red-400">*</span></label>
-                                        <select className={sc('sessionFrom')} value={form.sessionFrom} onChange={set('sessionFrom')}>
+                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Joining Month <span className="text-red-400">*</span></label>
+                                        <select className={sc('joiningMonth')} value={form.joiningMonth} onChange={set('joiningMonth')}>
+                                            <option value="" className="bg-[#0A192F]">— Month —</option>
+                                            <option value="January" className="bg-[#0A192F]">January</option>
+                                            <option value="July" className="bg-[#0A192F]">July</option>
+                                        </select>
+                                        <FieldErr field="joiningMonth" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Joining Year <span className="text-red-400">*</span></label>
+                                        <select className={sc('joiningYear')} value={form.joiningYear} onChange={set('joiningYear')}>
                                             <option value="" className="bg-[#0A192F]">Year</option>
                                             {YEARS.map(y => <option key={y} value={y} className="bg-[#0A192F]">{y}</option>)}
                                         </select>
-                                        <FieldErr field="sessionFrom" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Session To <span className="text-red-400">*</span></label>
-                                        <select className={sc('sessionTo')} value={form.sessionTo} onChange={set('sessionTo')}>
-                                            <option value="" className="bg-[#0A192F]">Year</option>
-                                            {YEARS.filter(y => !form.sessionFrom || y > parseInt(form.sessionFrom)).map(y => (
-                                                <option key={y} value={y} className="bg-[#0A192F]">{y}</option>
-                                            ))}
-                                        </select>
-                                        <FieldErr field="sessionTo" />
+                                        <FieldErr field="joiningYear" />
                                     </div>
                                 </div>
 
                                 {/* Class preview */}
-                                {classPreview && (
-                                    <div className="flex items-center gap-2 bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl px-3 py-2 text-sm text-[#10B981]">
-                                        <span className="text-base">🎓</span>
-                                        <span>Your class: <strong>{classPreview}</strong></span>
+                                {courseEndPreview && (
+                                    <div className="flex flex-col gap-1 bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl px-3 py-2 text-sm text-[#10B981]">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-base">🎓</span>
+                                            <span>Your generated Batch: <strong>{classPreview}</strong></span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-[#10B981]/80 text-xs">
+                                            <span className="text-transparent">🎓</span>
+                                            <span>Est. Graduation: <strong>{courseEndPreview}</strong></span>
+                                        </div>
                                     </div>
                                 )}
 

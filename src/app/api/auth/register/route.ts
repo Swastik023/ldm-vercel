@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
-import { Program, Batch } from '@/models/Academic';
+import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
 
 /**
@@ -27,31 +27,16 @@ export async function POST(req: NextRequest) {
         mobileNumber,
         rollNumber,
         password,
-        // Form sends batchId + sessionFrom/To
-        batchId,
-        sessionFrom,
-        sessionTo,
-        // Direct API fallback (programId + joiningMonth + joiningYear)
-        programId: directProgramId,
-        joiningMonth: directJoiningMonth,
-        joiningYear: directJoiningYear,
+        programId,
+        joiningMonth,
+        joiningYear,
     } = body;
 
     // ── Field presence validation ─────────────────────────────────────────────
-    if (!fullName || !email || !mobileNumber || !rollNumber || !password) {
+    if (!fullName || !email || !mobileNumber || !rollNumber || !password || !programId || !joiningMonth || !joiningYear) {
         return NextResponse.json({
             success: false,
-            message: 'All fields are required: Name, Email, Phone, Roll Number, Password.'
-        }, { status: 400 });
-    }
-
-    // Must have either batchId+sessionFrom OR programId+joiningMonth+joiningYear
-    const hasBatchForm = !!(batchId && sessionFrom);
-    const hasDirectForm = !!(directProgramId && directJoiningMonth && directJoiningYear);
-    if (!hasBatchForm && !hasDirectForm) {
-        return NextResponse.json({
-            success: false,
-            message: 'Please select a Batch and Session.'
+            message: 'All fields are required.'
         }, { status: 400 });
     }
 
@@ -65,40 +50,14 @@ export async function POST(req: NextRequest) {
 
     const roll = String(rollNumber).trim();
 
-    // ── Resolve programId and joiningMonth/Year ───────────────────────────────
-    let programId: string;
-    let joiningMonth: 'January' | 'July';
-    let joiningYear: number;
+    // ── Verify Month / Year ───────────────────────────────
+    if (!['January', 'July'].includes(joiningMonth)) {
+        return NextResponse.json({ success: false, message: 'Joining month must be January or July.' }, { status: 400 });
+    }
 
-    if (hasBatchForm) {
-        const batch = await Batch.findOne({ _id: batchId, is_active: true }).populate('program');
-        if (!batch) {
-            return NextResponse.json({ success: false, message: 'Selected batch is invalid or inactive.' }, { status: 400 });
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const prog = batch.program as any;
-        if (!prog) {
-            return NextResponse.json({ success: false, message: 'Batch has no associated program.' }, { status: 400 });
-        }
-        programId = prog._id.toString();
-        joiningYear = parseInt(String(sessionFrom));
-
-        // Validate sessionTo
-        const sessionToInt = parseInt(String(sessionTo));
-        if (sessionTo && sessionToInt <= joiningYear) {
-            return NextResponse.json({ success: false, message: 'Session "From" year must be before Session "To" year.' }, { status: 400 });
-        }
-
-        // Default intake month to January (form doesn't capture it explicitly)
-        joiningMonth = 'January';
-    } else {
-        programId = directProgramId;
-        joiningMonth = directJoiningMonth;
-        joiningYear = parseInt(String(directJoiningYear));
-
-        if (!['January', 'July'].includes(joiningMonth)) {
-            return NextResponse.json({ success: false, message: 'Joining month must be January or July.' }, { status: 400 });
-        }
+    const jyInt = parseInt(String(joiningYear));
+    if (isNaN(jyInt) || jyInt < 2020 || jyInt > 2040) {
+        return NextResponse.json({ success: false, message: 'Joining year is invalid.' }, { status: 400 });
     }
 
     if (isNaN(joiningYear) || joiningYear < 2020 || joiningYear > 2040) {
@@ -137,7 +96,34 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Auto-calculate course end date ────────────────────────────────────────
-    const courseEndDate = computeCourseEndDate(joiningMonth, joiningYear, program.duration_years);
+    const courseEndDate = computeCourseEndDate(joiningMonth, jyInt, program.duration_years);
+
+    // ── Determine Auto-Batch ───────────────────────────────────────────
+    const batchName = joiningMonth === 'January' ? `${jyInt}${program.code}` : `${jyInt + 2}${program.code}`;
+
+    let batch = await Batch.findOne({ name: batchName, program: program._id });
+    if (!batch) {
+        let session = await Session.findOne({ is_active: true }).sort({ start_date: -1 });
+        if (!session) session = await Session.findOne().sort({ start_date: -1 });
+
+        if (!session) {
+            session = await Session.create({
+                name: `Session ${jyInt}-${jyInt + program.duration_years}`,
+                start_date: new Date(jyInt, 0, 1),
+                end_date: new Date(jyInt + program.duration_years, 11, 31),
+                is_active: true
+            });
+        }
+        batch = await Batch.create({
+            name: batchName,
+            program: program._id,
+            session: session._id,
+            capacity: 60,
+            current_students: 0,
+            current_semester: 1,
+            is_active: true
+        });
+    }
 
     // ── Hash password & create user ───────────────────────────────────────────
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -150,9 +136,11 @@ export async function POST(req: NextRequest) {
         mobileNumber,
         programId,
         joiningMonth,
-        joiningYear,
+        joiningYear: jyInt,
         courseEndDate,
         rollNumber: roll,
+        batch: batch._id,
+        session: batch.session,
         role: 'student',
         status: 'pending',
         isProfileComplete: false,

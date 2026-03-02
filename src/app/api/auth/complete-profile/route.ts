@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { StudentDocuments } from '@/models/StudentDocuments';
-import { Program } from '@/models/Academic';
+import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
 import cloudinary from '@/lib/cloudinary';
 
@@ -218,12 +218,41 @@ export async function POST(req: NextRequest) {
 
         const courseEndDate = computeCourseEndDate(joiningMonth as 'January' | 'July', jyInt, program.duration_years);
 
+        // ── Determine Auto-Batch ──
+        const batchName = joiningMonth === 'January' ? `${jyInt}${program.code}` : `${jyInt + 2}${program.code}`;
+
+        let batch = await Batch.findOne({ name: batchName, program: program._id });
+        if (!batch) {
+            let sessionDoc = await Session.findOne({ is_active: true }).sort({ start_date: -1 });
+            if (!sessionDoc) sessionDoc = await Session.findOne().sort({ start_date: -1 });
+
+            if (!sessionDoc) {
+                sessionDoc = await Session.create({
+                    name: `Session ${jyInt}-${jyInt + program.duration_years}`,
+                    start_date: new Date(jyInt, 0, 1),
+                    end_date: new Date(jyInt + program.duration_years, 11, 31),
+                    is_active: true
+                });
+            }
+            batch = await Batch.create({
+                name: batchName,
+                program: program._id,
+                session: sessionDoc._id,
+                capacity: 60,
+                current_students: 0,
+                current_semester: 1,
+                is_active: true
+            });
+        }
+
         updateFields.programId = programId;
         updateFields.joiningMonth = joiningMonth;
         updateFields.joiningYear = jyInt;
         updateFields.courseEndDate = courseEndDate;
         updateFields.rollNumber = roll;
         updateFields.username = roll.toLowerCase(); // Roll number = username
+        updateFields.batch = batch._id;
+        updateFields.session = batch.session;
     }
 
     if (mobileNumber && /^\d{10}$/.test(mobileNumber)) updateFields.mobileNumber = mobileNumber;
