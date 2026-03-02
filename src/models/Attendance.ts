@@ -4,6 +4,7 @@ export interface IAttendanceRecord {
     student: mongoose.Types.ObjectId;
     status: 'present' | 'absent' | 'late' | 'excused';
     remarks?: string;
+    marked_by?: 'teacher' | 'self' | 'admin';
 }
 
 export interface IAttendance extends Document {
@@ -16,6 +17,9 @@ export interface IAttendance extends Document {
     records: IAttendanceRecord[];
     is_locked: boolean;
     marked_at: Date;
+    status: 'open' | 'reviewing' | 'finalized';
+    self_mark_open: boolean;
+    self_mark_deadline?: Date;
 }
 
 const AttendanceSchema = new Schema<IAttendance>({
@@ -28,9 +32,13 @@ const AttendanceSchema = new Schema<IAttendance>({
     records: [{
         student: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         status: { type: String, enum: ['present', 'absent', 'late', 'excused'], default: 'present' },
-        remarks: { type: String }
+        remarks: { type: String },
+        marked_by: { type: String, enum: ['teacher', 'self', 'admin'], default: 'teacher' }
     }],
     is_locked: { type: Boolean, default: false },
+    status: { type: String, enum: ['open', 'reviewing', 'finalized'], default: 'open' },
+    self_mark_open: { type: Boolean, default: false },
+    self_mark_deadline: { type: Date },
     marked_at: { type: Date, default: Date.now }
 }, { timestamps: true });
 
