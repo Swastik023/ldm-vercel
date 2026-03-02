@@ -79,31 +79,59 @@ export async function POST(request: Request, { params }: { params: Promise<{ ass
     const attendanceDate = new Date(date);
     attendanceDate.setHours(0, 0, 0, 0);
 
-    const formattedRecords = records.map((r: any) => ({
-        student: new mongoose.Types.ObjectId(r.studentId),
-        status: r.status,
-        remarks: r.remarks || '',
-    }));
+    // Fetch existing attendance to check locks and preserve tags
+    let attendance = await Attendance.findOne({
+        date: attendanceDate,
+        subject: assignment.subject,
+        section: assignment.section,
+    });
 
-    // Upsert: update if already exists for this date/subject/section
-    await Attendance.findOneAndUpdate(
-        {
-            date: attendanceDate,
-            subject: assignment.subject,
-            section: assignment.section,
-        },
-        {
+    if (attendance && (attendance.is_locked || attendance.status === 'finalized')) {
+        return NextResponse.json({ success: false, message: 'Attendance is finalized and locked' }, { status: 403 });
+    }
+
+    if (!attendance) {
+        // Create new
+        attendance = new Attendance({
             date: attendanceDate,
             subject: assignment.subject,
             teacher: new mongoose.Types.ObjectId(session.user.id),
             session: assignment.session,
             section: assignment.section,
             batch: assignment.batch || undefined,
-            records: formattedRecords,
-            marked_at: new Date(),
-        },
-        { upsert: true, new: true }
-    );
+            records: [],
+            status: 'open',
+        });
+    }
+
+    // Merge records smartly to preserve `marked_by`
+    const existingMap = new Map((attendance.records || []).map((r: any) => [r.student.toString(), r]));
+
+    const newRecords = records.map((r: any) => {
+        const exist: any = existingMap.get(r.studentId);
+
+        // If it's a new record or status changed, default to teacher
+        let markedBy = 'teacher';
+
+        if (exist) {
+            // Keep original marked_by if status didn't change
+            if (exist.status === r.status) {
+                markedBy = exist.marked_by || 'teacher';
+            }
+        }
+
+        return {
+            student: new mongoose.Types.ObjectId(r.studentId),
+            status: r.status,
+            remarks: r.remarks || '',
+            marked_by: markedBy,
+        };
+    });
+
+    attendance.records = newRecords;
+    attendance.marked_at = new Date();
+
+    await attendance.save();
 
     return NextResponse.json({ success: true, message: 'Attendance saved' });
 }

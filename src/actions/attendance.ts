@@ -82,12 +82,22 @@ export async function markAttendance(data: any) {
         }
 
         if (existing) {
-            // Update
-            existing.records = data.students.map((s: any) => ({
-                student: s.student_id,
-                status: s.status,
-                remarks: s.remarks
-            }));
+            // Update smartly to preserve marked_by
+            const existingMap = new Map((existing.records || []).map((r: any) => [r.student.toString(), r]));
+
+            existing.records = data.students.map((s: any) => {
+                const exist: any = existingMap.get(s.student_id);
+                let markedBy = 'teacher';
+                if (exist && exist.status === s.status) {
+                    markedBy = exist.marked_by || 'teacher';
+                }
+                return {
+                    student: s.student_id,
+                    status: s.status,
+                    remarks: s.remarks,
+                    marked_by: markedBy
+                };
+            });
             await existing.save();
             return { success: true, message: "Attendance updated" };
         } else {
@@ -102,7 +112,8 @@ export async function markAttendance(data: any) {
                 records: data.students.map((s: any) => ({
                     student: s.student_id,
                     status: s.status,
-                    remarks: s.remarks
+                    remarks: s.remarks,
+                    marked_by: 'teacher'
                 }))
             });
             return { success: true, message: "Attendance marked" };
@@ -117,12 +128,12 @@ export async function updateStudentAttendance(attendanceId: string, studentId: s
     try {
         const attendance = await Attendance.findById(attendanceId);
         if (!attendance) return { success: false, error: "Record not found" };
-        if (attendance.is_locked) return { success: false, error: "Record is locked" };
 
         const studentRecord = attendance.records.find((r: any) => r.student.toString() === studentId);
         if (studentRecord) {
             studentRecord.status = status as any;
             if (remarks) studentRecord.remarks = remarks;
+            studentRecord.marked_by = 'admin';
         }
 
         await attendance.save();

@@ -38,7 +38,8 @@ export default function BatchManager({
     sessions: Session[]
 }) {
     const [batches, setBatches] = useState<Batch[]>(initialBatches);
-    const [name, setName] = useState('');
+    const [intakeMonth, setIntakeMonth] = useState('January');
+    const [joiningYear, setJoiningYear] = useState(new Date().getFullYear().toString());
     const [programId, setProgramId] = useState('');
     const [sessionId, setSessionId] = useState('');
     const [capacity, setCapacity] = useState(60);
@@ -59,12 +60,30 @@ export default function BatchManager({
         return true;
     });
 
+    const computedName = (() => {
+        if (!programId || !joiningYear) return '';
+        const prog = programs.find((p) => p._id === programId);
+        if (!prog) return '';
+        const code = prog.code;
+        if (intakeMonth === 'January') {
+            return `${joiningYear}${code}`;
+        } else {
+            return `${parseInt(joiningYear, 10) + 2}${code}`;
+        }
+    })();
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!computedName) {
+            toast.error("Please select a program and joining year");
+            return;
+        }
+
         setIsLoading(true);
         try {
             const result = await createBatch({
-                name,
+                name: computedName,
                 program: programId,
                 session: sessionId,
                 capacity
@@ -87,8 +106,7 @@ export default function BatchManager({
                     };
                     setBatches([newBatch, ...batches]);
                 }
-
-                setName('');
+                // Don't reset everything, allow quick succession creation
             } else {
                 toast.error(result.error || 'Failed to create batch');
             }
@@ -146,20 +164,36 @@ export default function BatchManager({
             {/* Create Batch Card */}
             <Card>
                 <CardContent className="pt-6">
-                    <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-4 items-end">
+                    <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-5 items-end">
                         <div className="md:col-span-1">
-                            <label className="text-sm font-medium">Batch Name</label>
+                            <label className="text-sm font-medium">Intake Month</label>
+                            <select
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mt-1"
+                                value={intakeMonth}
+                                onChange={(e) => setIntakeMonth(e.target.value)}
+                                required
+                            >
+                                <option value="January">January</option>
+                                <option value="July">July</option>
+                            </select>
+                        </div>
+                        <div className="md:col-span-1">
+                            <label className="text-sm font-medium">Joining Year</label>
                             <Input
-                                placeholder="e.g. Section A"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                type="number"
+                                className="mt-1"
+                                placeholder="YYYY"
+                                value={joiningYear}
+                                onChange={(e) => setJoiningYear(e.target.value)}
+                                min={2000}
+                                max={2100}
                                 required
                             />
                         </div>
                         <div className="md:col-span-1">
                             <label className="text-sm font-medium">Program</label>
                             <select
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                className="flex h-10 w-full mt-1 rounded-md border border-input bg-background px-3 py-2 text-sm"
                                 value={programId}
                                 onChange={(e) => setProgramId(e.target.value)}
                                 required
@@ -173,7 +207,7 @@ export default function BatchManager({
                         <div className="md:col-span-1">
                             <label className="text-sm font-medium">Session</label>
                             <select
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                className="flex h-10 w-full mt-1 rounded-md border border-input bg-background px-3 py-2 text-sm"
                                 value={sessionId}
                                 onChange={(e) => setSessionId(e.target.value)}
                                 required
@@ -188,6 +222,16 @@ export default function BatchManager({
                             <Button type="submit" isLoading={isLoading} className="w-full">
                                 <Plus className="mr-2 h-4 w-4" /> Create
                             </Button>
+                        </div>
+                        <div className="md:col-span-1 md:col-start-1 md:col-end-6">
+                            <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded border border-gray-100">
+                                <span className="font-semibold text-gray-700">Generated Batch Name:</span>{' '}
+                                {computedName ? (
+                                    <span className="font-mono text-blue-600 font-bold ml-1">{computedName}</span>
+                                ) : (
+                                    <span className="italic ml-1">Select year and program</span>
+                                )}
+                            </p>
                         </div>
                     </form>
                 </CardContent>
