@@ -98,6 +98,16 @@ export default function CompleteProfilePage() {
     })();
 
     useEffect(() => {
+        // Kick out non-students if they somehow land here
+        if (session?.user && session.user.role !== 'student') {
+            const r = session.user.role;
+            if (r === 'admin') router.replace('/admin');
+            else if (r === 'teacher') router.replace('/teacher');
+            else router.replace('/');
+        }
+    }, [session, router]);
+
+    useEffect(() => {
         fetch('/api/public/programs').then(r => r.json()).then(d => { if (d.success) setPrograms(d.programs); });
     }, []);
 

@@ -18,12 +18,12 @@ const Login: React.FC = () => {
 
     useEffect(() => {
         if (status === 'authenticated' && session?.user) {
-            // Google user who hasn't completed academic profile yet
-            if (!session.user.isProfileComplete) {
+            const role = session.user.role;
+            // Only students need to complete the academic profile
+            if (role === 'student' && !session.user.isProfileComplete) {
                 router.push('/complete-profile');
                 return;
             }
-            const role = session.user.role;
             if (role === 'admin') router.push('/admin');
             else if (role === 'teacher') router.push('/teacher');
             else if (role === 'student') router.push('/student');
