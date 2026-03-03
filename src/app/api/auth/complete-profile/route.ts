@@ -7,10 +7,12 @@ import { StudentDocuments } from '@/models/StudentDocuments';
 import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
 import cloudinary from '@/lib/cloudinary';
+import { MAX_UPLOAD_MB, checkFileSizeBackend } from '@/lib/uploadLimits';
 
 const PHOTO_TYPES = ['jpg', 'jpeg', 'png', 'webp'];
 const DOC_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
-const MAX_SIZE_MB = 5;
+// MAX_SIZE_MB comes from the shared upload limits utility
+const MAX_SIZE_MB = MAX_UPLOAD_MB;
 
 // Increase Next.js execution timeout for heavy Cloudinary uploads
 export const maxDuration = 60;

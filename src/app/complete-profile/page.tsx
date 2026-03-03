@@ -5,6 +5,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, AlertCircle, Plus, X, Upload } from 'lucide-react';
+import { MAX_UPLOAD_MB, validateFiles } from '@/lib/uploadLimits.client';
 
 interface DocField {
     key: string; label: string; hint: string; accept: string;
@@ -23,7 +24,7 @@ const OPTIONAL_DOCS: DocField[] = [
     { key: 'familyId', label: 'Family ID', hint: 'Family ID card (optional) · PDF, JPG, PNG', accept: 'application/pdf,image/jpeg,image/png,image/webp', allowedTypes: ['pdf', 'jpg', 'jpeg', 'png', 'webp'] },
 ];
 
-const MAX_MB = 5;
+const MAX_MB = MAX_UPLOAD_MB; // Single source of truth — keeps in sync with server limit
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 12 }, (_, i) => CURRENT_YEAR - 4 + i);
 const INTAKE_MONTHS = ['January', 'July'] as const;
@@ -149,6 +150,17 @@ export default function CompleteProfilePage() {
     const handleSubmit = async () => {
         if (!requiredUploaded) { setError('Please upload all required documents (marked with *).'); return; }
         if (!metadataComplete) { setError('Please fill in all document details (Roll Numbers, Percentages, Aadhaar Number).'); return; }
+
+        // Client-side size validation BEFORE sending to stop early with a clear message
+        const allFileEntries = [
+            ...Object.entries(files)
+                .filter(([, f]) => f !== null)
+                .map(([key, f]) => ({ label: [...REQUIRED_DOCS, ...OPTIONAL_DOCS].find(d => d.key === key)?.label ?? key, file: f })),
+            ...customDocs.map(d => ({ label: d.title, file: d.file })),
+        ];
+        const sizeError = validateFiles(allFileEntries);
+        if (sizeError) { setError(sizeError); return; }
+
         setError(''); setLoading(true);
         try {
             const fd = new FormData();

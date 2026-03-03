@@ -3,7 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb',
+      // Match Vercel's 4.5MB hard limit. Our app-level checks enforce 4MB,
+      // leaving 0.5MB for form field overhead.
+      bodySizeLimit: '4.5mb',
     },
     // Controls how long the App Router's client-side router cache holds pages.
     // dynamic = pages with cookies/headers/searchParams → revalidate every 30s.

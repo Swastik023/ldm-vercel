@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import fs from 'fs';
+import { checkFileSizeBackend } from '@/lib/uploadLimits';
 
 export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
@@ -18,6 +19,9 @@ export async function POST(req: NextRequest) {
         if (!file) {
             return NextResponse.json({ success: false, message: 'No file uploaded' }, { status: 400 });
         }
+
+        const sizeGuard = checkFileSizeBackend('Library file', file);
+        if (sizeGuard) return sizeGuard;
 
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);

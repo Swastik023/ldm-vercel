@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { SliderImage } from '@/models/SliderImage';
 import cloudinary from '@/lib/cloudinary';
+import { checkFileSizeBackend } from '@/lib/uploadLimits';
 
 // GET /api/admin/slider — list all slides ordered
 export async function GET() {
@@ -31,6 +32,16 @@ export async function POST(req: Request) {
 
     if (!file) return NextResponse.json({ success: false, message: 'Image file is required.' }, { status: 400 });
     if (!title?.trim()) return NextResponse.json({ success: false, message: 'Title is required.' }, { status: 400 });
+
+    // Validate size and type before reading buffer
+    const sizeGuard = checkFileSizeBackend('Slider image', file);
+    if (sizeGuard) return sizeGuard;
+
+    const allowedTypes = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+    if (!allowedTypes.includes(ext)) {
+        return NextResponse.json({ success: false, message: `Only images are allowed (jpg, jpeg, png, webp, gif). Got: ${ext}` }, { status: 400 });
+    }
 
     // Convert File to buffer and upload to Cloudinary
     const arrayBuffer = await file.arrayBuffer();

@@ -8,6 +8,7 @@ import { User } from '@/models/User';
 import { StudentDocuments } from '@/models/StudentDocuments';
 import { checkEligibility } from '@/lib/checkEligibility';
 import cloudinary from '@/lib/cloudinary';
+import { checkFileSizeBackend } from '@/lib/uploadLimits';
 
 async function uploadToCloudinary(buffer: Buffer, folder: string, publicId: string, resourceType: 'image' | 'raw'): Promise<{ secure_url: string }> {
     return new Promise((resolve, reject) => {
@@ -69,9 +70,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (!allowedTypes.includes(ext)) {
         return NextResponse.json({ success: false, message: `Resume must be PDF or image. Got: ${ext}` }, { status: 400 });
     }
-    if (resume.size / (1024 * 1024) > 5) {
-        return NextResponse.json({ success: false, message: 'Resume exceeds 5MB limit.' }, { status: 400 });
-    }
+    const resumeSizeGuard = checkFileSizeBackend('Resume', resume);
+    if (resumeSizeGuard) return resumeSizeGuard;
 
     // Upload resume to Cloudinary
     const folder = `ldm-job-resumes/${session.user.id}`;

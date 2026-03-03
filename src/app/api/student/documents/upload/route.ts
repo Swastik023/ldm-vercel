@@ -10,6 +10,7 @@ import cloudinary from '@/lib/cloudinary';
 import mongoose from 'mongoose';
 import { Batch, Program } from '@/models/Academic'; // Register for batch.program populate()
 import '@/models/Academic';
+import { checkFileSizeBackend, MAX_UPLOAD_MB } from '@/lib/uploadLimits';
 
 // POST /api/student/documents/upload — Upload document + form responses
 export async function POST(req: NextRequest) {
@@ -50,6 +51,10 @@ export async function POST(req: NextRequest) {
         let uploadResult: any = null;
         let fileExtension: string | undefined;
         if (file) {
+            // Global hard cap — never exceed Vercel's payload limit
+            const globalGuard = checkFileSizeBackend(file.name, file);
+            if (globalGuard) return globalGuard;
+
             fileExtension = file.name.split('.').pop()?.toLowerCase();
             if (!fileExtension || !requirement.required_file_types.includes(fileExtension)) {
                 return NextResponse.json({
@@ -58,11 +63,13 @@ export async function POST(req: NextRequest) {
                 }, { status: 400 });
             }
 
+            // Enforce per-requirement limit but cap it at MAX_UPLOAD_MB
+            const effectiveLimit = Math.min(requirement.max_file_size_mb, MAX_UPLOAD_MB);
             const fileSizeMB = file.size / (1024 * 1024);
-            if (fileSizeMB > requirement.max_file_size_mb) {
+            if (fileSizeMB > effectiveLimit) {
                 return NextResponse.json({
                     success: false,
-                    message: `File size (${fileSizeMB.toFixed(1)}MB) exceeds limit of ${requirement.max_file_size_mb}MB`
+                    message: `File size (${fileSizeMB.toFixed(1)} MB) exceeds limit of ${effectiveLimit} MB`
                 }, { status: 400 });
             }
         }

@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Notice from '@/models/Notice';
 import cloudinary from '@/lib/cloudinary';
+import { checkFileSizeBackend } from '@/lib/uploadLimits';
 
 // GET /api/admin/notices — list all notices (admin only)
 export async function GET() {
@@ -40,6 +41,12 @@ export async function POST(req: Request) {
 
     let attachmentUrl: string | undefined;
     let attachmentName: string | undefined;
+
+    // Guard: Reject files that exceed Vercel's payload limit before touching the buffer
+    if (file && file.size > 0) {
+        const sizeGuard = checkFileSizeBackend('Notice attachment', file);
+        if (sizeGuard) return sizeGuard;
+    }
 
     // Upload file to Cloudinary for binary formats
     if (file && file.size > 0 && !['rich-text', 'md', 'none'].includes(file_type)) {
