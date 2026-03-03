@@ -27,13 +27,11 @@ export async function POST(req: NextRequest) {
         mobileNumber,
         rollNumber,
         password,
-        programId,
-        joiningMonth,
-        joiningYear,
+        batchId,
     } = body;
 
     // ── Field presence validation ─────────────────────────────────────────────
-    if (!fullName || !email || !mobileNumber || !rollNumber || !password || !programId || !joiningMonth || !joiningYear) {
+    if (!fullName || !email || !mobileNumber || !rollNumber || !password || !batchId) {
         return NextResponse.json({
             success: false,
             message: 'All fields are required.'
@@ -50,25 +48,19 @@ export async function POST(req: NextRequest) {
 
     const roll = String(rollNumber).trim();
 
-    // ── Verify Month / Year ───────────────────────────────
-    if (!['January', 'July'].includes(joiningMonth)) {
-        return NextResponse.json({ success: false, message: 'Joining month must be January or July.' }, { status: 400 });
+    // ── Validate Batch ────────────────────────────────────────────────────────
+    const batch = await Batch.findById(batchId).populate('program');
+    if (!batch || !batch.is_active) {
+        return NextResponse.json({ success: false, message: 'Selected batch is invalid or inactive.' }, { status: 400 });
+    }
+    if (!batch.program) {
+        return NextResponse.json({ success: false, message: 'Batch program details are missing.' }, { status: 400 });
     }
 
-    const jyInt = parseInt(String(joiningYear));
-    if (isNaN(jyInt) || jyInt < 2020 || jyInt > 2040) {
-        return NextResponse.json({ success: false, message: 'Joining year is invalid.' }, { status: 400 });
-    }
-
-    if (isNaN(joiningYear) || joiningYear < 2020 || joiningYear > 2040) {
-        return NextResponse.json({ success: false, message: 'Joining year is invalid.' }, { status: 400 });
-    }
-
-    // ── Validate program ──────────────────────────────────────────────────────
-    const program = await Program.findOne({ _id: programId, is_active: true });
-    if (!program) {
-        return NextResponse.json({ success: false, message: 'Selected program is invalid or inactive.' }, { status: 400 });
-    }
+    const programId = batch.program._id;
+    const joiningMonth = batch.intakeMonth;
+    const jyInt = batch.joiningYear;
+    const courseEndDate = batch.expectedEndDate;
 
     // ── Duplicate roll number check ───────────────────────────────────────────
     const existingRoll = await User.findOne({ rollNumber: roll });
@@ -95,43 +87,6 @@ export async function POST(req: NextRequest) {
         }, { status: 409 });
     }
 
-    // ── Auto-calculate course end date ────────────────────────────────────────
-    const courseEndDate = computeCourseEndDate(joiningMonth, jyInt, program.duration_years);
-
-    // ── Determine Auto-Batch ───────────────────────────────────────────
-    const batchName = joiningMonth === 'January' ? `${jyInt}${program.code}` : `${jyInt + 2}${program.code}`;
-
-    let batch = await Batch.findOne({ name: batchName, program: program._id });
-    if (!batch) {
-        let session = await Session.findOne({ is_active: true }).sort({ start_date: -1 });
-        if (!session) session = await Session.findOne().sort({ start_date: -1 });
-
-        if (!session) {
-            session = await Session.create({
-                name: `Session ${jyInt}-${jyInt + program.duration_years}`,
-                start_date: new Date(jyInt, 0, 1),
-                end_date: new Date(jyInt + program.duration_years, 11, 31),
-                is_active: true
-            });
-        }
-        batch = await Batch.create({
-            name: batchName,
-            program: program._id,
-            session: session._id,
-            intakeMonth: joiningMonth,
-            joiningYear: jyInt,
-            courseDurationYears: program.duration_years,
-            startDate: joiningMonth === 'January' ? new Date(jyInt, 0, 1) : new Date(jyInt, 6, 1),
-            expectedEndDate: courseEndDate,
-            status: 'upcoming',
-            capacity: 60,
-            current_students: 0,
-            current_semester: 1,
-            is_active: true
-        });
-    }
-
-    // ── Hash password & create user ───────────────────────────────────────────
     const hashedPassword = await bcrypt.hash(password, 12);
 
     await (User.create as any)({
@@ -156,7 +111,7 @@ export async function POST(req: NextRequest) {
         success: true,
         message: 'Account created successfully!',
         username,
-        programName: program.name,
+        programName: (batch.program as any).name,
         courseEndDate: courseEndDate.toISOString(),
     }, { status: 201 });
 }
