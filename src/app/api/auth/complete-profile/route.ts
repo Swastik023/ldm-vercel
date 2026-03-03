@@ -12,6 +12,9 @@ const PHOTO_TYPES = ['jpg', 'jpeg', 'png', 'webp'];
 const DOC_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
 const MAX_SIZE_MB = 5;
 
+// Increase Next.js execution timeout for heavy Cloudinary uploads
+export const maxDuration = 60;
+
 async function uploadToCloudinary(
     buffer: Buffer,
     folder: string,
