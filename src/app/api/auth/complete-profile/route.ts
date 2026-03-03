@@ -7,7 +7,7 @@ import { StudentDocuments } from '@/models/StudentDocuments';
 import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
 import cloudinary from '@/lib/cloudinary';
-import { MAX_UPLOAD_MB, checkFileSizeBackend } from '@/lib/uploadLimits';
+import { MAX_UPLOAD_MB, checkFileSizeBackend, checkTotalPayload } from '@/lib/uploadLimits';
 
 const PHOTO_TYPES = ['jpg', 'jpeg', 'png', 'webp'];
 const DOC_TYPES = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
@@ -93,6 +93,11 @@ export async function POST(req: NextRequest) {
 
     const folder = `ldm-student-docs/${userId}`;
     const ts = Date.now();
+
+    // ── Total payload guard (catches sum of many small files exceeding 4MB) ──────
+    const allFiles = [passportPhoto, marksheet10, marksheet12, aadhaarFront, aadhaarBack, familyId, ...customDocs.map(d => d.file)];
+    const totalGuard = checkTotalPayload(allFiles);
+    if (totalGuard) return totalGuard;
 
     // ── Re-upload flow ─────────────────────────────────────────────────────────
     if (isReupload) {
