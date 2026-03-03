@@ -50,9 +50,18 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const questionsFile = formData.get('questions') as File | null;
     const answersFile = formData.get('answers') as File | null;
+    // batchId and subjectId come from UI dropdowns — not from JSON (teacher-friendly)
+    const batchId = formData.get('batchId') as string | null;
+    const subjectId = formData.get('subjectId') as string | null;
 
     if (!questionsFile || !answersFile) {
         return NextResponse.json({ success: false, message: 'Both questions.json and answers.json files are required.' }, { status: 400 });
+    }
+    if (!batchId?.trim()) {
+        return NextResponse.json({ success: false, message: 'Please select a Batch from the dropdown.' }, { status: 400 });
+    }
+    if (!subjectId?.trim()) {
+        return NextResponse.json({ success: false, message: 'Please select a Subject from the dropdown.' }, { status: 400 });
     }
 
     // ── Parse JSON files ─────────────────────────────────────────────────
@@ -97,8 +106,8 @@ export async function POST(req: NextRequest) {
         description: meta.description?.trim() ?? '',
         durationMinutes: Number(meta.durationMinutes),
         totalMarks: Number(meta.totalMarks),
-        batch: meta.batch,
-        subject: meta.subject,
+        batch: batchId,
+        subject: subjectId,
         negativeMarking: Number(meta.negativeMarking ?? 0),
         shuffleQuestions: meta.shuffleQuestions ?? false,
         shuffleOptions: meta.shuffleOptions ?? false,

@@ -79,10 +79,10 @@ export function validateQuestionsFile(data: unknown): ValidationResult {
         if (!meta.title || typeof meta.title !== 'string' || !meta.title.trim()) errors.push('testMeta.title is required and must be a non-empty string.');
         if (typeof meta.durationMinutes !== 'number' || meta.durationMinutes < 1) errors.push('testMeta.durationMinutes must be a positive number.');
         if (typeof meta.totalMarks !== 'number' || meta.totalMarks < 1) errors.push('testMeta.totalMarks must be a positive number.');
-        if (!meta.batch || typeof meta.batch !== 'string') errors.push('testMeta.batch (ObjectId string) is required.');
-        if (!meta.subject || typeof meta.subject !== 'string') errors.push('testMeta.subject (ObjectId string) is required.');
+        // batch and subject are selected via UI dropdowns — not required in JSON
         if (meta.negativeMarking !== undefined && typeof meta.negativeMarking !== 'number') errors.push('testMeta.negativeMarking must be a number if provided.');
         if (meta.resultMode !== undefined && !['instant', 'manual'].includes(meta.resultMode as string)) errors.push('testMeta.resultMode must be "instant" or "manual".');
+
     }
 
     // questions array
