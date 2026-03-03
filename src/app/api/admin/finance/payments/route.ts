@@ -17,6 +17,8 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');
     const sessionId = searchParams.get('session');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(100, parseInt(searchParams.get('limit') || '25'));
 
     await dbConnect();
 
@@ -30,18 +32,23 @@ export async function GET(req: Request) {
         query.fee_structure = { $in: structureIds };
     }
 
-    const payments = await FeePayment.find(query)
-        .populate('student', 'fullName username email')
-        .populate({
-            path: 'fee_structure',
-            select: 'total_amount semester description due_date',
-            populate: [
-                { path: 'program', select: 'name code' },
-                { path: 'session', select: 'name' },
-            ],
-        })
-        .sort({ updatedAt: -1 })
-        .lean();
+    const [payments, total] = await Promise.all([
+        FeePayment.find(query)
+            .populate('student', 'fullName username email')
+            .populate({
+                path: 'fee_structure',
+                select: 'total_amount semester description due_date',
+                populate: [
+                    { path: 'program', select: 'name code' },
+                    { path: 'session', select: 'name' },
+                ],
+            })
+            .sort({ updatedAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean(),
+        FeePayment.countDocuments(query),
+    ]);
 
-    return NextResponse.json({ success: true, payments });
+    return NextResponse.json({ success: true, payments, total, page, pages: Math.ceil(total / limit) });
 }

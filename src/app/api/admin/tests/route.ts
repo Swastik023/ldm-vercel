@@ -8,19 +8,28 @@ import { ProTestAttempt } from '@/models/TestAttempt';
 import { validateQuestionsFile, validateAnswersFile, UploadedQuestionsFile, UploadedAnswersFile } from '@/lib/testSchemaValidator';
 
 // ── GET /api/admin/tests — list all tests with attempt counts ───────────────
-export async function GET() {
+export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session?.user || !['admin', 'teacher'].includes(session.user.role)) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
     await dbConnect();
 
-    const tests = await ProTest.find()
-        .populate('batch', 'name intakeMonth joiningYear')
-        .populate('subject', 'name code')
-        .populate('createdBy', 'fullName')
-        .sort({ createdAt: -1 })
-        .lean();
+    const { searchParams } = new URL(req.url);
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(100, parseInt(searchParams.get('limit') || '25'));
+
+    const [tests, total] = await Promise.all([
+        ProTest.find()
+            .populate('batch', 'name intakeMonth joiningYear')
+            .populate('subject', 'name code')
+            .populate('createdBy', 'fullName')
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean(),
+        ProTest.countDocuments(),
+    ]);
 
     const testIds = tests.map(t => t._id);
     const attemptCounts = await ProTestAttempt.aggregate([
@@ -37,7 +46,7 @@ export async function GET() {
         attemptCount: countMap[String(t._id)] ?? 0,
     }));
 
-    return NextResponse.json({ success: true, tests: enriched });
+    return NextResponse.json({ success: true, tests: enriched, total, page, pages: Math.ceil(total / limit) });
 }
 
 // ── POST /api/admin/tests — upload dual JSON files, validate, store ─────────

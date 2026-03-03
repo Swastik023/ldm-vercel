@@ -70,4 +70,7 @@ UserSchema.index({ classId: 1, rollNumber: 1 }, { unique: true, sparse: true });
 // Roll number used as primary login — unique globally (sparse so non-students don't collide)
 UserSchema.index({ rollNumber: 1 }, { unique: true, sparse: true });
 
+// Prevent duplicate roll numbers within the same batch
+UserSchema.index({ batch: 1, rollNumber: 1 }, { unique: true, sparse: true });
+
 export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

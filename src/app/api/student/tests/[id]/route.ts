@@ -44,14 +44,20 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     // Build safe questions (NO correct answers)
-    let questions = test.questions.map(q => ({
-        questionId: q.questionId,
-        sectionId: q.sectionId,
-        type: q.type,
-        questionText: q.questionText,
-        marks: q.marks,
-        options: test.shuffleOptions ? shuffle(q.options) : q.options,
-    }));
+    const labels: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
+    let questions = test.questions.map(q => {
+        let opts = test.shuffleOptions ? shuffle(q.options) : q.options;
+        // Re-label options sequentially so UI always shows A, B, C, D in order
+        opts = opts.map((o, i) => ({ label: labels[i] ?? o.label, text: o.text }));
+        return {
+            questionId: q.questionId,
+            sectionId: q.sectionId,
+            type: q.type,
+            questionText: q.questionText,
+            marks: q.marks,
+            options: opts,
+        };
+    });
 
     if (test.shuffleQuestions) questions = shuffle(questions);
 
@@ -81,12 +87,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     }
     const { id } = await params;
     await dbConnect();
-
-    // Prevent re-submission
-    const existing = await ProTestAttempt.findOne({ testId: id, studentId: session.user.id });
-    if (existing) {
-        return NextResponse.json({ success: false, message: 'You have already submitted this test.', alreadyAttempted: true }, { status: 409 });
-    }
 
     const test = await ProTest.findById(id).lean();
     if (!test) return NextResponse.json({ success: false, message: 'Test not found.' }, { status: 404 });
@@ -152,26 +152,37 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const percentage = Math.round((marksObtained / test.totalMarks) * 100);
     const resultVisible = test.resultMode === 'instant';
 
-    const attempt = await ProTestAttempt.create({
-        testId: id,
-        studentId: session.user.id,
-        startedAt: new Date(Date.now() - test.durationMinutes * 60 * 1000), // Approx
-        submittedAt: new Date(),
-        status: 'submitted',
-        answers: test.questions.map(q => ({
-            questionId: q.questionId,
-            selectedOption: studentMap[q.questionId] ?? null,
-        })),
-        totalMarks: test.totalMarks,
-        marksObtained,
-        negativeMarks,
-        correctCount,
-        wrongCount,
-        skippedCount,
-        percentage,
-        gradedAnswers,
-        resultVisible,
-    });
+    // Atomic create — the unique compound index { testId, studentId } prevents
+    // duplicate submissions even under concurrent requests (no TOCTOU race).
+    let attempt;
+    try {
+        attempt = await ProTestAttempt.create({
+            testId: id,
+            studentId: session.user.id,
+            startedAt: new Date(Date.now() - test.durationMinutes * 60 * 1000), // Approx
+            submittedAt: new Date(),
+            status: 'submitted',
+            answers: test.questions.map(q => ({
+                questionId: q.questionId,
+                selectedOption: studentMap[q.questionId] ?? null,
+            })),
+            totalMarks: test.totalMarks,
+            marksObtained,
+            negativeMarks,
+            correctCount,
+            wrongCount,
+            skippedCount,
+            percentage,
+            gradedAnswers,
+            resultVisible,
+        });
+    } catch (err: any) {
+        // E11000 duplicate key error = student already submitted
+        if (err?.code === 11000) {
+            return NextResponse.json({ success: false, message: 'You have already submitted this test.', alreadyAttempted: true }, { status: 409 });
+        }
+        throw err; // Re-throw unexpected errors
+    }
 
     // Instant mode — return full result
     if (test.resultMode === 'instant') {

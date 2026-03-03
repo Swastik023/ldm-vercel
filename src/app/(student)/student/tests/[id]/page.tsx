@@ -26,6 +26,7 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const submittedRef = useRef(false);
     const totalSeconds = useRef(0);
+    const endTimeRef = useRef(0);   // Absolute epoch ms when test expires
     const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     // Resolve params once
@@ -74,6 +75,7 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
                     setTest(d.test);
                     setQuestions(d.questions);
                     totalSeconds.current = d.test.durationMinutes * 60;
+                    endTimeRef.current = Date.now() + d.test.durationMinutes * 60 * 1000;
                     setTimeLeft(d.test.durationMinutes * 60);
                     gtag.event.testStart(d.test.title);
                 }
@@ -82,14 +84,13 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
             .catch(() => { setError('Failed to load test.'); setLoading(false); });
     }, [testId, router]);
 
-    // Timer — only initialises once when test loads
+    // Timer — uses absolute endTime so tab-throttling cannot extend the test
     useEffect(() => {
         if (!test) return;
         timerRef.current = setInterval(() => {
-            setTimeLeft(t => {
-                if (t <= 1) { clearInterval(timerRef.current!); handleSubmit(true); return 0; }
-                return t - 1;
-            });
+            const remaining = Math.max(0, Math.ceil((endTimeRef.current - Date.now()) / 1000));
+            setTimeLeft(remaining);
+            if (remaining <= 0) { clearInterval(timerRef.current!); handleSubmit(true); }
         }, 1000);
         return () => { if (timerRef.current) clearInterval(timerRef.current); };
         // eslint-disable-next-line react-hooks/exhaustive-deps

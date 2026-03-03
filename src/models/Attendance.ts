@@ -44,5 +44,7 @@ const AttendanceSchema = new Schema<IAttendance>({
 
 // Index for quick lookup of attendance by date/subject/section
 AttendanceSchema.index({ date: 1, subject: 1, section: 1 }, { unique: true });
+// Fast student-specific attendance lookups (student dashboard)
+AttendanceSchema.index({ 'records.student': 1, date: -1 });
 
 export const Attendance: Model<IAttendance> = mongoose.models.Attendance || mongoose.model<IAttendance>('Attendance', AttendanceSchema);
