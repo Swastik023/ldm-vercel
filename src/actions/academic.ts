@@ -129,63 +129,89 @@ export async function createBatch(data: any) {
     }
 }
 
-export async function populateBatches() {
+/**
+ * seedBatches — idempotent idempotent seed.
+ * Creates batches for all active programs for the given year range.
+ * Format: CODE_YEAR_JAN / CODE_YEAR_JUL
+ * Uses compound filter (program + joiningYear + intakeMonth) — true dedup.
+ */
+export async function seedBatches(fromYear?: number, toYear?: number) {
     await dbConnect();
     try {
-        const programs = await Program.find({ is_active: true });
-        if (!programs.length) throw new Error("No active programs found to populate");
+        const programs = await Program.find({ is_active: true }).lean();
+        if (!programs.length) throw new Error('No active programs found. Create at least one program first.');
 
-        // Need at least one master active session as placeholder if required by schema
-        let masterSession = await Session.findOne({ is_active: true }).sort({ start_date: -1 });
-        if (!masterSession) masterSession = await Session.findOne().sort({ start_date: -1 });
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const startYear = fromYear ?? currentYear;
+        const endYear = toYear ?? currentYear + 2;
 
         let createdCount = 0;
-        const now = new Date();
+        let skippedCount = 0;
 
         for (const program of programs) {
-            for (let year = 2020; year <= 2040; year++) {
-                for (const month of ['January', 'July'] as const) {
-                    const batchName = month === 'January' ? `${year}${program.code}` : `${year + 2}${program.code}`;
-                    const startDate = month === 'January' ? new Date(year, 0, 1) : new Date(year, 6, 1);
-                    const expectedEndDate = month === 'January' ? new Date(year + program.duration_years - 1, 11, 31) : new Date(year + program.duration_years, 5, 30);
+            const code = program.code.toUpperCase();
+            for (let year = startYear; year <= endYear; year++) {
+                for (const entry of [
+                    { intakeMonth: 'January' as const, monthCode: 'JAN', startDate: new Date(year, 0, 1) },
+                    { intakeMonth: 'July' as const, monthCode: 'JUL', startDate: new Date(year, 6, 1) },
+                ]) {
+                    const batchCode = `${code}_${year}_${entry.monthCode}`;
+                    const expectedEndDate = new Date(entry.startDate);
+                    expectedEndDate.setFullYear(expectedEndDate.getFullYear() + (program.duration_years || 3));
 
                     let status: 'upcoming' | 'active' | 'completed' = 'upcoming';
                     if (now > expectedEndDate) status = 'completed';
-                    else if (now >= startDate && now <= expectedEndDate) status = 'active';
+                    else if (now >= entry.startDate && now <= expectedEndDate) status = 'active';
 
                     const result = await Batch.updateOne(
-                        { name: batchName },
+                        // Dedup key: program + year + intakeMonth (not just name)
+                        { program: program._id, joiningYear: year, intakeMonth: entry.intakeMonth },
                         {
                             $setOnInsert: {
-                                name: batchName,
+                                name: batchCode,
+                                batchCode,
                                 program: program._id,
-                                session: masterSession ? masterSession._id : undefined, // Will fail validation if session required, better handled.
-                                intakeMonth: month,
+                                session: null,
+                                intakeMonth: entry.intakeMonth,
                                 joiningYear: year,
-                                courseDurationYears: program.duration_years,
-                                startDate,
+                                courseDurationYears: program.duration_years || 3,
+                                startDate: entry.startDate,
                                 expectedEndDate,
                                 status,
                                 capacity: 60,
                                 current_students: 0,
                                 current_semester: 1,
-                                is_active: true
-                            }
+                                is_active: status !== 'completed',
+                            },
                         },
                         { upsert: true }
                     );
 
                     if (result.upsertedCount > 0) createdCount++;
+                    else skippedCount++;
                 }
             }
         }
+
         revalidatePath('/admin');
-        revalidatePath('/admin/batches');
-        return { success: true, message: `Successfully initialized ${createdCount} batches.` };
+        revalidatePath('/admin/academic');
+        return {
+            success: true,
+            message: `Seeded ${createdCount} new batch(es), ${skippedCount} already existed.`,
+            created: createdCount,
+            skipped: skippedCount,
+        };
     } catch (error: any) {
         return { success: false, error: error.message };
     }
 }
+
+// Keep old name as alias for backward compat with BatchManager component
+export async function populateBatches() {
+    return seedBatches();
+}
+
 
 export async function updateBatch(id: string, data: any) {
     await dbConnect();

@@ -8,7 +8,7 @@ import { authOptions } from '@/lib/auth';
 // GET /api/admin/academic-options — returns sessions and batches for dropdowns
 export async function GET() {
     const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== 'admin') {
+    if (!session || !['admin', 'teacher'].includes(session.user?.role)) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 

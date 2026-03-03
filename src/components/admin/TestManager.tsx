@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 interface SubjectOption { _id: string; name: string; code?: string; }
-interface BatchOption { _id: string; name: string; program?: { name: string }; }
+interface BatchOption { _id: string; name: string; batchCode?: string; joiningYear?: number; intakeMonth?: string; program?: { name: string; code?: string }; }
 interface AdminTest {
     _id: string; title: string; description?: string;
     durationMinutes: number; totalMarks: number; negativeMarking: number;
@@ -132,7 +132,7 @@ export default function TestManager() {
         load();
         // Load batches + subjects
         Promise.all([
-            fetch('/api/admin/academic-options').then(r => r.json()),
+            fetch('/api/admin/batches?active=true').then(r => r.json()),
             fetch('/api/admin/academic-options/subjects').then(r => r.json()),
         ]).then(([batchData, subjectData]) => {
             if (batchData.success) setBatches(batchData.batches);
@@ -276,7 +276,7 @@ export default function TestManager() {
                                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white">
                                     <option value="">— Select Batch —</option>
                                     {batches.map(b => (
-                                        <option key={b._id} value={b._id}>{b.name} {b.program?.name ? `(${b.program.name})` : ''}</option>
+                                        <option key={b._id} value={b._id}>{b.batchCode || b.name} {b.program?.name ? `— ${b.program.name}` : ''}</option>
                                     ))}
                                 </select>
                             </div>

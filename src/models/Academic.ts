@@ -51,9 +51,10 @@ export interface ISubject extends Document {
 }
 
 export interface IBatch extends Document {
-    name: string; // e.g., "2025BTECH"
+    name: string;        // Human-readable, e.g. "CSE_2026_JAN"
+    batchCode: string;   // System code, e.g. "CSE_2026_JAN" — unique
     program: mongoose.Types.ObjectId;
-    session: mongoose.Types.ObjectId;
+    session?: mongoose.Types.ObjectId;  // Optional — batch exists independently of session
     intakeMonth: 'January' | 'July';
     joiningYear: number;
     courseDurationYears: number;
@@ -129,9 +130,11 @@ const SubjectSchema = new Schema<ISubject>({
 SubjectSchema.index({ code: 1, program: 1 }, { unique: true });
 
 const BatchSchema = new Schema<IBatch>({
-    name: { type: String, required: true },
+    name: { type: String, required: true, trim: true },
+    batchCode: { type: String, required: true, trim: true, uppercase: true },
     program: { type: Schema.Types.ObjectId, ref: 'Program', required: true },
-    session: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+    // session is optional — batch exists independently
+    session: { type: Schema.Types.ObjectId, ref: 'Session', default: null },
     intakeMonth: { type: String, enum: ['January', 'July'], required: true },
     joiningYear: { type: Number, required: true },
     courseDurationYears: { type: Number, required: true },
@@ -145,7 +148,10 @@ const BatchSchema = new Schema<IBatch>({
     is_active: { type: Boolean, default: true },
 }, { timestamps: true });
 
+// Unique by name (human readable)
 BatchSchema.index({ name: 1 }, { unique: true });
+// Unique by programme + year + intake — prevents true duplicates even if name differs
+BatchSchema.index({ program: 1, joiningYear: 1, intakeMonth: 1 }, { unique: true });
 
 const AssignmentSchema = new Schema<IAssignment>({
     teacher: { type: Schema.Types.ObjectId, ref: 'User', required: true },

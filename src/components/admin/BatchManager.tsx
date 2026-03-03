@@ -71,12 +71,8 @@ export default function BatchManager({
         if (!programId || !joiningYear) return '';
         const prog = programs.find((p) => p._id === programId);
         if (!prog) return '';
-        const code = prog.code;
-        if (intakeMonth === 'January') {
-            return `${joiningYear}${code}`;
-        } else {
-            return `${parseInt(joiningYear, 10) + 2}${code}`;
-        }
+        const monthCode = intakeMonth === 'January' ? 'JAN' : 'JUL';
+        return `${prog.code.toUpperCase()}_${joiningYear}_${monthCode}`;
     })();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -89,33 +85,24 @@ export default function BatchManager({
 
         setIsLoading(true);
         try {
-            const result = await createBatch({
-                name: computedName,
-                program: programId,
-                session: sessionId,
-                capacity
+            const res = await fetch('/api/admin/batches', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    programId,
+                    joiningYear: parseInt(joiningYear, 10),
+                    intakeMonth,
+                    capacity,
+                }),
             });
+            const result = await res.json();
 
             if (result.success) {
-                toast.success('Batch created');
-                // The returned batch might not have populated fields, usually we'd re-fetch or manual construct
-                // For simplicity, we might need to manually populate or refresh page.
-                // Or better, let's just refresh the page data via router.refresh() if needed, but here simple state update:
-                // We need the program/session objects for display
-                const prog = programs.find(p => p._id === programId);
-                const sess = sessions.find(s => s._id === sessionId);
-
-                if (prog && sess) {
-                    const newBatch = {
-                        ...result.data,
-                        program: prog,
-                        session: sess
-                    };
-                    setBatches([newBatch, ...batches]);
-                }
-                // Don't reset everything, allow quick succession creation
+                toast.success(`Batch "${result.batch?.name}" created`);
+                // Reload to show fresh data with all populated fields
+                window.location.reload();
             } else {
-                toast.error(result.error || 'Failed to create batch');
+                toast.error(result.message || 'Failed to create batch');
             }
         } catch (error) {
             toast.error('An error occurred');
@@ -166,16 +153,16 @@ export default function BatchManager({
         }
     };
     const handlePopulate = async () => {
-        if (!confirm('This will auto-generate all batches from 2020 to 2040 for all active programs. It is safe to run multiple times. Proceed?')) return;
+        if (!confirm('This will auto-generate batches for the current year + next 2 years for all active programs. Safe to run multiple times. Proceed?')) return;
         setIsPopulating(true);
         try {
-            const result = await populateBatches();
+            const res = await fetch('/api/admin/batches/seed', { method: 'POST' });
+            const result = await res.json();
             if (result.success) {
-                toast.success(result.message || 'Batches populated successfully');
-                // The page needs to refresh to show new data, router.refresh() works or let nextjs handle.
+                toast.success(result.message || 'Batches seeded successfully');
                 window.location.reload();
             } else {
-                toast.error(result.error || 'Failed to populate batches');
+                toast.error(result.message || result.error || 'Failed to seed batches');
             }
         } catch (error) {
             toast.error('An error occurred');
