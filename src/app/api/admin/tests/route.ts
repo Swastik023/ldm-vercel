@@ -66,6 +66,11 @@ export async function POST(req: NextRequest) {
     if (!questionsFile || !answersFile) {
         return NextResponse.json({ success: false, message: 'Both questions.json and answers.json files are required.' }, { status: 400 });
     }
+
+    // Security: Prevent RAM exhaustion
+    if (questionsFile.size > 2 * 1024 * 1024 || answersFile.size > 2 * 1024 * 1024) {
+        return NextResponse.json({ success: false, message: 'Files exceed 2MB limit. Please upload smaller JSON files.' }, { status: 413 });
+    }
     if (!batchId?.trim()) {
         return NextResponse.json({ success: false, message: 'Please select a Batch from the dropdown.' }, { status: 400 });
     }

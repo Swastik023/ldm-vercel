@@ -177,31 +177,41 @@ export async function DELETE(
         return NextResponse.json({ success: false, message: 'Record is locked for the period and cannot be modified' }, { status: 403 });
     }
 
-    // Find the exact nested payment
-    const paymentIndex = feePayment.payments.findIndex(p => p._id && (p._id as any).toString() === paymentRecordId);
-    if (paymentIndex === -1) {
+    // Find the exact nested payment to get its amount
+    const paymentRecord = feePayment.payments.id(paymentRecordId);
+    if (!paymentRecord) {
         return NextResponse.json({ success: false, message: 'Specific sub-payment transaction not found' }, { status: 404 });
     }
+    const cancelledPaymentObj = paymentRecord.toObject();
+    const amountToDeduct = paymentRecord.amount;
 
-    const cancelledPaymentObj = (feePayment.payments[paymentIndex] as any).toObject();
+    // Atomically pull the record and decrement the paid amount
+    const updatedFeePayment = await FeePayment.findByIdAndUpdate(
+        feePaymentId,
+        {
+            $pull: { payments: { _id: paymentRecordId } },
+            $inc: { amount_paid: -amountToDeduct }
+        },
+        { new: true }
+    ).populate('fee_structure');
 
-    // Withdraw the amount
-    feePayment.amount_paid -= feePayment.payments[paymentIndex].amount;
-    if (feePayment.amount_paid < 0) feePayment.amount_paid = 0; // Sanity protection
+    if (!updatedFeePayment) {
+        return NextResponse.json({ success: false, message: 'Failed to update fee record' }, { status: 500 });
+    }
 
-    // Remove from array 
-    feePayment.payments.splice(paymentIndex, 1);
+    // Ensure amount_paid doesn't go below 0 (sanity check, though logic shouldn't allow it)
+    if (updatedFeePayment.amount_paid < 0) {
+        updatedFeePayment.amount_paid = 0;
+    }
 
-    // Re-check status against total structure using populate
-    await feePayment.populate('fee_structure');
-    const fsTotal = (feePayment.fee_structure as any)?.total_amount || 0;
-
+    // Re-evaluate status based on new totals
+    const fsTotal = (updatedFeePayment.fee_structure as any)?.total_amount || 0;
     let newStatus: 'paid' | 'partial' | 'unpaid' = 'partial';
-    if (feePayment.amount_paid >= fsTotal && fsTotal > 0) newStatus = 'paid';
-    else if (feePayment.amount_paid <= 0) newStatus = 'unpaid';
+    if (updatedFeePayment.amount_paid >= fsTotal && fsTotal > 0) newStatus = 'paid';
+    else if (updatedFeePayment.amount_paid <= 0) newStatus = 'unpaid';
 
-    feePayment.status = newStatus;
-    await feePayment.save();
+    updatedFeePayment.status = newStatus;
+    await updatedFeePayment.save(); // Safe standard save for the status recalculation
 
     // Create Audit Log for deletion
     await AuditLog.create({
