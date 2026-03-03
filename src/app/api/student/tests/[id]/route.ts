@@ -1,12 +1,24 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
-import { Test } from '@/models/Test';
-import { TestAttempt } from '@/models/TestAttempt';
+import { ProTest } from '@/models/Test';
+import { TestAnswerKey } from '@/models/TestAnswerKey';
+import { ProTestAttempt } from '@/models/TestAttempt';
+import { User } from '@/models/User';
 
-// GET /api/student/tests/[id] — fetch test questions (hide correct answers)
-export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+// helper: shuffle array (Fisher-Yates)
+function shuffle<T>(arr: T[]): T[] {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ── GET /api/student/tests/[id] — load test questions (no answers) ──────────
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session?.user || session.user.role !== 'student') {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
@@ -14,31 +26,55 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const { id } = await params;
     await dbConnect();
 
-    const test = await Test.findOne({ _id: id, isActive: true }).lean();
-    if (!test) return NextResponse.json({ success: false, message: 'Test not found or not available.' }, { status: 404 });
+    // Verify student's batch matches
+    const student = await User.findById(session.user.id).select('batch').lean();
+    const test = await ProTest.findOne({ _id: id, isActive: true })
+        .populate('subject', 'name code')
+        .lean();
 
-    // Check if already attempted
-    const existing = await TestAttempt.findOne({ testId: id, studentId: session.user.id });
-    if (existing) {
-        return NextResponse.json({ success: false, message: 'You have already submitted this test.', alreadyAttempted: true, attemptId: existing._id }, { status: 409 });
+    if (!test) return NextResponse.json({ success: false, message: 'Test not found or not available.' }, { status: 404 });
+    if (String(test.batch) !== String(student?.batch)) {
+        return NextResponse.json({ success: false, message: 'This test is not assigned to your batch.' }, { status: 403 });
     }
 
-    // Strip correct answers before sending to client
-    const safeQuestions = test.questions.map((q, i) => ({
-        index: i,
+    // Check already attempted
+    const existing = await ProTestAttempt.findOne({ testId: id, studentId: session.user.id });
+    if (existing) {
+        return NextResponse.json({ success: false, message: 'You have already submitted this test.', alreadyAttempted: true }, { status: 409 });
+    }
+
+    // Build safe questions (NO correct answers)
+    let questions = test.questions.map(q => ({
+        questionId: q.questionId,
+        sectionId: q.sectionId,
+        type: q.type,
         questionText: q.questionText,
-        options: q.options,
+        marks: q.marks,
+        options: test.shuffleOptions ? shuffle(q.options) : q.options,
     }));
+
+    if (test.shuffleQuestions) questions = shuffle(questions);
 
     return NextResponse.json({
         success: true,
-        test: { _id: test._id, title: test.title, duration: test.duration, questionCount: test.questions.length },
-        questions: safeQuestions,
+        test: {
+            _id: test._id,
+            title: test.title,
+            description: test.description,
+            durationMinutes: test.durationMinutes,
+            totalMarks: test.totalMarks,
+            negativeMarking: test.negativeMarking,
+            questionCount: test.questions.length,
+            sections: test.sections,
+            resultMode: test.resultMode,
+            subject: test.subject,
+        },
+        questions,
     });
 }
 
-// POST /api/student/tests/[id] — submit answers & calculate score
-export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+// ── POST /api/student/tests/[id] — submit answers, grade, store ─────────────
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session?.user || session.user.role !== 'student') {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
@@ -47,59 +83,118 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     await dbConnect();
 
     // Prevent re-submission
-    const existing = await TestAttempt.findOne({ testId: id, studentId: session.user.id });
+    const existing = await ProTestAttempt.findOne({ testId: id, studentId: session.user.id });
     if (existing) {
         return NextResponse.json({ success: false, message: 'You have already submitted this test.', alreadyAttempted: true }, { status: 409 });
     }
 
-    const test = await Test.findById(id).lean();
+    const test = await ProTest.findById(id).lean();
     if (!test) return NextResponse.json({ success: false, message: 'Test not found.' }, { status: 404 });
 
-    const { answers } = await req.json(); // [{ questionIndex, selectedOption }]
+    const answerKey = await TestAnswerKey.findOne({ testId: id }).lean();
+    if (!answerKey) return NextResponse.json({ success: false, message: 'Answer key not found. Contact admin.' }, { status: 500 });
+
+    const { answers } = await req.json(); // [{ questionId, selectedOption }]
     if (!Array.isArray(answers)) {
         return NextResponse.json({ success: false, message: 'Invalid answers format.' }, { status: 400 });
     }
 
-    // Score calculation
-    let score = 0;
-    const totalQuestions = test.questions.length;
-    const answerMap: Record<number, string> = {};
-    answers.forEach((a: { questionIndex: number; selectedOption: string }) => {
-        answerMap[a.questionIndex] = a.selectedOption?.toUpperCase();
+    // Build student answer map
+    const studentMap: Record<string, string | null> = {};
+    (answers as { questionId: string; selectedOption: string | null }[]).forEach(a => {
+        studentMap[a.questionId] = a.selectedOption?.toUpperCase() ?? null;
     });
 
-    test.questions.forEach((q, i) => {
-        if (answerMap[i] === q.correctAnswer) score++;
+    // Build answer key map
+    const keyMap: Record<string, typeof answerKey.answers[0]> = {};
+    answerKey.answers.forEach(a => { keyMap[a.questionId] = a; });
+
+    // Grade
+    let marksObtained = 0;
+    let negativeMarks = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let skippedCount = 0;
+
+    const gradedAnswers = test.questions.map(q => {
+        const key = keyMap[q.questionId];
+        const studentAns = studentMap[q.questionId] ?? null;
+        const correctAns = key?.correctAnswer ?? '';
+        const isCorrect = !!studentAns && studentAns === correctAns;
+        const isSkipped = studentAns === null;
+
+        let marksAwarded = 0;
+        if (isCorrect) {
+            marksAwarded = q.marks;
+            correctCount++;
+            marksObtained += q.marks;
+        } else if (isSkipped) {
+            skippedCount++;
+        } else {
+            wrongCount++;
+            marksAwarded = -test.negativeMarking;
+            negativeMarks += test.negativeMarking;
+            marksObtained -= test.negativeMarking;
+        }
+
+        return {
+            questionId: q.questionId,
+            questionText: q.questionText,
+            studentAnswer: studentAns,
+            correctAnswer: correctAns,
+            reason: key?.reason ?? '',
+            marksAwarded,
+            isCorrect,
+        };
     });
 
-    const percentage = Math.round((score / totalQuestions) * 100);
+    marksObtained = Math.max(0, marksObtained); // Don't go below 0
+    const percentage = Math.round((marksObtained / test.totalMarks) * 100);
+    const resultVisible = test.resultMode === 'instant';
 
-    const attempt = await TestAttempt.create({
+    const attempt = await ProTestAttempt.create({
         testId: id,
         studentId: session.user.id,
-        answers,
-        score,
-        totalQuestions,
-        percentage,
+        startedAt: new Date(Date.now() - test.durationMinutes * 60 * 1000), // Approx
         submittedAt: new Date(),
+        status: 'submitted',
+        answers: test.questions.map(q => ({
+            questionId: q.questionId,
+            selectedOption: studentMap[q.questionId] ?? null,
+        })),
+        totalMarks: test.totalMarks,
+        marksObtained,
+        negativeMarks,
+        correctCount,
+        wrongCount,
+        skippedCount,
+        percentage,
+        gradedAnswers,
+        resultVisible,
     });
 
-    // Return result + answer key for review
-    const reviewData = test.questions.map((q, i) => ({
-        index: i,
-        questionText: q.questionText,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        studentAnswer: answerMap[i] ?? null,
-        isCorrect: answerMap[i] === q.correctAnswer,
-    }));
+    // Instant mode — return full result
+    if (test.resultMode === 'instant') {
+        return NextResponse.json({
+            success: true,
+            resultMode: 'instant',
+            attemptId: attempt._id,
+            marksObtained,
+            totalMarks: test.totalMarks,
+            negativeMarks,
+            percentage,
+            correctCount,
+            wrongCount,
+            skippedCount,
+            gradedAnswers,
+        });
+    }
 
+    // Manual mode — acknowledge only
     return NextResponse.json({
         success: true,
+        resultMode: 'manual',
         attemptId: attempt._id,
-        score,
-        totalQuestions,
-        percentage,
-        review: reviewData,
+        message: 'Your test has been submitted successfully. Results will be published by your teacher.',
     });
 }

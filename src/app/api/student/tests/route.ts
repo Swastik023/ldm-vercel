@@ -2,36 +2,61 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
-import { Test } from '@/models/Test';
-import { TestAttempt } from '@/models/TestAttempt';
+import { ProTest } from '@/models/Test';
+import { ProTestAttempt } from '@/models/TestAttempt';
+import { User } from '@/models/User';
 
-// GET /api/student/tests — list active tests (hide correct answers)
+// ── GET /api/student/tests — tests filtered by student's batch ─────────────
 export async function GET() {
     const session = await getServerSession(authOptions);
     if (!session?.user || session.user.role !== 'student') {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
     await dbConnect();
-    const tests = await Test.find({ isActive: true })
-        .select('title duration questions createdAt')
+
+    // Fetch student's batch
+    const student = await User.findById(session.user.id).select('batch').lean();
+    if (!student?.batch) {
+        return NextResponse.json({ success: true, tests: [] });
+    }
+
+    const testsFull = await ProTest.find({ isActive: true, batch: student.batch })
+        .populate('subject', 'name code')
+        .sort({ createdAt: -1 })
         .lean();
 
-    // Find which tests this student has already attempted
     const studentId = session.user.id;
-    const attempted = await TestAttempt.find({ studentId }).select('testId score percentage').lean();
-    const attemptedMap: Record<string, { score: number; percentage: number }> = {};
-    attempted.forEach(a => { attemptedMap[String(a.testId)] = { score: a.score, percentage: a.percentage }; });
+    const attempted = await ProTestAttempt.find({ studentId })
+        .select('testId marksObtained totalMarks percentage correctCount wrongCount skippedCount resultVisible')
+        .lean();
 
-    const enriched = tests.map(t => ({
-        _id: t._id,
-        title: t.title,
-        duration: t.duration,
-        questionCount: t.questions.length,
-        createdAt: t.createdAt,
-        attempted: !!attemptedMap[String(t._id)],
-        score: attemptedMap[String(t._id)]?.score ?? null,
-        percentage: attemptedMap[String(t._id)]?.percentage ?? null,
-    }));
+    const attemptMap: Record<string, typeof attempted[0]> = {};
+    attempted.forEach(a => { attemptMap[String(a.testId)] = a; });
+
+    const enriched = testsFull.map(t => {
+        const att = attemptMap[String(t._id)];
+        return {
+            _id: t._id,
+            title: t.title,
+            description: t.description,
+            durationMinutes: t.durationMinutes,
+            totalMarks: t.totalMarks,
+            negativeMarking: t.negativeMarking,
+            questionCount: t.questions.length,
+            subject: t.subject,
+            resultMode: t.resultMode,
+            isPublished: t.isPublished,
+            createdAt: t.createdAt,
+            attempted: !!att,
+            marksObtained: att?.marksObtained ?? null,
+            totalMarksForAttempt: att?.totalMarks ?? null,
+            percentage: att?.percentage ?? null,
+            correctCount: att?.correctCount ?? null,
+            wrongCount: att?.wrongCount ?? null,
+            skippedCount: att?.skippedCount ?? null,
+            resultVisible: att?.resultVisible ?? false,
+        };
+    });
 
     return NextResponse.json({ success: true, tests: enriched });
 }

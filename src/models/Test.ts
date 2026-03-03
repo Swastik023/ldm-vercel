@@ -1,47 +1,86 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export interface IOption {
-    label: string; // 'A', 'B', 'C', 'D'
+// ─── Option ────────────────────────────────────────────────────────────────
+export interface ITestOption {
+    label: 'A' | 'B' | 'C' | 'D';
     text: string;
 }
 
-export interface IQuestion {
+// ─── Question ──────────────────────────────────────────────────────────────
+export interface ITestQuestion {
+    questionId: string;   // Unique within test, matches answers.json
+    sectionId?: string;
+    type: 'mcq';
     questionText: string;
-    options: IOption[];
-    correctAnswer: string; // 'A', 'B', 'C', or 'D'
+    marks: number;
+    options: ITestOption[];
 }
 
-export interface ITest extends Document {
+// ─── Section ───────────────────────────────────────────────────────────────
+export interface ITestSection {
+    sectionId: string;
     title: string;
-    duration: number; // in minutes
+    instructions?: string;
+}
+
+// ─── ProTest ───────────────────────────────────────────────────────────────
+export interface IProTest extends Document {
+    title: string;
+    description?: string;
+    durationMinutes: number;
+    totalMarks: number;
+    batch: mongoose.Types.ObjectId;        // Student batch filter
+    subject: mongoose.Types.ObjectId;      // Subject filter
+    negativeMarking: number;               // Marks deducted per wrong answer (0 = disabled)
+    shuffleQuestions: boolean;
+    shuffleOptions: boolean;
+    resultMode: 'instant' | 'manual';
+    isPublished: boolean;                  // Admin publishes results for manual mode
     isActive: boolean;
-    questions: IQuestion[];
     createdBy: mongoose.Types.ObjectId;
+    sections: ITestSection[];
+    questions: ITestQuestion[];
     createdAt: Date;
     updatedAt: Date;
 }
 
-const OptionSchema = new Schema<IOption>({ label: String, text: String }, { _id: false });
+const OptionSchema = new Schema<ITestOption>({ label: String, text: String }, { _id: false });
 
-const QuestionSchema = new Schema<IQuestion>(
-    {
-        questionText: { type: String, required: true },
-        options: { type: [OptionSchema], required: true },
-        correctAnswer: { type: String, required: true },
+const QuestionSchema = new Schema<ITestQuestion>({
+    questionId: { type: String, required: true },
+    sectionId: { type: String },
+    type: { type: String, enum: ['mcq'], default: 'mcq' },
+    questionText: { type: String, required: true },
+    marks: { type: Number, required: true, min: 0 },
+    options: { type: [OptionSchema], required: true },
+}, { _id: false });
+
+const SectionSchema = new Schema<ITestSection>({
+    sectionId: { type: String, required: true },
+    title: { type: String, required: true },
+    instructions: { type: String },
+}, { _id: false });
+
+const ProTestSchema = new Schema<IProTest>({
+    title: { type: String, required: true, trim: true },
+    description: { type: String, trim: true },
+    durationMinutes: { type: Number, required: true, min: 1 },
+    totalMarks: { type: Number, required: true, min: 1 },
+    batch: { type: Schema.Types.ObjectId, ref: 'Batch', required: true },
+    subject: { type: Schema.Types.ObjectId, ref: 'Subject', required: true },
+    negativeMarking: { type: Number, default: 0, min: 0 },
+    shuffleQuestions: { type: Boolean, default: false },
+    shuffleOptions: { type: Boolean, default: false },
+    resultMode: { type: String, enum: ['instant', 'manual'], default: 'instant' },
+    isPublished: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    sections: { type: [SectionSchema], default: [] },
+    questions: {
+        type: [QuestionSchema],
+        validate: [(v: ITestQuestion[]) => v.length > 0, 'A test must have at least one question'],
     },
-    { _id: true }
-);
+}, { timestamps: true });
 
-const TestSchema = new Schema<ITest>(
-    {
-        title: { type: String, required: true, trim: true },
-        duration: { type: Number, required: true, min: 1 },
-        isActive: { type: Boolean, default: true },
-        questions: { type: [QuestionSchema], validate: [(v: IQuestion[]) => v.length > 0, 'A test must have at least one question'] },
-        createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    },
-    { timestamps: true }
-);
-
-export const Test: Model<ITest> =
-    mongoose.models.Test || mongoose.model<ITest>('Test', TestSchema);
+export const ProTest: Model<IProTest> =
+    mongoose.models.ProTest || mongoose.model<IProTest>('ProTest', ProTestSchema);
