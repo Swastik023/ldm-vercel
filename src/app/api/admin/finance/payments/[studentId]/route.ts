@@ -7,6 +7,7 @@ import { FeeStructure } from '@/models/FeeStructure';
 import { AuditLog } from '@/models/AuditLog';
 import { User } from '@/models/User';
 import '@/models/Academic'; // registers Program & Session for populate()
+import { toSafeNumber, isValidDate, safeParseJSON } from '@/lib/validate';
 
 
 // GET /api/admin/finance/payments/[studentId] — student's full payment history
@@ -55,15 +56,22 @@ export async function POST(
     }
 
     const { studentId } = await params;
-    const body = await req.json();
-    const { fee_structure_id, amount, mode, receipt_no, paid_on, remarks } = body;
+    const [body, parseErr] = await safeParseJSON(req);
+    if (parseErr) return parseErr;
 
-    if (!fee_structure_id || !amount || !mode || !receipt_no || !paid_on) {
+    const { fee_structure_id, mode, receipt_no, paid_on, remarks } = body;
+    const amount = toSafeNumber(body.amount);
+
+    if (!fee_structure_id || amount === null || !mode || !receipt_no || !paid_on) {
         return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
     }
 
     if (amount <= 0) {
         return NextResponse.json({ success: false, message: 'Amount must be greater than 0' }, { status: 400 });
+    }
+
+    if (!isValidDate(paid_on)) {
+        return NextResponse.json({ success: false, message: 'Invalid payment date.' }, { status: 400 });
     }
 
     await dbConnect();

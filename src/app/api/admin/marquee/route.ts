@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
     await dbConnect();
     const { message, isActive, order } = await request.json();
     if (!message?.trim()) return NextResponse.json({ success: false, message: 'Message is required' }, { status: 400 });
-    const msg = await MarqueeMessage.create({ message: message.trim(), isActive: isActive ?? true, order: order ?? 0 });
+    const trimmedMsg = message.trim().slice(0, 500); // Cap marquee messages at 500 chars
+    const msg = await MarqueeMessage.create({ message: trimmedMsg, isActive: isActive ?? true, order: order ?? 0 });
     return NextResponse.json({ success: true, message: msg }, { status: 201 });
 }
 
@@ -36,7 +37,10 @@ export async function PATCH(request: NextRequest) {
     }
     await dbConnect();
     const { id, isActive } = await request.json();
+    if (!id) return NextResponse.json({ success: false, message: 'ID is required' }, { status: 400 });
+    if (typeof isActive !== 'boolean') return NextResponse.json({ success: false, message: 'isActive must be a boolean' }, { status: 400 });
     const msg = await MarqueeMessage.findByIdAndUpdate(id, { isActive }, { new: true });
+    if (!msg) return NextResponse.json({ success: false, message: 'Marquee message not found' }, { status: 404 });
     return NextResponse.json({ success: true, message: msg });
 }
 

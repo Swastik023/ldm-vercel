@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { Expense } from '@/models/Expense';
 import { AuditLog } from '@/models/AuditLog';
 import { User } from '@/models/User';
+import { toSafeNumber, isValidDate, safeParseJSON } from '@/lib/validate';
 
 // GET /api/admin/finance/expenses
 export async function GET(req: Request) {
@@ -46,10 +47,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { title, amount, category, paid_on, paid_to, remarks } = body;
+    const [body, parseErr] = await safeParseJSON(req);
+    if (parseErr) return parseErr;
 
-    if (!title || !amount || !category || !paid_on || !paid_to) {
+    const { title, category, paid_to, remarks } = body;
+    const amount = toSafeNumber(body.amount);
+    const paid_on = body.paid_on;
+
+    if (!title || amount === null || !category || !paid_on || !paid_to) {
         return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -57,9 +62,13 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: 'Amount must be greater than 0' }, { status: 400 });
     }
 
+    if (!isValidDate(paid_on)) {
+        return NextResponse.json({ success: false, message: 'Invalid date for paid_on.' }, { status: 400 });
+    }
+
     await dbConnect();
     const expense = await Expense.create({
-        title, amount, category, paid_on: new Date(paid_on), paid_to, remarks,
+        title: String(title).trim(), amount, category, paid_on: new Date(paid_on), paid_to: String(paid_to).trim(), remarks,
         recorded_by: session.user.id,
     });
 

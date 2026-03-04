@@ -6,6 +6,8 @@ import { JobPosting } from '@/models/JobPosting';
 import { JobReferral } from '@/models/JobReferral';
 import { User } from '@/models/User';
 import cloudinary from '@/lib/cloudinary';
+import { checkFileSizeBackend } from '@/lib/uploadLimits';
+import { isValidEmail, isValidPhone } from '@/lib/validate';
 
 async function uploadToCloudinary(buffer: Buffer, folder: string, publicId: string, resourceType: 'image' | 'raw'): Promise<{ secure_url: string }> {
     return new Promise((resolve, reject) => {
@@ -68,6 +70,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (!candidateName || !candidateEmail || !candidatePhone) {
         return NextResponse.json({ success: false, message: 'Candidate name, email, and phone are required.' }, { status: 400 });
     }
+    if (!isValidEmail(candidateEmail)) {
+        return NextResponse.json({ success: false, message: 'Please enter a valid email for the candidate.' }, { status: 400 });
+    }
+    if (!isValidPhone(candidatePhone)) {
+        return NextResponse.json({ success: false, message: 'Candidate phone must be a 10-digit number.' }, { status: 400 });
+    }
 
     // Block self-referral
     if (candidateEmail === student.email?.toLowerCase()) {
@@ -90,9 +98,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     if (!allowedTypes.includes(ext)) {
         return NextResponse.json({ success: false, message: `Resume must be PDF or image.` }, { status: 400 });
     }
-    if (resume.size / (1024 * 1024) > 5) {
-        return NextResponse.json({ success: false, message: 'Resume exceeds 5MB limit.' }, { status: 400 });
-    }
+    const resumeSizeGuard = checkFileSizeBackend('Referral resume', resume);
+    if (resumeSizeGuard) return resumeSizeGuard;
 
     const folder = `ldm-job-referrals/${session.user.id}`;
     const resourceType = ext === 'pdf' ? 'raw' as const : 'image' as const;

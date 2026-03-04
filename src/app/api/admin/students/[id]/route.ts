@@ -10,6 +10,9 @@ import { Batch } from '@/models/Academic';
 import '@/models/Academic';
 import '@/models/Class';
 import { autoCreateStudentFee } from '@/lib/autoCreateStudentFee';
+import { safeParseJSON } from '@/lib/validate';
+
+const VALID_STATUSES = ['active', 'inactive', 'suspended', 'pending', 'under_review', 'rejected'];
 
 // PATCH /api/admin/students/[id] — edit student details
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -24,11 +27,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         if (!mongoose.Types.ObjectId.isValid(id))
             return NextResponse.json({ success: false, message: 'Invalid ID' }, { status: 400 });
 
-        const body = await req.json();
+        const [body, parseErr] = await safeParseJSON(req);
+        if (parseErr) return parseErr;
+
         const allowed = ['fullName', 'email', 'mobileNumber', 'rollNumber', 'sessionFrom', 'sessionTo', 'status', 'batch', 'classId'];
         const update: Record<string, unknown> = {};
         for (const key of allowed) {
-            if (body[key] !== undefined) update[key] = body[key];
+            if (body[key] !== undefined) {
+                // Whitelist status values
+                if (key === 'status' && !VALID_STATUSES.includes(body[key])) {
+                    return NextResponse.json({ success: false, message: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}` }, { status: 400 });
+                }
+                update[key] = body[key];
+            }
         }
 
         const updated = await User.findByIdAndUpdate(id, update, { new: true })

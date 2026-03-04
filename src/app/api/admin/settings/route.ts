@@ -26,7 +26,14 @@ export async function PATCH(req: NextRequest) {
     const settings = await CollegeSettings.getSingleton();
 
     if (body.academicSession !== undefined) settings.academicSession = body.academicSession;
-    if (body.intakeMonths !== undefined && Array.isArray(body.intakeMonths)) settings.intakeMonths = body.intakeMonths;
+    if (body.intakeMonths !== undefined && Array.isArray(body.intakeMonths)) {
+        const validMonths = ['January', 'July'];
+        const filtered = body.intakeMonths.filter((m: string) => validMonths.includes(m));
+        if (filtered.length === 0) {
+            return NextResponse.json({ success: false, message: 'intakeMonths must contain at least one of: January, July' }, { status: 400 });
+        }
+        settings.intakeMonths = filtered;
+    }
     if (body.collegeName !== undefined) settings.collegeName = body.collegeName;
 
     await settings.save();

@@ -100,7 +100,7 @@ export async function POST(req: Request) {
             description,
             category,
             required_file_types: required_file_types || ['pdf', 'jpg', 'png'],
-            max_file_size_mb: max_file_size_mb || 5,
+            max_file_size_mb: Math.min(max_file_size_mb || 4, 4), // Never exceed Vercel's 4MB limit
             is_mandatory: is_mandatory !== false,
             due_date: due_date || undefined,
             scope,

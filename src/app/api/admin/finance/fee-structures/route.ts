@@ -7,6 +7,7 @@ import { FeePayment } from '@/models/FeePayment';
 import { User } from '@/models/User';
 import { Batch } from '@/models/Academic';
 import '@/models/Academic'; // registers Program & Session for populate()
+import { toSafeNumber, safeParseJSON } from '@/lib/validate';
 
 // GET /api/admin/finance/fee-structures — list all
 export async function GET() {
@@ -32,10 +33,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { program, session: sessionId, semester, total_amount, due_date, description } = body;
+    const [body, parseErr] = await safeParseJSON(req);
+    if (parseErr) return parseErr;
 
-    if (!program || !sessionId || !semester || !total_amount || !due_date) {
+    const { program, session: sessionId, due_date, description } = body;
+    const total_amount = toSafeNumber(body.total_amount);
+    const semester = toSafeNumber(body.semester);
+
+    if (!program || !sessionId || semester === null || total_amount === null || !due_date) {
         return NextResponse.json({ success: false, message: 'All required fields must be provided' }, { status: 400 });
     }
 

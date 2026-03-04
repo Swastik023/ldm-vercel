@@ -4,6 +4,7 @@ import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
+import { isValidEmail, isValidObjectId, sanitizeString, safeParseJSON } from '@/lib/validate';
 
 /**
  * Compute course end date from joining month/year + program duration.
@@ -20,7 +21,9 @@ function computeCourseEndDate(joiningMonth: 'January' | 'July', joiningYear: num
 export async function POST(req: NextRequest) {
     await dbConnect();
 
-    const body = await req.json();
+    const [body, parseErr] = await safeParseJSON(req);
+    if (parseErr) return parseErr;
+
     const {
         fullName,
         email,
@@ -39,11 +42,21 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Format / value validation ─────────────────────────────────────────────
+    const safeName = sanitizeString(fullName, 100);
+    if (!safeName) {
+        return NextResponse.json({ success: false, message: 'Full name is required (max 100 characters).' }, { status: 400 });
+    }
+    if (!isValidEmail(email)) {
+        return NextResponse.json({ success: false, message: 'Please enter a valid email address.' }, { status: 400 });
+    }
     if (!/^\d{10}$/.test(mobileNumber)) {
         return NextResponse.json({ success: false, message: 'Mobile number must be 10 digits.' }, { status: 400 });
     }
     if (password.length < 8) {
         return NextResponse.json({ success: false, message: 'Password must be at least 8 characters.' }, { status: 400 });
+    }
+    if (!isValidObjectId(batchId)) {
+        return NextResponse.json({ success: false, message: 'Invalid batch selection.' }, { status: 400 });
     }
 
     const roll = String(rollNumber).trim();
@@ -90,7 +103,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     await (User.create as any)({
-        fullName,
+        fullName: safeName,
         email: email.toLowerCase().trim(),
         username,
         password: hashedPassword,

@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { Salary } from '@/models/Salary';
 import { AuditLog } from '@/models/AuditLog';
 import { User } from '@/models/User';
+import { toSafeNumber, isValidMonth, safeParseJSON } from '@/lib/validate';
 
 // GET /api/admin/finance/salary — list salary records by month
 export async function GET(req: Request) {
@@ -44,11 +45,19 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { employee, month, base_amount, deductions = 0, remarks } = body;
+    const [body, parseErr] = await safeParseJSON(req);
+    if (parseErr) return parseErr;
 
-    if (!employee || !month || !base_amount) {
+    const { employee, month, remarks } = body;
+    const base_amount = toSafeNumber(body.base_amount);
+    const deductions = toSafeNumber(body.deductions ?? 0) ?? 0;
+
+    if (!employee || !month || base_amount === null) {
         return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (!isValidMonth(month)) {
+        return NextResponse.json({ success: false, message: 'Month must be in YYYY-MM format (e.g. 2026-03).' }, { status: 400 });
     }
 
     if (base_amount <= 0) {

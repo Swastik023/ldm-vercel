@@ -4,11 +4,15 @@ import dbConnect from '@/lib/db';
 import { EmailOTP } from '@/models/EmailOTP';
 import { StudentProfile } from '@/models/StudentProfile';
 import { User } from '@/models/User';
+import { safeParseJSON } from '@/lib/validate';
 
 export async function POST(req: Request) {
     await dbConnect();
 
-    const { email, otp } = await req.json();
+    const [body, parseErr] = await safeParseJSON(req);
+    if (parseErr) return parseErr;
+
+    const { email, otp } = body;
     if (!email || !otp) {
         return NextResponse.json({ success: false, message: 'Email and OTP are required.' }, { status: 400 });
     }
