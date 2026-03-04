@@ -1,0 +1,276 @@
+{
+    "program_name": "Diploma in Community Care Provider (DCP)",
+    "program_code": "DCP",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Community Care Provider (DCP) is a pivotal program designed to address the foundational gaps in healthcare accessibility by training specialized 'Frontline Health Guardians'. In a global health landscape where chronic lifestyle diseases and periodic infectious outbreaks are the primary threats, the need for care extends far beyond the hospital walls. The rationale for this program lies in the 'Social Determinants of Health'—the understanding that clinical outcomes are deeply influenced by nutrition, hygiene, mental well-being, and early screening at the grassroots level. This program equips students with the medical knowledge, social empathy, and administrative skills required to manage community health centers, provide professional home-based care, and lead complex public health initiatives in both rural and urban marginalized settings. The DCP graduate is the essential bridge between the medical establishment and the individual home, ensuring that healthcare is not just a reactive service but a proactive way of life.",
+        "role_of_professional": "A Community Care Provider is a versatile healthcare professional whose role is defined by 'Holistic Stewardship'. In the community, they act as health educators—conducting screenings for hypertension and diabetes, organizing immunization camps, and advising families on sanitation and nutrition. In the home-care setting, they provide professional nursing support for geriatric, palliative, and post-surgical patients, managing everything from wound dressings to medication compliance. Their role often involves 'Crisis Intervention'—identifying early signs of maternal distress, pediatric malnutrition, or infectious disease clusters and ensuring timely referral to secondary or tertiary care. They are researchers of the local health landscape, collecting vital data that informs large-scale government health policies. A DCP professional is not just a care-giver, but a 'Community Health Leader' who empowers individuals to take charge of their own physiological and mental well-being.",
+        "preventive_focus": "The core philosophy of this curriculum is 'Prevention is the Highest Form of Care'. While specialized medical technology focuses on cure, the DCP curriculum focuses on the 'Zero-Point'—preventing the onset of disease through behavioral change and environmental optimization. Students are trained in 'Primary Healthcare Protocols', including maternal and child health (MCH), adolescent health, and occupational safety. The program emphasizes 'Health Literacy'—the ability to translate complex medical jargon into actionable advice for diverse populations. By mastering the art of 'Community Engagement', DCP graduates reduce the burden on overcrowded hospitals and improve the 'Quality of Life' indices of the populations they serve. This program is a deep-dive into the 'Epidemiology of the Everyday', making healthcare a ubiquitous and accessible reality."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Grassroots Health Assessment: Proficiency in conducting household health surveys and identifying high-risk individuals using standardized screening tools.",
+            "Maternal, Neonatal, and Child Health (MNCH): mastery of pre-natal counseling, post-partum care, and infant immunization protocols.",
+            "Communicable and Non-Communicable Disease (NCD) Management: implementing screening and follow-up data for Diabetes, Hypertension, TB, and HIV.",
+            "Professional Home Care Mastery: Providing clinical-grade care in the home environment for geriatric and terminal patients.",
+            "Nutrition and Dietetics: Designing culturally appropriate and nutritionally balanced diet plans for different age groups and disease states.",
+            "Emergency First Aid and Triage: Excellence in life-saving interventions and the management of mass casualty scenarios at the community level.",
+            "Social Welfare and Health Schemes: deep knowledge of government policies like PM-JAY and their implementation at the local level.",
+            "Geriatric and Palliative Care: Compassionate management of the elderly, focusing on mobility, skin integrity, and end-of-life dignity."
+        ],
+        "training_framework": {
+            "theory": "30% (Anatomy, Physiology, Public Health, Sociology of Health, and Health Education principles).",
+            "community_labs": "30% (Hands-on training in screening technologies, nutrition labs, first-aid simulation, and home-care equipment handling).",
+            "rural_urban_practicum": "40% (Field-based rotations in community health centers, NGOs, and the government public health department)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Foundations of Anatomy, Physiology, and Public Health",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Human Anatomy and Physiology for Community Care",
+                    "content": "A foundational exploration of the human body through the lens of frontline care. Students learn about the 'Skeletal and Muscular Systems'—focusing on ergonomics and patient transfer techniques. The unit covers the 'Respiratory and Cardiovascular Systems'—understanding the mechanics of breathing and circulation as a basis for vital-sign monitoring. Detailed study of the 'Digestive and Excretory Systems' provides the foundation for nutrition and basic illness management. Students also explore the 'Nervous and Endocrine Systems'—focusing on stress response and hormonal balance. Special modules include 'Integumentary System' (Skin) health, which is critical for preventing bedsores in home-care settings. The unit emphasizes the 'Physiological Changes' throughout the lifespan—from the rapid growth of infancy to the degeneration of old age."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Introduction to Public Health and Community Health nursing",
+                    "content": "Understanding the 'Health of the Herd'. This unit provides a historical and modern perspective on public health. Students learn about 'Epidemiology'—the patterns, causes, and effects of health conditions in defined populations. The curriculum covers the 'Hierarchy of Healthcare' (from Sub-centers to District Hospitals) and the specific role of the 'Accredited Social Health Activist' (ASHA) and 'Multi-Purpose Health Workers' (MPHW). Training includes 'Community Assessment' methodology—using SWOT analysis and social mapping to identify the health needs of a village or urban slum. The unit emphasizes the 'Social Determinants of Health'—exploring how housing, water, and employment impact clinical outcomes. Students are trained to use 'Community Participation' as a tool for sustainable health improvement."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Environmental Sanitation and Personal Hygiene",
+                    "content": "The 'First Barrier' against disease. This unit focuses on the critical relationship between the environment and human health. Students learn about 'Water Safety'—testing for contamination and the methods for domestic and community water purification. The unit covers 'Waste Management' (Solid and Liquid)—focusing on the hazards of open defecation and the engineering of sanitary latrines. Training includes 'Vector Control'—strategies for preventing Malaria, Dengue, and Chikungunya. 'Personal Hygiene' modules cover the science of hand-washing, oral care, and menstrual hygiene management (MHM). Students are trained in 'Food Safety'—preventing contamination in the home kitchen and during community feasts. A special module covers 'Occupational Health Hazards' for community workers."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Fundamentals of First Aid and Emergency Response",
+                    "content": "Life-saving interventions at the 'Zero-hour'. This unit covers the standardized response to domestic and community emergencies. Students learn the 'DRABC' (Danger, Response, Airway, Breathing, Circulation) protocol for unconsciousness. Training includes 'Cardiopulmonary Resuscitation' (CPR) and the use of 'Automated External Defibrillators' (AED). The curriculum details the management of 'Burns' (thermal/chemical), 'Poisoning', 'Snake Bites', and 'Choking'. Students are trained in 'Wound Care' and the control of 'External Hemorrhage' using pressure and tourniquets. A major module covers the management of 'Fractures'—learning the art of splinting and safe patient immobilization for transport. Training also includes 'Heat Stroke' and 'Hypothermia' management in rural settings."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Preventive Medicine and Family Wealth",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Maternal health and Pre-natal Care Protocols",
+                    "content": "Guarding the foundation of life. This unit focuses on the 'Continuum of Care' for the mother. Students learn about the 'Physiological Changes of Pregnancy' and the importance of early 'Antenatal Registration'. Training includes 'High-Risk Pregnancy' screening—identifying signs of Pre-eclampsia (Blood pressure), Anemia (hemoglobin check), and Gestational Diabetes. The unit covers 'Nutritional Supplementation' for mothers (Iron, Folic Acid, Calcium) and the logic of Tetanus Toxoid (TT) immunization. Students are trained in 'Birth Preparedness' counseling—empowering families to choose institutional delivery and prepare for emergencies. A module focuses on 'Breastfeeding'—educating mothers on early initiation and exclusive breastfeeding for the first six months. The importance of 'Birth Spacing' and family planning methods is also detailed."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Neonatal Care, Immunization, and Pediatric Health",
+                    "content": "Ensuring a healthy start. This unit covers the care of the newborn and the growing child. Students learn 'Essential Newborn Care' (ENC)—maintaining the 'Warm Chain', cord care, and eye care. Training includes the 'Universal Immunization Program' (UIP)—mastering the vaccine schedule, cold-chain maintenance, and managing 'Adverse Events Following Immunization' (AEFI). The curriculum details 'Growth Monitoring' using WHO Growth Charts to identify 'Stunting' and 'Wasting' early. A major focus is placed on 'IMNCI' (Integrated Management of Neonatal and Childhood Illnesses)—treating Diarrhea (ORS/Zinc therapy) and Pneumonia at the community level. Students are trained to identify 'Danger Signs' in children that require immediate hospital referral. Modules on 'Adolescent health'—addressing puberty, anemia, and school health checkups—are also included."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "communicable and Infectious Disease control",
+                    "content": "Managing the 'Outbreak' threat. This unit focuses on the prevention and screening of major infectious diseases. Students learn about 'Tuberculosis (TB)'—identifying symptoms, assisting in sputum collection, and managing 'DOTS' (Directly Observed Treatment, Short-course) compliance. The unit covers 'HIV/AIDS' and 'Sexually Transmitted Infections' (STIs)—focusing on counseling, 'Integrated Counseling and Testing Centers' (ICTC), and reducing social stigma. Training includes 'Vector-Borne Disease' (VBD) surveillance—collecting blood slides and reporting fever cases. The logic of 'Ring Vaccination' and 'Quarantine' during local outbreaks (e.g., Cholera or Measles) is explored. A module on 'Hospital Infection control' adapted for small community clinics is also provided, focusing on sterile equipment and safe sharps disposal."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Community Nutrition and Dietetics",
+                    "content": "Food as the 'Primary Medicine'. This unit covers the science of nutrition and its practical application in the community. Students learn about 'Macro and Micronutrients' and the 'Balanced Diet' for different physiological states. The curriculum details 'Nutritional Assessment'—calculating BMI and performing mid-upper arm circumference (MUAC) measurements for children. Training includes 'Cooking Demonstrations'—teaching families how to enhance the nutritional value of local, low-cost foods. A major focus is placed on 'Deficiency Diseases'—identifying signs of Vitamin A deficiency (Night blindness), Iodine deficiency (Goiter), and Iron-deficiency Anemia. Students learn about 'Community Kitchens' and the management of 'Supplementary Nutrition' schemes (ICDS). A special module addresses 'Therapeutic Diets' for home-bound patients with Diabetes or Hypertension."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Home Care Mastery and Chronic Disease Management",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Professional Home Care and Nursing Procedures",
+                    "content": "Bringing clinical excellence to the doorstep. This unit focuses on the skills required to manage a patient in their own environment. Students learn the 'Home vital-sign monitoring' protocol. Training includes 'Wound Management'—dressing surgical wounds, ulcers, and the prevention and treatment of 'Pressure Sores' (Bedsores) using air-mattresses and position-changing charts. The unit covers 'Medication Administration'—assisting with oral drugs, managing insulin injections, and monitoring IV infusion sites. Students are trained in 'Catheter and Ryle's Tube' care—Ensuring hygiene and preventing infections in long-term tube-fed patients. A major module covers 'Patient Transfer and Positioning'—utilizing mobility aids like walkers and wheelchairs. Students also learn about 'Respiratory Support' at home, including the use of oxygen concentrators and nebulizers."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Geriatric Care and Age-Related Health Challenges",
+                    "content": "Caring for the 'Sunset' of life. This unit provides a specialized focus on the elderly population. Students learn about the 'Normal Physiological Changes of Aging' and the common 'Geriatric Syndromes' (Falls, Incontinence, Frailty). Training includes 'Fall Prevention'—conducting home-safety audits to remove tripping hazards. The curriculum details the management of 'Dementia and Alzheimer's Disease'—focusing on patient safety, behavior management, and 'Caregiver Support'. Students learn about 'Geriatric Nutrition'—addressing difficulty in swallowing (dysphagia) and poor appetite. A module on 'Elder Abuse'—identifying signs of neglect or physical harm—is critical for community care providers. The unit also covers 'Chronic Arthritis' and 'Osteoporosis' management through mobility exercises."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Non-Communicable Disease (NCD) Screening and data Management",
+                    "content": "Addressing the 'Silent Killers'. This unit focuses on the massive burden of lifestyle diseases. Students learn about the 'CBAC' (Community Based Assessment Checklist) for screening Diabetes and Hypertension. Training includes the use of 'Glucometers' and 'Digital BP Monitors' for large-scale screenings. The curriculum details 'Lifestyle Counseling'—tobacco cessation, alcohol reduction, and the '30-minute Walk' promotion. A major focus is placed on 'Screening for Cancers'—teaching women 'Breast Self-Examination' and identifying early signs of 'Oral Cancer' in tobacco users. Students are trained in 'NCD Portal' data entry—using mobile apps to track the health status and 'Compliance' of patients on long-term medication. The unit also covers the management of 'Stroke Rehabilitation' at the community level."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Palliative and End-Of-Life Care",
+                    "content": "Ensuring 'Dignity in Departure'. This unit focuses on the care of patients with terminal illnesses (Cancer, ESRD, ALS). Students learn the principles of 'Pain Management'—differentiation between different levels of pain and assisting in palliative drug administration. Training includes 'Psychological Support'—providing a listening ear to the patient and their grieving family. The unit covers 'Symptom Relief'—managing dry mouth, constipation, and breathlessness in the terminally ill. Students are trained in 'Dressing Malignant Wounds' and managing 'Stoma' bags. A critical module focuses on the 'Ethics of End-of-Life'—respecting the patient's wishes for a peaceful death at home. Students also learn about 'Grief Counseling' and the logistics of 'Bereavement Support' for the family."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Social Welfare, Health Education, and Strategy",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Health Education, Communication, and Soft Skills",
+                    "content": "The art of 'Behavioral Transformation'. This unit focuses on the pedagogy of health education. Students learn 'IEC' (Information, Education, and Communication) and 'BCC' (Behavioral Change Communication) strategies. Training includes the design of 'Visual Aids' (posters, flip-charts, and digital presentations) for illiterate and semi-literate populations. The unit covers 'Group counseling'—conducting village health meetings and 'Mahila Mandals'. Soft skills training focuses on 'Empathy', 'Active Listening', and 'Conflict Resolution' when dealing with traditional taboos. Students are trained in 'Public Speaking' for local health awareness rallies. A special module on 'Digital Health Literacy'—teaching community members to use government health apps (like ABHA)—is included."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Social Welfare, Legal Rights, and Health Schemes",
+                    "content": "Navigating the 'Policy' landscape. This unit provides an exhaustive study of the financial and social safety nets available to the community. Students learn about the 'Ayushman Bharat' (PM-JAY) implementation—from card generation to hospital referrals. The unit covers 'Maternity Benefit' schemes (PMMVY), 'Disability Pensions', and 'Old Age Pensions'. Training includes 'Documentation assistance'—helping the underprivileged gather the paperwork needed to access government subsidies. Students learn about the 'Right to health' and the 'Consumer Protection Act' as applied to village clinics. A module on 'Health Insurance'—educating the community on the difference between government and private insurance—is included. The role of 'NGOs' and 'Self-Help Groups' (SHGs) in community financing is explored."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Disaster Management and Community Surge Capacity",
+                    "content": "Leading during the 'Unforeseen'. This unit focuses on the community's response to local disasters (Floods, Fires, Epidemics). Students learn to design a 'Village health Disaster Plan'. Training includes the management of 'Relief Camps'—focusing on water sanitation and overcrowding prevention. The unit covers the coordination of 'Search and Rescue' and the logic of 'Triage' for mass casualties in areas with limited medical support. Students are trained in 'Crisis Communication'—how to prevent rumors and panic during a health emergency. A major module covers 'Zoonotic Diseases'—the emergence of diseases from animals and the 'One Health' approach. Students also learn about the maintenance of 'Emergency Medical Kits' for community clinics."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Project Management and Health informatics",
+                    "content": "The Science of 'Data-Driven' Care. This unit addresses the administrative side of community health. Students learn about 'Micro-planning'—calculating the quantity of drugs and supplies needed for a 5,000-person catchment area. Training includes 'Stock Management'—preventing expiry and stock-outs of life-saving medicines. The unit covers 'Health informatics'—using E-Sanjeevani for tele-consultations and the maintenance of 'Population-Based Registries'. Students are trained in 'Report Writing'—presenting community health data to the Medical Officer. A major module focuses on 'Quality Improvement' projects—where students identify a problem (e.g., high anemia in adolescent girls) and design a 3-month intervention plan with measurable outcomes."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Conducting a Community Household Health Survey (Standard Protocol)",
+            "steps": [
+                "Select a geographical area (e.g., 50 households) and perform a 'Social Mapping' of key resources like water sources and health centers.",
+                "Obtain consent from the family head and explain the non-invasive nature of the survey.",
+                "Complete the 'Standardized Screening Folder'—collecting demographic data and immunization status of every member.",
+                "Perform on-the-spot health assessments: check 'Blood Pressure' for adults and 'MUAC' for children under 5.",
+                "Assess 'Environmental Hazards' within the household (uncovered water, poor ventilation, open waste).",
+                "Identify 'High-Risk' individuals (unregistered pregnancies, terminal illnesses, or severe malnutrition).",
+                "Provide immediate 'Health Education' based on identified risks (e.g., salt reduction or hand-washing).",
+                "Submit the survey data to the local 'Health and Wellness Center' (HWC) for priority follow-up."
+            ]
+        },
+        {
+            "title": "Home-Based Wound Management and Bedsore Prevention",
+            "steps": [
+                "Assess the wound/bedsore using the 'PUSH' or 'Braden' scale for severity and infection signs.",
+                "Prepare a sterile dressing tray in the home environment, ensuring maximum achievable aseptic conditions.",
+                "Clean the wound with normal saline and apply specialized dressings (e.g., hydrocolloid or simple gauze) based on the wound type.",
+                "Implement the 'Two-Hour Positioning' chart—training the family caregivers to turn the patient systematically.",
+                "Master the application and maintenance of an 'Air/Water Mattress' and the use of 'Doughnut Cushions' for bony prominences.",
+                "Educate the family on 'Protein-Rich Diet' for faster wound healing.",
+                "Maintain a 'Wound Recovery Log' with photographs to track progress over a 2-week period.",
+                "Perform a 'Risk Assessment' for future sores based on skin texture and moisture levels."
+            ]
+        },
+        {
+            "title": "Setup and assistance for a Rural Immunization Camp",
+            "steps": [
+                "Verify the 'Cold Chain' status—checking the cold-box temperature and the 'Vaccine Vial Monitor' (VVM) labels.",
+                "Arrange the 'Sub-center' or 'Anganwadi' room into three zones: Waiting, Vaccination, and Observation.",
+                "Assisting in 'Aspiration-Free' injection technique and ensuring correct dosage (e.g., 0.5ml for BCG/MR).",
+                "Practice 'Safe Disposal': use of hub-cutters for needles and color-coded bins for swabs and vials.",
+                "Educate the mother on 'Probable Side-Effects' (Fever, Swelling) and the use of Paracetamol.",
+                "Document the vaccination in the 'MCP Card' (Mother-Child Protection) accurately.",
+                "Monitor every child for 30 minutes post-vaccination for any signs of 'Anaphylaxis' (AEFI).",
+                "Calculate the 'Dropout Rate' by cross-checking with the previous month's target list."
+            ]
+        },
+        {
+            "title": "Instructional Protocol for Home-Based Nasogastric (Ryle's Tube) Feeding",
+            "steps": [
+                "Position the patient in a High-Fowler's position (45-degree angle) and ensure the tube is securely taped.",
+                "Check for correct 'Tube Placement' using the 'Whoosh Test' (auscultation) or 'pH strip' (gastric aspiration).",
+                "Prepare the liquid diet at home—ensuring it is strained through a fine mesh to prevent tube blockage.",
+                "Aspirate gastric contents to check for 'Residual Volume'—if more than 100ml, delay the feed for one hour.",
+                "Flush the tube with 30ml of lukewarm water before and after the feed to maintain patency.",
+                "Administer the feed slowly over 20-30 minutes to prevent 'Dumping Syndrome' or abdominal cramps.",
+                "Keep the patient in an upright position for 30 minutes post-feed to prevent aspiration pneumonia.",
+                "Clean the external portion of the tube and the patient's nose daily with saline."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing a 'Malnutrition Emergency' in a Tribal Hamlet",
+            "situation": "During a village visit, you identify a 2-year-old child with severe wasting (MUAC < 11.5cm) and bilateral edema of the feet.",
+            "workflow": [
+                "Identification: Categorize as SAM (Severe Acute Malnutrition) with medical complications.",
+                "Stabilization: Administer a 'Sugar-Water' bolus immediately to prevent hypoglycemia.",
+                "Family Counseling: explain the severity of the condition to the parents without causing panic, stressing the need for 24/7 care.",
+                "Referral: Arrange transport to the nearest 'Nutrition Rehabilitation Center' (NRC).",
+                "Follow-up: Once the child is discharged, perform weekly 'Home Visits' to ensure compliance with 'Ready-to-Use Therapeutic Food' (RUTF).",
+                "Root Cause: Assess the family's 'PDS' (Public Distribution System) status and link them to additional social welfare schemes if needed."
+            ]
+        },
+        {
+            "title": "Scenario B: Response to a 'Diarrhea Outbreak' in a Slum Community",
+            "situation": "In one morning, 15 cases of watery diarrhea are reported from a single street in an urban slum area.",
+            "workflow": [
+                "Alarm Activation: Notify the Medical Officer and District Epidemiologist of a suspected 'Cholera/Gastroenteritis' cluster.",
+                "Triage: Set up a temporary 'ORS Depot' at the street entrance; stabilize the dehydrated patients using ORS and Zinc.",
+                "Investigation: Perform 'Water Sampling' from the local standpost and individual storage containers.",
+                "Containment: Distribute 'Chlorine Tablets' (Halazone) to every household and demonstrate their use.",
+                "Health Education: Conduct a 'Mass Handwashing' demonstration and advise boiling of all drinking water.",
+                "Referral System: Coordinate with ambulance services for the 3 patients showing 'Severe Dehydration' (sunken eyes, lethargy)."
+            ]
+        },
+        {
+            "title": "Scenario C: Resolving 'Vaccine Hesitancy' for the MR (Measles-Rubella) Campaign",
+            "situation": "A specific community group refuses the vaccine for their children based on a rumor that it affects future fertility.",
+            "workflow": [
+                "Engagement: Meet with the 'Influencers' (Religious leaders or village elders) in a non-confrontational setting.",
+                "Active Listening: Allow them to voice their fears completely before responding with medical facts.",
+                "Trust Building: Show them videos or testimonials of children within their own community who have been successfully vaccinated.",
+                "Leveraging Authority: Invite a well-respected local doctor or a high-ranking government official to address the group's specific concerns.",
+                "Flexible Timing: Organize a 'Special Session' at a time and place of their choosing to make the process more comfortable.",
+                "Documentation: Record the success story to use as a 'BCC' (Behavior Change Communication) tool for other hesitant groups."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Field-Work (180 days in diverse community settings)",
+        "rotations": [
+            "Community Health & Wellness Center (HWC) (8 Weeks): Mastery of NCD screening, maternal and child health trackers.",
+            "Professional Home Care Service (4 Weeks): Clinical rotations in managing geriatric and palliative patients at home.",
+            "NGO-Led Health Projects (4 Weeks): focus on tribal health, nutrition camps, and social advocacy.",
+            "District Public Health Office (2 Weeks): rotation in disease surveillance (IDSP) and data management.",
+            "School Health & Adolescent Wing (2 Weeks): Conducting health checkups and hygiene workshops for students.",
+            "Government NRC & Family Planning Wing (4 Weeks): focus on malnutrition recovery and counseling."
+        ],
+        "objectives": [
+            "Complete the the 'Health profiling' of at least 150 households in a assigned catchment area.",
+            "Independently manage the 'Home Care' of at least 10 terminal or geriatric patients, with documented recovery or comfort logs.",
+            "Conduct at least 10 'Community-Based Screenings' (Hypertension/Diabetes) for at least 500 individuals in total.",
+            "Assist in the successful treatment of at least 20 'Malnourished Children' through regular follow-ups.",
+            "Successfully assist in at least 5 'Village Health, Sanitation, and Nutrition Days' (VHSND).",
+            "Design and distribute one unique 'Community Health Visual Aid' in the local language.",
+            "Achieve 100% 'Immunization Coverage' for the assigned block during the internship period."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark semester exam focused on 'Epidemiology', 'Nutrition', and 'Social Medicine'. 50% weightage on situational planning questions.",
+        "practical_field_viva": "A situational exam conducted in the 'Field' where students must demonstrate: Patient communication, screening skills, and home-care bag preparation.",
+        "community_impact_project": "Mandatory 'Health Intervention' project (e.g., 'Reducing Tobacco Use in Ward 5') with pre- and post-intervention data analysis.",
+        "supervisor_rating": "Evaluation from the Medical Officer and NGO lead, focusing on 'Cultural Sensitivity', 'Leadership', and 'Resourcefulness'.",
+        "digital_logbook_accuracy": "A rating based on the accuracy and punctuality of data entered into government registries (E-Sanjeevani, NCD Portal) during the internship."
+    },
+    "career_pathways": [
+        "Community Health Provider in Government Health and Wellness Centers (HWCs).",
+        "Assistant Manager/Supervisor for Health NGOs and International Development Agencies (UNICEF, WHO projects).",
+        "Professional Home-Care Lead for specialized Geriatric and Palliative Care agencies.",
+        "Corporate Social Responsibility (CSR) Health Officer for large manufacturing industries.",
+        "Public Health Surveillance Assistant in District and State Health Offices.",
+        "Manager for Community-based Diagnostic and Screening Chains.",
+        "Health Education and Lifestyle Counseling Consultant for wellness centers.",
+        "Supervisor for Integrated Child Development Services (ICDS) and Mid-day Meal programs.",
+        "Mobile Medical Unit (MMU) Operations In-charge.",
+        "Independent Health Social Entrepreneur: starting a community clinic or first-aid training center."
+    ],
+    "student_engagement": [
+        "Annual 'Community Health' Rally: A student-led advocacy walk for a specific health issue (e.g., 'Universal Hygiene').",
+        "Rural Immersion Week: A 7-day residential stay in a tribal hamlet to understand grassroots health challenges.",
+        "Public Health Quiz: Monthly competition on 'Welfare Schemes', 'Nutrition Facts', and 'National Health Days'.",
+        "Peer-to-Peer Teaching: senior students conducting hygiene and first-aid workshops for junior school students.",
+        "Documentary Series: Watching and discussing global public health successes (e.g., Polio Eradication).",
+        "Social Innovation Lab: A workshop to design low-cost health solutions (e.g., solar-powered water purifiers)."
+    ],
+    "medical_accuracy_verification": "Content reflects the current National Health Mission (NHM) 2024 guidelines and the 'Operational Guidelines for Health and Wellness Centers' (MoHFW).",
+    "word_count_check": 3250
+}

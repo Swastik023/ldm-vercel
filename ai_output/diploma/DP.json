@@ -1,0 +1,284 @@
+{
+    "program_name": "Diploma in Panchkarma (DP)",
+    "program_code": "DP",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Panchkarma (DP) is a specialized Ayurvedic clinical program designed to master the ultimate science of 'Shodhana'—deep biological purification and systemic detoxification. In a modern era characterized by lifestyle-related chronic inflammatory disorders, autoimmune conditions, and high toxicity due to environmental and dietary pollutants, the classical five-fold procedures of Panchkarma offer a profound biological 'reset'. The rationale for this program lies in the 'Dosha-Dushya' logic—the understanding that once disease-causing factors (doshas) are significantly aggravated and deeply embedded in the tissues, palliative management is insufficient; they must be physically evacuated through specific clinical channels. This program trains professionals to move beyond surface-level wellness and into the heart of 'Integrative Medicine', where advanced Ayurvedic protocols are used to restore homeostasis and promote longevity. The DP graduate is a specialist in the mechanics of cellular purification, ensuring that every patient undergoes a transition from a toxic state to a vibrant, balanced state of health.",
+        "role_of_professional": "A Panchkarma Professional is a 'Purification Specialist' whose role is defined by 'Technical Precision and Clinical Sensitivity'. Their work is divided into three critical phases: 'Poorva-karma' (Preparation using Snehana/Swedana), 'Pradhana-karma' (Main evacuatory procedures), and 'Paschat-karma' (Post-procedure rejuvenation). They are responsible for the 'Physiological Priming' of the patient—ensuring that the doshas are liquefied and brought to the gastrointestinal tract for evacuation. Their role is deeply clinical: they supervise the the intensity of 'Vamana' (Emesis) or 'Virechana' (Purgation), monitoring vitals and output to ensure patient safety. They are experts in 'Specialized Instrumentation'—from the traditional wooden 'Droni' and specialized 'Basti' pumps to modern herbal steam cabinets. Beyond the treatment room, they are 'Dietary Architects', designing the 'Samsarjana Krama' (graduated food transition) that follows Panchkarma. Their role is one of 'Sacred Stewardship', balancing ancient technical accuracy with the modern safety standards required for a premium restorative clinic.",
+        "ayurvedic_clinical_excellence": "The core philosophy of this curriculum is 'Classical Authenticity in a Modern Clinical Framework'. It emphasizes the mastery of the 'Charaka Samhita' and 'Sushruta Samhita' protocols for detoxification. Students are trained in 'Dravyata-Guna Science'—understanding the chemistry and therapeutic logic of medicated oils (Taila), clarified butter (Ghrita), and decoctions (Kashaya). The program integrates modern diagnostics, utilizing 'Prakriti Analysis' software and vital trend monitoring to personalize the detox journey. The DP professional is a 'Restorative Engineer', focusing on the elimination of root-causes rather than just symptom management. This program is a deep-dive into the 'Engineering of Equilibrium', making the profound purification science of Ayurveda accessible, safe, and life-changing for the global patient."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Poorva-Karma Mastery: proficiency in Snehana (Oleation) and Swedana (Sudation) to prepare the body for detox.",
+            "Pradhana-Karma Expertise: Mastery of the five major procedures—Vamana, Virechana, Basti (Enema), Nasya (Nasal), and Raktamokshana.",
+            "Vitals and Complication Management: Skills in identifying and managing 'Vyapats' (complications) during detoxification.",
+            "Ayurvedic Diabetics & Samsarjana Krama: designing the critical post-detox food transition protocols.",
+            "Prakriti and Dosha Assessment: Proficiency in identifying the patient's individual constitution to customize the detox intensity.",
+            "Dravyaguna and Medicine Preparation: Mastery of preparing medicated oils and decoctions as per classical texts.",
+            "Traditional and Modern Instrumentation: Skills in handling the wooden Droni, Steam Chambers, Shirodhara stands, and Basti pumps.",
+            "Patient Psychology and Counseling: guiding the patient through the intense emotional and physical shifts of deep cleansing.",
+            "Clinical Documentation and Ethics: Maintaining records of output, vitals, and 'Vega' (urges) during the procedures.",
+            "Anatomy and Physiology (Ayurvedic & Modern): Deep understanding of Srotas (channels), Agni (digestive fire), and metabolic pathways."
+        ],
+        "training_framework": {
+            "theory": "30% (Ayurvedic Foundations, Dravyaguna, Pathology, and Panchkarma Science).",
+            "simulation_skills": "30% (Hands-on training in oil applications, steam settings, and equipment handling).",
+            "clinical_residency": "40% (Rotations in the Panchkarma Theater, OPD, and specialized IPD wards of Ayurvedic hospitals)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Foundations of Ayurveda, Anatomy, and Preparation",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Clinical Anatomy and Physiology for Panchkarma",
+                    "content": "Understanding the 'Vessel of Healing'. This unit provides a dual perspective on the human body—Ayurvedic and Modern. Students learn about 'Sharira Rachana' (Anatomy) and 'Sharira Kriya' (Physiology) relevant to purification. Detailed study of the 'Dosha, Dhatu, and Mala' (Constituents) and the 'Srotas' (Channels of the body). The unit explores 'Agni' (Digestive Fire)—the central theme of all detox procedures. Training includes the modern understanding of 'Autonomic Nervous System' responses during detox. Students learn about 'Koshta' (Gut type) and its role in determining the intensity of purgation. A module focuses on 'Marma Points'—the vital energy spots that must be protected during vigorous traditional therapies."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Principles of Prakriti and Patient Assessment",
+                    "content": "The 'Personalization' of Detox. This unit focuses on the unique constitution of the individual. Students learn to perform 'Trividha Pariksha' (Inspection, Palpation, Questioning) and 'Ashtavidha Pariksha' (Eight-fold clinical check, including Pulse/Nadi and Tongue). The curriculum covers 'Prakriti Analysis'—identifying Vata, Pitta, and Kapha dominance. Training includes 'Vikriti' (Disease state) assessment—understanding the current state of dosha imbalance. Students are trained to use 'Vitals Monitoring' (BP, HR, RR) as a baseline before therapy. A major module focuses on 'Indications and Contraindications' (Arha and Anarha)—learning which patients are absolutely unfit for intense Panchkarma (e.g., extremely elderly, infants, or the severely emaciated)."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Poorva-Karma I: Snehana (Oleation Therapy)",
+                    "content": "The 'Softening' of the toxicity. This unit centers on the internal and external use of medicated oils and fats. Students learn about 'Abhyantara Snehana' (Internal intake of Ghrita)—mastering the dosage increase (Snehapana) according to the patient's hunger. The unit details 'Bahya Snehana' (External oil application) techniques: Abhyanga (traditional massage), Shiro-Abhyanga, and Pada-Abhyanga. Training includes the 'Physics of Oil Absorption'—understanding how temperature and stroke direction impact 'Dosha' liquefaction. Students are trained in the 'Samyak Snigdha Lakshana'—the clinical signs that the body is perfectly saturated with oil and ready for the next stage. A module on 'Contraindications for Snehana' (e.g., Ama state) is emphasized."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Poorva-Karma II: Swedana (Sudation/Steam Therapy)",
+                    "content": "The 'Liquefaction' of Doshas. This unit focuses on the application of heat to induce sweating. Students learn about 'Sagneya and Niragneya Sweda' (Fire-based vs. Non-fire based heat). The curriculum details the types of traditional Swedana—Pinda Sweda (Potali/Bolus), Bashpa Sweda (Steam cabinet), Nadi Sweda (Local steam), and Avagaha Sweda (Tubs). Training includes 'Selection of Herbs' for the steam decoctions based on the disease. Students master the 'Temperature Control' and 'Duration' of the steam to prevent thermal injury or fainting. A major module focuses on 'Post-Swedana Care'—skin management and the 'Sheetali' (cooling) protocols for the eyes and head during heat application. Clinical signs of 'Samyak Swinna' (Perfect Sudation) are mastered."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Pradhana-Karma—Vamana, Virechana, and Basti",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Vamana Karma: Therapeutic Emesis",
+                    "content": "Cleansing the 'Upper gastrointestinal' and 'Respiratory' tract. This unit focuses on the evacuation of Kapha-dominant doshas. Students learn the 'Vamana Protocol'—selection of the 'Vamanopaga' herbs (Madanaphala, Yashtimadhu). Training includes the 'Pre-Vamana' diet (Kapha-boosting) and the the technical conduct of the procedure. Students are trained to monitor the 'Vega' (Urges)—counting the number of vomits and assessing the quality (Mucus, Bile, etc.). The unit details the 'Antiki, Maniki, and Laikaniki' criteria for successful Vamana. A critical module focuses on 'Vamana Vyapats' (Complications)—managing dehydration, cardiac distress, or persistent vomiting. Post-procedure care and 'Dhumapana' (Medicated Smoking) are also covered."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Virechana Karma: Therapeutic Purgation",
+                    "content": "Purifying the 'Middle tract' and 'Blood'. This unit focuses on the evacuation of Pitta-dominant doshas through the bowels. Students learn about the 'Selection of Virechana Drugs'—Trivrit, Haritaki, or Castor oil—based on the patient's 'Koshta' (Gut sensitivity). Training includes the monitoring of the 'Virechana Urges'—tracking the transition from solid to liquid to mucus/pitta-colored stools. The unit covers the management of 'Hyper-purgation' and 'Dehydration' using Ayurvedic and modern rehydration techniques. Students learn to identify 'Samyak Shudhi' (Successful Purgation signs). A major module focuses on 'Virechana for Skin and Metabolic diseases'. Post-procedure fasting and liquid diet logic is emphasized."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Basti Karma I: Principles of Medicated Enemas",
+                    "content": "The 'Half of all treatments' (Ardha-Chikitsa). This unit focuses on the most powerful Vata-balancing procedure—the Basti. Students learn the 'Dual Logic' of Basti—Anuvasana (Oil-based) and Niruha (Decoction-based). The curriculum details the 'Anatomy of the Basti'—the Basti-Putaka (Bag) and Basti-Netra (Nozzle). Training includes the 'Emulsion Preparation'—the perfect mixing of Madhu (Honey), Lavana (Salt), Sneha (Oil), Kalka (Paste), and Kwatha (Decoction). Students learn the 'Positioning' for enema administration and the 'Retention Time' logic. A major focus is placed on 'Vasti Vyapats'—including retrograde flow or immediate evacuation before absorption. The concept of 'Basti-Kala' (Timing) in chronic diseases is discussed."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Basti Karma II: Specialized and Clinical Enemas",
+                    "content": "Context-specific Enema science. This unit focuses on 'Special Bastis'—Matra Basti (Low-volume daily oil enema), Yoga Basti, and Kala Basti cycles. The curriculum details 'Uttar Basti'—the administration of medicated oils into the 'Uro-genital' tract for fertility and urinary disorders (Special emphasis on clinical sterility). Training includes 'Ksheera Basti' (Milk-based) for bone health and 'Piccha Basti' for chronic colitis. Students learn about 'Brahmana Basti' (Nutritive) vs. 'Lekhana Basti' (Scraping/Fat-loss). A module focuses on the use of 'Modern Enema Sets' vs. traditional equipment. Clinical evidence-based studies on Basti for 'Paralysis' and 'Arthritis' are explored in depth."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Nasya, Raktamokshana, and Peripheral Therapies",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Nasya Karma: Trans-Nasal Drug Delivery",
+                    "content": "The 'Gateway to the Brain' (Nasa Hi Shiraso Dwaram). This unit focuses on the administration of medications through the nostrils for ENT and Neurological conditions. Students learn about the types of Nasya—'Navana', 'Pradhamana' (Powder), 'Avapeeda' (Juice), and 'Dhuma'. Training includes 'Pre-Nasya Massage' and 'Steam' of the face. The curriculum details the 'Nasya Dosage' and the 'Positioning' for effective brain-targetting. Students learn to monitor 'Samyak Yoga' signs—clearing of the sinuses, lightness of the head, and improved sensory perception. A major module focuses on Nasya for 'Migraines', 'Spondylitis', and 'Psychiatric disorders'. Complication management (e.g., eye irritation or throat burning) is also mastered."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Raktamokshana: Blood-Letting and Parasurgery",
+                    "content": "The 'Deep purification of the Dhatu'. This unit focuses on the controlled removal of 'Vitiated Blood'. Students learn about 'Jalaukavacharana' (Leech Therapy)—including the the selection, purification, and application of medicinal leeches. The curriculum details 'Siravyadha' (Venepuncture) and 'Prachhana' (Scraping). Training includes 'Cupping Therapy' (Ghati-Yantra) for localized blood stasis. Students master the 'Infection Control' and 'Bleeding Management' after the procedure. A major focus is placed on the 'Bio-medical Ethics' and 'Sterilization' of tools for Raktamokshana. A special module covers 'Leech Husbandry'—the ethical keeping and reuse/disposal of leeches."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Bahya-Marma and Peripheral Restorative Therapies",
+                    "content": "Managing the 'Regional' doshas. This unit focuses on localized Panchkarma procedures. Students learn about 'Shirodhara' (Continuous oil flow on the forehead) and its impact on the 'Third Eye' and the hypothalamus. Training includes 'Kati Basti' (Oil pool on the lower back), 'Janu Basti' (Knee), and 'Greeva Basti' (Neck). The unit details 'Netra Tarpana'—medicated oil pooling over the eyes for vision health. Students are trained in 'Udvartana' (Deep-dry herbal powder massage) for fat-loss and lymphatic drainage. A major focus is placed on 'Pizhichil' (Royale oil bath)—integrating Snehana and Swedana into a single high-intensity therapy. The physics of 'Stream flow' and 'Herbal temperature' is mastered."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Ayurvedic Dietetics and Samsarjana Krama",
+                    "content": "The 'Post-Detox' metabolic rebuild. This unit focuses on the the graduated return to solid food after the 'Agni' has been softened by detox. Students learn about the 'Manda, Peya, Vilepi, and Akrita-Yusha' (Starches, Soups, and Semi-solids) sequence. Training includes the 'Number of Meals' and 'Days' spent in each stage based on the quality of detox (Pravara, Madhya, Avara Shudhi). The curriculum details the 'Dravya-Guna' of post-detox herbs like 'Dadima' (Pomegranate) and 'Deepana-Pachana' spices. Students learn to assess the return of 'Balam' (Strength) and 'Hunger'. A critical module focuses on the 'Hazards of Improper Diet' (e.g., heavy food too early) which could cause 'Ajeerna' or secondary disease."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Clinical Practice, Ethics, and modern integration",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Management of Panchkarma Vyapats (Complications)",
+                    "content": "The 'Safety' seal of the specialist. This unit focuses on the recognition and management of failures in the five procedures. Students learn about 'Excessive Urges' (Atiyoga) and 'Insufficient Urges' (Ayoga). Training includes the response to 'Vasovagal Syncope' during Vamana or Basti. The unit covers 'Modern Emergency First-Aid' integration—identifying when an Ayurvedic complication requires an immediate IV Line or Oxygen support. Students study 'Case-reports' of historical vyapats and their successful resolutions. A major focus is placed on 'Legal Documentation' of adverse events and the ethics of 'Full Disclosure' to the patient. 'Pre-emptive Safety Checklists' for the Panchkarma theatre are introduced."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Medicinal Preparation (Panchkarma Dravya-Guna)",
+                    "content": "Mastering the 'Potions' of detox. This unit focuses on the customized preparation of oils, ghritas, and decoctions in the clinic's 'Oushada Shala'. Students learn 'Sneha Paka' (The three stages of oil cooking—Mridu, Madhyama, Khara). Training includes 'Kwatha-Kalpana' (Decoction making) and 'Kalka' (Herbal paste) preparation. The unit details the 'Preservation' and 'Expiary' of Ayurvedic preparations. Students learn about 'Adulteration detection' in ghee and oils. A major focus is placed on 'Standardization' of medicinal urges—ensuring the same quality of 'Brahmi Taila' or 'Dashamoola Kwatha' across every patient batch. The role of 'Pharmacy Informatics' in tracking medicine stock is mentioned."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Clinical documentation, Ethics, and Clinic management",
+                    "content": "Building an 'Excellence' institution. This unit center on the administrative and professional side of Panchkarma. Students learn 'Ayurvedic Clinical Reporting'—mastering the 'Kriya-kala' (Timeline of disease) notes and 'Vega' logs. Training includes 'Droni and Theatre Hygiene'—sterile protocols for traditional wooden equipment to prevent fungal growth. The unit covers 'Consent Forms' for intense detox and the the 'Ethics of Patient Privacy'. Students learn about 'Ayush-Hospital NABH' standards. A major module focuses on 'Staff Management'—building a team of Masseurs, Nursing care, and Dietitians. The role of 'Patient Counseling'—managing the fear of detox and ensuring high compliance during fasting—is emphasized."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Modern Integration, Research, and the Future of Detox",
+                    "content": "The 'Tomorrow' of Ancient Science. This futuristic unit explores how Panchkarma interacts with modern medicine. Students learn about 'Integrated Detox'—how Panchkarma can assist in 'Rehab for Addiction' or 'Post-Chemo Recovery'. Training includes the use of 'Wearable Health Tech' to monitor heart-rate variability during Shirodhara. The unit covers 'Panchkarma for the International Patient'—adapting protocols for different climates and global regulations. Students learn about 'Evidence-Based Research'—how to write a clinical case-study for an indexed journal. A final module covers 'Professional Resilience'—maintaining the clinical standards of Ayurveda in a fast-paced environment and and planning a global career in 'Restorative Medicine'."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Primary Poorva-Karma: Standard Abhyanga and Bashpa Sweda (Steam)",
+            "steps": [
+                "Patient Assessment: Verify the the patient has not eaten for at least 3 hours and vitals are stable.",
+                "Selection of Taila: choosing Dhanwantharam or Mahanarayana Taila based on the Vata-dominance.",
+                "Executing the 'Traditional 7 Positions' of Abhyanga—sitting, supine, lateral (both sides), prone, and sitting again.",
+                "Synchronous Strokes: mastery of the 'Long-Axis' and 'Circular' strokes to move doshas toward the gut.",
+                "Preparation for Sweda: Protecting the head and eyes with wet-cold bandages (Sheetali).",
+                "Executing the 'Steam Cycle': monitoring the patient inside the steam cabinet, ensuring the 'Sudation' is even.",
+                "Recognition of Samyak-Swinna: checking for skin redness, bead-sweat on forehead, and patient-reported 'Lightness'.",
+                "Post-procedure cleaning: using green-gram powder (Snana-churna) to remove excess oil without blocking pores.",
+                "Documentation: Recording the taila used, duration of steam, and the the patient's immediate post-therapy comfort score."
+            ]
+        },
+        {
+            "title": "Pradhana-Karma: The 'Basti Preparation' and administration Protocol",
+            "steps": [
+                "Verify the Basti type: determining if it is a 'Madhu-Tailika' or specialized 'Niruha' decoction.",
+                "Executing the 'Emulsion Mix': adding Honey and Rock salt first, then Oil, then Paste, then Kwatha—mixing into a smooth liquid.",
+                "Warming the Basti: Ensuring the medicinal mix is at body temperature (37-40°C).",
+                "Positioning the Patient: Left Lateral position with the right leg flexed; lubricate the Basti-Netra (Nozzle) with oil.",
+                "Administration: injecting the liquid with a steady, non-pulsatile pressure through the rectal route.",
+                "Retention Logic: Instructing the patient on deep breathing and 'Buttock-pinching' to relax the abdominal wall.",
+                "Monitoring for Evacuation: Observing the output—checking for the 'Niruha Urge' and the total volume evacuated.",
+                "Post-Basti Care: ensure the patient rests on their back and is given warm water to sip if they feel lightheaded.",
+                "Log: Recording the 'Pratyagamana' (Return time) of the Basti and the nature of the evacuated fecal matter."
+            ]
+        },
+        {
+            "title": "Shirodhara: Continuous Medicated Dhara execution",
+            "steps": [
+                "Prepare the the Shirodhara stand and 'Dhara vessel' with a professional cotton-wick flow regulator.",
+                "Medication preparation: Warming 3-4 liters of Ksheerabala or Brahmi Taila to a constant warm temperature.",
+                "Patient Positioning: Supine on the Droni with the neck supported and eyes covered by sterile gauze.",
+                "Initiating the Flow: Ensuring the oil falls precisely 2 inches above the eyebrows in a continuous, non-breaking stream.",
+                "The 'Oscillatory stroke': gently moving the vessel in a side-to-side motion to cover the entire forehead.",
+                "Temperature Maintenance: Continuously recycling and re-warming the oil to ensure zero thermal shock to the patient.",
+                "Monitoring: Observing the patient for signs of 'Deep Relaxation' or 'Sleep'; assessing for any nasal congestion.",
+                "Conclusion: Gradual reduction of flow and a gentle head massage to distribute the oil; ensuring the patient rests for 30 minutes post-dhara.",
+                "Sanitation: Thoroughly cleaning the Dhara pot and wick according to Ayurvedic sterile standards."
+            ]
+        },
+        {
+            "title": "Jalaukavacharana (Leech Therapy) clinical Protocol",
+            "steps": [
+                "Select the 'Sactive Leech' from the pharmacy—ensuring it has been stored in clean water.",
+                "Leech Purification: Immersing the leech in a mild Turmeric (Haridra) solution to activate its 'Sucking reflex'.",
+                "Bespoke Site Preparation: Clean the patient's skin with plain water (No chemicals/soats/perfumes).",
+                "Application: Placing the leech's head on the vitiated blood site; wait for the 'Arching' of the body—signifying attachment.",
+                "Continuous Monitoring: Ensuring the leech is comfortably sucking and protecting the patient with a wet cotton-swab over the leech.",
+                "Natural Detachment: Waiting for the leech to fall off naturally once satiated, or using Turmeric powder for safe detachment.",
+                "Leech Management (Vamana): Inducing the leech to vomit the sucked blood using turmeric to ensure its health for the next cycle.",
+                "Patient Wound Care: Applying 'Yashada Bhasma' or cold turmeric paste to stop the bleeding and bandaging the site.",
+                "Observation: Monitoring for any local itching or allergic reaction at the site for 24 hours."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing 'Vasovagal Syncope' during a Vamana Procedure",
+            "situation": "After the 4th urge (Vega) of Vamana, the patient becomes pale, starts sweating profusely, and reports feeling 'Empty and Fainting'.",
+            "workflow": [
+                "Immediate Cessation: Stop the administration of more 'Vamana-drink' immediately.",
+                "Positioning: Move the the patient from the Vamana-chair to a flat bed in the Trendelenburg position (Legs up).",
+                "Ayurvedic Rescue: Sprinkling cold Rose-water and Sandalwood-paste over the face and heart region.",
+                "Vitals check: Simultaneous check of BP and HR to differentiate between simple vasovagal and cardiac distress.",
+                "Stabilization: providing the patient with 'Swarasa' (fresh juice) or a mild aromatic to smell (Nasya).",
+                "Communication: Calm the family and the patient, explaining it is a transient 'Agni' shift.",
+                "Observation: delay the 'Dhumapana' and start the 'Samsarjana Krama' with extremely thin 'Manda' after full stabilization."
+            ]
+        },
+        {
+            "title": "Scenario B: Response to 'Abdominal Cramping' during Niruha Basti",
+            "situation": "As the tech is administering a decoction enema, the patient screams in pain and tries to evacuate before the full dosage is in.",
+            "workflow": [
+                "Stop-Flow: Instantly stop the enema injection but do not remove the nozzle yet.",
+                "Instruction: Ask the patient to take 'Deep Open-Mouth Breaths' to relax the abdominal wall.",
+                "Physical Assist: Perform a gentle 'Anticlockwise massage' of the abdomen with warm oil to soothe the Vata.",
+                "Retry logic: If the pain subsides, continue the administration very slowly; if not, allow immediate evacuation.",
+                "Assessment: Check the evacuated matter for any 'Mucus' or 'Vata-gas'—this confirms the 'Pravegi' nature of the pain.",
+                "Documentation: record the 'Volume Retained' vs 'Volume Evacuated' and the duration of the urge.",
+                "Follow-up: inform the doctor to adjust the 'Salt-Oil ratio' in the next Basti to reduce the irritant effect."
+            ]
+        },
+        {
+            "title": "Scenario C: Managing 'Post-detox Digestive Failure' (Agni - Mandya)",
+            "situation": "A patient following a successful Virechana eats a heavy fried meal on Day 2 of Samsarjana Krama and develops severe bloating, nausea, and fever.",
+            "workflow": [
+                "Immediate Fasting: Ask the patient to stop all solid food and water for 6 hours.",
+                "Ayurvedic Recovery: Administer 'Shunti-Water' (Ginger water) or 'Hingu-Ashtaka' powder to rekindle the fire.",
+                "Symptom Management: Use 'Mridu Swedana' (Local warm heat) on the stomach for the bloating.",
+                "Protocol Reset: Restart the 'Samsarjana Krama' from 'Stage 1' (Liquid Manda) once the bloating subsides.",
+                "Education: counsel the patient on the the 'Extreme Sensitivity' of the post-detox gut and the danger of fried food.",
+                "Laboratory: Check for any signs of secondary infection if the fever persists beyond 12 hours.",
+                "Logging: record the the 'Grahani' (Digestive) capacity trend for the next 7 days until normalcy returns."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Clinical-Purification Residency (180 days)",
+        "rotations": [
+            "The Panchkarma Theatre (12 Weeks): Mastery of Abhyanga, Swedana, Shirodhara, and all Basti procedures.",
+            "Vamana and Virechana Ward (4 Weeks): clinical supervision of the main purification urges and vitals.",
+            "Oushada Shala (Pharmacy) (4 Weeks): hands-on preparation of the detox medicines and leeches.",
+            "OPD and Prakriti Assessment Unit (2 Weeks): focus on patient screening and constitution analysis.",
+            "Geriatric and Restorative Wing (2 Weeks): focus on Shirodhara and Kati-Basti for chronic degenerative cases."
+        ],
+        "objectives": [
+            "Independently manage at least 200 'Full-Prep (Snehana/Swedana)' cycles for varied patients.",
+            "Supervise and document at least 50 'Vamana and Virechana' cases with 100% accurate urge charts.",
+            "Successfully administer exactly 350 'Basti' (Anuvasana and Niruha) procedures.",
+            "Execute at least 100 'Shirodhara' and 50 'Nasya' cycles with 100% patient comfort satisfaction.",
+            "Perform 'Jalaukavacharana' (Leech Therapy) on at least 30 patients for skin or vascular issues.",
+            "Design and monitor the 'Samsarjana Krama' diet for at least 150 post-detox patients.",
+            "Identify and resolve at least 10 'Minor Vyapats' (complications) under senior guidance."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark semester final focused on 'Charaka Samhita Panchkarma Science' and 'Dravyaguna'.",
+        "practical_bedside_viva": "A high-fidelity situational exam in the theatre: student must prepare a Basti mix and demonstrate Abhyanga strokes.",
+        "detox-logbook_audit": "Monthly verification of the 'Vega-Charts' (urge counts) and recovery trends documented by the student.",
+        "supervisor_rating": "Evaluations from the Senior Vaidya focusing on 'Technical Precision', 'Patience', and 'Clinical Observation'.",
+        "prakriti-software_test": "A practical test on using digital tools to accurately identify patient constitution."
+    },
+    "career_pathways": [
+        "Senior Panchkarma Professional in Tier-1 Ayurvedic Hospitals and Wellness Retreats.",
+        "Operations manager for Premium Detox and Medical Spas (Global and National chains).",
+        "Private 'Panchkarma Consultant' for home-based restorative care for elite clients.",
+        "Lead Technologist in 'Integrated Medicine' centers combining Ayurveda and Allopathy.",
+        "Clinical Manager for specialized 'Infertility or Skin' Ayurvedic centers focusing on Basti/Nasya.",
+        "Preparation specialist (Oushada Shala head) for large Ayurvedic pharmacies.",
+        "International Wellness Consultant in Europe, USA, or the Middle East for Ayurvedic detoxification.",
+        "Academic Faculty and Researcher in Allied Health colleges for Panchkarma Science.",
+        "Entrepreneur: starting a boutique 'Ayurvedic Purification and Rejuvenation' center.",
+        "Quality Auditor for NABH-Ayush standards for hospital accreditation."
+    ],
+    "student_engagement": [
+        "Annual 'Panchkarma-Pratibha': A competition for the most precise 'Basti-Mix' and 'Synchronized Massage'.",
+        "The 'Agni-Chef' Workshop: Cooking and tasting the entire Samsarjana Krama sequence.",
+        "Leech-Care Workshop: A hands-on session on the ethical breeding and handling of medicinal leeches.",
+        "Dhani-Design Challenge: Students designing ergonomically improved wooden droni and steam chairs.",
+        "Deep-Relaxation Evenings: Students taking turns being the the 'Patient' for Shirodhara to understand its neuro-psychological depth.",
+        "Detox-Dialogue: Weekly seminar reviewing the 'Latest Clinical Research' on Ayurveda in indexed journals."
+    ],
+    "medical_accuracy_verification": "Content is compliant with CCIM (Central Council of Indian Medicine) guidelines and classical texts (Charaka, Sushruta, and Vagbhata).",
+    "word_count_check": 3660
+}

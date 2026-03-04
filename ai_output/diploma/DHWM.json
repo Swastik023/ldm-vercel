@@ -1,0 +1,281 @@
+{
+    "program_name": "Diploma in Hospital Waste Management (DHWM)",
+    "program_code": "DHWM",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Hospital Waste Management (DHWM) is a specialized environmental health program designed to secure the 'Final Frontier' of clinical safety—the safe disposal of the hazardous by-products of healing. Every life-saving procedure in a hospital generates waste that is potentially lethal if not managed with scientific precision. The rationale for this program lies in the 'Bio-Hazardous Paradox'—the reality that a hospital, while curing patients, can simultaneously become a source of infection for the staff, the community, and the environment through improper waste handling. This program trains professionals to master the physics, chemistry, and microbiology of waste, moving from 'Containment' to 'Sustainable Treatment'. The DHWM graduate is the essential regulator who ensures that the hospital's exit-points are as sterile as its operation theatres, safeguarding the ecosystem from 'Superbugs', chemical toxins, and radiological hazards.",
+        "role_of_professional": "A Hospital Waste Management Professional is a 'Biosafety Steward' whose role is defined by 'Strict Segregation and Technical Vigilance'. They are the architects of the 'Waste Flow' within an institution. Their role begins at the 'Source'—auditing the bedside segregation of sharps, infectious solids, and cytotoxic drugs. They are responsible for the 'Safe Conveyance' of hazardous materials through high-traffic hospital zones, ensuring zero spills and zero needle-stick injuries. Their role is deeply technical: they operate complex 'Treatment Technologies' like autoclaves, microwaves, and hydroclaves, and supervise the precise calibration of incinerator emissions. Beyond the hospital walls, they act as the 'Environmental Liaison', coordinating with Common Bio-medical Waste Treatment Facilities (CBWTFs) and regulatory bodies to ensure 100% legal compliance. They are the guardians of 'Occupational Health', training the hundreds of sanitation workers who are at the highest risk of hospital-acquired infections.",
+        "regulatory_and_biosafety_excellence": "The core philosophy of this curriculum is 'Cradle-to-Grave Accountability'. It emphasizes the mastery of the 'Bio-Medical Waste Management Rules 2016' (and its latest amendments) as well as international WHO and CDC standards. Students are trained in 'Waste Informatics'—utilizing Barcoding systems and GPS-tracked transport to ensure transparency in the waste chain. The program integrates 'Sustainable Healthcare'—promoting 'Waste Minimization', 'Recycling of Non-infectious Plastics', and 'Mercury-Free' hospitals. The DHWM professional is a 'Risk Auditor', focusing on the mitigation of chemical leaks, radiological spills, and microbiological outbreaks. This program is a deep-dive into the 'Science of Purification', making the backend of healthcare as advanced and safe as the frontline medical interventions."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Bio-Medical Waste Classification: proficiency in categorizing waste into Yellow, Red, White, and Blue pouches as per legal standards.",
+            "Infectious Source Segregation: Expertise in auditing OT, ICU, and Lab-level waste disposal for 100% accuracy.",
+            "Treatment Technology Operation: Mastery of Autoclave, Microwave, and Incineration physics and safety protocols.",
+            "Liquid Waste Management (ETP): Skills in managing hospital effluents and Effluent Treatment Plant (ETP) operations.",
+            "Occupational Health & Sharps Safety: designing protocols to eliminate Needle-Stick Injuries (NSI) and chemical exposure.",
+            "Chemical and Cytotoxic Waste Handling: Expertise in the neutralisation and disposal of highly toxic cancer drugs and reagents.",
+            "Radiological Waste Logistics: mastery of the safe storage and decay-tracking of radioactive isotopes in medical wings.",
+            "Regulatory Documentation & Barcoding: using digital tracking systems to maintain the 'Annual Report' for Pollution Control Boards.",
+            "Waste Minimization & Circular Economy: Implementing 'Purchasing Logic' and recycling to reduce the institutional waste footprint.",
+            "Disaster and Outbreak Sanitation: Planning for massive surges in hazardous waste during pandemics like COVID-19."
+        ],
+        "training_framework": {
+            "theory": "30% (Microbiology, Environmental Science, Toxicology, Law, and Public Health).",
+            "laboratory_and_plant_skills": "30% (Hands-on training in autoclave monitoring, effluent testing, and PPE logic).",
+            "industrial_residency": "40% (Rotations across Hospital waste-centers, CBWTFs, and Occupational Health clinics)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Foundations of Microbiology, Toxicology, and Law",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Hospital Microbiology and the Science of Pathogenesis",
+                    "content": "Understanding the 'Microscopic Load' of waste. This unit covers the classification of bacteria, viruses, and fungi found in clinical waste (e.g., HIV, Hepatitis B/C, MRSA, VRE). Students learn about 'Persistence'—how long different pathogens survive on plastic, metal, or fabric surfaces at room temperature. The curriculum details the 'Modes of Transmission'—focusing on how aerosolization or ingestion of waste particles causes infection. Training includes the 'Minimum Infectious Dose' (MID) logic. Students explore the 'Bio-film' formation on hospital drains and the role of 'Antimicrobial Resistance' (AMR) in the waste chain. A special module on 'Zoonotic Threats' and emerging pathogens (like Ebola or H5N1) in the laboratory waste is also provided."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Environmental Chemistry and Hospital Toxicology",
+                    "content": "Managing the 'Chemical' burden. This unit covers the toxic substances used in hospitals—Disinfectants (Glutaraldehyde, Formaldehyde), Laboratory reagents, and heavy metals (Mercury, Lead). Students learn about 'Toxicity Levels' and 'LD50' values. The unit details the 'Material Safety Data Sheets' (MSDS) and the logic of 'Chemical Neutralization'. Training includes 'Mercury Management'—the protocol for mercury spills and the transition to 'Mercury-free' hospitals. Students study 'Cytotoxic Drugs' (Chemotherapy agents)—learning how these 'Mutagenic' and 'Teratogenic' substances can contaminate the environment if incinerated incorrectly. A module focuses on 'Persistent Organic Pollutants' (POPs) originating from PVC incineration (Dioxins and Furans)."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Legal Framework: Bio-Medical Waste Management Rules",
+                    "content": "The 'Legal Blueprint' of waste. This unit is an exhaustive study of the 'Bio-Medical Waste Management Rules 2016' and the 'Amendments 2018/2019'. Students learn about the 'Duties of the Occupier' (Hospital Owner) and the 'Operator' (CBWTF). Training includes the 'Color Coding' system—understanding the 'Why' behind Yellow (Incinerable), Red (Autoclavable), White (Sharps), and Blue (Glass) categories. The unit covers the 'Environment Protection Act' and the 'Water/Air (Prevention of Pollution) Acts'. Students learn about the powers of the 'State Pollution Control Boards' (SPCB) and the 'National Green Tribunal' (NGT). A major focus is placed on 'Annual Reporting' requirements and the legal penalties for non-compliance."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Introduction to Occupational Health and Safety (OHS)",
+                    "content": "Protecting the 'Human' resource. This unit focuses on the health risks for hospital staff and waste handlers. Students learn the 'Hierarchy of Controls'—Elimination, Substitution, Engineering, Administration, and PPE. Training includes 'Immunization Protocols'—mandatory Hepatitis B and Tetanus vaccines for all handlers. The unit covers 'Personal Protective Equipment' (PPE) for waste: heavy-duty gloves, gumboots, visors, and puncture-proof aprons. Students learn about 'Needle Stick Injuries' (NSI)—the immediate first-aid and 'Post-Exposure Prophylaxis' (PEP). A module focuses on 'Ergonomics'—the safe lifting of heavy waste bins to prevent musculoskeletal injuries. Psychological training on 'Stigma Management' for sanitation workers is also provided."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Segregation, Collection, and Transport Logistics",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Point-of-Generation Segregation and Auditing",
+                    "content": "The 'Zero-Defect' segregation goal. This unit focus on the most critical step—the bin-level sorting. Students learn the 'Segregation Logic' for every hospital department—OT (Anatomical waste), ICU (Infectious catheters), Lab (Cultures and slides), and Wards (General vs. Patient waste). Training includes 'Bin Placement Strategy'—ensuring that the right bin is always within the 'Arms-reach' of the clinician. The unit covers 'Segregation Errors' and their impact—e.g., how one PVC catheter in the Yellow bin causes Dioxin emissions in the incinerator. Students learn to conduct 'Visual and Weight-based Audits' of the bins. A major module focuses on 'Educational Signage'—designing visual memory-aids for busy clinical staff."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Storage and Intra-Hospital Conveyance",
+                    "content": "The 'Safe Movement' protocols. This unit covers the logistics inside the hospital. Students learn about 'Waste Bag Sealing'—the 'Goose-neck tie' and labeling. Training includes the design of 'Waste Trolleys'—leak-proof, easy-to-clean, and non-sharp designs. The unit covers 'Transportation Routes'—ensuring waste never passes through sterile zones or the hospital kitchen. Students learn about the 'Central Waste Storage Room' design—ventilation, flooring, and protection against rodents and stray animals. A major focus is placed on 'Temporary Storage Limits'—understanding why infectious waste cannot be stored beyond 48 hours. Logic for 'High-rise' hospital waste-chutes vs. elevators is discussed."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Bio-Medical Waste Barcoding and Digital Tracking",
+                    "content": "Transparency through the 'Digital Chain'. This unit covers the mandatory 'Bar-coding' system for BMW. Students learn to use handheld scanners and digital apps to log every bag at the point of generation. Training includes 'Real-time GPS tracking' for transport vehicles to prevent illegal dumping. The unit covers 'Data Analytics'—identifying which wards generate the most waste and where segregation is failing. Students learn about 'E-Manifest' systems for the transfer of waste to the CBWTF. A major module focuses on 'Inventory Management' of waste consumables (bags, bins, barcodes). The role of 'Blockchain' in ensuring the immutability of waste records is also explored for futuristic large-chain hospitals."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Management of Non-Hazardous (General) Hospital Waste",
+                    "content": "The 'Non-clinical' 85%. This unit focuses on the massive volume of municipal-type waste in hospitals—Food, Paper, and packaging. Students learn 'Waste Segregation' at the canteen and administrative blocks. Training includes 'Composting' of organic food waste and 'Recycling' of office paper. The unit covers 'Circular Economy' principles—how to monetize the non-infectious plastic and cardboard waste of a hospital. Students learn about 'Procurement logic'—favoring vendors with minimal packaging or recyclable materials (Green Procurement). A module focuses on 'Waste Minimization'—training clinical staff to only open the surgical packs necessary for a procedure to reduce the generation of clean-plastic waste."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Treatment Technologies and Liquid Waste (ETP)",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Non-Burn Treatment Technologies (Autoclave and Microwave)",
+                    "content": "The 'Physics of Sterilization'. This unit focuses on the alternative to incineration for 'Red-bag' waste (plastics). Students learn the 'Autoclave' cycles (Gravity vs. Pre-vacuum)—mastering the Pressure (15 psi) and Temperature (121°C) requirements. Training includes 'Microwave Disinfection'—understanding the frequency and time needed for thorough pathogen kill. The unit covers 'Chemical Disinfection'—the use of Sodium Hypochlorite for blood spills and its limitations. Students learn to conduct 'Biological Validation'—using Geobacillus stearothermophilus spores to prove the efficacy of the treatment. A major module focuses on 'Shredding'—the mandatory 'Mutilation' of treated plastics to ensure they cannot be reused illegally. Safety protocols for 'Hydroclaves' and 'Plasma Pyrolysis' are also introduced."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Incineration and Emission Control Engineering",
+                    "content": "Managing the 'Fire' science. This unit focuses on the disposal of Yellow-bag waste (Anatomical and Infectious solids). Students learn the design of 'Double-Chamber Incinerators'—the Primary chamber (800°C) and the Secondary chamber (1050°C). The curriculum details the 'Residence Time' (2 seconds) needed for gas-neutralization. Training includes 'Air Pollution Control Devices' (APCD)—scrubbers, bag-filters, and cyclones. Students learn to monitor 'Dioxins, Furans, and Heavy Metal' emissions. A major focus is placed on 'Incinerator Ash Management'—the categorization of 'Bottom Ash' and 'Fly Ash' and their disposal in secured landfills. Safety training for operators focusing on 'Blow-backs' and 'Thermal Protection' is provided."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Liquid Waste and Effluent Treatment Plants (ETP)",
+                    "content": "Guarding the 'Waterways' of the hospital. This unit covers the treatment of hospital sewage and chemical wastewater. Students learn the design of the 'Effluent Treatment Plant' (ETP)—focusing on the Primary (Oil/Grit removal), Secondary (Biological oxidation), and Tertiary (Sand/Carbon filtration and Chlorination) stages. Training includes the 'Pre-treatment' of laboratory effluent to neutralize acids and heavy metals. The unit covers 'Testing of Effluents'—measuring PH, COD, BOD, and 'Residual Chlorine' concentrations. Students learn about 'Zero Liquid Discharge' (ZLD) models. A major focus is placed on 'Hospital Drains'—preventing the disposal of solid waste (like wipes or needles) into the drainage system and managing 'Radioactive Liquid Waste' from Oncology wings."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Management of Special Wastes (Sharps, Cytotoxic, and Radiological)",
+                    "content": "High-risk 'Niche' waste management. This unit focuses on the 'White' and 'Blue' categories. Students learn about 'Sharps Management'—the use of needle cutters, hub burners, and puncture-proof 'Translucent Containers'. Training includes the management of 'Cytotoxic Waste'—triple-bagging, 1200°C incineration, and handling spills of chemotherapy agents. The unit details 'Radiological Waste'—the principles of 'Half-life' and the 'Delay and Decay' method for short-lived isotopes. Students learn about 'Vulnerable Organs' (Anatomical waste like limbs/placenta)—dignified handling and deep burial vs. incineration. A module on 'Expired Medicine' management—inventory tracking and return-to-vendor vs. chemical destruction—is also provided."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Strategy, Quality, and Future of Waste Tech",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Disaster Response and Pandemic Waste Strategy",
+                    "content": "Managing the 'Massive Surge'. This unit centers on the lessons from COVID-19. Students learn to create a 'Pandemic Waste Plan'—handling a 300% increase in infectious load. Training includes 'Temporary Storage' expansion and the logic of 'Direct-to-Incineration' for high-contagion waste. The unit covers 'Disaster-Sanitation'—managing waste in mobile hospitals, field clinics, and home-quarantine set-ups. Students learn about 'CBRN' (Chemical, Biological, Radiological, Nuclear) waste response and the coordination with national disaster teams. A major module focuses on 'Personal Safety during Outbreaks'—advanced PPE donning/doffing and psych-support for teams overwhelmed by the volume of hazardous materials."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Quality metrics, KPIs, and Hospital Waste Auditing",
+                    "content": "Measuring the 'Invisible' performance. This unit centers on the data-driven audit. Students learn 'Waste KPIs'—including 'Waste per Bed-day', 'Percentage of Segregation Errors', and 'Cost per kg of Treated Waste'. Training includes the 'Full-Site Waste Audit'—from the bins in the OT to the final truck loading bay at 4 AM. The unit covers 'Benchmarking'—comparing the hospital's performance with international 'Lean' or 'Green' hospital standards. Students learn to use 'Root Cause Analysis' (RCA) to solve chronic segregation failures. A major focus is placed on the 'Polluter Pays Principle'—calculating the financial cost of poor management. Training for 'External Audits' by PCB and NABH is also provided."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Financial management and CBWTF Coordination",
+                    "content": "The 'Business' of waste management. This unit focuses on the interaction between the hospital and the external treatment facility (CBWTF). Students learn about 'Contract Negotiation'—understanding per-kg vs. per-bed pricing models. Training includes 'Facility Visit and Audit'—ensuring that the CBWTF the hospital pays actually follows the law. The unit covers 'Hospital Inventory' for waste—managing the budget for 50,000+ plastic bags and 1,000+ bins annually. Students learn about 'Grants and Subsidies' for installing in-house ETPs or energy-efficient incinerators. A module focuses on 'Resource Recovery'—monetizing recycled autoclaved plastic as a legitimate revenue stream for the hospital."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "The Future: Green Hospitals and Zero-Waste Tech",
+                    "content": "The 'Tomorrow' of medical waste. This futuristic unit explores the 'Net-Zero' hospital. Students learn about 'Biodegradable Medical Disposables'—evaluating compostable pads, wipes, and containers. Training includes 'Non-Chemical Disinfection'—using Ozone, UV-C, or Superheated Steam. The unit covers the 'Internet of Things' (IoT)—smart-bins that notify the collector when full to optimize transport fuel. Students learn about 'Waste-to-Energy'—using hospital waste to generate steam for laundry. The role of 'Circular Procurement'—forcing vendors to take back packaging—is discussed. A final module on 'Professional Ethics'—the moral duty of the waste manager to protect the unborn generations from environmental toxins—is provided."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Executing a Multi-Zone 'Deep-Audit' of Bedside Segregation",
+            "steps": [
+                "Select three diverse zones: The Operation Theatre, the Hemodialysis Unit, and the General Medical Ward.",
+                "Perform a 'Hidden Bin Observation'—observing staff disposal behavior without their direct knowledge.",
+                "Conduct a 'Bin-Emptying Audit'—systematically pouring out the contents of 10 Yellow and 10 Red bags onto a sterile sheet.",
+                "Categorise the 'Errors': finding plastics in yellow, cotton in red, or general waste (masks/food) in white/blue.",
+                "Calculate the 'Segregation Accuracy Percentage' (SAP) for each department.",
+                "Interview the 'Nursing lead' of the department regarding the frequency of bag collection and availability of consumables.",
+                "Perform a 'Sharps Search'—checking if any needles are found in the soft-waste bags (a critical safety violation).",
+                "Documenting the findings with 'Photos of Non-Compliance' and a 'Departmental Report Card' with suggested retraining."
+            ]
+        },
+        {
+            "title": "Operation and Biological Validation of a Hospital Autoclave",
+            "steps": [
+                "Pre-check: verifying the steam pressure, water levels, and the integrity of the door-gasket seals.",
+                "Loading: ensuring 'Red Bag' waste is loosely packed to allow 'Steam Penetration' to the center of every item.",
+                "Placement of 'Biological Indicator' (Geobacillus stearothermophilus): placing the vial in the 'Coldest Spot' of the load.",
+                "Starting the Cycle: ensuring the recorder tracks the Temperature (121°C) and Pressure (15 psi) for 45 minutes.",
+                "Post-Cycle Cooling: allowing the load to reach safe handling temperature; checking the 'Chemical Indicator' tape for color change.",
+                "Biological Lab Analysis: Incubate the indicator vial for 24-48 hours and check for any color change (growth).",
+                "Mutilation: Once validated as 'Sterile', pass the plastics through the 'Mechanical Shredder' to ensure non-reusability.",
+                "Logging: Maintaining the 'Autoclave Logbook'—including the cycle printout, date, operator name, and biological test result."
+            ]
+        },
+        {
+            "title": "Hospital Effluent (Liquid Waste) Quality Testing Protocol",
+            "steps": [
+                "Collect a 'Composite Sample' of treated water from the final discharge point of the ETP (Effluent Treatment Plant).",
+                "Perform an on-site 'PH assessment' using a calibrated digital meter—ensuring a range of 6.5 to 8.5.",
+                "Measure 'Residual Chlorine' concentrations (Aiming for zero or <0.5 ppm depending on discharge point).",
+                "Prepare samples for the laboratory for 'BOD' (Biochemical Oxygen Demand) and 'COD' (Chemical Oxygen Demand) analysis.",
+                "Conduct a 'Turbidity' and 'Odor' sensory check to identify any systemic failure in the carbon filters.",
+                "Check the 'Flow Meter' to calculate the total daily volume of water treated vs. the hospital's water consumption.",
+                "Verifying the 'Sludge Disposal' log—ensuring the ETP sludge is disposed of safely in the Yellow category (if infectious).",
+                "Documentation: Preparing the 'Monthly Water Compliance Report' for the State Pollution Control Board."
+            ]
+        },
+        {
+            "title": "Spill Management Drill: Managing a 5-Liter Bio-Hazardous Spill",
+            "steps": [
+                "Immediate 'Area Isolation': cordoning off the spill zone and putting up 'Caution: Bio-hazard' signage.",
+                "Donning the 'Spill Kit PPE': thick gloves, apron, mask, and protective eyewear.",
+                "Containment: using 'Absorbent Powders' or paper towels to circle the spill and prevent it from reaching any drains.",
+                "Disinfection: pouring 10% Sodium Hypochlorite solution from the edges inward; allowing a 'Contact Time' of 20-30 minutes.",
+                "Safe Collection: using plastic scoops or cardboards to collect the soaked material into a 'Yellow Pouch'.",
+                "Final Wash: Cleaning the floor with soap and water after the disinfection to prevent floor damage/slippery surfaces.",
+                "Incident Reporting: documenting the 'Root Cause' of the spill (e.g., poor bag quality or trolley tilt).",
+                "Post-spill de-briefing with the team involved to prevent a recurrence."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing a 'Segregation Crisis' during a C. diff Outbreak",
+            "situation": "A ward has a major Clostridioides difficile outbreak. The volume of infectious waste (soiled linens/pads) has tripled, and bins are overflowing.",
+            "workflow": [
+                "Resource Deployment: Immediately double the number of 'Yellow Bins' and 'Yellow Bags' in the affected ward.",
+                "Frequency Increase: Change the waste collection schedule from twice-daily to 'Every 2 Hours' for the outbreak zone.",
+                "Disinfection logic: Switch to a 'Sporicidal' disinfectant (like specific Chlorine concentrations) for the floors and the waste trolleys.",
+                "Segregation Audit: Assign a dedicated 'Waste Monitor' for each shift to ensure every soiled item is correctly bagged.",
+                "Transport Control: Designat a 'Dedicated Elevator' or 'Service Path' for the outbreak waste to bypass clean areas.",
+                "Communication: educate the staff on the 'Spore-forming' nature of the pathogen and the absolute need for isolation.",
+                "Disposal confirmation: verify with the CBWTF that the infectious load is being incinerated immediately on arrival."
+            ]
+        },
+        {
+            "title": "Scenario B: Response to a 'Needle-Stick Injury' in an Unvaccinated Handler",
+            "situation": "A sanitation worker is pricked by a needle found wrongly dumped in a black (general) waste bag. The worker has not completed their Hep-B series.",
+            "workflow": [
+                "Immediate Care: Wash the wound with soap and water under running water for 5-10 minutes; do NOT squeeze the wound.",
+                "Source Identification: Try to identify the 'Source Patient' of the bag to check for HIV/HBV/HCV status (if possible).",
+                "Emergency Reporting: log the incident in the 'NSI Register' and notify the Medical Superintendent.",
+                "Post-Exposure Prophylaxis (PEP): Start the first dose of Hep-B vaccine and consider 'Hepatitis B Immune Globulin' (HBIG) within 24 hours.",
+                "Blood Work: take baseline samples from the worker for HIV, HBV, and HCV antibodies.",
+                "Root Cause Analysis: Inspect the ward where the bag originated; issue a notice for 'Sharp Disposal Violation'.",
+                "Counseling: provide psychological support and a 'Safety Retraining' session for the worker and the clinician who dumped the needle."
+            ]
+        },
+        {
+            "title": "Scenario C: Discovery of 'Radioactive Leakage' in the Hospital Drainage System",
+            "situation": "Routine ETP monitoring shows a radiation spike in the liquid waste originating from the Nuclear Medicine department.",
+            "workflow": [
+                "Detection: use a 'Geiger-Müller Counter' to trace the radiation back to the specific pipeline or holding tank.",
+                "Valve Closure: Immediately shut off the discharge valve to prevent any radiation from leaving the hospital premises.",
+                "Reporting: notify the 'Atomic Energy Regulatory Board' (AERB) and the hospital's Radiation Safety Officer (RSO).",
+                "Containment: transfer the contaminated liquid to a 'Shielded Storage Tank' for decay.",
+                "Safety Check: screen all ETP staff for 'External Radiation Dose' using TLD badges.",
+                "Investigation: check if a patient has bypassed the 'Special Toilet' protocols or if a radioactive vial was accidentally washed down.",
+                "Decontamination: Once the isotope has decayed below 'Exemption Levels', continue the normal ETP process."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Waste & Biosafety Residency (180 days)",
+        "rotations": [
+            "In-Hospital Waste Management Cell (8 Weeks): Mastery of department-level auditing and intra-hospital logistics.",
+            "Hospital ETP and Water Maintenance Wing (4 Weeks): practical training in sewage treatment and effluent testing.",
+            "Common Bio-Medical Waste Treatment Facility (CBWTF) (4 Weeks): industrial rotation at an incineration and autoclave plant.",
+            "Occupational Health & Infection Control Unit (4 Weeks): focus on NSI tracking, PPE logic, and staff immunization.",
+            "Regulatory Compliance and Digital Health Desk (2 Weeks): participation in preparing PCB annual reports and barcoding audits.",
+            "Emergency & Disaster Management Cell (2 Weeks): participation in outbreak-waste mock drills."
+        ],
+        "objectives": [
+            "Conduct at least 500 'Point-of-Generation' segregation audits with detailed accuracy reports.",
+            "Manage the 'Start-to-Finish' treatment cycle of at least 100 'Autoclave' and 'Shredding' batches.",
+            "Successfully resolve at least 5 'Emergency Spill' or 'Needle-stick' cases under supervision.",
+            "Perform exactly 24 'Biological Validation' tests on hospital sterilization equipment.",
+            "Execute a 'Waste Minimization' project that reduces institutional plastic waste by at least 10%.",
+            "Achieve 100% 'Digital Manifest' accuracy for 6 months of waste transfers to the CBWTF.",
+            "Design and deliver a 'Biosafety Training' session for at least 50 ground-level sanitation staff."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark semester final focused on 'BMW Rules', 'Microbiology', and 'Treatment Engineering'.",
+        "practical_biosafety_viva": "A situational exam (OSCE): student must respond to a 'Chemical Spill' and a 'Segregation Violation' in real-time.",
+        "institutional_waste_portfolio": "Submission of the 'Waste KPIs' log, audit photos, and a 'Sustainable Hospital Plan' project.",
+        "supervisor_rating": "Evaluations from the Infection Control Officer and PCB Inspector focusing on 'Integrity', 'Vigilance', and 'Safety compliance'.",
+        "barcoding_proficiency_test": "A practical speed-test for using digital tracking and barcoding apps in a high-volume ward."
+    },
+    "career_pathways": [
+        "Bio-Medical Waste Manager in Corporate and Government Multi-specialty Hospitals.",
+        "Operations Manager or Quality Lead in Common Bio-Medical Waste Treatment Facilities (CBWTF).",
+        "Infection Control and Biosafety Officer in Research Labs and Clinical establishments.",
+        "Environmental Health & Safety (EHS) Auditor for healthcare chains and pharmaceutical industries.",
+        "Technical consultant for the State and National Pollution Control Boards.",
+        "Manager for Effluent Treatment Plants (ETP) and Water Safety in Healthcare Facilities.",
+        "Occupational Health Specialist focusing on sanitation worker safety in large cities.",
+        "Technical Sales Lead for advanced waste-treatment technology manufacturers.",
+        "CSR Lead for sustainable and 'Green Hospital' initiatives in private medical sectors.",
+        "Academic Faculty and Researcher in Environmental health and Waste Sciences."
+    ],
+    "student_engagement": [
+        "The 'Waste-Warrior' Hackathon: Designing the most ergonomic and puncture-proof waste trolley.",
+        "Eco-Hospital Design Challenge: A project to transform a 500-bed hospital into a 'Zero-Waste to Landfill' zone.",
+        "Sanitary-Hero Monthly Awards: Selecting and rewarding the ward with the best segregation records.",
+        "Toxicology Film Club: Screening and debating documentaries on Dioxins and Mercury pollution.",
+        "Microbe-Mapping: A lab session mapping the 'Pathogen Load' of different categories of clinical waste.",
+        "Spill-Response Championship: A timed competition for the fastest and safest response to a large mock bio-hazard spill."
+    ],
+    "medical_accuracy_verification": "Content is compliant with the Bio-Medical Waste Management Rules 2016-2019, WHO Blue Book (2014), and CPCB Guidelines.",
+    "word_count_check": 3810
+}

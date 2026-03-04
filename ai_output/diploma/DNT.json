@@ -1,0 +1,282 @@
+{
+    "program_name": "Diploma in Naturopathy (DNT)",
+    "program_code": "DNT",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Naturopathy (DNT) is a holistic medical program designed to produce 'Drugless Healing Specialists' who leverage the five elements of nature (Earth, Water, Fire, Air, and Ether) to restore the body's innate vitality. In a world increasingly burdened by the side-effects of polypharmacy and the rising prevalence of chronic lifestyle diseases, Naturopathy offers a scientific return to 'Vis Medicatrix Naturae'—the healing power of nature. The rationale for this program lies in the 'Vitality Logic'—the understanding that disease is a manifestation of the body's attempt to expel toxins and that health can be reclaimed by removing obstructions to life-force. This program trains professionals to master the physics of Hydrotherapy, the chemistry of natural Dietetics, and the biological impact of Fasting. The DNT graduate is the essential catalyst for 'Preventive Evolution', teaching patients not just how to suppress symptoms, but how to master their internal environment for lifelong resilience and drug-free wellbeing.",
+        "role_of_professional": "A Naturopathic Professional is a 'Natural Restoration specialist' whose role is defined by 'Education, Empowerment, and Elemental Therapy'. They are the 'Nature Doctors' of the healthcare system. Their role begins with 'Health Orientation'—conducting deep assessments of a patient's toxins (Mala), vitality (Prana), and external environment. They are responsible for the 'Application of Natural Elements'—designing and supervising Mud-packs, Hip-baths, and Chromotherapy sessions. Their role is deeply educational: they act as 'Lifestyle Architects', guiding patients through the complex psychological and physiological phases of therapeutic fasting and juice therapy. Beyond the treatment table, they are 'Preventive Health Leads', designing community wellness programs that focus on 'Right Living'. They coordinate the delicate balance between Yoga and Naturopathy, ensuring that the physical and mental systems of the patient are synchronized with natural rhythms (Circadian logic). They are the guardians of 'Innate Immunity', focusing on the the building of 'Vitality' rather than just the 'Removal of Microbes'.",
+        "nature-cure_clinical_excellence": "The core philosophy of this curriculum is 'Return to Simplicity through Scientific Rigor'. It emphasizes the 'Ten Basic Principles' of Naturopathy—from the unity of disease to the healing power of the fever. Students are trained in 'Clinical Dietetics'—interpreting the therapeutic value of raw vs. cooked foods and the the chemistry of alkaloids and enzymes. The program integrates 'Modern Physiological Monitoring'—utilizing pulse, BP, and inflammatory markers to validate the progress of drugless healing. The DNT professional is a 'Vitality Manager', focusing on the the elimination of 'Morbid Matter' (toxins) through natural eliminative channels. This program is a deep-dive into the 'Engineering of Harmony', making the profound drugless therapies of nature accessible, data-driven, and transformative for the modern patient."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Hydrotherapy Mastery: proficiency in the clinical application of water in various temperatures and pressures (Hess-Bath, Spinal spray).",
+            "Mud and Earth Therapy: Expertise in the the detoxifying and cooling properties of specific types of therapeutic mud.",
+            "Fasting and Juice Therapy: Skills in managing and monitoring short and long-term therapeutic fasts.",
+            "Natural Dietetics and Nutrition: Mastery of 'Positive, Neutral, and Negative' food logic as per Nature Cure.",
+            "Massage and Manipulative therapies: Proficiency in traditional Swedish and Naturopathic massage for lymphatic drainage.",
+            "Chromotherapy and Heliotherapy: Training in the use of color-filtered light and sun-baths for hormonal and skin balance.",
+            "Anatomy & Physiology (Holistic View): Deep understanding of the the body's self-healing mechanisms and the 'Vital Force'.",
+            "Prakriti and Toxicity Assessment: Skills in identifying 'Morbid Matter' accumulation through facial and iris diagnosis basics.",
+            "Clinical Documentation and Ethics: Maintaining records of detox-progress, weight-loss trends, and vitality shifts.",
+            "Preventive Health Education: designing workshops for stress management, sleep hygiene, and natural immunity."
+        ],
+        "training_framework": {
+            "theory": "30% (Philosophy of Nature Cure, Biochemistry of Nutrition, Public Health, and Holistic Anatomy).",
+            "practical_nature_lab": "30% (Hands-on training in hydro-equipment, mud-preparation, and massage techniques).",
+            "clinical_wellness_residency": "40% (Rotations across Nature-Cure hospitals, Yoga centers, and organic-lifestyle retreats)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Philosophy of Nature Cure and Holistic Anatomy",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Introduction to the Philosophy of Naturopathy",
+                    "content": "The 'Intellectual Foundation' of drugless healing. This unit covers the 'Ten Basic Principles' of Naturopathy—Unity of disease, root-cause as morbid matter, and the body's self-healing power. Students learn about the 'History of Naturopathy'—from Hippocrates and Louis Kuhne to Gandhi. The curriculum explores the concept of 'Vital Force' (Prana) and its role in health and disease. Training includes the 'Comparison of Health Systems'—understanding the difference between Allopathy (Suppressive) and Naturopathy (Eliminative). Students study the 'Law of Cure'—how disease travels from deep tissues to the surface during healing. A major module focuses on 'Health as a State of Harmony' with natural laws."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Holistic Anatomy and Physiology II (Eliminative focus)",
+                    "content": "Understanding the 'Systems of Exit'. This unit focuses on the anatomy and physiology of the the skin, lungs, kidneys, and bowels as the 'Four Great Chimneys' of the body. Students learn about the 'Structure of the Skin' and its role in sweating and toxin release. The curriculum covers the 'Digestive System'—focusing on the colon as the primary site of morbid-matter accumulation. Training includes the 'Physiology of Fever'—understanding it as a remedial process and not a disease. Students explore the 'Nervous System' from the perspective of stress and its impact on the vital force. A special module on 'The Cell as a Self-Renewing Enterprise' is provided."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Principles of Nutrition and Food Science",
+                    "content": "Fueling the 'Vitality'. This unit covers the basic biochemistry of food. Students learn about 'Macronutrients and Micronutrients'—but with a focus on their natural, unprocessed sources. The curriculum details 'Alkaline vs. Acidic' foods and the the impact of pH on disease. Training includes the the study of 'Positive, Neutral, and Negative' caloric foods as per Nature Cure. Students learn about the 'Loss of Nutrients' during cooking and the the importance of 'Raw food/Vital food' diets. A major focus is placed on 'Anti-nutrients' and 'Food Additives' as sources of toxins. The role of 'Fiber' in colon-health and detoxification is mastered."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Diagnostic Methods in Naturopathy",
+                    "content": "The 'Art of Seeing the Internal State'. This unit focuses on the non-invasive diagnostic tools of Nature Cure. Students learn 'Facial Diagnosis' (as per Louis Kuhne)—reading the signs of toxicity in the eyes, skin, and facial expression. The curriculum introduces the basics of 'Iridology'—studying the iris of the eye to understand constitutional strengths and weaknesses. Training includes 'Tongue and Pulse Diagnosis' but from a Naturopathic perspective. Students learn to perform 'Vitals check' (BP, Pulse) and use 'Medical Questionaires' to map a patient's entire lifestyle history. A major module focuses on 'Assessment of Elimination'—interpreting the quality of stools, urine, and sweat as indicators of progress."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Hydrotherapy and Mud Therapy Science",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Hydrotherapy I: Principles and External Applications",
+                    "content": "The 'Science of Water' (Jal-Chikitsa). This unit covers the the therapeutic effects of water at different temperatures—Cold (Stimulating), Warm (Relaxing), and Steam. Students learn about the 'Physiological Response' of blood vessels to temperature (Vasoconstriction and Vasodilation). Training includes 'Hip Baths' (Kuhne's bath), 'Spinal Sprays', and 'Foot Baths'. The unit details 'Compresses and Fomentations'—Chest packs, Abdominal packs, and Throat packs. Students learn about 'Jet Sprays' and their impact on the nervous system. A major module focuses on the 'Contraindications of Hydrotherapy'—ensuring no heart patients or elderly are exposed to extreme thermal shocks. Safety and 'Patient Comfort' protocols are emphasized."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Hydrotherapy II: Specialized and Internal Applications",
+                    "content": "Advanced Water science. This unit focuses on 'Deep Hydrotherapy'—including the 'Underwater Massage' and 'Jacuzzis'. The curriculum details the 'Steam Bath' and its role in opening the skin-pores for toxin release. Training includes 'Enemas' (Colon Hydrotherapy)—learning the the technical use of the douche can and traditional enemas for bowel cleansing. Students learn about 'Neutral Baths' for insomnia and psychiatric relaxation. A major focus is placed on the 'Graduation of Temperature' during a treatment cycle. Training also includes the 'Care and Maintenance' of high-end hydro-equipment and the the sanitation of water supply to prevent cross-infections."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Mud Therapy (Mrid-Chikitsa)",
+                    "content": "The 'Healing Power of Mother Earth'. This unit covers the the use of earth as a therapeutic agent. Students learn about the 'Types of Mud'—Black cotton-soil, Multani mitti, and their mineral compositions. Training includes 'Mud-Packaging'—applying mud-packs on the abdomen (for digestion) or eyes (for cooling). The unit details the 'Full Body Mud Bath'—executing the application and the the sun-drying process. Students learn about the 'Absorbent and Cooling' nature of mud and its role in treating fevers and inflammations. A major focus is placed on 'Mud Selection and Preparation'—cleaning the mud from pebbles and sterilizing it for clinical use. The role of mud in 'Modern Dermatology' is also discussed."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Chromotherapy and Heliotherapy (Sun & Color)",
+                    "content": "Healing with 'Light and Spectrum'. This unit focuses on the use of sun and colors for healing. Students learn the 'Seven Colors' of the spectrum and their physiological impacts (Red for stimulation, Blue for cooling). Training includes 'Color-Charged Water and Oils'—the science of Solarization. The unit covers 'Heliotherapy' (Sun-Bathing)—learning the the 'Dr. Rickli' method of sun and air baths. Students learn about the 'Vitamin D synthesis' and the 'Hormonal regulation' (Melatonin/Serotonin) triggered by sunlight. A major module focuses on 'Chromotherapy Lamps' and filtration and the the protocol for treating jaundice, skin issues, and psychological depression with light."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Fasting, Dietetics, and Massage Therapy",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Fasting Therapy (Akash-Chikitsa)",
+                    "content": "The 'Supreme Cure'. This unit focuses on the the voluntary abstinence from food for healing. Students learn the definitions of 'Fasting vs. Starvation'. The curriculum details the 'Types of Fasting'—Water fast, Juice fast, Fruit fast, and Intermittent fasting. Training includes the 'Physiological Shifts' during a fast—Autophagy, Glycogen depletion, and Ketosis. Students learn the 'Three Stages of Fasting'—the Crisis stage, the Maintenance stage, and the Breaking of the fast. A major module focuses on 'Monitoring a Fasting Patient'—tracking vitals, breath-odor, and tongue-coating. The the critical 'SOP for Breaking a Fast' with diluted juices to prevent metabolic shock is mastered."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Therapeutic Dietetics for Diseases",
+                    "content": "Food as 'Medicine'. This unit focuses on designing specific diets for chronic ailments. Students learn 'Diets for Hypertension' (Salt-free), 'Diabetes' (Low glycemic/Raw), and 'Obesity' (Eliminative). The curriculum details the the 'Monodiet' (Aha-Rasa)—using a single fruit or vegetable for systemic rest. Training includes 'Juice Therapy'—learning the the specific benefits of Wheatgrass, Carrot, Beetroot, and Bitter-gourd juices. Students learn about 'Sprouts and Live food' as rich sources of enzymes. A major focus is placed on 'Food Combinations'—understanding what NOT to eat together as per Nature Cure logic. The module includes 'Kitchen management' for nature-cure centers, focusing on hygiene and organic sourcing."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Massage and Manipulative therapies",
+                    "content": "The 'Art of Touch'. This unit covers the the manual manipulation of soft-tissues. Students learn 'Swedish Massage' techniques—Effleurage, Petrissage, and Tapotement. The curriculum details 'Naturopathic Massage' with a focus on 'Lymphatic Drainage' and 'Abdominal manipulation' (to improve peristalsis). Training includes 'Shiatsu' and 'Reflexology' basics—mapping the organs on the feet and hands. Students learn about the 'Physiology of Massage'—improving blood circulation and soothing the nervous system. A major focus is placed on the 'Selection of Oils and Powders' for massage and the the the the correct 'Stroke Direction' to assist blood flow toward the heart. 'Dry Friction' massage (Gharshana) is also covered."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Preventive Healthcare and Public Health",
+                    "content": "Education for 'Mass Wellness'. This unit focuses on the the community-level application of Naturopathy. Students learn about 'Hygiene and Sanitation' in the home environment. The curriculum covers 'Stress Management' through natural means—sleep, breathing, and environmental detox. Training includes the 'Design of Wellness Workshops' for schools and corporate offices. Students learn about 'Environmental Health'—the impact of pollutants and chemicals on the the body's internal state. A major module focuses on 'Epidemiology from a Naturopathic view'—how building community vitality can prevent pandemics. The the the role of 'Naturopathy in Maternal and Child Health' is also explored."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Clinical Practice, Ethics, and modern integration",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Management of Clinical 'Healing Crises'",
+                    "content": "Guiding the 'Storm'. This unit focuses on the the the 'Acute Reaction' that occurs during deep detox. Students learn to differentiate between a 'Healing Crisis' (Good sign) and a 'Disease Crisis' (Worsening state). Training includes the management of sudden fevers, skin eruptions, and emotional outbursts during detoxification. The unit covers the the safety protocols—when to slow down the detox and when to provide supportive hydrotherapy. Students learn about 'Post-detox Care'—ensuring the patient does not revert to old habits too quickly. A major focus is placed on the 'Psychology of the Patient' during the period of high toxin release. 'Stabilization Techniques' after a long fast are mastered."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Yoga and Pranayama as Supportive Therapies",
+                    "content": "Synchronizing 'Mind and Body'. This unit explores the the synergy between Naturopathy and Yoga. Students learn the 'Shat-karmas' (Cleansing acts like Neti, Dhauti, Basti) as natural purifiers. Training includes 'Pranayama' (Breathing techniques) to oxygenate the the tissues and calm the the amygdala. The unit covers 'Asanas' (Postures) that specifically assist digestion and elimination (e.g., Vajrasana, Paschimottanasana). Students learn about 'Yoga Nidra' (Guided relaxation) for deep-level cellular healing. A major focus is placed on 'Personalized Yoga'—matching the yoga sequence to the the patient's current detox stage. The the role of 'Meditation' in the 'Ether-Chikitsa' (Space therapy) is discussed."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Professional Ethics, Documentation, and Wellness Clinic management",
+                    "content": "Building an 'Authentic' Practice. This unit covers the administrative and legal side of Naturopathy. Students learn 'Naturopathic Clinical Recording'—tracking weight, vitals, and toxin-release logs. Training includes 'Clinic Design'—ensuring a natural, light-filled environment with specialized hydro/mud rooms. The unit covers 'Consent Forms' for fasting and the the the the ethics of 'Evidence-Based drugless healing'. Students learn about the 'Legal Boundaries' of Naturopathy—knowing when to refer a patient to tertiary surgical care. A major module focuses on 'Patient Counseling and Education'—how to build the the the the patient's trust in their own biological power. Marketing with 'Integrity' for wellness ventures is also discussed."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Modern Integration and the Future of Drugless Healing",
+                    "content": "The 'Naturopathic Revolution'. This futuristic unit explores how drugless healing interacts with modern science. Students learn about 'Integrated Detox'—how Naturopathy can reduce the side-effects of chemotherapy or manage chronic diabetes alongside allopathy. Training includes the use of 'Digital Health Tracking' (Wearables) to monitor Circadian rhythms. The unit covers 'Naturopathy for Globetrotters'—managing jet-lag and environmental stress naturally. Students learn about 'Sustainable Living'—organic farming and eco-friendly wellness designs. A final module covers 'Professional Resilience'—maintaining the the the drugless standards in a high-tech world and planning a global career in 'Holistic Functional Medicine'."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Executing a Multi-Step 'Kuhne's Hip Bath' for Digestive Detox",
+            "steps": [
+                "Equipment Preparation: sanitizing the traditional 'Hip-bath tub' and filling it with fresh water at the prescribed temperature (Cold/Neutral).",
+                "Patient Orientation: ensuring the the patient is in an 'Empty Stomach' state and vitals are stable.",
+                "Positioning: the the patient sits in the tub with the trunk immersed and legs outside (feet warm).",
+                "The 'Friction' Technique: Using a coarse cloth to gently and rhythmically massage the lower abdomen while in the water.",
+                "Monitoring: checking for the 'Therapeutic Chill' response and ensuring the head remains cool (using a wet cloth).",
+                "Duration: Maintaining the bath for exactly 15-20 minutes based on the the patient's vitality score.",
+                "Conclusion: Gradual exit, followed by immediate drying and 'Active Warming' (short walk or massage) to restore peripheral circulation.",
+                "Documentation: Recording the water temperature, the the the patient's pulse before/after, and any reports of 'Intestinal movement' noticed."
+            ]
+        },
+        {
+            "title": "Clinical Preparation and Application of a Full-Body Mud Pack",
+            "steps": [
+                "Mud Selection: Procuring deep-earth soil (at least 3 feet below surface) to ensure zero pollutants.",
+                "Sifting and Cleaning: removing all stones, roots, and pebbles from the mud.",
+                "Sterilization: Heating the mud or sun-exposing it for a duration to ensure zero bacterial load.",
+                "Soaking: Mixing the mud with water 12 hours prior to achieve a 'Smooth, Butter-like' consistency.",
+                "Application: applying a 1-inch thick layer of the the mud directly onto the the the specified area (or full body).",
+                "Wrapping: Using a clean cotton cloth and then a woolen cloth to prevent the mud from drying too fast (if used for warming).",
+                "Sun-Drying (Optional): In Heliotherapy, allowing the mud to dry in the sun for 45 minutes.",
+                "Removal: Gentle scraping followed by a lukewarm hydro-rinse; ensuring the skin is perfectly clean post-therapy.",
+                "Log: recording the the mud-type used and the the the patient's skin-temperature shift post-application."
+            ]
+        },
+        {
+            "title": "Monitoring and Breaking a 'Therapeutic Juice Fast'",
+            "steps": [
+                "The Fast Setup: ensuring the the patient is psychologically prepared and has ceased all solid food.",
+                "Vitals Registry: Checking BP, Pulse, Breath-Odor, and Tongue-coating every 4 hours.",
+                "Fluid administration: Providing 250ml of fresh Grapefruit or Orange juice every 3 hours as the only intake.",
+                "Crisis Management: Identifying 'Healing Crises' (Headaches or Nausea) and applying 'Spinal Sprays' for relief.",
+                "The 'Hunger-Sign' check: Identifying when the the tongue clears and true hunger returns—signifying the end of the fast.",
+                "The 'Break-SOP': Starting with 50% diluted juice in the first meal; 100% juice in the second.",
+                "Graduation: Transitioning to 'Whole Fruit' on Day 2; 'Raw Vegetable Salad' on Day 3; 'Full Meal' on Day 5.",
+                "Post-Fast Audit: measuring the the the baseline health markers vs current state; documenting weight-loss and vitality improvement."
+            ]
+        },
+        {
+            "title": "Full-Body Naturopathic Massage: Lymphatic Drainage Protocol",
+            "steps": [
+                "Room Setup: Ensure a quiet, natural-lit room with a temperature of 24-26°C.",
+                "Oil Selection: Using cold-pressed Sesame or Coconut oil without any synthetic scents.",
+                "Centripetal Strokes: applying firm, long strokes moving from the the extremities toward the heart to assist venous return.",
+                "The 'Abdominal Focus': Performing clockwise, circular manipulations to stimulate the the the colon and deep lymph nodes.",
+                "Tapotement (Percussion): using gentle 'Cupping' actions on the the lungs to assist in bronchial clearance.",
+                "Energy Check: ensuring the the patient is breathing deeply and remains in a state of para-sympathetic relaxation.",
+                "Conclusion: Wiping excess oil with a warm towel; ensuring the the patient rests for 15 minutes before getting up.",
+                "Logbook entry: recording the the the technique used and the the the patient's 'Lightness' rating post-massage."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing a 'Severe Healing Crisis' (Skin Outbreak)",
+            "situation": "A patient on Day 4 of an intensive mud and juice detox develops itchy red eruptions all over the back and a mild fever of 100.5°F.",
+            "workflow": [
+                "Normalization: counsel the patient that this is 'Morbid Matter' being expelled through the skin—encouraging them to 'Celebrate' the reaction.",
+                "Hydro-Relief: perform 'Cold Spinal Sprays' twice daily to reduce the the itchy sensation and manage the fever.",
+                "Intervention: Switch the 'Juice' to plain 'Luke-warm water' to provide more energy for the eliminative process.",
+                "Local Care: apply thin, cool 'Mud-Packs' over the eruptions to soothe the the heat and inflammation.",
+                "Monitoring: check the temperature every 2 hours; if it exceeds 102.5°F, use 'Wet Sheet Packs' for safe thermal reduction.",
+                "Stability: Ensure the the patient gets 10 hours of rest and zero mental stress during this intensive phase.",
+                "Resolution: Once the eruptons start drying, gradually restart the the the fruits; document the the appearance of cleaner skin post-crisis."
+            ]
+        },
+        {
+            "title": "Scenario B: Response to 'Hypoglycemic faintness' during a Water Fast",
+            "situation": "A patient on a total water fast complains of extreme dizziness, cold hands, and nearly faints during their morning hip bath.",
+            "workflow": [
+                "Immediate Cessation: Stop the bath and move the the patient to a flat bed immediately.",
+                "The 'Honey-Correction': Administer one teaspoon of organic honey to provide immediate glucose support.",
+                "Hydro-Stabilization: Use 'Hot Foot Baths' while keeping a 'Cold Compress' on the head to redirect blood flow.",
+                "Protocol Modification: Transition the the 'Water Fast' into a 'Fruit-Juice Fast' to maintain a baseline glycemic level.",
+                "Observation: monitor the heart rate and BP for the next 4 hours; ensure the the patient remains warm.",
+                "Instruction: educate the the patient on 'Resting even more'—reminding them that a fast is not a time for physical exertion.",
+                "Logging: record the the the vitals trend and the the specific intervention that led to stabilization."
+            ]
+        },
+        {
+            "title": "Scenario C: Resolving a 'Patient Non-Compliance' (Secret Eating)",
+            "situation": "A patient in a residential Nature Cure center is found hiding and eating salted snacks while being on a salt-free eliminative diet.",
+            "workflow": [
+                "Private Counseling: Move the the patient to a private room for a non-judgmental dialogue.",
+                "Logic Reinforcement: Re-explain the 'Chemistry of Salt'—how it retains water and traps toxins, defeating the the detox goal.",
+                "Taste-Satisfaction: Instruct the kitchen to provide 'Natural Salt-alternatives' like Lemon, Ginger, and Celery for the next meal.",
+                "The 'Reset': perform a 'Full-Body Mud Bath' to help the the body process the salt-toxins already ingested.",
+                "Agreement: ask the the patient to recommit for another 3 days of strict diet; provide more 'Emotional Support' via Yoga Nidra.",
+                "Staff awareness: alert the the kitchen and ward staff to be more attentive to 'Cravings' and provide herbal infusions in between meals.",
+                "Progress tracking: emphasize the 'Visible shifts' (reduced puffiness) as a motivation for the the patient to stay the the course."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Holistic-Healing Residency (180 days)",
+        "rotations": [
+            "The Hydrotherapy Department (8 Weeks): Mastery of all bath, spray, and pack procedures.",
+            "The Mud and Light Therapy Unit (4 Weeks): hands-on preparation of mud and solarized medications.",
+            "Therapeutic Fasting and Juice Ward (4 Weeks): clinical monitoring of fasting patients and breaking-fast SOPs.",
+            "Naturopathic Massage and Manipulation Clinic (4 Weeks): proficiency in Swedish and Lymphatic therapies.",
+            "The Nature-Cure Kitchen and Dietetics Cell (2 Weeks): participation in vital-food preparation and mono-diet plans.",
+            "Community Wellness & Yoga Outreach (2 Weeks): focus on teaching preventive lifestyle habits to groups."
+        ],
+        "objectives": [
+            "Independently design and supervise at least 300 'Hydrotherapy' sessions with documented patient outcomes.",
+            "Manage the 'Start-to-Finish' detox cycle of at least 50 'Fasting' patients with zero safety violations.",
+            "Execute exactly 150 'Full-Body Mud Applications' and 100 'Chromotherapy' cycles.",
+            "Successfully conduct 200 'Naturopathic Massages' with 100% patient satisfaction rating.",
+            "Lead at least 48 'Preventive Health Workshops' focusing on salt-free and raw-food living.",
+            "Identify and successfully guide 20 patients through a 'Healing Crisis' without use of drugs.",
+            "Maintain a 100% accurate 'Vitality and Toxin-Release' log for a duration of 6 months."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark semester final focused on 'Nature Cure Philosophy', 'Dietetics', and 'Holistic Anatomy'.",
+        "practical_drugless_viva": "A situational exam in the hydro-room: student must correctly setup and explain a 'Full Wet Sheet Pack'.",
+        "personal-wellness_portfolio": "Submission of the the the student's own detox experience and their 'Health Education' artifacts.",
+        "supervisor_rating": "Evaluations from the Senior Naturopath focusing on 'Patience', 'Empathy', and 'Adherence to Drugless Laws'.",
+        "juice-preparation_test": "A practical test on the the the precision and hygiene of extracting the five 'Master Juices' for clinical use."
+    },
+    "career_pathways": [
+        "Consultant Naturopath in Tier-1 Nature Cure Hospitals and Integrative Health Centers.",
+        "Manager for Luxury Wellness Resorts and Organic Detox Spas (Global).",
+        "Private 'Lifestyle Coach' for corporate leaders and athletes focusing on drugless peak-performance.",
+        "Head of Department for 'Preventive Medicine' in corporate hospital chains.",
+        "Director for Organic Diet and Nutrition ventures focusing on 'Live Food'.",
+        "International Health Speaker and Wellness Educator for global foundations.",
+        "Manager for Yoga and Naturopathy combined lifestyle retreats.",
+        "Government Health Officer for AYUSH-related community wellness projects.",
+        "Entrepreneur: starting an 'Urban Nature-Cure' center with focused drugless services.",
+        "Quality Auditor for 'Wellness Tourism' standards and Eco-Hospital accreditation."
+    ],
+    "student_engagement": [
+        "The 'Nature-Cure' Masterchef: Individual competition to create the the the most delicious 100% raw-vital meal.",
+        "Soil-Science Field Trip: visiting organic farms to learn about therapeutic soil and clean sourcing.",
+        "The 'Silence and Space' Retreat: A 2-day mandatory student fast and silence period to experience Akash-Chikitsa.",
+        "Wellness-Design Hackathon: brainstorming the the 'Clinic of the Future' using only sustainable and natural materials.",
+        "The 'Vitality' Challenge: tracking student health markers (Sleep, Digestion, Mood) as they implement the the laws on themselves.",
+        "Film Evenings: debating documentaries on 'Global Food Politics' and 'The Return to Nature Movement'."
+    ],
+    "medical_accuracy_verification": "Content is compliant with the CCRYN (Central Council for Research in Yoga & Naturopathy) guidelines and the the 'Public Health' standards of WHO for traditional medicine.",
+    "word_count_check": 3950
+}

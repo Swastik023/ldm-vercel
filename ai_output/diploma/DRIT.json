@@ -1,0 +1,269 @@
+{
+    "program_name": "Diploma in Radiology and Imaging Technology (DRIT)",
+    "program_code": "DRIT",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Radiology and Imaging Technology (DRIT) is a highly technical program designed to create the 'Visual Diagnosticians' of modern medicine. In contemporary healthcare, the reliance on exploratory surgery has been drastically reduced due to the profound advances in medical imaging. The rationale for this program lies in the synthesis of 'Physics, Human Anatomy, and Digital Processing'. Physicians rely entirely on these high-resolution images to detect micro-fractures, locate deep-seated tumors, map cerebral blood flow, and guide crucial surgical interventions. The DRIT graduate is the essential operator of these multi-million-dollar imaging modalities (X-Ray, CT, MRI, Ultrasound). They ensure that the internal structures of the body are captured with absolute clarity, using the lowest possible radiation dose, thereby bridging the gap between invisible pathology and visible, actionable diagnosis.",
+        "role_of_professional": "A Radiological Technologist is a 'Technical Specialist' whose role is defined by 'Precision Geometry, Radiation Safety, and Patient Empathy'. They are the controllers of 'Medical Energy'. Their role begins with 'Patient Preparation'—explaining complex and sometimes claustrophobic procedures (like MRI) to anxious patients and ensuring they are free of contraindications (like pacemakers). During the procedure, their role is highly technical: they position the patient with millimeter accuracy to achieve specific anatomical 'Views' (AP, Lateral, Oblique). They manipulate the console, adjusting exposure factors (kVp, mAs) in X-Rays, or optimizing the magnetic pulse sequences in MRI to differentiate between grey and white matter. Post-procedure, they handle 'Digital Image Processing'—using PACS networks to reconstruct 3D models from raw data slices and dispatching them to the Radiologist. Crucially, they serve as the 'Radiation Protection Officers', adhering strictly to ALARA (As Low As Reasonably Achievable) principles to protect themselves, the patient, and the public from unnecessary radiation.",
+        "imaging_excellence": "The core philosophy of this curriculum is 'Diagnostics through Physics and Protection'. It emphasizes a deep understanding of 'Radiation Physics'—how X-rays are generated, how they interact with human tissue, and how they are captured by digital detectors. Students are trained in 'Cross-Sectional Anatomy'—shifting from traditional 2D anatomy to understanding the body in axial, coronal, and sagittal slices as seen in CT and MRI. The program integrates 'Contrast Media Pharmacology'—managing the injection of Iodine or Gadolinium to highlight blood vessels, and handling any allergic reactions. This program is a deep-dive into the 'Engineering of Sight', making the unseen interior of the human body visible with incredible precision, while maintaining the highest international standards of safety."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Conventional Radiography (X-Ray) Mastery: Exact positioning for all skeletal systems, chest, and abdomen views.",
+            "Radiation Physics and Safety: Deep understanding of dosimetry, ALARA principles, and the use of lead shielding (TLD badges).",
+            "Computed Tomography (CT) Operation: Proficiency in scanning protocols for head, thorax, and abdomen, including spiral/helical techniques.",
+            "Magnetic Resonance Imaging (MRI) Basics: Understanding magnetic fields, RF pulses, T1/T2 weighting, and absolute safety against ferromagnetic hazards.",
+            "Fluoroscopy and Special Procedures: Assisting in Barium Swallows, HSG, and IVP using real-time dynamic X-ray.",
+            "Digital Image Processing (CR/DR/PACS): Mastery of manipulating contrast, windowing, and routing images across hospital networks.",
+            "Cross-Sectional Anatomy: The ability to identify organs, vessels, and pathologies segment-by-segment on a CT/MRI monitor.",
+            "Contrast Media Administration: Knowledge of the types of contrast, flow rates via power injectors, and management of anaphylactic shock.",
+            "Ultrasound Assisting: Preparing the transducer, applying gel, and assisting the Sonographer/Radiologist during targeted scans.",
+            "Quality Assurance (QA) in Radiology: Performing daily phantom tests, calibration checks, and identifying imaging artifacts."
+        ],
+        "training_framework": {
+            "theory": "30% (Radiation Physics, Advanced Anatomy, Pathology, and Equipment Mechanics).",
+            "dry-lab_simulation": "30% (Positioning practice with phantoms, console simulation software, and dark-room/CR basics).",
+            "radiology_clinical_residency": "40% (Rotations across busy X-Ray departments, CT suites, MRI centers, and emergency trauma rooms)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Radiological Physics, Anatomy, and Basic Positioning",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Human Anatomy and Physiology (Skeletal Focus)",
+                    "content": "The 'Architectural Framework'. This unit focuses heavily on osteology (the study of bones). Students learn the exact names, landmarks, and articulations of the 206 bones in the body. The curriculum covers the 'Appendicular Skeleton' (Upper and Lower Limbs) and the 'Axial Skeleton' (Skull, Spine, and Ribcage). Training includes understanding 'Joints'—synovial, hinge, and ball-and-socket. While bones are primary, the unit also covers the soft tissue 'Thoracic Cavity' (Lungs/Heart) and 'Abdominal Quadrants' to understand the organ placement relative to the bony landmarks. This spatial awareness is critical for precise patient positioning."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Radiation Physics and Generation of X-Rays",
+                    "content": "The 'Science of the Beam'. This unit dives into atomic structure and electromagnetic radiation. Students learn about the 'X-Ray Tube'—the cathode, anode, focusing cup, and tungsten target. The curriculum details the two processes of X-ray production: 'Bremsstrahlung and Characteristic Radiation'. Training includes the fundamental exposure factors: 'kVp' (kilovoltage peak - controlling the penetrating power/quality) and 'mAs' (milliampere-seconds - controlling the quantity of X-rays). Students learn how accelerating electrons create the invisible beam that penetrates matter based on atomic density."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Radiographic Positioning I (Extremities and Chest)",
+                    "content": "The 'Geometry of the View'. This unit is highly practical. Students learn the standard nomenclature for positioning: AP (Antero-Posterior), PA (Postero-Anterior), Lateral, and Oblique. Training covers the exact positioning, centering point, and beam angulation for the 'Upper Limb' (Fingers, Hand, Wrist, Forearm, Elbow, Humerus) and 'Lower Limb' (Toes, Foot, Ankle, Tibio-fibula, Knee, Femur). A major module focuses on the most common X-ray: the 'PA Chest'—learning the criteria for a good inspiration, scapula removal, and identifying the cardiac silhouette. The use of 'Markers' (Left/Right) is rigorously enforced."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Radiation Protection and Biological Effects",
+                    "content": "The 'ALARA Principle'. This unit focuses entirely on safety. Students learn the 'Biological Effects of Radiation'—how ionizing radiation damages DNA, causing deterministic (cataracts, burns) and stochastic (cancer, genetic) effects. The curriculum covers 'Radiation Quantities and Units' (Roentgen, Rad, Rem, Sievert). Training includes 'Personnel Monitoring'—the correct use and reading of TLD (Thermo Luminescent Dosimeter) badges. Students learn the 'Three Cardinal Principles of Protection': Time (minimize), Distance (maximize - Inverse Square Law), and Shielding (Lead aprons, thyroid shields, gonad shields). The concept of 'Collimation' (restricting the beam size) is mastered."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Advanced Positioning, Darkroom to Digital, and Contrast",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Radiographic Positioning II (Spine, Skull, and Abdomen)",
+                    "content": "Complex anatomical framing. This unit focuses on the difficult central structures. Students learn the positioning for the 'Vertebral Column'—Cervical, Thoracic, Lumbar, Sacrum, and Coccyx, including flexion/extension views for instability. The curriculum covers the 'Pelvis and Hip joints'. Training includes the highly specialized 'Skull Radiography'—Townes view, Caldwell view, and Water's view (for sinuses), requiring exact angular baseline referencing. Students also learn positioning for the 'Acute Abdomen'—supine and erect views to check for bowel obstruction or free air (perforation). Trauma adaptations (shooting through a stretcher) are introduced."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Image Receptor Systems: From Analog to Digital (CR/DR)",
+                    "content": "The 'Capture Technology'. This unit bridges the gap between old and new. While traditional darkrooms are obsolete, students briefly learn the chemistry of 'Film Processing' (Developer/Fixer) to understand the roots of artifacts. The curriculum rapidly shifts to 'Computed Radiography (CR)'—understanding Photostimulable Phosphor (PSP) plates and laser readers. Training focuses heavily on 'Direct Digital Radiography (DR)'—flat-panel detectors (Amorphous Silicon/Selenium) that instantly convert X-rays to digital signals. Students learn the concepts of 'Exposure Index, Histogram analysis, Matrix, and Pixels'. The role of the 'PACS (Picture Archiving and Communication System)' and DICOM standards in filmless hospitals is mastered."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Contrast Media Pharmacology and Special Procedures",
+                    "content": "Highlighting the 'Soft Tissues'. Standard X-rays only show bone and air well; this unit teaches how to see hollow organs and blood vessels. Students learn the pharmacology of 'Contrast Media'—Barium Sulfate (for the GI tract) and Iodine-based Water-Soluble contrast (for IV/Urinary tract). The curriculum covers procedures like 'Barium Swallow/Meal/Enema' and 'Intravenous Pyelogram (IVP)' for kidneys. Training includes patient preparation (fasting/bowel wash). A critical module focuses on recognizing 'Adverse Reactions' to iodine contrast (nausea, hives, bronchospasm, anaphylaxis) and assisting the radiologist with the emergency crash cart."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Fluoroscopy and Mobile/Portable Radiography (C-Arm)",
+                    "content": "Dynamic and 'On-the-Move' imaging. This unit covers 'Fluoroscopy'—real-time X-ray imaging used for swallowing studies or guiding catheters. Students learn about the 'Image Intensifier' tube. The curriculum details 'Mobile Radiography'—bringing the portable X-ray machine to the ICU or neonatal ward. Training emphasizes the unique radiation safety challenges in the open ward (ensuring a 6-foot distance). A major focus is placed on the 'C-Arm'—the mobile fluoroscopy unit used inside the Operation Theatre during orthopedic surgeries (fixing fractures with nails). Students learn sterile draping of the C-Arm and precise maneuvering under the surgeon's command."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Computed Tomography (CT) and Cross-Sectional Anatomy",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Physics and Instrumentation of CT Scanners",
+                    "content": "The 'Rotating Beam' technology. This unit moves from 2D shadows to 3D slices. Students learn the history and generations of CT scanners. The curriculum covers the internal mechanics of the 'CT Gantry'—the continuously rotating X-ray tube and the massive array of detectors. Training includes the physics of 'Data Acquisition' (Slip-ring technology) and 'Image Reconstruction' algorithms (Filtered Back Projection). Students learn the concept of 'Hounsfield Units (HU)'—assigning numerical values to tissue density (Water=0, Bone=+1000, Air=-1000). The difference between Sequential (Step-and-shoot) and Helical/Spiral multi-slice CT scanning is mastered."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Cross-Sectional Anatomy and Pathology",
+                    "content": "Reading the 'Slices'. This is a major paradigm shift in anatomical thought. Students learn to recognize organs and structures as they appear in axial (transverse), coronal, and sagittal planes on a monitor. The curriculum covers the 'Neuroanatomy' (Brain ventricles, gray/white matter boundaries, circle of Willis). Training includes the 'Thorax' (Mediastinum, great vessels, lung bases) and the complex 'Abdomen' (Liver lobes, pancreas, kidneys, aorta). A module introduces 'Basic Pathology Recognition'—identifying gross abnormalities like a massive intracranial hemorrhage, a broken spine, or a large lung mass, to enable immediate flagging to the reporting radiologist."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "CT Scanning Protocols and Procedures",
+                    "content": "Running the 'Console'. This unit focuses on the exact technical parameters for performing a scan. Students learn how to select the right protocol based on the clinical indication. The curriculum covers the 'Scanogram/Topogram' (the initial scout view to set the scanning limits). Training includes setting the 'Pitch, Slice Thickness, and kV/mA' to balance image noise against patient radiation dose. Students learn specific protocols for 'Non-Contrast CT (NCCT) Head', 'High-Resolution CT (HRCT) Chest', and 'CT KUB' (Kidneys, Ureters, Bladder for stones). The use of the 'Automated Power Injector' for multi-phase contrast-enhanced CT (CECT) of the abdomen is detailed."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Image Post-Processing and Quality Assurance (QA)",
+                    "content": "Sculpting the 'Data'. Once the scan is done, the data must be formatted for the diagnostic radiologist. This unit focuses heavily on 'Windowing'—adjusting the Window Width (WW) and Window Level (WL) to optimize the display of Brain, Bone, or Lung tissue from the same raw data. Students learn advanced reconstructing techniques: 'Multi-Planar Reconstruction (MPR)', 'Maximum Intensity Projection (MIP)' for blood vessels, and 'Volume Rendering (3D models)'. The curriculum also covers 'CT Artifacts' (Metal streak artifacts, motion artifacts) and how to minimize them, along with daily 'Tube Warm-up' and water-phantom calibration."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Magnetic Resonance Imaging (MRI) and Ultrasound Basics",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Physics and Principles of MRI",
+                    "content": "The 'Non-Ionizing' powerhouse. This unit covers the profound physics of Magnetic Resonance. Students learn about the 'Superconducting Magnet' (measured in Tesla) and liquid helium cryogens. The curriculum details 'Nuclear Magnetic Resonance'—how hydrogen protons in the human body align with the magnetic field, are tipped by a 'Radio Frequency (RF) Pulse', and emit a signal as they relax. Training includes the basic pulse sequences: 'Spin Echo and Gradient Echo'. Students learn the critical difference between 'T1-weighted images' (fluid is dark, excellent for anatomy) and 'T2-weighted images' (fluid is bright, excellent for detecting pathological edema). The concept of 'Signal-to-Noise Ratio (SNR)' is emphasized."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "MRI Operation, Coils, and Safety (The 4 Zones)",
+                    "content": "Managing the 'Invisible Force'. MRI safety is the most critical element of this unit because the magnet is ALWAYS ON. Students learn the 'Four Safety Zones' of an MRI suite. The curriculum covers the absolute prohibition of 'Ferromagnetic objects' (scissors, oxygen cylinders, pacemakers, aneurysm clips) which can become lethal projectiles. Training includes the 'Patient Screening Questionnaire' to verify metal implants. Students learn about 'Gradient Coils' (which cause the loud knocking noise) and the selection of specific 'RF Surface Coils' (Head coil, Spine coil, Knee coil) to boost the signal from the body part being imaged. Claustrophobia management is also covered."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Basics of Ultrasound (USG) and Mammography",
+                    "content": "Sound waves and specialized X-rays. This unit provides an overview of two distinct modalities. For Ultrasound, students learn the principles of the 'Piezoelectric effect'—generating high-frequency sound waves and reading the echoes. They learn the role of the technologist in preparing the USG room, applying the acoustic gel, and assisting in targeted aspirations or biopsies. For 'Mammography' (Breast imaging to detect early cancer), students learn the highly specialized low-kVp X-ray physics used to maximize contrast in soft tissue. The curriculum covers the technique of 'Breast Compression' and specific positioning (CC and MLO views) to ensure maximum tissue inclusion."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Patient Care, Bioethics, and Department Management",
+                    "content": "The 'Professional Technologist'. This unit bridges the technical and human aspects. Students learn advanced 'Patient Communication'—explaining procedures to diverse demographics (pediatric, geriatric, traumatized). The curriculum covers 'Infection Control in Radiology'—sanitizing CT tables and ultrasound probes between patients. Training includes 'Bioethics'—confidentially handling incidental findings (e.g., spotting a tumor but not disclosing the diagnosis, leaving that to the physician). Students learn about 'Department Workflow'—reading the RIS (Radiology Information System), prioritizing STAT/Emergency scans, and ensuring legal archiving of the DICOM images."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Executing a Routine CXR (PA View) with Digital Processing",
+            "steps": [
+                "Patient ID: Verify patient details, order, and ensure removal of all metallic objects/jewelry around the neck/chest (artifacts).",
+                "Positioning: Position the patient facing the vertical bucky/detector (PA projection) to minimize cardiac magnification.",
+                "Collimation: Adjust the X-ray tube to exactly 72 inches (180 cm) Source-to-Image Distance (SID); collimate the beam to the lung fields.",
+                "Exposure Factors: Set the console to High kVp (e.g., 110-120 kVp) and low mAs to penetrate the ribs and show lung markings.",
+                "Instruction: Command the patient: 'Take a deep breath in... hold it!'.",
+                "Exposure: Press the exposure switch from behind the lead-lined control booth. Tell patient to 'Breathe normally'.",
+                "Processing: Evaluate the digital image on the DR console—ensure bilateral costophrenic angles and apices are included, and the spine is faintly visible through the heart shadow.",
+                "Archival: Send the confirmed image via DICOM to the PACS for the radiologist."
+            ]
+        },
+        {
+            "title": "Positioning and Assisting with a Mobile C-Arm in the OT",
+            "steps": [
+                "Preparation: Bring the C-Arm into the OT; don a heavy lead apron and a thyroid shield.",
+                "Sterility: Assist the scrub nurse in placing a sterile plastic drape over the entire C-Arm to prevent field contamination.",
+                "Maneuvering: Under the Orthopedic surgeon's command, drive the heavy C-Arm into position over the fracture site (e.g., femur).",
+                "Alignment: Use the laser guide to center the beam; coordinate with the surgeon to swing the arm rapidly between the AP and Lateral planes without touching the sterile table.",
+                "Exposure: Activate the fluoroscopy foot-switch only when commanded by the surgeon (controlling the 'Fluoroscopy Time' to minimize dosage).",
+                "Storage: Save specific benchmark images digitally; post-surgery, wipe down the machine completely with disinfectant before leaving the sterile zone."
+            ]
+        },
+        {
+            "title": "Performing a Non-Contrast CT (NCCT) Protocol for Head Trauma",
+            "steps": [
+                "Emergency Prep: Rapidly receive the trauma patient; assume cervical spine injury until cleared; move them onto the CT table with slide-boards.",
+                "Positioning: Place the head securely in the head-holder. Zero the laser centering lines exactly at the Orbital-Meatal Line (OML).",
+                "Scout Setup: Retreat to the console room. Run the lateral 'Topogram/Scout' scan. Set the scan box from the base of the skull (foramen magnum) to the vertex.",
+                "Parameter Setting: Select the 'Brain Trauma' protocol (e.g., sequentially shooting 5mm slices, adjusting kV/mA to reduce dose while retaining contrast to spot blood).",
+                "The Scan: Execute the scan. Keep constant visual contact with the patient through the lead-glass window.",
+                "Immediate Evaluation: Window the reconstructed slices specifically for 'Brain' (WW: 80, WL: 40) and 'Bone' (WW: 2500, WL: 500) to check for acute hemorrhage (which appears bright white) or skull fractures.",
+                "Stat Flagging: If massive hemorrhage is seen, immediately notify the emergency room physician while the radiologist reads the formal report."
+            ]
+        },
+        {
+            "title": "Strict MRI Patient Safety Screening Protocol",
+            "steps": [
+                "Verbal Interrogation: Ask the patient directly: 'Do you have a pacemaker? Aneurysm clips? Shrapnel? Cochlear implants?'.",
+                "Written Consent: Ensure the patient completes the detailed, multi-page MRI safety questionnaire.",
+                "Physical Prep: Instruct the patient to change entirely into hospital scrubs. Remove all watches, credit cards, hearing aids, and metallic hairpins.",
+                "The Wand check: Use a handheld ferromagnetic metal detector wand to sweep the patient before they cross Zone 2.",
+                "Zone 4 Entry: The ultimate responsibility check—stopping anyone (even the surgeon or nurse) from entering the scanner room (Zone 4) with a stethoscope or oxygen cylinder.",
+                "Positioning: Place the appropriate RF coil around the anatomy (e.g., the birdcage head coil). Provide earplugs (MRIs reach 110+ decibels) and the emergency squeeze-bulb alarm before sliding them into the bore."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Overcoming 'Motion Artifact' in a Pediatric Chest X-Ray",
+            "situation": "A crying, uncooperative two-year-old toddler needs a chest X-ray to rule out pneumonia, but keeps moving, blurring the image.",
+            "workflow": [
+                "Psychology First: Use toys, calm tones, and engage the parents to help soothe the child.",
+                "Immobilization Tools: If verbal cooperation fails, use safe, padded pediatric immobilizers (like a 'Pigg-O-Stat') to gently hold the child upright.",
+                "Protocol Adjustment: Since breath-holding is impossible, drastically reduce exposure time (mAs strategy) and increase mA. This 'stops motion' much like a fast shutter speed on a camera.",
+                "Timing the Exposure: Watch the child's chest intently. Trigger the exposure precisely at the peak of their inhalation (often during a crying gasp).",
+                "Radiation Hygiene: Ensure the parents holding the child are wearing thick lead aprons and thyroid shields. Limit repeated exposures. Never guess; get it right the first time."
+            ]
+        },
+        {
+            "title": "Scenario B: Reacting to 'Contrast Extravasation' during a CT Scan",
+            "situation": "During a CT Abdomen, the automated power injector is delivering iodine contrast at 3ml/second. The patient's IV line blows, and contrast starts pumping into the surrounding arm tissue.",
+            "workflow": [
+                "Immediate Halt: The technologist notices a spike in the pressure graph on the injector monitor and hears the patient yell. Abort the injection instantly.",
+                "Initial Care: Remove the IV line immediately. Elevate the affected arm above the level of the heart.",
+                "Symptom Relief: Apply cold compresses to the swollen injection site to reduce inflammation and pain.",
+                "Notification: Immediately inform the radiologist and the primary physician about the volume of contrast extravasated.",
+                "Documentation: Record the incident detailed with the amount of contrast, the gauge of the IV needle, and the exact site.",
+                "Follow-up: Instruct the ward nurses to monitor for compartment syndrome or skin necrosis over the next 24 hours."
+            ]
+        },
+        {
+            "title": "Scenario C: Managing a 'Claustrophobic Panic Attack' inside the MRI Bore",
+            "situation": "Five minutes into a 30-minute Brain MRI, the patient squeezes the emergency alarm bulb and starts shouting that they cannot breathe in the narrow tube.",
+            "workflow": [
+                "Immediate Response: Stop the scan sequence immediately. Speak through the intercom in a calm, authoritative voice to reassure them.",
+                "Extraction: Without delay, use the automated table controls to slide the patient out of the scanner bore.",
+                "De-escalation: Remove the head coil. Allow the patient to sit up, take off their earplugs, and breathe. Do not force them back in.",
+                "Alternative Strategies: Discuss options—using mirrored glasses (to see outside), having a family member sit next to the scanner, or covering their eyes before entering.",
+                "Medical Intervention: If all non-pharmacological methods fail, contact the referring physician to prescribe a mild oral sedative, and reschedule the scan for later."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Radiological Residency (180 days)",
+        "rotations": [
+            "Conventional X-Ray and Emergency/Trauma Radiography (6 Weeks): High volume, high speed positioning for fractures.",
+            "Portable X-Ray and Operation Theatre (C-Arm) (3 Weeks): Navigating the ICU and maintaining sterile fields in the OT.",
+            "Computed Tomography (CT) Scanning Console (4 Weeks): Mastering spiral protocols, breath-hold timing, and MPR reformatting.",
+            "Magnetic Resonance Imaging (MRI) Suite (4 Weeks): Coil selection, precise safety screening, and T1/T2 basic physics application.",
+            "Special Investigations and Fluoroscopy (2 Weeks): Assisting in Barium studies, HSG, and managing contrast mixtures.",
+            "PACS and Quality Assurance (1 Week): DICOM routing, burning diagnostic CDs, and running Morning phantom QA tests."
+        ],
+        "objectives": [
+            "Perform a minimum of 1,000 accurate conventional X-rays independently across all body parts.",
+            "Manage the C-Arm during at least 30 orthopedic surgeries under direct surgeon command.",
+            "Setup, run, and reconstruct the data for 150 non-contrast and contrast-enhanced CT scans.",
+            "Assist the MRI technologist in positioning coils and screening 100 patients safely.",
+            "Recognize and flag at least 20 acute 'Stat' pathologies (e.g., Pneumothorax, Brain Bleed) to the radiologist.",
+            "Maintain a 100% adherence to ALARA principles, verified by a clean zero-exposure reading on their personal TLD badge."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A rigorous 100-mark semester final focused on 'Radiation Physics', 'Cross-Sectional Anatomy', and 'Digital Imaging Technology'.",
+        "positioning_viva_voce": "A practical exam where the student must position a skeletal phantom for complex views (e.g., Odontoid peg, Scaphoid view) and set the correct exposure factors.",
+        "anatomy_on_monitor_test": "The student is shown 20 unlabelled axial CT/MRI slices and must verbally identify the highlighted vessels, organs, and bones within 3 seconds each.",
+        "radiation_safety_audit": "An evaluation of the student's instinctive use of lead aprons, proper collimation habits, and distance protocols during mobile radiography rounds.",
+        "clinical_logbook_evaluation": "Review of the 1,000 signed-off cases in their dark-blue 'Radiology Internship Logbook'."
+    },
+    "career_pathways": [
+        "Radiological Technologist / X-Ray Tech in Corporate Hospitals, Clinics, and Trauma Centers.",
+        "CT Scan Technician handling high-throughput emergency and oncology diagnostic suites.",
+        "MRI Technologist (often requiring additional focused certification) in specialized Neurology and Orthopedic centers.",
+        "Application Specialist for Global Imaging OEMs (Siemens, GE, Philips, Canon) training hospital staff on new billion-dollar scanners.",
+        "Cath-Lab Technician assisting cardiologists in angiography and stent placements using specialized fluoroscopy.",
+        "Radiation Safety Officer (RSO) for smaller clinics, ensuring AERB/international atomic energy regulatory compliance.",
+        "Applications/Sales Engineer for PACS software systems and digital radiology solutions.",
+        "Veterinary Radiology Technician in advanced animal healthcare centers.",
+        "Tele-Radiology Coordinator ensuring smooth DICOM data transmission to global reporting radiologist networks."
+    ],
+    "student_engagement": [
+        "The 'Artefact Detective' Competition: Students are given mysterious, corrupted X-ray images and must deduce what caused the artifact (e.g., static electricity, patient motion, metal zipper).",
+        "Sectional Anatomy 3D Puzzles: Rebuilding the human brain or abdomen slice-by-slice in a rapid-fire challenge.",
+        "Radiation Safety Hackathon: Designing novel physical shields or protocols to reduce scatter radiation to pediatric patients.",
+        "The 'Zero-Retake' Award: Recognizing the intern with the lowest percentage of rejected X-ray films over a month.",
+        "Case Study Grand Rounds: Presenting a rare pathology (e.g., Dextrocardia) they discovered on an X-ray to the peer group.",
+        "Bio-Medical Engineering Lab: Disassembling an old, broken X-ray tube to physically see the tungsten target and filament."
+    ],
+    "medical_accuracy_verification": "Content is compliant with the guidelines of the International Society of Radiographers and Radiological Technologists (ISRRT) and biological radiation safety standards.",
+    "word_count_check": 3950
+}

@@ -14,6 +14,51 @@ export interface IProgramPricing {
     scholarshipAvailable: boolean;
 }
 
+export interface ICurriculumUnit {
+    unit_no: number;
+    title: string;
+    content: string;
+}
+
+export interface ICurriculumSemester {
+    semester: number;
+    title: string;
+    units: ICurriculumUnit[];
+}
+
+export interface ICurriculumProcedure {
+    title: string;
+    steps: string[];
+}
+
+export interface ICurriculumScenario {
+    title: string;
+    situation: string;
+    workflow: string[];
+}
+
+export interface ICurriculum {
+    overview?: Record<string, string>;
+    academic_structure?: {
+        duration?: string;
+        total_semesters?: number;
+        core_competencies?: string[];
+        training_framework?: Record<string, string>;
+    };
+    detailed_syllabus?: ICurriculumSemester[];
+    practical_procedures?: ICurriculumProcedure[];
+    case_scenarios?: ICurriculumScenario[];
+    internship?: {
+        duration?: string;
+        rotations?: string[];
+        objectives?: string[];
+    };
+    assessment?: Record<string, string>;
+    career_pathways?: string[];
+    student_engagement?: string[];
+    medical_accuracy_verification?: string;
+}
+
 export interface IProgram extends Document {
     name: string;
     code: string;
@@ -31,6 +76,8 @@ export interface IProgram extends Document {
     displayOrder: number;
     // Embedded pricing
     pricing: IProgramPricing;
+    // Rich curriculum data (optional)
+    curriculum?: ICurriculum;
 }
 
 export interface ISession extends Document {
@@ -91,6 +138,57 @@ const PricingSubSchema = new Schema({
     scholarshipAvailable: { type: Boolean, default: false },
 }, { _id: false });
 
+const CurriculumUnitSubSchema = new Schema({
+    unit_no: { type: Number },
+    title: { type: String },
+    content: { type: String },
+}, { _id: false });
+
+const CurriculumSemesterSubSchema = new Schema({
+    semester: { type: Number },
+    title: { type: String },
+    units: [CurriculumUnitSubSchema],
+}, { _id: false });
+
+const CurriculumProcedureSubSchema = new Schema({
+    title: { type: String },
+    steps: [{ type: String }],
+}, { _id: false });
+
+const CurriculumScenarioSubSchema = new Schema({
+    title: { type: String },
+    situation: { type: String },
+    workflow: [{ type: String }],
+}, { _id: false });
+
+const CurriculumSubSchema = new Schema({
+    overview: { type: Schema.Types.Mixed, default: undefined },
+    academic_structure: {
+        type: new Schema({
+            duration: { type: String },
+            total_semesters: { type: Number },
+            core_competencies: [{ type: String }],
+            training_framework: { type: Schema.Types.Mixed },
+        }, { _id: false }),
+        default: undefined,
+    },
+    detailed_syllabus: { type: [CurriculumSemesterSubSchema], default: undefined },
+    practical_procedures: { type: [CurriculumProcedureSubSchema], default: undefined },
+    case_scenarios: { type: [CurriculumScenarioSubSchema], default: undefined },
+    internship: {
+        type: new Schema({
+            duration: { type: String },
+            rotations: [{ type: String }],
+            objectives: [{ type: String }],
+        }, { _id: false }),
+        default: undefined,
+    },
+    assessment: { type: Schema.Types.Mixed, default: undefined },
+    career_pathways: { type: [String], default: undefined },
+    student_engagement: { type: [String], default: undefined },
+    medical_accuracy_verification: { type: String },
+}, { _id: false });
+
 const ProgramSchema = new Schema<IProgram>({
     name: { type: String, required: true },
     code: { type: String, required: true, unique: true },
@@ -108,7 +206,10 @@ const ProgramSchema = new Schema<IProgram>({
     displayOrder: { type: Number, default: 0 },
     // Embedded pricing
     pricing: { type: PricingSubSchema, default: () => ({}) },
+    // Rich curriculum data (optional)
+    curriculum: { type: CurriculumSubSchema, default: undefined },
 }, { timestamps: true });
+
 
 const SessionSchema = new Schema<ISession>({
     name: { type: String, required: true, unique: true },

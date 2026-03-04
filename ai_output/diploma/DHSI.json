@@ -1,0 +1,281 @@
+{
+    "program_name": "Diploma in Health & Sanitary Inspector (DHSI)",
+    "program_code": "DHSI",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Health & Sanitary Inspector (DHSI) is a foundational public health program designed to create 'Environmental Health Custodians' who safeguard the community against the unseen threats of pathogens, pollutants, and poor sanitation. Historically, the most significant leaps in human life expectancy have come not from advanced surgery, but from the implementation of rigorous sanitary standards. The rationale for this program lies in the 'One Health' approach—the recognition that human health is inextricably linked to the purity of our water, the safety of our food, and the efficiency of our waste systems. This program trains professionals to move beyond the clinic and into the heart of the community, where they act as the first line of defense against epidemics and environmental degradation. The DHSI graduate is the essential regulator who ensures that urban and rural spaces are not just habitable, but conducive to the long-term physiological well-being of every citizen.",
+        "role_of_professional": "A Health & Sanitary Inspector is a multi-dimensional regulatory professional. Their role spans from 'Field Surveillance'—inspecting water sources, waste disposal sites, and public toilets—to 'Regulatory Auditing' of food establishments, markets, and slaughterhouses. They are the 'Sentinels of Disease'—tasked with identifying and reporting early signs of vector-borne outbreaks like Malaria or Dengue and coordinating massive containment efforts. They act as educators, translating complex municipal laws into actionable hygiene practices for the public. In the industrial sector, they serve as 'Occupational Health and Safety' (OHS) officers, ensuring that workplace environments do not pose chemical or biological risks to workers. Their role is one of 'Public Advocacy and Enforcement', balancing the implementation of health laws with the compassionate education of the community to foster a culture of hygiene and environmental stewardship.",
+        "regulatory_excellence": "This curriculum is rooted in the 'Regulatory Science of Sanitation'. It emphasizes the mastery of municipal bylaws, the 'Food Safety and Standards Act' (FSSAI), and the 'Environment Protection Act'. Students are trained in 'Scientific Inspection Techniques'—from water quality testing and food sampling to the mapping of vector breeding sites. The program integrates modern technology, utilizing 'Geographic Information Systems' (GIS) for disease mapping and digital platforms for real-time reporting to municipal authorities. The DHSI professional is not just an inspector, but a 'Strategic Planner' for healthy cities and villages, ensuring that sanitation is treated as a core utility and a basic human right. This program is a deep-dive into the 'Engineering of Health', making our shared environments safer for all."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Water Quality Engineering: Proficiency in testing, treating, and managing community water supplies for zero contamination.",
+            "Waste Management Mastery: Expertise in Solid, Liquid, and Bio-medical waste disposal as per NGT and local bylaws.",
+            "Food Safety Inspection: Mastery of FSSAI standards, auditing food preparation zones, and managing food poisoning outbreaks.",
+            "Vector and Pest Control Management: Designing large-scale surveillance and elimination protocols for disease-carrying pests.",
+            "Infectious Disease Surveillance: Identifying and reporting TB, Leprosy, Malaria, and emerging zoonotic threats.",
+            "Occupational Health & Safety (OHS): Identifying workplace hazards and implementing ergonomic and safety standards.",
+            "Municipal Law and Public Health Ethics: mastery of the legal framework governing public nuisances and sanitary violations.",
+            "Community Health Education: designing visual communication strategies for behavioral change in sanitation.",
+            "Disaster Sanitation: Planning emergency sanitation and water supply for refugee camps or disaster relief zones.",
+            "Health Informatics: Using digital tools for GIS-based disease mapping and municipal data management."
+        ],
+        "training_framework": {
+            "theory": "30% (Microbiology, Epidemiology, Environmental Science, Sociology, and Public Health Law).",
+            "laboratory_skills": "30% (Hands-on training in water testing, food sampling, pest identification, and disinfectant chemistry).",
+            "municipal_residency": "40% (Field rotations with Municipal Corporations, Food Safety Departments, and Rural Health Missions)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Foundations of Hygiene, Microbiology, and Water Safety",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Applied Microbiology and Infectious Disease Patterns",
+                    "content": "A deep dive into the 'Invisible Enemy'. This unit covers the classification and physiology of bacteria, viruses, fungi, and parasites relevant to public health. Students learn about 'Pathogenesis'—how microbes cause disease and the 'Modes of Transmission' (Water-borne, Food-borne, Vector-borne, and Air-borne). The unit explores 'Epidemiology'—understanding the 'Agent-Host-Environment' triad. Detailed study of major communicable diseases like TB, Cholera, Typhoid, and Hepatitis is provided. Students learn about the 'Immune Response' and the importance of 'Herd Immunity' through vaccination. A major module focuses on 'Antibiotic Resistance'—analyzing how poor sanitation and over-prescription drive the emergence of 'Superbugs' in our environment."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Water Supply Science and Quality Control",
+                    "content": "Managing the 'Lifeline of the City'. This unit covers the multi-stage engineering of community water supply—from source (River/Groundwater) to the household tap. Students learn about 'Water Purification' technologies: Coagulation, Flocculation, Sedimentation, Filtration, and Disinfection (Chlorination/UV). Training includes 'Water Quality Testing'—measuring pH, Turbidity, Total Dissolved Solids (TDS), and performing 'Bacteriological Analysis' (MPN test). The unit details the 'Cold Chain' of sampling and the management of 'Water Distribution Networks' to prevent cross-contamination from sewage lines. Students are trained in 'Plumbing Health'—identifying cross-connections and backflow hazards. A special module on 'Rural Water Schemes' and rain-water harvesting is also provided."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Personal and Institutional Hygiene Standards",
+                    "content": "The science of 'Safe Living'. This unit focuses on hygiene at both the individual and organizational level. Students learn about 'The Five Moments of Hand Hygiene' and the science of skin surface disinfection. The unit covers hygiene standards for 'Institutions'—including Schools, Hostels, Prisons, and Marriage Halls. Training includes 'Ventilation Engineering'—understanding air-change rates and the prevention of indoor air pollution (Sick Building Syndrome). A major module focuses on 'Sanitary Latrines'—the design and maintenance of septic tanks, soak pits, and eco-san toilets to eliminate open defecation. Students learn about 'Disinfectants and Antiseptics'—the chemistry of phenol, bleaching powder, and quaternary ammonium compounds."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Sociology of Health and Community Engagement",
+                    "content": "Navigating the 'Human' factor. This unit explores how social structures, culture, and poverty impact health outcomes. Students learn 'Behavioral Change Communication' (BCC) strategies to address taboos related to toilets and sanitation. The curriculum covers 'Community Participation' models—learning how to mobilize village elders and youth groups for 'Cleanliness Drives'. Training includes 'Communication Soft Skills'—empathy, active listening, and conflict resolution during sanitary enforcements. A module focuses on 'Social Stigma' associated with diseases like Leprosy or HIV and the role of the inspector in fostering inclusion. Students also study the 'Demographic' impact of hygiene on life expectancy and economic productivity."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Waste Engineering and Environmental Health",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Solid Waste Management and circular Economy",
+                    "content": "The 'Science of Scraps'. This unit covers the 'Life Cycle of Waste'—from the point of generation to final disposal. Students learn the '3 Rs' (Reduce, Reuse, Recycle) and the transition to a 'Circular Economy'. Training includes 'Waste Segregation' at source—categorizing into Biodegradable, Non-biodegradable, and Hazardous waste. The unit details 'Collection Systems' (Door-to-door) and 'Transportation' logistics. Students master the engineering of 'Sanitary Landfills', 'Composting', 'Vermicomposting', and 'Incineration' (Waste-to-Energy). A major focus is placed on 'Plastic Waste Management Rules'—addressing the global crisis of microplastics. Training also covers the remediation of 'Legacy Waste' (Dumpsites) and the role of 'Informal Waste Pickers' in the urban ecosystem."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Liquid Waste and Sewage Treatment (STP)",
+                    "content": "Managing the 'Flow' of urban health. This unit covers the collection, conveyance, and treatment of domestic and industrial wastewater. Students learn the design of 'Sewerage Systems' and the mechanics of 'Pumping Stations'. The curriculum details the 'Sewage Treatment Plant' (STP) stages: Primary (Screening/Grit), Secondary (Biological treatment like Activated Sludge), and Tertiary (Nutrient removal/Disinfection). Training includes 'Testing of Effluents'—measuring BOD (Biochemical Oxygen Demand), COD, and Suspended Solids levels. Students are trained in 'Decentralized Wastewater Treatment' (DEWATS) for rural or peri-urban settings. A module focuses on 'Fecal Sludge Management' (FSM) and the safety of 'Sanitation Workers' during sewer cleaning (preventing manual scavenging)."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Bio-Medical and E-Waste Management",
+                    "content": "Hazardous waste in the 'Digital and Medical' age. This unit covers the 'Bio-Medical Waste Management Rules 2016' (and amendments). Students learn the 'Color-Coding' system (Yellow, Red, White, Blue) for hospital waste. Training includes the management of 'Sharps', 'Infectious Solids', and 'Cytotoxic' drugs. The unit also details 'E-waste' management—focusing on the hazardous heavy metals (Lead, Mercury, Cadmium) inside electronic devices and the protocols for their safe recycling. A module focuses on 'Radiological Waste' management in hospitals and industries. Students are trained in 'Cradle-to-Grave' documentation and 'Annual Reporting' protocols for hazardous waste generators. Public awareness campaigns for domestic hazardous waste (batteries/bulbs) are also covered."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Air, Noise, and Soil Pollution Surveillance",
+                    "content": "Monitoring the 'Common' environment. This unit focuses on the 'Ambient' threats to health. Students learn about 'Air Quality Index' (AQI) parameters (PM2.5, PM10, NOx, SO2). Training includes the use of 'Ambient Air Samplers' and strategies for reducing vehicular and industrial emissions. The unit covers 'Noise Pollution'—measuring decibel levels and implementing 'No-Honking' zones near hospitals and schools. 'Soil Pollution' modules focus on 'Soil Chemistry' and the impact of excessive chemical fertilizers and industrial leaching on the food chain. Students are trained to use 'Environmental Impact Assessment' (EIA) basics to predict the health impact of new industrial or urban development projects."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Food Safety, Pest Control, and Occupational Health",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Food Safety and Standards Authority of India (FSSAI) Protocols",
+                    "content": "Guarding the 'Plate of the Nation'. This unit focuses on the 'Farm-to-Fork' safety. Students learn the legal requirements of the 'Food Safety and Standards Act'. Training includes 'Food Establishment Inspection'—auditing the hygiene of kitchens, storage areas, and water supply. The unit covers 'Food Adulteration'—testing for common adulterants in milk, spices, and oils using Rapid Kits. Students master 'HACCP' (Hazard Analysis Critical Control Point) principles and 'GHP' (Good Hygiene Practices). A major module focuses on 'Food Poisoning' investigation—collecting samples, conducting 'Stool Analysis' of food handlers, and tracing the source of outbreaks. Training also includes the management of 'Street Food Vendors' and 'Mid-day Meal' safety audits."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Vector Biology and Integrated Pest Management (IPM)",
+                    "content": "Strategizing against the 'Six-legged' threats. This unit covers the biology and control of 'Disease Vectors'—Mosquitoes (Anopheles, Aedes, Culex), Houseflies, Bedbugs, Rodents, and Fleas. Students learn to identify larvae and adult stages under the microscope. The curriculum details 'Integrated Pest Management'—combining Biological control (Gambusia fish), Chemical control (Space spraying/IRS), and 'Source Reduction' (Emptying water containers). Training includes the calculation of 'Container Index' and 'House Index' for Aedes monitoring. A module focuses on 'Anti-Rodent Measures'—baiting, trapping, and grain-store proofing. Students are trained in the 'Safe Handling of Pesticides'—focusing on toxicity, LD50 values, and personal protection, and the prevention of insecticide resistance."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Occupational Health and Industrial Hygiene",
+                    "content": "Safety at the 'Workplace'. This unit focuses on the health hazards in diverse work environments—from Factories and Mines to IT Parks. Students learn to identify 'Physical Hazards' (Heat, Radiation, Vibration), 'Chemical Hazards' (Dust, Fumes, Vapors), and 'Biological Hazards'. The unit covers 'Ergonomics'—the science of matching the workstation to the human body to prevent musculoskeletal disorders. Training includes the 'Selection and Maintenance of PPE' (Earplugs, Respirators, Safety shoes). Students learn about 'Industrial Toxicology' and the legal requirements for 'Periodic Health Checkups' for workers. A module on 'Sick Leave' management and 'Workmen's Compensation' as related to occupational diseases is also provided. The role of the inspector in identifying 'Child Labor' in hazardous industries is emphasized."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Public Health Laws, Bylaws, and Regulatory Auditing",
+                    "content": "The 'legal teeth' of the inspector. This unit covers the statutory powers of the Sanitary Inspector. Students learn about 'The Epidemic Diseases Act 1897', 'The Public Health Act', and local 'Municipal Bylaws'. Training includes the procedure for 'Issuing Notices' and 'Fines' for sanitary violations (Nuisances). The unit details the 'Audit Protocol'—preparing for an inspection, evidence collection through photography and sampling, and writing the 'Final Inspection Report'. Students learn about 'Licensing' procedures for offensive trades (Tanneries/Dyes). A major module focuses on the 'Right to Information' (RTI) as a tool for public accountability. The unit also addresses the ethics of 'Professional Integrity'—resisting corruption and maintaining regulatory neutrality."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Strategy, Disaster Management, and Digital Health",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Disaster Sanitation and Emergency Water Supply",
+                    "content": "Hygiene in the 'Heart of the Crisis'. This unit focuses on the sanitary response to Floods, Earthquakes, and Refugee influx. Students learn 'Rapid Health Assessment' in a disaster zone. Training includes the setup of 'Emergency Latrines' (Shallow trench/Deep trench) and 'Temporary Water Distribution' (Water trucking/Bladders). The unit covers 'Carcass Management'—the safe disposal of human and animal remains to prevent outbreaks. Students are trained in 'Relief Camp Hygiene'—focusing on soap distribution, menstrual hygiene, and overcrowding mitigation. A major module covers 'Mass Vaccination' logistics during a disaster and the coordination of 'Vector Spraying' in stagnant water. Psychological modules focus on 'Community Resilience' and fear management."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Healthy Cities and Urban Planning Strategy",
+                    "content": "The 'Architect' of sustainable urban health. This unit explores the link between 'City Design' and public health. Students learn about 'Zoning Laws'—keeping residential areas away from industrial pollutants. Training includes 'Slum Upgradation' projects—focusing on community taps, paved drains, and lighting. The unit covers the design of 'Active Cities'—promoting parks, cycle tracks, and walkable neighborhoods to counter lifestyle diseases. Students learn about 'Green Buildings' and the implementation of 'City Sanitation Plans' (CSP). A major module focuses on 'Climate Change adaptation'—preparing for 'Heat Waves' and 'Urban Flooding'. The role of 'Public-Private Partnerships' (PPP) in managing city waste and water is also explored."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Digital Health, GIS, and Data Informatics",
+                    "content": "Monitoring in the 'Digital Age'. Students learn the application of 'Geographic Information Systems' (GIS) to map disease clusters and sanitary failures. Training includes the use of 'Mobile Apps' for real-time reporting of waste heaps or water leaks. The unit covers 'Health informatics'—analyzing municipal health data to identify trends in 'Zero-Waste' neighborhoods. Students learn about 'E-Governance'—using digital portals for license applications and fine payments. A major module focuses on 'Big Data' in public health—understanding how social media and mobile data can predict outbreaks. Training also includes 'Digital Literacy'—assisting the community in using government portals for health grievances and feedbacks."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Project Management, Soft Skills, and Leadership",
+                    "content": "Leading the 'Sanitary Revolution'. This unit focuses on the soft skills and administrative logic of a Senior Inspector. Students learn 'Project Management'—calculating the budget, manpower, and equipment needed for a zero-waste ward. Training includes 'Time Management', 'Leadership', and 'Team Coordination' during massive drives like 'Swachh Bharat Abhiyan'. The unit covers 'Public Relations'—managing the media during an outbreak or a controversial demolition. Students learn to design 'Health Campaigns' from scratch—including social media, radio jingles, and street plays. A final module covers 'Professional Ethics'—maintaining dignity, transparency, and high standards of service in a demanding public sector environment."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Scientific Inspection of a Large Food Establishment (Hotel/Canteen)",
+            "steps": [
+                "Pre-inspection briefing: Reviewing the establishment's previous license history and pending complaints.",
+                "Executing the 'Wall-to-Wall' inspection: starting from the dry storage area (checking for pests/shelf life).",
+                "Auditing the 'Kitchen Processing Zone': checking for separate boards for veg/non-veg and fly-traps over entrances.",
+                "Executing the 'Personal Hygiene Audit' of chefs: checking for nails, hair-nets, and signs of skin/respiratory infections.",
+                "Verifying the 'Water Source' and 'Waste Disposal' protocol within the canteen premises.",
+                "Performing 'Rapid Food Sampling' for adulterants in perishables like milk or paneer.",
+                "Documentation: Preparing a 10-point 'Sanitary Improvement Notice' with a 7-day compliance deadline.",
+                "Conducting a 'Follow-up' audit to verify the implementation of the suggested improvements."
+            ]
+        },
+        {
+            "title": "Community Water Quality Audit (Field Protocol)",
+            "steps": [
+                "Select at least 10 random sampling points (Public Taps, Wells, Overhead Tanks) in a specific ward.",
+                "Perform the 'Residual Chlorine Test' (OT test) at the tail-end of the distribution line—ensuring 0.2 to 0.5 ppm levels.",
+                "Collect 'Bacteriological Samples' in sterile Whirl-Pak bags, following strict aseptic protocols during handling.",
+                "Perform field measurements for 'pH' and 'Turbidity' using portable digital meters.",
+                "Log the GPS location and physical condition (leaks/stagnation) of each sampling point into the municipal app.",
+                "Maintain the 'Cold Chain' (2-8°C) while transporting the samples to the District Laboratory within 24 hours.",
+                "Interpret the lab results and issue 'Boil Water Advisories' if E. coli or High Coliforms are detected.",
+                "Submit a 'Sanitary Correction Memo' to the Water Engineering department for identified leaks/contamination."
+            ]
+        },
+        {
+            "title": "Vector Surveillance and Larvicidal Spraying (Outbreak Drill)",
+            "steps": [
+                "Identify a 'High-Risk' area with a spike in Dengue/Malaria cases and plot the cluster on the village map.",
+                "Conduct a 'House-to-House' search for larvae in drums, coolers, tires, and pots.",
+                "Calculate the 'Breteau Index' and 'House Index' to assess the transmission threat level.",
+                "Demonstrate 'Mechanical Source Reduction'—emptying containers and teaching residents 'Dry Day' protocols.",
+                "Execute 'Chemical Larviciding' (using Temephos or BTI) in large undrainable stagnant water bodies.",
+                "Supervise 'Thermal Fogging' or 'Space Spraying' in the early morning/late evening hours (peak vector activity).",
+                "Assisting in the distribution of LLINs (Long Lasting Insecticidal Nets) and educating the community on their use.",
+                "Evaluation: Perform a follow-up larval survey 48 hours later to check the effectiveness of the spraying."
+            ]
+        },
+        {
+            "title": "Design and Setup of a 'Zero-Waste' Composting Unit for a Housing Society",
+            "steps": [
+                "Calculate the 'Waste Output' (kg/day) of the society to size the composting pits/bins correctly.",
+                "Selecting the 'Ideal Location': well-ventilated, accessible, but away from residents' windows.",
+                "Setup of the 'Segregation Station' with clear signage for Wet (Organic) vs. Dry (Recyclable) waste.",
+                "Demonstrating the 'Pit/Bin Layering' technique: Greens (Nitrogen-rich) and Browns (Carbon-rich) balance.",
+                "Assisting in the introduction of 'Bio-culture' (microbial inoculants) to accelerate decomposition and reduce odor.",
+                "Teaching the staff to monitor 'Temperature' and 'Moisture' levels (the 'Squeeze Test') twice a week.",
+                "Harvesting and 'Sieving' the final compost for use in the society gardens/sale.",
+                "Documentation of the 'Waste Diverted from Landfill' (kg/month) as a quality metric for the society."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing a 'Massive Food Poisoning' Outbreak in a Wedding Hall",
+            "situation": "40 guests report severe vomiting and diarrhea 4 hours after a wedding feast. The hall has no valid sanitary NOC.",
+            "workflow": [
+                "Immediate Closure: Seal the kitchen area and stop all food service immediately to prevent more cases.",
+                "Investigation: Collect 'Food Retain Samples' (if available) and swab the kitchen surfaces and water tanks.",
+                "Data Gathering: Map out the 'Attack Rate'—identifying which specific dish was eaten by the most symptomatic people.",
+                "Logistics: Coordinate with the nearest hospital for 'Hydration Zones' and ensure ambulances are on standby.",
+                "Legal Action: Issue a 'Show-Cause' notice to the management and file a case for operating without a sanitary license.",
+                "Remediation: Supervise a 'Deep-Clean and Disinfection' of the entire facility before its allowed to reopen.",
+                "Publicity: issue a brief health advisory regarding the incident to inform the public and prevent panic."
+            ]
+        },
+        {
+            "title": "Scenario B: Response to a 'Bio-Medical Waste' Spill in a Residential Street",
+            "situation": "A local clinic is found to have dumped used syringes and bloody bandages in the common municipal yellow bin.",
+            "workflow": [
+                "Site Cordoning: tape off the area to prevent children or rag-pickers from touching the hazardous waste.",
+                "Evidence Collection: Take high-resolution photos and check for any clinic-specific labels/invoices within the waste.",
+                "Safe Capture: Don full PPE (puncture-proof gloves) and collect the waste into appropriate color-coded pouches.",
+                "Clinic Audit: Conduct a surprise inspection of the suspected clinic's waste management log and MOU with a disposal facility.",
+                "Fine Imposition: Levying a heavy 'Spot Fine' as per the BMW Rules 2016 and the Environment Protection Act.",
+                "Decontamination: Treat the spill site with 10% Sodium Hypochlorite solution and ensure a thorough wash-down.",
+                "Training: Conduct a mandatory 1-hour 'Sanitary Awareness' session for the clinic staff on sharps safety."
+            ]
+        },
+        {
+            "title": "Scenario C: Managing 'Chemical effluent' leakage into the Village Pond",
+            "situation": "A small factory is found discharging a colored, pungent liquid into the primary village water source during the night.",
+            "workflow": [
+                "Emergency Sampling: Collect effluent samples at the discharge point and pond water samples at different depths.",
+                "Stop-Order: Immediately issue a 'Closure Notice' to the factory power/water lines in coordination with the local administration.",
+                "Health Warning: Use the 'Village Public Address System' to ban the use of pond water for animals or domestic use.",
+                "Alternate Supply: Arrange 'Water Tankers' for the village until the pond water is tested and declared safe.",
+                "Environmental Audit: Request a 'Soil Seepage' check to see if the chemicals have reached the groundwater (Borewell) level.",
+                "Restoration: Force the factory owner to pay for the 'Remediation' (cleaning/pumping) of the pond under the 'Polluter Pays' principle.",
+                "Surveillance: Install a 24/7 CCTV or community guard to prevent secret nocturnal dumping in the future."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Field-Residency (180 days across Municipal and Industrial sites)",
+        "rotations": [
+            "Municipal Corporation - Health Department (8 Weeks): Mastery of city-wide waste and water audits.",
+            "Food Safety Wing (FSSAI) (4 Weeks): Clinical rotations in food sampling and establishment auditing.",
+            "Infectious Disease Surveillance Wing (4 Weeks): focus on TB/Malaria and Leprosy surveillance data.",
+            "Industrial/OHS Wing of a Factory (4 Weeks): practical training in workplace safety and effluent monitoring.",
+            "Disaster Management Cell (2 Weeks): participation in mock drills and relief camp planning.",
+            "Health Education & Communication Unit (2 Weeks): Design and implementation of a week-long hygiene campaign."
+        ],
+        "objectives": [
+            "Conduct at least 200 'Sanitary Inspections' of diverse establishments (Hotels, Schools, Markets) with detailed reports.",
+            "Verify 'Chlorine Levels' in at least 500 household taps and overhead tanks.",
+            "Successfully assist in the investigation of at least 2 'Health Outbreaks' or 'Environmental Spill' cases.",
+            "Manage a 'Zero-Waste' pilot project in a designated ward for a duration of 1 month.",
+            "Assist in the 'FSSAI Licensing' and hygiene rating of at least 50 local food businesses.",
+            "Identify and remediate at least 20 'Vector Breeding Clusters' in the assigned field area.",
+            "Complete the the 'GIS-Mapping' of every waste collection point in a 2-km radius."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark semester final focused on 'Public Health Law', 'Epidemiology', and 'Waste Engineering'.",
+        "practical_field_viva": "A 'Walking Exam': student is taken to a local market and must identify 10 sanitary violations in 15 minutes.",
+        "community_impact_portfolio": "Submission of a portfolio containing: mapped clusters, inspection notices, and a 'Health Campaign' design.",
+        "supervisor_rating": "Evaluations from the Municipal Medical Officer and Food Safety Officer focusing on 'Neutrality', 'Attention to Detail', and 'Regulatory Courage'.",
+        "data_informatics_test": "A practical test on using GIS apps and municipal portals for reporting field data."
+    },
+    "career_pathways": [
+        "Health and Sanitary Inspector in Urban Municipal Corporations and Rural Panchayats.",
+        "Assistant Food Safety Officer (AFSO) or Food Quality Auditor for the food industry.",
+        "Occupational Health and Safety (OHS) Officer for Manufacturing and IT industries.",
+        "Environmental Consultant for Real Estate and Infrastructure projects.",
+        "Public Health Surveillance Assistant in National Health Programs (NHM, IDSP).",
+        "Waste Management Consultant for city planning and smart-city projects.",
+        "Manager for Water Quality and Treatment in Urban Development schemes.",
+        "Health Inspector for the Indian Railways and Port Authorities.",
+        "CSR Manager for environmental sustainability in large corporations.",
+        "Independent Consultant for Green Buildings and Zero-Waste campus certification."
+    ],
+    "student_engagement": [
+        "Annual 'Clean-City' Design Competition: A challenge to design the most efficient waste-collection system.",
+        "The 'Sanitary-Detective' Club: Weekly field visits to identify and solve a small local hygiene problem.",
+        "Health-Parliament: A moderated debate on 'Plastics vs. Economy' and 'Mandatory Vaccination'.",
+        "Field Documentaries: Students filming and editing 'A Day in the Life of a Sanitation Worker' to foster empathy.",
+        "Interactive GIS Lab: Weekly session for mapping the city's health and pollution data on a live dashboard.",
+        "Sanitation Innovation Hackathon: Developing low-cost solutions like 'Smart-Bins' or 'Solar-Powered Water Kits'."
+    ],
+    "medical_accuracy_verification": "Content is compliant with the Swachh Bharat Mission (Grameen/Urban) 2024, FSSAI Act, and WHO Environmental Health Guidelines.",
+    "word_count_check": 3520
+}

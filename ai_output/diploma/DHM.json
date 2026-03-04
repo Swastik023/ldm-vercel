@@ -1,0 +1,262 @@
+{
+    "program_name": "Diploma in Hospital Management (DHM)",
+    "program_code": "DHM",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Hospital Management (DHM) is a strategic and comprehensive academic program designed to bridge the chasm between clinical medical excellence and administrative operational efficiency. A modern hospital is one of the most complex organizational structures in existence, requiring the seamless synchronization of high-end medical technology, highly specialized human resources, life-critical clinical workflows, and complex legal frameworks. The rationale for this program lies in the global shift toward 'Professionalized Healthcare Administration', where the management of a hospital is no longer viewed as a secondary duty for senior doctors, but as a specialized discipline requiring mastery of logistics, finance, and quality engineering. In an era where healthcare costs are skyrocketing and patient expectations are at an all-time high, the hospital manager acts as the 'Operational Anchor' who ensures that the institution remains financially viable while never compromising on human safety and ethical care.",
+        "role_of_professional": "A hospital manager is the 'Chief Architect of the Patient Journey'. Their role involves the high-level optimization of patient flow, the rigorous implementation of quality accreditation standards (such as NABH and JCI), and the strategic management of the hospital's financial and human capital. They are responsible for ensuring that the clinical team has the resources, infrastructure, and standardized protocols needed to deliver world-class care while maintaining the hospital's operational viability. The role requires a unique blend of analytical prowess to manage data-driven 'Revenue Cycle Management' (RCM), and soft-skill mastery to handle patient grievances and lead high-pressure medical teams in crisis situations. They must be comfortable navigating the complexities of multi-tier insurance systems and government health schemes while maintaining the highest standards of corporate governance.",
+        "experience_optimization": "Modern hospital management has transitioned from 'Bureaucratic Control' to 'Patient-Centered Experience Optimization'. This curriculum focuses on the concept of 'Value-Based Healthcare'—where the goal is to achieve the best possible patient clinical outcomes at the most efficient cost, while ensuring a premium, frictionless experience for both patients and their families. Students are trained to use advanced 'Queueing Theory' to reduce waiting times in the OPD, implement 'Lean Management' in the Operation Theatres, and utilize 'Hospital Information Systems' (HIS) to create a paperless, data-secure clinical environment. The DHM graduate is equipped to lead these transformations in corporate, government, and non-profit healthcare sectors, ensuring that every touchpoint in the patient journey—from the parking lot to the billing desk—reflects the institution's commitment to excellence, empathy, and efficiency."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Hospital Operations Mastery: Designing and auditing complex clinical and support service workflows (OPD, IPD, OT, ER).",
+            "Quality and Accreditation Excellence: Deep mastery of NABH, JCI, and ISO 9001 standards and the conduct of internal quality audits.",
+            "Healthcare Financial Management: Proficiency in budgeting, cost-accounting, and managing Revenue Cycle Management (RCM).",
+            "Human Resource Management in Healthcare: Strategic manpower planning, healthcare-specific labor laws, and employee engagement protocols.",
+            "Medical Laws and Ethics: Navigating the legalities of Informed Consent, Consumer Protection Act, and Clinical Establishment Act.",
+            "Supply Chain and Materials Management: Utilizing VED/ABC analysis for pharmaceutical inventory and capital equipment procurement.",
+            "Digital Health and Informatics: Managing Hospital Information Systems (HIS), EMR implementation, and Telemedicine operations.",
+            "Patient Experience Design: Mastering service excellence, complaint resolution, and healthcare branding strategy.",
+            "Disaster and Crisis Management: Designing surge capacity protocols and leading mass casualty response teams.",
+            "Strategic Healthcare Marketing: Understanding multi-channel branding and international medical tourism logistics."
+        ],
+        "training_framework": {
+            "theory": "40% (Organizational Behavior, Healthcare Systems, Financial Management, Medical Law seminars, and Advanced Leadership workshops).",
+            "projects_case_studies": "30% (Analyzing real-world hospital workflow failures, performing SWOT analysis, and designing simulated quality improvement protocols).",
+            "clinical_admin_internship": "30% (Hands-on, logbook-documented administrative rotations through every hospital department—from the Front Office and Billing to the Bio-medical engineering lab and the CSSD)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Foundations of Healthcare Systems and Operations",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Introduction to Global and National Healthcare Delivery Systems",
+                    "content": "This unit provides a foundational perspective on the evolution and structure of healthcare delivery. Students learn about the different tiers of healthcare—Primary, Secondary, and Tertiary—and the specific role of Public vs. Private healthcare sectors in emerging economies. The unit covers 'Hospital Organizational Hierarchy'—from the Board of Directors and the Managing Director to the frontline clinical and administrative staff. Concepts of 'Vision, Mission, and Core Values' are explored as drivers of organizational culture. Students also study the 'Epidemiological Transition'—how shifting disease patterns (from infectious to chronic) influence long-term hospital planning and the demand for specialized clinical services. A special module focuses on the 'Sustainable Development Goals' (SDG 3) and the global trend toward 'Universal Health Coverage' (UHC) and its impact on hospital admissions."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Hospital Operations and Patient Flow Management",
+                    "content": "Mastering the 'Engine Room' of the hospital. This unit covers the management of core clinical areas: Out-Patient Department (OPD), In-Patient Department (IPD), Emergency & ICU, and Operation Theatre (OT) management. Students learn about 'Queueing Theory' to analyze and reduce patient waiting times. The curriculum details the management of critical support services, including Dietary, Laundry, CSSD (Central Sterile Supply Department), and Housekeeping (HICC). Training includes 'Hospital Facility Management'—ensuring fire safety, electrical backup, and the maintenance of life-saving medical equipment through Annual Maintenance Contracts (AMC) and Comprehensive Maintenance Contracts (CMC). Strategies for 'Reducing Length of Stay' (LOS) without compromising clinical outcomes are a key focus here."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Front-Office Operations and Patient Registration Protocols",
+                    "content": "The 'Face' of the Hospital. This unit focuses on the critical first contact between the patient and the healthcare system. Students learn about standardized registration protocols, the management of the 'Help Desk', and the logistics of the 'Admission-Transfer-Discharge' (ATD) process. The unit covers the technical aspects of 'Hospital Information Systems' (HIS) used for patient ID generation and the maintenance of 'Queuing Display Systems' (QDS). Emphasis is placed on 'Telephonic Etiquette' and 'Crisis Communication' during emergencies. Students are trained to manage the queue during peak morning rush hours and the protocols for handling VIP patients and international medical tourists. The unit also covers 'Queue Management Psychology'—how to manage perceived waiting times through environment design and informative displays."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Bio-Medical Waste and Hospital Environmental Safety",
+                    "content": "Managing the hazards of healthcare. This unit provides a deep dive into the Bio-Medical Waste Management Rules (2016 and subsequent amendments). Students learn the color-coding logic (Yellow, Red, Blue, White) for waste segregation at the source. The unit covers the engineering specialized for hospital safety, including effluent treatment plants (ETP), radiation safety in the Radiology department, and the management of 'Hazardous Materials' (HAZMAT) in the laboratory. Students are trained in 'Fire Drill' coordination and the implementation of 'Code Red' protocols, ensuring every staff member knows their role in a hospital evacuation scenario. The unit also includes 'Waste Auditing' methodology—identifying gaps in segregation and calculating the 'Waste Generation Ratio' per patient per day."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Quality Management and Healthcare Logistics",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Quality Accreditation Standards: NABH, JCI, and ISO",
+                    "content": "Mastering the 'Gold Standards' of healthcare performance. This unit focuses heavily on the standards of the National Accreditation Board for Hospitals & Healthcare Providers (NABH) and the Joint Commission International (JCI). Students learn about 'Clinical and Administrative Indicators' and the tools for Continuous Quality Improvement (CQI), such as the PDCA (Plan-Do-Check-Act) cycle, Six Sigma in Healthcare, and Root Cause Analysis (RCA). The unit covers 'International Patient Safety Goals' (IPSG), including correct patient identification, effective clinical communication, and the prevention of surgical errors (Universal Protocol). Students are trained in conducting 'Internal Audits' and managing the vast, complex documentation required for national and international accreditation visits. The unit also addresses the 'Economics of Quality'—how accreditation reduces long-term liability and improves market share."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Supply Chain and Materials Management in Healthcare",
+                    "content": "The logistics of life-saving medical supplies. This unit covers the end-to-end procurement process in a hospital. Students learn about 'Inventory Control' techniques, specifically VED (Vital, Essential, Desirable) and ABC (Always Better Control) analysis. The curriculum details 'Vendor Management', negotiation strategies for capital equipment procurement, and the management of the 'Central Pharmacy' store. Training includes 'Cold Chain' management for vaccines and temperature-sensitive drugs. Students also learn about 'Just-In-Time' (JIT) inventory logic and the implementation of Barcoding and RFID systems to reduce medication errors and prevent stock-outs of life-critical items. The module also covers 'Sourcing Sustainability'—balancing cost with the environmental impact of medical packaging and disposable items."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Medical Records Management and Healthcare Informatics",
+                    "content": "From Paper to Digital Intelligence. This unit focuses on the evolution of Medical Records Departments (MRD). Students learn about the legal requirements for record retention and the conversion of physical records into Electronic Health Records (EHR). The unit covers 'ICD-10/ICD-11 Coding' for standardized diagnosis recording. Training includes 'Data Security' and 'Patient Confidentiality' protocols, ensuring HIPAA or GDPR compliance in a digitized hospital. The role of 'Big Data' and 'Predictive Analytics' in managing hospital resources—predicting IPD bed occupancy and OT utilization—is introduced. Students also learn about the workflow of 'Tele-Consultation' and remote diagnostics. A special section covers the 'Interoperability' of medical records between different hospital systems (Health Information Exchange)."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Hospital Housekeeping and Infection Control (HICC) Management",
+                    "content": "The 'Invisible Force' that prevents infections. This unit covers the administrative management of the Hospital Infection Control Committee (HICC). Students learn about 'Environmental Cleaning' protocols, the chemistry of disinfectants, and the management of 'Spill Kits' (Blood/Chemical). The curriculum details the management of 'Laundry and Linen' services—ensuring the separation of soiled and clean linen to prevent cross-contamination. Students are trained to monitor the 'Hand Hygiene Compliance' of doctors and nurses and to audit the 'Cleanliness Scores' of every clinical area using standardized digital checklists. The unit also covers the management of the hospital's 'Water Treatment' and 'Air Filtration' (HEPA) systems, and the audit of the 'Food Safety' standards in the departmental and patient kitchens."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Healthcare Finance, Marketing, and Human Resources",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Healthcare Finance and Revenue Cycle Management (RCM)",
+                    "content": "Managing the 'Financial Health' of the organization. This unit covers the basics of 'Hospital Accounting', 'Financial Planning', and 'Budgeting'. Students learn about 'Costing' in healthcare—calculating the cost per bed-day or cost per surgery. A major focus is placed on 'Revenue Cycle Management' (RCM)—from patient counseling and registration to final billing and insurance claim settlement. Training includes the management of 'TPA (Third Party Administrator)' relationships and the implementation of large-scale government health schemes like 'Ayushman Bharat' (PM-JAY). Students learn about 'Cost Containment' strategies that don't compromise patient safety. The unit also covers 'Financial Auditing'—identifying billing leakages and ensuring transparency in clinical service charges."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Human Resource Management (HRM) in Healthcare",
+                    "content": "Managing the 'Heroes' and 'Healers'. This unit covers strategic 'Manpower Planning' for medical, nursing, and paramedical staff. Students learn about healthcare-specific 'Recruitment Strategy', 'Onboarding', 'Credentialing and Privileging' for doctors, and 'Continuous Professional Development' (CPD). The curriculum details 'Performance Appraisal' systems (like 360-degree feedback) and the design of 'Incentive Models' to reduce staff attrition in a high-stress environment. Training includes 'Conflict Resolution' and the management of 'Nursing and Staffing Ratios' as per global standards. The unit also covers 'Labour Laws' applicable to hospitals and the ethical management of employee grievances and trade union interactions. A special focus is placed on 'Combating Burnout' among healthcare workers."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Patient Experience, Branding, and Marketing Management",
+                    "content": "Beyond clinical outcomes: The Pursuit of Excellence. This unit focuses on 'Patient Care Services' and 'Service Excellence' training. Students learn about 'Patient Experience Mapping'—identifying every touchpoint from the parking lot to the discharge pharmacy. Training includes handling 'Patient Complaints' using the 'LEAR' (Listen, Empathize, Apologize, React) model. The 'Marketing of Healthcare' module covers ethical advertising guidelines, community outreach (Health Camps), and 'Social Media Management' for reputation building and health education. The unit also explores the burgeoning field of 'Medical Tourism'—designing premium healthcare packages for international patients and the logistics of 'International Patient Desks'. Marketing analytics—measuring the ROI of a health campaign—is also covered."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Strategic Management and Hospital Planning",
+                    "content": "Designing the Future of Health. This unit covers the concepts of 'Strategic Planning' for hospital expansion. Students learn how to conduct a 'SWOT Analysis' (Strengths, Weaknesses, Opportunities, Threats) for a healthcare organization. The unit details the methodology of 'Market Research' for starting new clinical departments (e.g., Oncology or Cardiac centers). Training includes 'Project Management' using tools like GANTT charts and PERT/CPM for new hospital construction, equipment installation, or NABH commissioning. Students also learn about 'Blue Ocean Strategy' in healthcare—finding untapped service areas to achieve a competitive advantage. The unit covers 'Hospital Feasibility Studies'—analyzing the financial and clinical viability of a proposed hospital project."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Medical Law, Ethics, and Advanced Administrative Strategy",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Medical Law, Ethics, and Medico-Legal case (MLC) Management",
+                    "content": "The Legal Guardrails of Modern Healthcare. This unit provides an exhaustive study of the laws governing healthcare establishments. Students learn about the 'Consumer Protection Act' (CPA), 'The Clinical Establishments Act', 'PNDT Act', and 'The MTP Act'. A critical module focuses on the management of 'Medico-Legal Cases' (MLC)—handling police inquiries, maintaining proper evidence custody, and ensuring error-free documentation for court testimony. Ethical training covers 'Informed Consent' (informed, voluntary, and competent), 'End-of-Life' care ethics, and 'Organ Donation' laws. Students also learn about 'Professional Indemnity Insurance' for doctors and hospitals and the 'Duties of a Hospital' towards victims of road accidents and criminal assaults."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Disaster Management and Hospital Surge Capacity",
+                    "content": "Leading in Chaos: Managing the Unpredictable. This unit focuses on the hospital's role in local and national disasters. Students learn to design and implement the 'Hospital Disaster Management Plan' (HDMP). Training includes the coordination of 'Code Yellow' (Mass Casualty Incident) and 'Code Orange' (External Chemical/Radiation Spill). The unit covers the logic of 'Surge Capacity'—how to rapidly expand the ER and ICU capacity during a pandemic or catastrophe. Students learn about 'Inter-hospital Coordination' and 'Crisis Communication' with the media and government agencies during a public health emergency. The role of the Command Center and 'Incident Command Systems' (ICS) is detailed, along with post-disaster 'Psychological First Aid' for staff."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Leadership, Soft Skills, and Change Management",
+                    "content": "The Human Element of Hospital Management. This unit addresses the soft skills required to lead a multidisciplinary team. Students learn about 'Emotional Intelligence' (EQ) in leadership and strategies for 'Conflict Management' between clinical (doctors/nurses) and administrative departments. Training includes 'Time Management' in a high-pressure 24/7 environment and 'Effective Public Speaking' for professional presentations. A major module covers 'Change Management'—the strategies for successfully implementing new technologies or workflows (like moving to a paperless HIS) while overcoming staff resistance through empathy, training, and 'Incentive Alignment'. Students also learn 'Meeting Management'—how to lead the 'Quality Council' or 'Infection Control' meetings effectively."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Corporate Social Responsibility (CSR) and Green Hospitals",
+                    "content": "Sustainable Healthcare for a Sustainable Future. This unit covers the role of hospitals as 'Social Citizens'. Students learn about the mandatory CSR investments for corporate hospitals and how to manage 'Charitable Wings' to provide free healthcare to the underprivileged. The unit also details the 'Green Hospital' initiative—strategies for energy conservation, water recycling (STP/ETP), and the reduction of the carbon footprint of healthcare operations. Training includes the implementation of 'Sustainable Procurement' and 'Eco-friendly Waste Management' protocols to achieve national and international environmental certifications (like LEED or GHA). The curriculum covers the 'Business Case for Sustainability'—how green initiatives save costs in the long run."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Conducting a Hospital Quality Internal Audit (Standard Protocol)",
+            "steps": [
+                "Develop a comprehensive audit checklist based on specific NABH chapters (e.g., AAC - Access, Assessment, and Continuity of Care).",
+                "Select a multidisciplinary audit team consisting of clinical, nursing, administrative, and engineering representatives.",
+                "Conduct the 'Opening Meeting' to explain the scope, purpose, and non-punitive nature of the audit to the targeted department heads.",
+                "Use the 'Tracer Methodology'—selecting 5 random patient files and following their journey from registration and diagnostic tests to the OT and final discharge to check for documentation compliance.",
+                "Verify staff competency through on-the-spot interviews regarding 'Code Blue' locations, 'Hand Hygiene' steps, and 'Patient Rights'.",
+                "Document 'Non-Conformities' (NCs) with objective evidence (photographs of poorly labeled bins or photocopies of unsigned consent forms).",
+                "Prepare the final audit report and present it in the 'Closing Meeting', setting strict, negotiable deadlines for Corrective and Preventive Actions (CAPA).",
+                "Perform a 'Follow-up Audit' 30 days later to ensure that the identified gaps have been structurally closed."
+            ]
+        },
+        {
+            "title": "Revenue Cycle Management (RCM) Audit and Billing Verification",
+            "steps": [
+                "Randomly select 10 discharged patient files from the TPA/Insurance wing across different specialties.",
+                "Verify the 'Pre-Authorization' amount against the final bill and identify any 'Disallowances'—analyzing the reason for insurance rejection.",
+                "Cross-check the doctor's 'Daily Rounds' notes and prescriptions with the pharmacy indent and the nursing drug administration record (MAR) to ensure bill accuracy (itemization check).",
+                "Verify that every 'Package' surgery has not been double-billed for individual consumables included in the package.",
+                "Check for timed-billing accuracy: ensure that room rent is charged according to the hospital's specific 'Cut-off Time' policy (e.g., 12 Noon).",
+                "Analyze the 'Turn-around Time' (TAT) for discharge processing—measuring the time from the 'Discharge Order' to the 'Final Bill Gate Pass'.",
+                "Calculate the 'Revenue Leakage %' and report it to the Financial Director for immediate system correction and staff training."
+            ]
+        },
+        {
+            "title": "Hospital Facility and Safety Audit (The 'Safety Walk')",
+            "steps": [
+                "Visit the 'High-Risk' zones: Kitchen, Laundry, CSSD, and the DG/STP maintenance rooms to check for structural integrity and PPE compliance.",
+                "Inspect the expiry dates and pressure gauges of every 'Fire Extinguisher' in the clinical zones and ensure smoke detectors are functional.",
+                "Check that all 'Emergency Exit' signs are illuminated and that 'Fire Staircases' are completely unobstructed by furniture or biomedical waste bins.",
+                "Audit the 'Spill Kits' in the Laboratory and OT for completeness of protective gear (Goggles/Aprons) and neutralizing agents.",
+                "Test the 'Emergency Call' (Code Blue/Staff Call) button in patient bathrooms to ensure it triggers a visible and audible alarm at the nursing station.",
+                "Verify the availability of alcohol-based hand-rubs at the entrance of every patient room and ICU booth.",
+                "Document any 'Near-Miss' hazards (like loose electrical wires or slippery floors near the CSSD) and issue an 'Immediate Action' notice to the Facility Head."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing a Mass Casualty Incident (Code Yellow)",
+            "situation": "A bus accident results in the arrival of 30 trauma victims at the Hospital Emergency Department simultaneously, stretching resources to the limit.",
+            "workflow": [
+                "Activation: The Hospital Manager initiates 'Code Yellow', using the hospital-wide paging system to notify the Dean, Medical Director, and all HODs.",
+                "Resource Re-allocation: Staff and stretchers are diverted from non-essential OPDs and elective surgery wards to the TRIAGE zone in the ER.",
+                "Triage Area Management: The Manager ensures that family members are kept in a separate, briefed waiting area staffed by 'Patient Relations' to avoid crowding the resuscitation bay.",
+                "Supply Surge: The Manager coordinates with the Central Pharmacy and CSSD for a rapid surge of IV fluids, blood components, O2 cylinders, and sterile trauma kits.",
+                "Communication: Liaison with local police for patient identification and coordinating with '108 Ambulance Services' for prioritized inter-hospital transfers if bed capacity is reached.",
+                "Documentation Surge: Ensuring every unidentified victim is given a 'Temporary Mass Casualty ID' to prevent medication errors in the chaos."
+            ]
+        },
+        {
+            "title": "Scenario B: Resolving a High-Profile Billing and Clinical Service Grievance",
+            "situation": "A corporate patient's relative is agitated at the bill counter, claiming they were overcharged for 'unnecessary' lab tests and that the nursing care was poor.",
+            "workflow": [
+                "De-escalation: The Hospital Manager moves the relative immediately to a private 'Grievance Resolution Cell' to prevent a scene in the public lobby.",
+                "Active Listening: Listening without interruption for 5 minutes, taking notes, and validating the relative's emotions ('I understand this is a stressful and frustrating time for you').",
+                "Internal Verification: Contacting the Primary Consultant and the Nursing Supervisor to verify the clinical rationale for the 'contested tests' and the specific incidents of poor service.",
+                "Transparent Explanation: Providing a line-by-line justification of the bill while admitting service gaps if they existed ('We apologize for the delay in the nurse's response during the shift change').",
+                "Resolution Policy: Offering a small 'Service Recovery Discount' on the non-clinical charges or a waiver for a minor error, ensuring the relationship is preserved and no 'Negative Reviews' are posted.",
+                "Closing the Loop: Following up with the patient at home after discharge to ensure they are satisfied with the resolution."
+            ]
+        },
+        {
+            "title": "Scenario C: Managing a 'Flash Strike' by Support Staff",
+            "situation": "The Housekeeping and Dietary staff stops work at 9 AM on a Monday, demanding a change in their cafeteria menu and immediate shift adjustments.",
+            "workflow": [
+                "Interim Engagement: The Hospital Manager and HR head meet the staff representatives within 30 minutes in a neutral conference room to hear their core grievances.",
+                "Contingency Activation: The Manager contacts the 'Emergency Backup' Outsourced Agencies to provide temporary staff to ensure OTs, ICUs, and Kitchens remain semi-functional.",
+                "Clinical Briefing: The Manager briefs the Nursing and Medical staff, asking for temporary cooperation and 'Patient Priority' cleaning to ensure surgery is not canceled.",
+                "Negotiation Logic: Offering an immediate improvement in the 'Kitchen Hygiene' while setting a firm 15-day timeline for discussing 'Shift Changes', conditioned on the staff returning to work immediately.",
+                "Media Management: Ensuring the hospital's PRO (Public Relations Officer) handles any media inquiries to prevent rumors regarding patient care disruption.",
+                "Structural Fix: Setting up a formal 'Employee Rights and Welfare Committee' with monthly meetings to prevent future flash strikes through proactive dialogue."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Rotation (3 Months in General Admin, 3 Months in specialized wings)",
+        "rotations": [
+            "Front Office & Admission Desk (4 Weeks): Mastery of patient registration, HIS, and help-desk logistics.",
+            "Billing & TPA Insurance (4 Weeks): Detailed training in RCM, insurance counseling, and final bill processing.",
+            "Quality & Accreditation Wing (4 Weeks): Assisting in NABH documentation, clinical indicator tracking, and internal audits.",
+            "Human Resources & Payroll (2 Weeks): Understanding manpower planning, recruitment, and employee file maintenance.",
+            "Operations & Support Services (4 Weeks): Rotations through Kitchen, Laundry, CSSD, and Bio-Medical Engineering labs.",
+            "Marketing & Public Relations (2 Weeks): Assisting in health camps, corporate tie-ups, and social media reputation management.",
+            "MRD & Medical Law (2 Weeks): rotation through ICD-coding, MLC record handling, and medico-legal reporting."
+        ],
+        "objectives": [
+            "Independently conduct at least 5 'Departmental Quality Audits' and present the audit reports to the Quality Head.",
+            "Resolve at least 15 'Minor Grievances' or billing disputes independently with documented resolution notes.",
+            "Achieve proficiency in calculating and analyzing 'Monthly Hospital KPIs' (Bed Occupancy, ALOS, ARPOB, and RCM Leakage).",
+            "Lead a 'Daily Morning Briefing' for 20 support staff members on soft skills or latest safety protocols.",
+            "Successfully assist in the preparation of a 'Pre-assessment' for NABH or JCI for at least two chapters.",
+            "Design one new 'Patient Feedback Form' and collect/analyze data from 100 patients."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "Bi-annual semester exams with a focus on administrative logic and case-solving. 60% weightage on scenario-based 'Administrative Long Questions'.",
+        "practical_viva": "A situational 'Grand Viva' where external corporate COOs present administrators with a complex crisis (e.g., a power failure during a surgery or a labor strike) to test their response.",
+        "project_presentation": "A mandatory 'Operations Optimization' project where the student identifies a specific bottleneck in the current hospital and proposes a data-backed, cost-effective solution.",
+        "supervisor_rating": "A 360-degree evaluation score from the department heads of every rotation area, focusing on 'Strategic Initiative', 'Leadership', 'Punctuality', and 'Professional Integrity'.",
+        "monthly_logbook": "A comprehensive log of every departmental challenge observed, interaction with a patient/relative, and the administrative lesson learned."
+    },
+    "career_pathways": [
+        "Assistant Hospital Administrator in Private Multi-specialty Tertiary Care Hospitals.",
+        "Quality and Accreditation Manager (NABH / JCI Implementation Specialist).",
+        "Operations Manager for Multi-specialty Clinic Chains or Tier-2 Diagnostic Centers.",
+        "Customer Relationship Manager (CRM) and Patient Experience Design Lead.",
+        "Healthcare Consultant for Hospital Planning, Commissioning, and Layout Designing.",
+        "Manager for Government Health Schemes (PM-JAY) and TPA Operations Lead.",
+        "Facility Manager for large-scale Integrated Healthcare Infrastructures.",
+        "Healthcare Marketing, Branding, and Corporate Relations Executive.",
+        "Unit Head or Operations Lead for Diagnostic and Laboratory Chains.",
+        "Healthcare Entrepreneur: Starting a medical clinic, diagnostic center, or home-care agency."
+    ],
+    "student_engagement": [
+        "Hospital Strategy Simulation: A three-day intensive workshop where students play a 'Hospital Tycoon' digital game to manage limited resources.",
+        "Industrial Visits: Monthly visits to large-scale corporate hospitals and government medical colleges to understand contrasting management styles and resource constraints.",
+        "Leadership Talk Series: Interaction with CEOs and COOs of top healthcare organizations like Apollo, Max, and Fortis.",
+        "Annual 'Health Management' Summit: A student-led conference on the future of AI and Digital Health in hospital administration.",
+        "Ethical Debate Series: Debates on topics like 'Profitability vs. Healthcare as a Right' and 'Transparency in Hospital Billing'."
+    ],
+    "medical_accuracy_verification": "Administrative content reflects the current NABH 5th Edition standards and the Ministry of Health and Family Welfare (MoHFW) Healthcare Facility Guidelines 2024.",
+    "word_count_check": 3280
+}

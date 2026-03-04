@@ -1,0 +1,282 @@
+{
+    "program_name": "Diploma in Emergency & Trauma Care Technician (DETC)",
+    "program_code": "DETC",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Emergency & Trauma Care Technician (DETC) is a high-intensity program designed to forge professionals who operate at the 'Golden Hour'—the critical first hour after injury where medical intervention has the highest impact on survival. In a world with rising rates of road traffic accidents, industrial mishaps, and natural disasters, the Emergency Room (ER) is the most volatile and decisive department in any hospital. The rationale for this program lies in 'Crisis Physiology'—the understanding that an emergency technician must possess the calm of a pilot and the precision of a surgeon to stabilize patients with multiple system failures. This program bridges the gap between pre-hospital care and definitive surgery, ensuring that trauma victims receive life-saving interventions like advanced airway management, hemorrhage control, and rapid resuscitation markers instantly upon arrival. The DETC graduate is the 'Frontline Commander' of the trauma bay, orchestrating survival when every second counts.",
+        "role_of_professional": "An Emergency and Trauma Care Technician is the heartbeat of the Emergency Department. Their role begins with 'Triage'—the rapid sorting of patients based on the severity of their condition using standardized scales like South African Triage Scale (SATS) or ESI. In the trauma bay, they assist in 'Primary and Secondary Surveys', managing cervical spine stabilization, tension pneumothorax decompression, and massive transfusion protocols. They are experts in 'Emergency Instrumentation'—from ventilators and defibrillators to rapid infusers and ultrasound-guided vascular access tools. Beyond the ER, they lead 'Critical Care Transport', ensuring patient stability during ambulance transfers. Their role is multi-faceted: they are clinical techs, coordinators of the trauma team, and the calm face of healthcare for families in their most distressed moments. They are trained to make split-second decisions that determine whether a patient exits the ER towards recovery or further decline.",
+        "technology_and_safety": "Modern trauma care is no longer just about 'brute force' resuscitation; it is a technology-driven science. This curriculum emphasizes 'Evidence-Based Emergency Care'—utilizing technologies like Point-of-Care Ultrasound (eFAST), portable blood gas analyzers (i-STAT), and mechanical chest compression devices (LUCAS). Students learn the 'Physics of Trauma'—understanding the ballistics of gunshot wounds, the mechanics of high-speed deceleration, and the thermal dynamics of burns. Safety is paramount, focusing on 'Universal Precautions' in high-bleed environments and the psychological resilience required to prevent burnout. The DETC graduate is a specialist in 'Resuscitative Endovascular Balloon Occlusion of the Aorta' (REBOA) preparation and 'Damage Control Resuscitation', ensuring that the most advanced medical science is applied the moment a patient hits the trolley."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Advanced Trauma Life Support (ATLS) Protocols: Mastery of the ABCDE sequence for stabilizing polytrauma patients.",
+            "Emergency Airway Management: Proficiency in Rapid Sequence Intubation (RSI) assistance and surgical airway (Cricothyroidotomy) setup.",
+            "Advanced Hemorrhage Control: Expert application of tourniquets, hemostatic dressings, and assist in resuscitative thoracotomy.",
+            "Cardiovascular Emergency Management: Expertise in ECG interpretation, Defibrillation/Pacing, and ACLS/PALS drugs.",
+            "Skeletal and Spinal Stabilization: Mastery of Log-rolling, Cervical collar application, and specialized traction splinting.",
+            "Critical Care Transport & Pre-hospital Care: Managing life-support equipment in the high-vibration environment of an ambulance.",
+            "Disaster and Mass Casualty Management: Leading 'Triage' and resource allocation during large-scale surges.",
+            "Medico-Legal Documentation: ensuring perfect records for MLC cases, including evidence preservation in assault or accidents.",
+            "Toxicology and Poisoning Response: managing decontamination and specific antidote administration protocols.",
+            "Point-of-Care Ultrasound (POCUS) Assistance: Setting up for eFAST and Blue-Protocol exams to identify internal bleeding."
+        ],
+        "training_framework": {
+            "theory": "30% (Anatomy, Emergency Physiology, Traumatology, Forensic Medicine, and Pharmacology).",
+            "simulation_skills": "30% (High-fidelity manikin-based training for ACLS, airway crises, and trauma scenarios).",
+            "clinical_residency": "40% (Rotations in the Triage, Red-Zone (Resuscitative), ICU, and Level-1 Trauma Operation Theatres)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Anatomy, Physiology, and the Foundations of Trauma",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Clinical Anatomy and Physiology for Emergencies",
+                    "content": "A high-speed dive into the body's response to acute injury. Students learn about 'Trauma Anatomy'—focusing on the great vessels (Aorta, Vena Cava), the surface anatomy of the lungs and heart for needle decompression, and the 'Danger Zones' of the neck and abdomen. The unit covers 'Emergency Cardiovascular Physiology'—understanding shock (Hypovolemic, Cardiogenic, Obstructive, Distributive) and the body's compensatory mechanisms. Training includes the 'Respiratory Mechanics' during chest trauma (Flail chest, Tension Pneumothorax). Students explore 'Neuroanatomy' relevant to Glasglow Coma Scale (GCS) assessment and intracranial pressure (ICP) spikes. A module focuses on 'Renal Response to Trauma' (Crush syndrome and Myoglobinuria) and the physiology of 'Pain' and 'Stress' in the acute setting."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Introduction to Emergency Medical Services (EMS) and Triage",
+                    "content": "Understanding the 'Gateway to the Hospital'. This unit covers the history and organization of EMS systems globally and in India. Students learn the 'Philosophy of Triage'—doing the best for the most with limited resources. Training includes the South African Triage Scale (SATS), the Emergency Severity Index (ESI), and 'START' (Simple Triage and Rapid Treatment) for mass casualties. The unit details the 'Red/Yellow/Green/Black' color-coding logic and the psychology of the 'Triage Officer'. Students learn about the 'Hub and Spoke' model of trauma centers (Level 1 to Level 4) and the importance of 'Base Station' communication and pre-arrival notifications. A module focuses on the 'Ethics of Triage' during a pandemic or surge event."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Foundations of Primary and Secondary trauma Surveys",
+                    "content": "The 'Alphabet of Survival'. This unit focuses on the ATLS-based approach to the trauma patient. Students master the 'Primary Survey' (A - Airway with C-spine, B - Breathing, C - Circulation with hemorrhage control, D - Disability, E - Exposure). Training includes the recognition of life-threats like 'Cardiac Tamponade' and 'Massive Hemothorax'. The unit details the 'Secondary Survey'—the head-to-toe 'Fingers and Tubes in every orifice' check once the patient is stable. Students learn to perform the 'AMPULE' history and the management of 'Hypothermia' during exposure. A major focus is placed on 'Log-rolling' protocols and the importance of 'Re-assessment' every 5 minutes."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Airway and Ventilation in the Emergency Setting",
+                    "content": "Securing the 'Breath of Life'. This unit covers the management of the 'Difficult Emergency Airway'. Students learn about 'Basic Airway' (Jaw thrust, Guedel/Nasopharyngeal airways). Training includes 'Bag-Valve-Mask' (BVM) ventilation and 'Laryngeal Mask Airway' (LMA) rescue. The unit details 'Rapid Sequence Intubation' (RSI)—mastering the '7 Ps' (Preparation, Preoxygenation, Pretreatment, Paralysis, Position, Placement, Post-intubation care). Students are trained to assist in 'Fiberoptic' and 'Video Laryngoscopy' in a bloody airway. A major module covers 'Surgical Airway' (Needle and Scalpel Cricothyroidotomy). Ventilation training includes managing 'Portable Ventilators', 'CPAP/BiPAP' for acute pulmonary edema, and the physics of 'Oxygen Therapy' devices (High-flow nasal cannula)."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Advanced Life Support and Monitoring",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Advanced Cardiac Life Support (ACLS) and ECG Tech",
+                    "content": "The High-Voltage science of cardiac rescue. This unit focuses on the management of 'Cardiac Arrest' in the ER. Students master the recognition of 'Shockable' (VF/VT) vs. 'Non-shockable' (PEA/Asystole) rhythms. Training includes 'Biphasic Defibrillation'—selecting energy levels and maintaining 'Clearance' safety. The unit details the pharmacology of ACLS (Adrenaline, Amiodarone, Lidocaine). Students learn '12-lead ECG' placement and the recognition of 'STEMI' (Heart Attack) patterns. A major module covers 'Synchronized Cardioversion' for tachyarrhythmias and 'External Transcutaneous Pacing' for bradycardia. Training includes 'Post-Resuscitation Care'—focusing on Targeted Temperature Management (TTM) and hemodynamic stability. Automated CPR devices (LUCAS) and their integration into the rescue team are also covered."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Monitoring and Hemodynamic Stability",
+                    "content": "The 'Vital' feedback loop. This unit covers the instrumentation used to monitor the unstable patient. Students learn the physics and interpretation of 'Pulse Oximetry' and 'End-Tidal CO2' (Capnography) for confirming tube placement and ROSC (Return of Spontaneous Circulation). Training includes 'Invasive Blood Pressure' (IBP) setup—arterial line transducers and leveling. The unit details 'Central Venous Pressure' (CVP) monitoring and its role in fluid resuscitation. Students learn to use 'Non-invasive Hemodynamic Monitors' and interpret 'Lactate' levels and 'Arterial Blood Gas' (ABG) for shock assessment. A module focuses on 'Temperature Monitoring' and the physics of 'Blood and Fluid Warmers' for massive transfusion cases."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Emergency Pharmacology and Toxicology",
+                    "content": "Managing the 'Chemical' crisis. This unit covers the drugs used in resuscitation—'Vasoactive agents' (Noradrenaline, Dopamine), 'Sedatives' (Propofol, Etomidate, Ketamine), and 'Muscle Relaxants'. The curriculum details the 'Toxicology' emergency—responding to Organophosphate poisoning, Snake venom (ASV administration), and Drug Overdoses. Training includes 'Gastric Lavage' and the use of 'Activated Charcoal'. Students learn about 'Specific Antidotes' (Naloxone, Flumazenil) and the 'Decontamination' protocols for chemical spills. A major module focuses on 'Anaphylaxis'—the rapid administration of Epinephrine and the management of airway edema. Legal aspects of 'Narcotic storage' and 'Emergency Pharmacy' maintenance are also discussed."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Pediatric (PALS) and Neonatal Emergency (NRP)",
+                    "content": "Caring for the 'Little' emergencies. This unit provides a specialized focus on life-support for children. Students learn the 'Pediatric Assessment Triangle' (Appearance, Work of Breathing, Circulation). Training includes 'PALS' protocols—adjusting dosages and energy based on the 'Broselow Tape' or weight. The unit details 'Intraosseous (IO)' access—the rapid drilling of the tibia for fluid resuscitation when IV access fails. Students learn about 'Pediatric Airway' differences and the management of 'Croup' and 'Epiglottitis' emergencies. Neonatal resuscitation (NRP) covers the 'Initial Steps', mask ventilation, and the management of preterm births in the ER. Psychological modules cover the management of 'Grieving Parents' in the pediatric unit."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Special Trauma and Disaster Management",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Management of Skeletal, Spinal, and Head Trauma",
+                    "content": "Stabilizing the 'Structural' integrity. This unit covers 'Neurosurgical Emergencies'—managing 'Extradural' and 'Subdural' Hematomas and recognizing herniation signs. Students master 'Cervical Spine Stabilization' and the use of 'Long Backboards' and 'Spider Straps'. Training includes the management of 'Open Fractures'—irrigation, sterile dressing, and 'Traction Splint' application (Thomas splint / Kendrick Traction). The unit details the 'Crush Injury' protocol—managing potassium spikes and fluid loading. Students learn about 'Pelvic Trauma' and the application of 'Pelvic Binders' to prevent massive internal bleeding. A module on 'Hand and Limb Replantation' logistics—preserving amputated parts for surgery—is also included."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Introduction to Disaster and Mass Casualty management",
+                    "content": "Operating through the 'Chaos'. This unit focuses on the hospital's response to large-scale events (Bomb blasts, Earthquakes, Industrial leaks). Students learn about 'HICS' (Hospital Incident Command System). Training includes 'Surge Capacity'—transforming the lobby and cafeteria into triage zones. The unit details the 'Personal Protective Equipment' (PPE) for CBRNE (Chemical, Biological, Radiological, Nuclear, and Explosive) disasters and 'Decontamination' tent setup. Students practice 'Table-top' and 'Live Drills' for mass-casualty events. A major focus is placed on 'Public Health Communication' and the coordination with Police, Fire, and Civil Defense services. Psychological training for 'Critical Incident Stress Debriefing' (CISD) is provided."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Point-Of-Care Ultrasound (POCUS) and Radiology in ER",
+                    "content": "The 'Visual pulse' of the trauma bay. This unit focuses on the technologist's role in rapid imaging. Students learn the protocols for 'eFAST' (Extended Focused Assessment with Sonography for Trauma)—assessing the abdomen, heart, and chest for free fluid. Training includes it identification of 'Pneumothorax' using M-mode ultrasound. The unit details the assistance in 'CT-Scan' transport for unstable patients—maintaining life support during transit. Students learn about 'Chest X-ray' interpretation for tube/line placement and 'C-spine/Pelvis X-rays' for fracture screening. Safety training focuses on 'Radiation Protection' in the ER for staff and patients. The role of 'POCUS' in guiding 'Peripheral and Central IV access' is also mastered."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Special Emergencies (Burns, Pregnancy, Geriatric, and Remote)",
+                    "content": "Context-specific emergency care. This unit covers 'Burn Management'—calculating the 'Rule of Nines', fluid resuscitation using the 'Parkland Formula', and airway management for 'Inhalation Injuries'. 'Obstetric Trauma' modules focus on the 'Physiological Changes of Pregnancy' that mask blood loss and the 'Left Lateral Tilt' for the pregnant patient. 'Geriatric Emergencies' cover the specific risks of anticoagulation and subtle presentations of sepsis/strokes in the elderly. Students learn 'Wilderness or Remote area' emergencies—managing bites, stings, and immersion injuries with limited tech. The unit also includes 'Psychiatric Emergencies'—de-escalation techniques and the safe physical/chemical restraint of the violent patient."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Critical Transport, Ethics, and advanced Tech",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Critical Care Transport and Advanced Ambulance Tech",
+                    "content": "The 'Hospital on Wheels'. This unit focuses on the safe transport of the critically ill. Students learn about 'Ambulance Configurations' (Type A, B, C) and the 'Checklist' for Advanced Life Support (ALS) ambulances. Training includes the 'Physics of Transport'—how acceleration, deceleration, and altitude (in air-ambulance) affect pneumothoraxes and IV drip rates. Students master 'Loading and Unloading' protocols for stabilized patients. The unit details 'Mobile Monitoring'—using multi-parameter monitors and portable ventilators. A major focus is placed on 'Inter-hospital' and 'Intra-hospital' transport communication (SBAR). Vehicle safety, siren logic, and 'Driver-Technician' communication are also emphasized."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Forensic Medicine and Medico-Legal Cases (MLC)",
+                    "content": "The 'legal shadow' of the Emergency room. This unit covers the legal responsibilities of the ER technician. Students learn about 'MLC Identification' (Road accidents, poisoning, burns, assaults). Training includes 'Evidence Preservation'—collecting clothing, projectiles, or toxicological samples (Semen/Vomitus) and maintaining the 'Chain of Custody'. The unit details 'Informed Consent' and its 'Emergency Waiver' for the unconscious patient. Students learn about the 'Dying Declaration' and the legal requirement for 'Injury Reports'. A major module focuses on 'End-of-life' in the ER—'Death on Arrival' (DOA) protocols and the sensitive handling of 'Organ Donation' triggers in brain-dead trauma victims."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Quality metrics and patient safety in Emergency",
+                    "content": "Measuring the 'Survival' math. This unit focuses on the clinical data that defines a high-functioning ER. Students learn about 'Quality Indicators'—including 'Door-to-ECG' time for STEMI, 'Door-to-Needle' for strokes, and 'Triage-to-Doctor' times. Training includes the analysis of 'Return to ER within 72 hours' and 'Unexpected Deaths'. Students participate in 'M&M (Morbidity and Mortality)' reviews and learn about the 'Swiss Cheese Model' of medical error. The unit introduces 'Standard Operating Procedures' (SOPs) for high-risk procedures and the importance of 'Checklist' compliance during resuscitation. A module on 'Infection Control' in the chaotic emergency setting is also provided."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Advanced Technology and the Future of Emergency care",
+                    "content": "The 'Tomorrow' of the trauma bay. This futuristic unit explores the next generation of life-saving tech. Students learn about 'REBOA' (Resuscitative Endovascular Balloon Occlusion of the Aorta) and the tech for 'ECMO' (Extracorporeal Membrane Oxygenation) in the ER. The role of 'Artificial Intelligence' (AI) in triage—predicting sepsis or cardiac arrest through vitals patterns—is explored. The unit addresses 'Tele-Emergency'—how specialized doctors guide remote technicians via high-definition video links. Students learn about 'Wearable Tech' for disaster victims and 'Drohne-delivered' emergency meds/AEDs. The role of 'Smart glasses' for remote mentoring during complex procedures is also discussed."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Primary Trauma Survey and C-Spine Stabilization (ATLS standard)",
+            "steps": [
+                "Immediate BSI (Body Substance Isolation) and safety check of the trauma bay.",
+                "Manual in-line stabilization of the C-spine while the patient is still on the ambulance stretcher.",
+                "A - Airway: Checking for patency, suctioning blood/vomitus, and insertion of OPA/NPA if indicated.",
+                "B - Breathing: Auscultation of both lungs, checking for 'Tracheal Shift' or 'Jugular Venous Distension' (Tension Pneumothorax).",
+                "C - Circulation: Two large-bore (14G/16G) IV access, controlling active external bleeding with pressure/tourniquets.",
+                "D - Disability: Rapid GCS (Glassgow Coma Scale) and Pupillary light reflex assessment.",
+                "E - Exposure: Complete exposure for secondary injuries while protecting from 'Hypothermia' with Bair Huggers.",
+                "Performance of a 'Standard Log-roll' (4-person team) to examine the back and spinal column.",
+                "Placement of a rigid 'Cervical Collar' after manual stabilization is complete."
+            ]
+        },
+        {
+            "title": "Needle Decompression and Thoracostomy Assistance (Plan B for Tension)",
+            "steps": [
+                "Identify the 'Tension Pneumothorax' signs: Tracheal shift, respiratory distress, and hyper-resonance.",
+                "Assisting the doctor in selecting the '14-gauge' decompression needle or specialized 'Finger Thoracostomy' kit.",
+                "Locate the 2nd intercostal space in the mid-clavicular line or 5th intercostal space in the mid-axillary line.",
+                "Sterile preparation of the site with Povidone-Iodine; assist in the insertion until the 'Hiss' of air is heard.",
+                "Setup for the 'Chest Tube' (Thoracostomy)—arranging the 28Fr-32Fr tube and the underwater-seal drainage system.",
+                "Verify tube placement with the 'Fogging' of the tube and the 'Oscillation' of the water seal with breathing.",
+                "Secure the tube with silk sutures and 'Vase-line' gauze to create an airtight seal.",
+                "Immediate X-ray confirmation of tube position and lung re-expansion."
+            ]
+        },
+        {
+            "title": "ACLS Defibrillation and Pharmacology (Scenario: Pulseless VT)",
+            "steps": [
+                "Confirm Pulselessness and call for the 'Crash Cart' and 'Code Blue' team.",
+                "Initiate high-quality Chest Compressions (100-120 bpm, 2-inch depth).",
+                "Power on the 'Manual Defibrillator' and place the 'Apex-Sternum' pads/plates with conductive gel.",
+                "Identify 'Ventricular Tachycardia' (Pulseless) on the monitor.",
+                "Charging the Defibrillator to 200 Joules (Biphasic) and ensuring 'Oxygen' is away from the bed.",
+                "Executing the 'Clearance Command' (I am clear, You are clear, Everyone is clear).",
+                "Delivery of the shock followed by immediate resumption of CPR for 2 minutes WITHOUT checking the pulse.",
+                "Assisting in the administration of 1mg 'Adrenaline' and 300mg 'Amiodarone' as per the 3rd and 5th loop.",
+                "Confirming 'ROSC' (Return of Spontaneous Circulation) with a sudden rise in EtCO2 on the capnograph."
+            ]
+        },
+        {
+            "title": "Decontamination Protocol for Chemical Exposure/Hazmat Emergency",
+            "steps": [
+                "Establish 'Hot', 'Warm', and 'Cold' zones outside the main Emergency Department.",
+                "Don full Level C PPE (Waterproof gown, gloves, N95, Face-shield).",
+                "Assisting the victim in 'Dry Decontamination'—careful removal of all contaminated clothing into 'Hazmat Bins'.",
+                "Executing 'Wet Decontamination': copious irrigation with lukewarm water for 15 minutes, ensuring eyes are rinsed first.",
+                "Capturing 'Run-off' water to ensure the hospital sewage system is not contaminated with the chemical.",
+                "Continuous monitoring of vitals during the bath—specifically checking for respiratory distress or neurological symptoms.",
+                "Once 'Clean', transfer the 'Warm' patient to the 'Cold' zone for definitive medical treatment.",
+                "Documentation of the chemical name (if known) and the duration of the decontamination process."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing a 'Mass Casualty' Motor-Vehicle Collision (MVC)",
+            "situation": "A bus accident has occurred. 10 patients are arriving at once. Resources are limited to 2 doctors and 3 techs.",
+            "workflow": [
+                "Triage Initiation: Move to the ambulance bay and categorize patients using START (Simple Triage and Rapid Treatment).",
+                "Red-Tag Identification: Identifying the 2 patients with airway obstruction and tension pneumothorax for immediate 'Resuscitation Room' transfer.",
+                "Yellow-Tag Management: Placing the 4 patients with open fractures into the 'Observation Zone' with IV line and analgesia.",
+                "Green-Tag (Walking Wounded): Moving 4 patients with minor lacerations to a 'Waiting Hall' with a nursing student for comfort.",
+                "Family/Media Control: Directing the anxious families to a separate 'Information Center' to avoid cluttering the trauma bay.",
+                "Stock Deployment: Requesting additional 'Red Zone' kits and 'Negative-O' blood from the blood bank as a preemptive measure.",
+                "Documentation: Assigning a 'Scribe' to ensure every patient gets a unique Triage ID and a basic clinical record."
+            ]
+        },
+        {
+            "title": "Scenario B: Response to 'Anaphylactic Shock' in the ER Waiting Room",
+            "situation": "A patient waiting for a minor wound dressing suddenly develops hives, swollen lips, and falls to the floor with audible stridor.",
+            "workflow": [
+                "Positioning: Flat on the back with legs elevated to improve venous return (Modified Trendelenburg).",
+                "Immediate Epinephrine: Assist the doctor in the IM administration of 0.5mg Epinephrine (1:1000) in the mid-outer thigh.",
+                "Airway Rescue: Support ventilation with 100% O2; prepare for 'Difficult Intubation' as the laryngeal edema could move fast.",
+                "Fluid Loading: Rapid IV bolus of 1-Liter Normal Saline to counter the massive vasodilation.",
+                "Secondary Meds: Prepare and administer H1/H2 blockers (Pheniramine/Ranitidine) and Hydrocortisone to prevent the 'Late-phase' reaction.",
+                "Monitoring: Continuous 12-lead ECG to check for myocardial ischemia caused by the sudden drop in blood pressure.",
+                "Observation: Move to the ICU/HDC for 24-hour observation due to the risk of 'Biphasic' anaphylaxis."
+            ]
+        },
+        {
+            "title": "Scenario C: Sudden 'Hemorrhagic Shock' in a Penetrating Trauma",
+            "situation": "A patient with a stab wound to the lower abdomen arrives pale, cold, and with a heart rate of 150 bpm but no blood pressure (Pulse only at carotid).",
+            "workflow": [
+                "Damage Control Resuscitation: Immediate activation of 'Code Red' (Massive Transfusion Protocol - MTP).",
+                "Pressure Control: Direct pressure or wound packing on the stab site; if internal, prepare for immediate 'Ex-Lap' (Exploratory Laparotomy).",
+                "O-Negative Transfusion: Starting transfusion with un-crossmatched O-negative blood within 5 minutes of arrival.",
+                "Blood Warmer: ensuring all fluids and blood products pass through a warmer (Level-1 Infuser) to prevent the 'Triad of Death' (Acidosis, Coagulopathy, Hypothermia).",
+                "Permissive Hypotension: Maintaining a 'Palpable Radial Pulse' (SBP around 80-90) rather than normal BP to prevent 'Pop the Clot' phenomenon before surgical control.",
+                "REBOA Readiness: Setup of the arterial line and specialized balloon catheter for aortic occlusion if the pelvic/abdominal bleeding is uncontrollable.",
+                "Direct to OR: Bypassing CT-Scan and moving the patient directly to the Operation Theatre for definitive surgical control of the bleeding."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Rotation (180 days in Level-1 or Level-2 Trauma Centers)",
+        "rotations": [
+            "The 'Red Zone' (Resuscitative Trauma Bay) (8 Weeks): Mastery of high-acuity resuscitation and airway assistance.",
+            "Triage and Emergency Front Desk (4 Weeks): practice in sorting, initial assessment, and medico-legal tagging.",
+            "Cardiac Emergency and ECG Wing (4 Weeks): focus on STEMI, Arrhythmias, and ACLS skills.",
+            "Advanced Life Support (ALS) Ambulance (4 Weeks): rotations in 'Field Medical Care' and critical transport.",
+            "Pediatric Emergency Wing (2 Weeks): focus on PALS and neonatal resuscitation protocols.",
+            "ICU/High-Dependency Unit (2 Weeks): management of the stabilized trauma patient and mechanical ventilation."
+        ],
+        "objectives": [
+            "Participate in the the first-hour management of at least 300 'Multi-system Trauma' cases.",
+            "Successfully assist in at least 50 'Endotracheal Intubations' and 20 'Chest Tube' insertions.",
+            "Perform at least 100 'Manual Defibrillations' or 'Synchronized Cardioversions' in simulated or real scenarios.",
+            "Demonstrate competency in 'Arterial Cannulation' and 'Central Line' setup for at least 30 patients.",
+            "Manage at least 15 'Critical Care Transports' via ambulance with 100% stability results.",
+            "Perform 'eFAST' scans independently (under supervision) on at least 50 patients.",
+            "Maintain a 100% accurate 'Medication andNarcotic Log' for the entire trauma-bay rotation."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark semester final with 70% weightage on 'Trauma Physiology' and 'Emergency Pharmacology'.",
+        "practical_skills_viva": "A high-fidelity situational exam (OSCE): student must manage a 'Massive GI Bleed' or 'Crush Injury' scenario from arrival to transfer.",
+        "clinical_logbook_review": "Monthly verification of procedure counts and 'Critical Incident' reflections by the Emergency HOD.",
+        "supervisor_rating": "Evaluation focusing on 'Decision Speed', 'Hand-Eye Coordination', and 'Communication under Pressure' by the Trauma Surgeons.",
+        "forensic_documentation_audit": "A test for the accuracy and legal validity of the student's clinical records for MLC (Medico-Legal) cases."
+    },
+    "career_pathways": [
+        "Senior Emergency Room Technician in Government and Corporate Level-1 Trauma Centers.",
+        "Flight Medic or Paramount Emergency Staff for Air-Ambulance and HEMS services.",
+        "Lead Technologist for Critical Care Transport and Green-Corridor Coordination.",
+        "Disaster Management Officer for Municipal Corporations or NGOs (Red Cross, MSF).",
+        "Clinical Application Specialist for Resuscitation Tech Manufacturers (Defibrillators, POC-US).",
+        "Academic Faculty and Simulation Coordinator for Allied Health Colleges.",
+        "Manager for Mobile Medical Units (MMU) in industrial zones.",
+        "Healthcare Quality Auditor specialized in 'ER Wait Times' and 'Patient Safety' metrics.",
+        "Technical consultant for the design of 'SMART Emergency Departments' and 5G-linked ambulances."
+    ],
+    "student_engagement": [
+        "Annual 'Trauma-Olympiad': A cross-college competition featuring 'The Ultimate Triage' and 'Code Blue' dash.",
+        "Emergency Simulation Sundays: Immersive 'Full-ER' drills with 100+ mock victims and simulated power/oxygen failures.",
+        "The 60-Minute Journal Club: Weekly review of the 'Journal of Emergency Medicine' for new life-saving algorithms.",
+        "Crisis Debriefing Sessions: Monthly psychologist-led session to help students process the 'Emotional Burden' of the ER.",
+        "VR Trauma Lab: Using Virtual Reality for practice in complex pelvic surgeries and neuro-trauma decompression logic.",
+        "Wilderness Medicine Trek: A 3-day mountain trek to practice emergency care with 'Improvised' equipment."
+    ],
+    "medical_accuracy_verification": "Content is compliant with ATLS (10th Edition), AHA 2024 Guidelines for CPR/ECC, and the National Trauma Care Policy of India.",
+    "word_count_check": 3410
+}

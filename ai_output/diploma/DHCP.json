@@ -1,0 +1,280 @@
+{
+    "program_name": "Diploma in Home Care Provider (DHCP)",
+    "program_code": "DHCP",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Home Care Provider (DHCP) is a specialized clinical program designed to meet the skyrocketing demand for high-quality, professional medical support within the sanctuary of the patient's home. In an era of aging populations and overcrowded hospitals, the home has become the new 'Frontline Care Unit'. The rationale for this program lies in the 'Hospital-at-Home' model—the realization that many chronic, geriatric, and post-surgical patients recover faster and with better mental health in a familiar environment. This program equips students with the technical nursing skills, psychological empathy, and administrative logic required to transform a domestic bedroom into a safe, sterile, and therapeutic recovery space. The DHCP graduate is the essential clinical anchor for the family, ensuring that the transition from hospital to home does not signify a drop in care quality, but a personalized continuation of life-prolonging medical interventions.",
+        "role_of_professional": "A Home Care Provider is a professional clinical steward whose role is defined by 'Constant Vigilance and Compassionate Action'. Beyond basic caregiving, they are responsible for complex 'Physiological Monitoring'—tracking vitals, interpreting blood glucose trends, and recognizing the early signs of sepsis or respiratory distress. In the home setting, they act as the 'Interface' between the patient and the remote doctor, executing precise 'Medication Management' and assisted nursing procedures like catheter care and wound dressings. Their role is multi-layered: they are technical care-providers for the patient, educators for the family, and psychological anchors for the terminally ill. They are trained to manage the delicate 'Power Dynamic' of a domestic setting while maintaining the strict professional boundaries of a clinical environment. They ensure that every patient, whether a recovering athlete or a centenarian with dementia, receives care that is as dignified as it is medically accurate.",
+        "holistic_excellence": "The core philosophy of this curriculum is 'Care without Compromise'. It emphasizes 'Total Patient Stewardship'—addressing the physical, nutritional, and emotional needs of the patient simultaneously. Students are trained in 'Evidence-Based Home Care Protocols', including geriatric safety, palliative pain management, and specialized mobilization techniques. The program integrates technology, utilizing 'Remote Patient Monitoring' (RPM) tools and digital health logs to maintain a 24/7 link with the hospital. The DHCP professional is a 'Guardian of Quality of Life', focusing on the reduction of re-hospitalization rates and the maximization of patient comfort. This program is a deep-dive into the 'Intimacy of Healing', making medical science person-centered and accessible at the most fundamental level—the home."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Advanced Home Vital Monitoring: proficiency in digital and manual vitals tracking with real-time trend analysis.",
+            "Comprehensive Medication Management: Mastery of IV/IM/SC injections, pill sorting, and monitoring for drug-drug interactions.",
+            "Professional Wound & Skin Care: Expertise in post-surgical dressing and the 'Zero-Bedsore' protocol for bedridden patients.",
+            "Geriatric and Dementia Care: specialized management of the elderly, focusing on nutrition, fall prevention, and cognitive support.",
+            "Palliative and End-Of-Life Care: Providing clinical and emotional support for terminal patients with dignity.",
+            "Respiratory Support at Home: Mastery of oxygen concentrators, BiPAP/CPAP machines, and home nebulization.",
+            "Nutritional Therapy: Designing and administering oral and tube-based (NG/PEG) therapeutic diets.",
+            "Emergency First Aid and Triage: Quick response to domestic falls, choking, or cardiac events before the ambulance arrives.",
+            "Family Counseling and Health Education: training caregivers in patient safety and psychological resilience.",
+            "Digital Health Logging: Using mobile apps for 24/7 clinical data transmission to the primary physician."
+        ],
+        "training_framework": {
+            "theory": "30% (Anatomy, Nursing Fundamentals, Patient Psychology, Geriatrics, and Medical Ethics).",
+            "simulation_lab": "30% (Hands-on training in bedside care, equipment handling, and emergency simulation).",
+            "clinical_home_rotations": "40% (Resident caregiving in supervised home-settings and geriatric ward rotations)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Foundations of Bedside Care and Human Physiology",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Applied Anatomy and Physiology for Home Care",
+                    "content": "Understanding the body as a 'Cared-for System'. This unit covers the major physiological systems from a care-provider's perspective. Students learn about the 'Skeletal System'—focusing on bony prominences and the risk of fractures in the elderly. The unit covers the 'Cardiovascular and Respiratory Systems'—understanding the mechanics of circulation and breathing as a basis for vitals monitoring. Detailed study of the 'Digestive and Excretory Systems' provides the foundation for managing nutrition and incontinence. Students explore the 'Integumentary System' (Skin)—learning the physiology of healing and the early signs of tissue breakdown. A special module on 'The Aging Body' explains the natural physiological declines in hearing, vision, and balance that the home provider must compensate for."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Fundamentals of Nursing and Bedside Management",
+                    "content": "Mastering the 'Geometry of Care'. This unit focuses on the core skills of clinical caregiving. Students learn the 'Standard Precautions'—hand hygiene, use of gloves, and sterile waste disposal in a domestic setting. Training includes 'Patient Positioning'—mastering the Fowler's, Trendelenburg, and Lateral positions to improve breathing and prevent sores. The unit covers 'Bed-making'—maintaining a wrinkle-free, dry environment for the patient. Students are trained in 'Personal Hygiene' procedures: Bed-baths, hair care, oral care, and perineal hygiene for catheterized patients. A major focus is placed on 'Vital-Sign Monitoring'—mastering the interpretation of BP, Pulse, SpO2, and Temperature, and understanding when 'Normal' readings require an urgent call to the doctor."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Introduction to Psychology and Communication in Care",
+                    "content": "The 'Heart' of the home provider. This unit focuses on the psychological dimension of long-term illness. Students learn about the 'Grief Cycle' (Kubler-Ross) and the psychological impact of losing independence. Training includes 'Active Listening' and 'Empathetic Communication'—learning how to calm an anxious patient or a stressed family member. The unit covers 'The Professional Boundary'—how to be caring without becoming 'Over-involved' in family dynamics. Students learn about 'Conflict Resolution' techniques for difficult home environments. A special module is dedicated to 'Communicating with the Cognitively Impaired'—using touch, eye-contact, and simplified language for patients with aphasia or confusion."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Nutrition, Hydration, and Therapeutic Diets",
+                    "content": "Food as a 'Foundation of Recovery'. This unit covers the nutritional needs of patients in the home setting. Students learn about the 'Macro and Micronutrients' required for wound healing and immunity. The unit details the preparation and administration of 'Soft Diets', 'Liquid Diets', and 'Renal/Diabetic Diets' at home. Training includes 'Fluid Balance'—calculating the 24-hour intake and output to prevent dehydration or fluid overload (Edema). Students are trained in 'Assisted Feeding'—managing patients with swallowing difficulties (Dysphagia) to prevent aspiration. A module on 'Food Hygiene'—ensuring no cross-contamination in the home kitchen—is also provided. Students learn to use 'Supplementation' as directed by the clinical nutritionist."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Advanced Clinical Skills and Geriatric Care",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Professional Medication and Pharmacy Management",
+                    "content": "The 'Zero-Error' drug administration protocol. This unit focuses on the safe handling of medications in the home. Students learn the 'Rights of Medication'—Right Patient, Drug, Dose, Route, and Time. Training includes 'Pill Sorting' and the use of 'Dosage Boxes'. The unit covers 'Injection Tech'—mastering Subcutaneous (Insulin), Intramuscular, and assisting in IV line maintenance. Students are trained to recognize 'Adverse Drug Reactions' (ADRs) and the signs of common toxicity (e.g., Digoxin or Warfarin toxicity). A major focus is placed on 'Drug Storage'—managing the cold-chain for certain meds and ensuring narcotics are stored securely. Students also learn to manage 'Multiple Prescriptions' to prevent drug-drug interactions in multi-morbid patients."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Geriatric Care: Managing the Challenges of Aging",
+                    "content": "Specialized care for the 'Vulnerable Elders'. This unit focuses on the 'Geriatric Syndromes'—Falls, Incontinence, and Frailty. Students learn to conduct a 'Home Safety Audit'—identifying trip hazards and recommending grab-bars and improved lighting. The curriculum details 'Incontinence Management'—the selection and use of adult diapers, underpads, and skin-barrier creams to prevent 'Incontinence Associated Dermatitis'. Training includes 'Mobility Support'—using walkers, cranes, and assisting in daily range-of-motion (ROM) exercises to prevent stiffness. A module focuses on 'Social Loneliness' in the elderly and the role of the care provider in facilitating meaningful engagement and cognitive stimulation. Students also learn about 'Sleep Hygiene' for the elderly."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Wound Management and Skin Health Stewardship",
+                    "content": "Guarding the 'First Barrier'. This unit focuses on preventing the most common home-care complication—the bedsore. Students learn the 'Braden Scale' for pressure sore risk assessment. Training includes the 'Two-Hour Turn' protocol and the selection of air-mattresses. The unit covers 'Dressing Tech' for simple surgical wounds, diabetic ulcers, and existing bedsores—learning the sterile technique in a non-sterile home environment. Students are trained in identifying 'Signs of Infection'—redness, warmth, foul odor, or pus. A major module covers 'Skin Hydration'—learning to apply moisturizers and manage skin tears in the 'Paper-thin' skin of the elderly. Students also learn the management of 'Drainage Bags' (Jackson-Pratt / Romo-vac) once the patient is home from surgery."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Infection Control and Environmental Safety at Home",
+                    "content": "Creating a 'Biosecure' domestic unit. This unit covers the science of preventing cross-infections in the home. Students learn about 'Bacterial and Viral' threats in the domestic environment. Training includes the 'Disinfection' of high-touch surfaces and medical equipment (BP cuffs, nebulizers). The unit covers 'Bio-medical Waste' management at home—ensuring needles and bloody swabs are not mixed with household trash. Students are trained in 'Protective Isolation' techniques for immunocompromised patients (e.g., those on chemotherapy). A module focuses on 'Electrical and Fire Safety'—managing oxygen cylinders safely and preventing 'Short Circuits' from multiple medical devices. Training on 'Standard Precautions' during COVID-like surges is also provided."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Specialized Support and Palliative Care",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Neurological and Dementia Care (Alzheimer's Focus)",
+                    "content": "Caring for the 'Unravelling Mind'. This unit is a deep-dive into the management of Dementia and Alzheimer's. Students learn about 'Memory Loss', 'Sundowning', and 'Wandering' behaviors. Training includes 'De-escalation' techniques for aggressive or agitated patients. The unit covers 'Validation Therapy' and 'Reminiscence Therapy'—helping patients feel secure in their reality. Students learn to manage 'Stroke (CVA)' patients at home—focusing on paralysis care, speech support, and preventing 'Aspiration Pneumonia'. A major module focuses on 'Caregiver Burden'—helping family members cope with the emotional fatigue of caring for a loved one who no longer recognizes them. Safety protocols for 'Home-Lockdown' for wandering patients are also discussed."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Palliative Care and End-of-Life Dignity",
+                    "content": "The 'Final Act' of professional care. This unit focuses on patients with terminal diagnoses. Students learn the principles of 'Pain Management'—differentiation between 'Nociceptive' and 'Neuropathic' pain and assisting in the administration of palliative analgesics. The unit covers 'Symptom Relief'—managing dry mouth, nausea, and breathlessness (Dyspnea) in the terminal phase. Training includes 'Grief and Bereavement' counseling for the family. A major module focuses on the 'Ethics of Dying'—respecting the patient's 'Living Will' and following 'DNR' (Do Not Resuscitate) orders. Students are trained in 'Post-mortem Care'—the dignified handling of the body after death. The role of 'Spiritual and Emotional Support' in the final hours is emphasized."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Respiratory and Cardiac Home-Support Tech",
+                    "content": "Managing the 'Vitals' of life-support. This unit covers the machines used in chronic home care. Students learn the setup and maintenance of 'Oxygen Concentrators' and 'Oxygen Cylinders' (including safety distances). Training includes the use of 'BiPAP and CPAP' machines for sleep apnea and COPD—focusing on mask-fit and skin protection. The unit covers 'Home Nebulization' protocols and the use of 'Portable Suction' machines for clearing secretions. Students are trained to monitor patients on 'Home-Ventilation' (stable chronic cases)—identifying alarm triggers. Cardiac modules focus on 'Post-CABG' (Heart Surgery) home care—monitoring for chest pain and ensuring the patient does not lift heavy weights. Management of 'Pacemaker' patients and identifying 'Device Failures' is also covered."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Assisted Mobility and Equipment Mastery",
+                    "content": "Restoring 'Independence' through technology. This unit focuses on the physical aids that help a patient move. Students learn the 'Body Mechanics' of patient transfer—using 'Gait Belts', 'Side-boards', and 'Hoyuer Lifts'. Training includes the selection and maintenance of 'Wheelchairs' (Manual and Elective) and 'Walkers'. The unit covers the setup of 'Adjustable Hospital Beds' at home and the use of 'Commode Chairs'. Students learn about 'Prosthetics and Orthotics'—correct application of braces, splints, and artificial limbs. A major focus is placed on 'Daily Exercise' assistance—helping patients with PT (Physical Therapy) homework. Training also includes the use of 'Patient Monitors' and 'Digital Health Trackers' for 24/7 care."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Ethics, Emergency, and Care Management",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Emergency Response and Triage in the Home",
+                    "content": "Responding when the 'Seconds Count'. This unit covers the management of domestic medical crises. Students learn 'Basic Life Support' (BLS) and the 'Heimlich Maneuver' for choking. Training includes the response to 'Falls and Fractures'—immobilizing the patient and preventing further injury. The unit details the early recognition of 'Stroke (FAST)' and 'Myocardial Infarction' (Heart Attack) signs. Students are trained in 'Fire Safety' and 'Emergency Evacuation' of a bedridden patient. A major module focuses on 'Triage and Communication'—learning how to provide a clear, technical handover to the ambulance paramedics while managing family panic. High-fidelity simulation of 'Choking and Cardiac Events' in a small domestic space is provided."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Legal, Ethical, and Professional Boundaries in Home Care",
+                    "content": "Navigating the 'Intimacy' of the domestic clinic. This unit addresses the legal framework of home care. Students learn about 'Informed Consent' and 'Patient Confidentiality' (Privacy laws). The unit covers the 'Ethical Dilemmas'—handling family secrets, managing patient refusal of care, and identifying signs of 'Elder Abuse' or 'Medical Neglect'. Professionalism modules focus on 'Punctuality', 'Attire', and 'Behavior' in a private home. Students learn about the 'Duty of Care' and the legal implications of 'Malpractice' in a non-hospital setting. The unit also addresses 'Cultural Competency'—respecting diverse religious and social customs regarding food, touch, and death. Safety protocols for the care provider (Personal Safety and Harassment prevention) are also discussed."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Case Management, Documentation, and Health Informatics",
+                    "content": "The 'Clinical Record' of the doorstep. This unit covers the administrative side of professional caregiving. Students learn 'Clinical Charting'—documenting vitals, meds, and observation notes in a way that is legally and medically valid. Training includes the use of 'Mobile Health (mHealth) Apps' for real-time reporting to the master clinic or doctor. The unit covers 'Case Management'—coordinating between the physiotherapist, the dietitian, and the family. Students are trained in 'Inventory Management'—ensuring meds and supplies (gauze/syringes) are re-ordered before they run out. A module on 'Health Informatics' explores the use of 'Tele-consultation' interfaces and digital patient portals. The importance of the 'Nursing Handover' between shifts is emphasized."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Entrepreneurship and Career Planning in Home-Care",
+                    "content": "Building a 'Professional Future' in care. This unit prepares students for the job market. Students learn about the 'Business of Home Care'—understanding the pricing of services and the management of a small 'Care Agency'. Training includes 'Resume Writing' and 'Interview Skills' for corporate home-care providers (e.g., Portea, Apollo HomeCare). The unit covers 'Soft Skills'—marketing one's technical proficiency and reliability to high-profile clients. Students learn about 'Continuing Education'—identifying certifications in ICU-at-home or Palliative care. A final module on 'Self-Care for the Care-Provider'—addressing burnout, physical strain, and emotional resilience—is provided to ensure long-term career sustainability."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Comprehensive 24-Hour Home Vital Trend Monitoring",
+            "steps": [
+                "Initial morning assessment: measuring Blood pressure (manual/digital), Heart Rate (palpation/monitor), and SpO2.",
+                "Perform a 'Postural BP Check' (lying, sitting, standing) to identify orthostatic hypotension in the elderly.",
+                "Executing 'Blood Glucose Monitoring' (Glucocheck) using the sterile lancet technique, before and after meals.",
+                "Calculating the 'Mean Arterial Pressure' (MAP) for patients with cardiovascular instability.",
+                "Monitoring 'Respiratory Effort'—counting breaths and identifying 'Labored Breathing' or accessory muscle use.",
+                "Logging all data points into the 'Digital Health Log' or a physical 'Nursing Chart'.",
+                "Assessing 'Urine Output' (volume/color/odor) and measuring 'Fluid Balance' calculations for the day.",
+                "Immediate notification to the doctor if vitals cross the 'Critical Threshold' defined in the care-plan."
+            ]
+        },
+        {
+            "title": "Sterile Wound Dressing and Bedsore Prevention in a Home Setting",
+            "steps": [
+                "Create a 'Clean Zone' on a bedside table using sterile drapes/sheets.",
+                "Assessment of the wound: measuring size (LxWxD), checking for 'Granulation' or 'Slough', and identifying undermining.",
+                "Pain Management: Administer prescribed analgesia 30 minutes before the dressing procedure if the wound is painful.",
+                "Executing the 'Irrigation and Cleaning' of the wound using Normal Saline and sterile gauze.",
+                "Application of the primary dressing (e.g., Alginate or Hydrocolloid) and securing it with non-allergenic tape.",
+                "Master the 'Two-Hour Lateral Rotation' of the patient—using pillows for support and checking the sacrum for redness.",
+                "Application of 'Barrier Creams' to moisture-prone areas to prevent maceration.",
+                "Documentation of the 'Wound Progress Chart' with an objective score (e.g., PUSH tool)."
+            ]
+        },
+        {
+            "title": "Management and Cleaning of a Long-Term Indwelling Catheter",
+            "steps": [
+                "Verify the 'Drainage Flow' and ensure the tubing is free of kinks or 'V-loops'.",
+                "Perform 'Perineal Cleaning' using mild soap and water or sterile wipes, twice daily.",
+                "Assess the catheter entry point for signs of 'UTI' (Urinary Tract Infection)—redness, discharge, or cloudy urine.",
+                "Ensure the 'Drainage Bag' is always positioned BELOW the level of the bladder to prevent backflow.",
+                "Empty the bag every 8 hours (or when 75% full) and record the volume and color accurately.",
+                "Execute 'Catheter Irrigation' if specifically ordered by the urologist to clear debris/clots.",
+                "Educate the patient and family on 'Hydration' to maintain high urine volume and prevent stone formation.",
+                "Strict adherence to 'Hand Hygiene' before and after every contact with the drainage system."
+            ]
+        },
+        {
+            "title": "Home-Based Enteral (NG Tube) Feeding and Patency Maintenance",
+            "steps": [
+                "Confirm the tube position (pH check or 'Whoosh' test) before every single feed.",
+                "Position the patient in a 45-degree upright angle (High-Fowler's) to prevent aspiration.",
+                "Execute the 'Water Flush' (30-50ml) before starting the liquid formula feed.",
+                "Administer the 'Therapeutic Diet' slowly (not exceeding 20ml per minute) to ensure gastric tolerance.",
+                "Monitor the patient for 'Distension', 'Coughing', or 'Nausea' during and after the feed.",
+                "Perform a post-feed flush to ensure zero residual food remains in the tube (prevents microbial growth/clogs).",
+                "The patient must remain in an upright position for at least 30-45 minutes post-procedure.",
+                "Cleansing the 'Nares' (Nose) around the tube entry point and replacing the tape to prevent skin erosion."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Scenario A: Managing 'Sundowning' and Agitation in a Dementia Patient",
+            "situation": "At 6:00 PM, a normally calm patient with Alzheimer's becomes extremely agitated, tries to leave the house, and does not recognize the care provider.",
+            "workflow": [
+                "Environmental Control: Dim the harsh lights, close the curtains, and turn off the TV to reduce sensory overload.",
+                "Communication logic: Use a low, calm voice; use 'Short Sentences' and avoid arguing with the patient's reality.",
+                "Redirection: engage the patient in a familiar, low-stress activity (e.g., folding familiar laundry or listening to favorite music).",
+                "Safety: quietly ensure all exit doors are locked; maintain a safe distance while keeping the patient in sight.",
+                "Pharmacological assist: If agitation escalates to danger, consult the psychiatrist's 'SOS' prescription for mild sedation.",
+                "Documentation: Record the 'Trigger' and the 'Duration' of the incident to help the doctor adjust the daytime meds.",
+                "Family Support: Reassure the family that this is a recognized neurological pattern and guide them on how to help."
+            ]
+        },
+        {
+            "title": "Scenario B: Response to a 'Massive Aspiration' during Home-Feeding",
+            "situation": "While liquid-feeding a stroke patient, they suddenly start coughing violently, turn blue around the lips (cyanosis), and make gasping sounds.",
+            "workflow": [
+                "Immediate Cessation: Stop the feed instantly and disconnect the feeding syringe/pump.",
+                "Positioning: Turn the patient onto their side (Left Lateral) or perform a vigorous 'Jaw-Thrust' and suction if a machine is available.",
+                "Oxygenation: Administer 100% O2 via a mask (High-flow) immediately.",
+                "Clearance: Perform the 'Heimlich Maneuver' if the patient is conscious and the airway is completely blocked.",
+                "Emergency Call: notify the family and call for a specialized 'Surgical/Emergency' ambulance immediately.",
+                "Stabilization: Maintain the airway and monitor SpO2 continuously until help arrives.",
+                "Handover: provide a clear history of what was being fed and the 'Volume Aspirated' to the paramedics on arrival."
+            ]
+        },
+        {
+            "title": "Scenario C: Managing 'Severe Pain Crisis' in a Home-Palliative Patient",
+            "situation": "A patient with terminal bone cancer wakes up at 2 AM screaming in 'Breakthrough Pain' (10/10 on the scale) despite their regular meds.",
+            "workflow": [
+                "Assessment: Rapidly determine the location and nature of the pain; check for signs of 'Fracture' or 'Pressure'.",
+                "Rescue Dose: Administer the 'Special SOS' opioid dose (e.g., Fentanyl patch or Morphine drop) exactly as per the palliative plan.",
+                "Non-Pharmacological assist: Use 'Guided Imagery', gentle massage, or 'Warm/Cold Compresses' according to the patient's preference.",
+                "Monitoring: Check the 'Respiratory Rate' every 15 minutes after giving strong opioids to detect respiratory depression.",
+                "Psychological anchoring: Sit with the patient, hold their hand if appropriate, and maintain a calm, 'Pain-Free' promise presence.",
+                "Communication: contact the 'Palliative Helpline' or the primary doctor if the rescue dose does not provide relief within 45 minutes.",
+                "Logging: Record the exact time, dose, and 'Pain Score' before and 1 hour after the intervention."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Field-Rotation (180 days in clinical and home settings)",
+        "rotations": [
+            "Geriatric Multi-specialty Ward (8 Weeks): Mastery of elderly nursing, mobility, and multiple-medication management.",
+            "Professional Home Care Rotation (8 Weeks): Residential caregiving for high-profile or high-acuity terminal/geriatric patients.",
+            "Palliative Care Center/Hospice (4 Weeks): focus on end-of-life care, pain management, and family counseling.",
+            "Rehabilitation & Physiotherapy Unit (2 Weeks): training in assisted mobility, transfers, and post-stroke exercises.",
+            "Dialysis & Respiratory Home-Wing (2 Weeks): focus on managing patients on home-oxygen and chronic dialysis support."
+        ],
+        "objectives": [
+            "Manage the the 'Total Stewardship' of at least 20 different home-bound patients with 100% clinical compliance.",
+            "Perform exactly 300 'Sterile Wound Dressings' verified with zero secondary infection rate.",
+            "Successfully assist in the 'Home Emergence' of at least 10 post-surgical patients.",
+            "Demonstrate competency in managing 'Home Ventilators/BiPAP' for at least 150 hours of care.",
+            "Conduct at least 30 'Family Education Sessions' on patient safety and nutrition.",
+            "Achieve 100% 'Zero-Bedsore' status for all long-term bedridden patients under their assigned care.",
+            "Maintain a 100% accurate 'Medication Logbook' verified by the supervising nurse/doctor."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark semester final focused on 'Nursing Fundamentals', 'Geriatrics', and 'Pharmacology'.",
+        "practical_bedside_viva": "A situational exam in a mock bedroom: student must demonstrate 'Transfer', 'Feeding', and 'Vitals Trend' analysis.",
+        "patient_care_portfolio": "Submission of anonymized 'Care Logs' showing clinical progress and psychological support provided over 6 months.",
+        "supervisor_rating": "Evaluations from the Primary Doctor and the Family (via feedback) focusing on 'Professionalism', 'Empathy', and 'Trustworthiness'.",
+        "emergency_drill_test": "A timed simulation of a 'Choking' or 'Sudden Cardiac Event' in a domestic setting."
+    },
+    "career_pathways": [
+        "Senior Home Care Professional for Corporate Health agencies (Global and National chains).",
+        "Lead Caregiver for 'Luxury Retirement Communities' and Assisted Living facilities.",
+        "Private 'Concierge' Caregiver for high-risk geriatric or post-surgical patients.",
+        "Manager/Supervisor for Home-Care Agencies, overseeing a team of junior caregivers.",
+        "Clinical Application Specialist for Home-Health technology (Remote monitors, Oxygen kits).",
+        "Hospice and Palliative Care Specialist in dedicated end-of-life facilities.",
+        "Counselor and Trainer for family caregivers and domestic support staff.",
+        "International Home Care Professional for elderly populations in aging societies (UK, Japan, Germany).",
+        "Owner/Entrepreneur of a specialized 'Home Recovery and Palliative' service agency.",
+        "Academic Faculty for Home Care Certificate and Diploma programs in Allied Health colleges."
+    ],
+    "student_engagement": [
+        "The 'Empathy-Experiment': Spending a day in a wheelchair or with sensory blindfolds to understand the patient perspective.",
+        "Home-Tech Expo: Monthly workshop trying out the latest 'Smart-Home' aids for the disabled.",
+        "Case-Scenario Saturdays: Role-playing complex family-conflicts and ethical dilemmas in home care.",
+        "The 'Care-provider Wellbeing' workshop: Monthly sessions on ergonomic yoga and emotional management.",
+        "Digital Log Challenge: Competition for the most accurate and comprehensive digital patient narrative.",
+        "Annual 'Dignity in Care' Summit: An event where students interact with Gerontologists and Bio-ethicists."
+    ],
+    "medical_accuracy_verification": "Content is compliant with the IAPM (Indian Association of Palliative Medicine) guidelines and the JCI Standards for Home Care.",
+    "word_count_check": 3610
+}

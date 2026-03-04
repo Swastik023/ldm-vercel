@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     };
 }
 
-function toClientCourse(p: any) {
-    return {
+function toClientCourse(p: any, includeCurriculum = false) {
+    const base: any = {
         id: p.code,
         title: p.name,
         duration: p.duration_years >= 1
@@ -34,7 +34,12 @@ function toClientCourse(p: any) {
         description: p.description || p.shortDescription || '',
         syllabus: p.syllabus || [],
         career: p.careerOptions || [],
+        course_type: p.course_type || 'diploma',
     };
+    if (includeCurriculum && p.curriculum) {
+        base.curriculum = p.curriculum;
+    }
+    return base;
 }
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -53,8 +58,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         is_active: true,
     }).sort({ displayOrder: 1 }).limit(3).lean();
 
-    const course = toClientCourse(program);
-    const related = relatedPrograms.map(toClientCourse);
+    const course = toClientCourse(program, true);
+    const related = relatedPrograms.map(p => toClientCourse(p));
 
     return <CourseDetailClient course={course} related={related} />;
 }

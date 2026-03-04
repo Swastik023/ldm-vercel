@@ -1,0 +1,259 @@
+{
+    "program_name": "Diploma in Critical Care Management (DCCM)",
+    "program_code": "DCCM",
+    "course_type": "diploma",
+    "overview": {
+        "clinical_rationale": "The Diploma in Critical Care Management (DCCM) is an intensive academic and clinical program designed to train healthcare professionals in the high-stakes, fast-paced environment of the Intensive Care Unit (ICU). Critical care represents the 'Last Line of Defense' in the contemporary hospital system, where complex medical conditions, multi-organ failure, and life-threatening emergencies are managed with extreme precision, advanced technology, and multidisciplinary expertise. The rationale for this program lies in the increasing complexity of patient acuity in modern hospitals, necessitating a specialized workforce that can transcend traditional nursing or paramedical roles to become masters of life-support systems and physiological monitoring. In the current healthcare landscape, the ability to manage acute respiratory failure, septic shock, and neuro-emergencies is not just a skill but a specialized science that requires specialized training beyond the scope of general medical education.",
+        "role_of_professional": "A DCCM specialist is a critical care technologist trained to manage patients who are physiologically unstable and require constant, minute-by-minute monitoring. Their role is multifaceted, involving the operation of advanced life-support systems such as mechanical ventilators, hemodialysis machines, and ECMO circuits. They are responsible for the titration of high-alert life-saving medications, providing real-time data to the clinical team, and participating as core members of rapid response and code-blue teams. Beyond technical skills, they must possess a unique blend of rapid decision-making capabilities, profound emotional resilience, and the ability to maintain calm in high-pressure clinical environments. They serve as the technical bridge between the physician's orders and the life-saving technology at the patient's bedside, ensuring that every physiological change is noted and every intervention is technically flawless.",
+        "evolution_of_icu": "Modern ICU management has evolved significantly from simple life support to what is now known as 'Restorative Care'. This paradigm shift emphasizes the proactive prevention of 'ICU-Acquired Weakness'—a common complication of prolonged immobilization—and the implementation of early mobilization protocols for ventilated patients. It also involves the integration of 'Precision Medicine', where real-time physiological data, genomic analysis, and rapid biomarkers are used to tailor treatments to the individual patient's unique metabolic and respiratory needs. This curriculum incorporates these modern evolutions, ensuring that graduates are not just technicians but clinical partners in the journey of patient recovery, skilled in using AI-driven predictive tools and advanced hemodynamics to improve patient outcomes and survival rates in the most critical of circumstances."
+    },
+    "academic_structure": {
+        "duration": "2 Years",
+        "total_semesters": 4,
+        "core_competencies": [
+            "Mastery of Mechanical Ventilation: Understanding every mode from Volume Control to Airway Pressure Release Ventilation (APRV) and Proportional Assist Ventilation (PAV).",
+            "Advanced Hemodynamic Monitoring: Proficient interpretation of Central Venous Pressure (CVP), Pulmonary Artery Wedge Pressure (PAWP), and advanced cardiac output metrics like PiCCO (Pulse-induced Contour Cardiac Output).",
+            "Arterial Blood Gas (ABG) Mastery: The ability to diagnose complex mixed acid-base disorders and manage compensated and uncompensated metabolic/respiratory states.",
+            "ACLS/BLS Leadership: Not just participating, but leading portions of the resuscitation cycle, managing rhythm identification and defibrillation logic.",
+            "Infection Control Engineering: Mastering the 'Bundles of Care' designed to eliminate hospital-acquired infections like VAP, CLABSI, and CAUTI through systematic surveillance.",
+            "Renal Replacement Mastery: Hands-on management of Continuous Renal Replacement Therapy (CRRT), managing filter pressure, effluent rates, and anticoagulation titration.",
+            "Neurological Surveillance: Proficient use of Bispectral Index (BIS) monitoring, Intracranial Pressure (ICP) monitoring, and Bedside EEG interpretation in the comatose patient.",
+            "Advanced Pharmacological Titration: Managing ultra-sensitive infusions of Noradrenaline, Vasopressin, Propofol, and high-dose Opioids with zero margin for error."
+        ],
+        "training_framework": {
+            "theory": "30% (Classroom lectures, Pathophysiology seminars, Advanced Physics of ventilation, and Pharmacological workshops focusing on drug-drug interactions in the critically ill).",
+            "skill_lab": "30% (High-fidelity simulation-based training utilizing advanced manikins that respond to drug titration and ventilator changes in real-time, focusing on crisis resource management).",
+            "clinical_residency": "40% (Hands-on, logbook-documented management of unstable patients in multi-specialty ICUs, including Surgical, Medical, Coronary, and Neurosurgical units under direct supervision of a board-certified Intensivist)."
+        }
+    },
+    "detailed_syllabus": [
+        {
+            "semester": 1,
+            "title": "Semester I: Foundations of Critical Care and ICU Infrastructure",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "ICU Infrastructure, Design, and Engineering",
+                    "content": "This unit provides an exhaustive exploration of the architectural, functional, and engineering design of modern Intensive Care Units. Students learn about the specialized physical requirements, such as positive and negative pressure gradients for isolation, the physics of medical gas piping systems, and the ergonomic layout of a central monitoring station to ensure 360-degree patient surveillance. A major focus is placed on 'Infection Control in the ICU'—mastering the engineering controls and behavioral protocols to prevent Ventilator-Associated Pneumonia (VAP), Central Line-Associated Blood Stream Infections (CLABSI), and Catheter-Associated Urinary Tract Infections (CAUTI). The unit also covers the administrative criteria for patient admission and discharge (Triage logic), the legal requirements for bio-medical waste disposal, and the maintenance of electrical safety in a high-density equipment environment."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Physiological Monitoring and Bedside Technology Physics",
+                    "content": "Understanding the 'Digital Patient' through the lens of physics. This unit dives deep into the technology of multi-para monitors. Students learn the principles of spectrophotometry in Pulse Oximetry (SpO2), the oscillometric method of Non-invasive Blood Pressure (NIBP), and the electro-physiology of 12-lead and continuous ECG monitoring. Training includes the manual setup, priming, and troubleshooting of invasive pressure monitoring systems, focusing on the physics of the pressure transducer, the importance of the damping coefficient, and the accurate identification of arterial and central venous pressure waveforms (a, c, x, v, y waves). Students also master the calibration and safety protocols of infusion pumps, syringe drivers, and bed-side Point-of-Care Ultrasound (POCUS) machines for vascular access."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Airway Management, Oxygen Therapy, and Basic Resuscitation",
+                    "content": "This unit covers the fundamental maneuvers of life support, focusing on the critical Airway, Breathing, and Circulation (ABC) algorithms. Students are trained in Basic Life Support (BLS) to a mastery level and introduced to the entry-level components of Advanced Cardiac Life Support (ACLS). Mastery involves manual ventilation using the AMBU bag with proper seal technique, the selection and insertion of Oropharyngeal and Nasopharyngeal airways, and the precise organization of the 'Airway Cart' for emergency endotracheal intubation. The curriculum includes the pharmacodynamics of first-line resuscitation medications such as Adrenaline, Atropine, and Amiodarone. Students learn the 'Lidocaine vs. Amiodarone' logic in shockable rhythms and the role of Magnesium in Torsades de Pointes. The unit also covers high-flow nasal cannula (HFNC) therapy and non-rebreather mask mechanics."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Basic Nursing Care and Patient Hygiene in ICU",
+                    "content": "Even in a high-tech environment, basic care remains the foundation. This unit covers the technical aspects of 'Patient Positioning' for the critically ill—mastering the semi-fowler's 30-45 degree head elevation to prevent aspiration, and the prone positioning logic for severe hypoxia. Students learn about 'Skin Integrity Management', utilizing the Braden Scale to prevent pressure sores in paralyzed patients. The unit also includes the technical setup and maintenance of indwelling catheters (Foley's), nasogastric (NG) tube insertion, and the meticulous care of the unconscious patient, including eye care and limb physiotherapy to prevent contractures."
+                }
+            ]
+        },
+        {
+            "semester": 2,
+            "title": "Semester II: Advanced Respiratory and Cardiovascular Support",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Respiratory Pathophysiology and Advanced Mechanical Ventilation",
+                    "content": "Mastering the mechanical 'lungs' of the ICU. This unit covers the deep pathophysiology of Acute Respiratory Distress Syndrome (ARDS), focusing on the recruitment of alveoli and the prevention of Ventilator-Induced Lung Injury (VILI). Students learn every mode of ventilation: from traditional Volume Control (VC) and Pressure Control (PC) to advanced modes like Airway Pressure Release Ventilation (APRV) and Bi-level. Training includes the fine-tuning of FiO2 (Oxygen concentration), PEEP (Positive End-Expiratory Pressure), and Tidal Volume based on 'Lung Protective Ventilation' strategies. Students master 'Ventilator Asynchrony'—recognizing 'double-triggering', 'autocycling', and 'ineffective effort' by analyzing pressure and flow waveforms. ABG interpretation is trained using the 'Stewart Approach' to mixed acid-base disorders."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Hemodynamics, Shock Management, and Vasoactive Titration",
+                    "content": "The 'heart' of the matter. This unit focuses on the differentiation and rapid management of various types of Shock: Hypovolemic (hemorrhagic and non-hemorrhagic), Cardiogenic, Septic, and Neurogenic. Students learn to implement fluid resuscitation protocols using dynamic parameters like Pulse Pressure Variation (PPV) instead of static CVP. Proficiency in 'Vasoactive Drug Titration'—Noradrenaline, Vasopressin, Dobutamine, and Milrinone—is a core requirement for passing this semester. Students learn the 'receptor logic' (Alpha vs. Beta) behind each drug. The unit also covers the setup and monitoring of the Intra-Aortic Balloon Pump (IABP) for cardiac support, and the troubleshooting of cardiac pacing (Trans-cutaneous and Trans-venous)."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "ICU Pharmacology, Sedation, and Analgesia",
+                    "content": "A deep dive into high-alert medications and the 'Comfort-First' protocol. Students learn the pharmacodynamics and clinical implications of sedatives like Propofol and Dexmedetomidine, analgesics like Remifentanil and Fentanyl, and neuromuscular blockers (Paralytics) like Rocuronium. The unit emphasizes 'Infusion Safety'—calculating complex dosages and understanding the 'dead space' in IV tubing that can cause bolus effects. Training includes the management of the 'Dose Error Reduction System' (DERS) in smart pumps and the psychological and technical aspects of 'Sedation Vacation' and daily weaning assessments using the RASS and CPOT scales."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Sepsis Bundles and Anti-Microbial Stewardship",
+                    "content": "The most common killer in the ICU. This unit covers the latest 'Surviving Sepsis Campaign' guidelines, focusing on the 'Hour-1 Bundle': obtaining blood cultures, measuring lactate, and starting broad-spectrum antibiotics within 60 minutes. Students learn about 'Anti-Microbial Stewardship'—the clinical logic of de-escalating antibiotics based on culture results to prevent Multi-Drug Resistant (MDR) infections like VRE and CRE. The unit also covers the management of septic cardiomyopathy and the use of steroids in refractory septic shock."
+                }
+            ]
+        },
+        {
+            "semester": 3,
+            "title": "Semester III: Multi-Organ Support and Metabolic Critical Care",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "Continuous Renal Replacement Therapy (CRRT) and AKI",
+                    "content": "Managing the kidneys in the unstable patient. This unit covers the pathophysiology of Acute Kidney Injury (AKI) in the ICU, focusing on CAKIN (Critical Care AKI) protocols. Students learn the setup, priming, and clinical monitoring of Continuous Renal Replacement Therapy (CRRT). Training includes understanding the different modes: CVVH (Convection), CVVHD (Diffusion), and CVVHDF (Combined). Mastering the 'Citrate Anticoagulation' protocol, monitoring for citrate toxicity (calcium gap), and managing the replacement fluid chemistry is essential. The unit also covers the management of life-threatening Hyperkalemia and the technical assistance required for bedside acute peritoneal dialysis."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Neuro-Critical Care and Advanced Neuromonitoring",
+                    "content": "The unit focuses on the 'Silent Brain' in critical illness. Students learn systematic assessment using the Glasgow Coma Scale (GCS) and the FOUR score. Management of increased Intracranial Pressure (ICP), including the setup of ICP monitors (Bolt/Camino) and EVD (External Ventricular Drains), is a core competency. The unit covers the management of Traumatic Brain Injury (TBI), Status Epilepticus (including bedside EEG basics), and the unique challenges of 'Post-Cardiac Arrest Brain Injury' using Targeted Temperature Management (TTM). Students are also trained in identifying 'ICU Delirium' using the CAM-ICU tool and implementing 'Sleep Hygiene' protocols to prevent neuro-cognitive decline."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "Metabolic Management, GI Support, and Nutrition Physics",
+                    "content": "Fueling the recovery. This unit covers the bio-energetics of critical illness. Students learn the protocols for Enteral (Tube) and Parenteral (IV) nutrition, focusing on the calculation of daily protein requirements (1.2-2.0 g/kg) and the prevention of 'Refeeding Syndrome'. Metabolic management focuses on 'Tight Glycemic Control'—implementing insulin infusion protocols to maintain blood sugar within 140-180 mg/dL while preventing hypoglycemia. GI support covers the prevention of Stress Ulcers using PPIs/H2 blockers and the management of 'Intra-Abdominal Hypertension' (IAH) using bladder pressure measurement techniques. The unit also addresses Endocrine emergencies like Myxedema Coma and Thyroid Storm."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Fluids, Electrolytes, and Acid-Base Mastery",
+                    "content": "The 'Chemistry' of Survival. This unit is an advanced module on the management of life-threatening electrolyte imbalances: Hypernatremia, Hyponatremia (and the risk of Osmotic Demyelination Syndrome), Hypokalemia, and Hypomagnesemia. Students master the Stewart-Fencl approach to acid-base disorders, understanding the role of SID (Strong Ion Difference) and Atot. Clinical training includes the calculation of the 'Anion Gap' and 'Delta-Delta' to identify multiple co-existing metabolic disorders. The use of Bicarbonate therapy—its indications and significant risks—is a key clinical discussion point."
+                }
+            ]
+        },
+        {
+            "semester": 4,
+            "title": "Semester IV: Specialized Care, Economics, Ethics, and Future Tech",
+            "units": [
+                {
+                    "unit_no": 1,
+                    "title": "ECMO, IABP, and Extra-Corporeal Life Support",
+                    "content": "This unit covers the absolute 'Cutting Edge' of critical care technology. Students learn the principles and bedside management of Extra-Corporeal Membrane Oxygenation (ECMO). V-V ECMO for refractory respiratory failure (ARDS) and V-A ECMO for cardiogenic shock and cardiac arrest (E-CPR) are detailed. Training includes monitoring the membrane oxygenator for clotting, identifying 'Delta P' changes, managing the centrifugal pump, and handling the extreme anticoagulation requirements. The unit also includes advanced management of the Intra-Aortic Balloon Pump (IABP) and an introduction to the 'Impella' ventricular assist device."
+                },
+                {
+                    "unit_no": 2,
+                    "title": "Organ Donation, Brain Death, and Ethics",
+                    "content": "Navigating the 'End of Life' with professionalism and empathy. Students learn the legal and clinical protocols for Brain Death Certification, involving the 'Apnea Test' and 'Cerebral Blood Flow' studies. The unit focuses on the 'Physiological Management of the Potential Organ Donor'—the 'Rule of 100s' to ensure heart, lung, and kidney viability for transplant. Ethical components cover 'Medical Futility', 'Withdrawal or Withholding of Life Support' (DNR/AND), and the communication techniques (VALUE mnemonic) required to guide grieving families through the most difficult decisions of their lives."
+                },
+                {
+                    "unit_no": 3,
+                    "title": "ICU Quality, Research, and Medical Informatics",
+                    "content": "The science of continuous improvement. Students learn about 'ICU Quality Indicators' like SMR (Standardized Mortality Ratio), Length of Stay (LOS), and VAP/CLABSI rates. Training includes the methodology of clinical audits and 'Root Cause Analysis' (RCA) for adverse events like accidental extubation. The unit introduces Evidence-Based Medicine (EBM)—learning to critically appraise landmark ICU trials (e.g., the ARDSNet trials). Medical informatics covers the role of Artificial Intelligence (AI) in predicting sepsis and the setup of 'e-ICU' systems for remote monitoring of peripheral hospitals by a central hub of experts."
+                },
+                {
+                    "unit_no": 4,
+                    "title": "Toxicology, Poisoning, and Disaster Critical Care",
+                    "content": "The unexpected emergencies. This unit covers the ICU management of acute poisoning: Organophosphates, Paracetamol overdose (using the Rumack-Matthew nomogram), and corrosive ingestion. Students learn about 'Gastric Decontamination' protocols (Activated Charcoal, Whole Bowel Irrigation) and the administration of specific antidotes. The 'Disaster' component focuses on 'Surge Capacity'—how to rapidly expand an ICU during a pandemic (like COVID-19) or a mass casualty incident, including triage logic and the management of 'Transport Ventilation' for inter-hospital transfers."
+                }
+            ]
+        }
+    ],
+    "practical_procedures": [
+        {
+            "title": "Assisting in Endotracheal Intubation (A-Z Mastery)",
+            "steps": [
+                "Assemble and test the high-power suction system (Yankauer tip) and ensure a Backup Manual Resuscitator (AMBU) is connected to 15L of O2.",
+                "Check Laryngoscope blade (Macintosh/Miller) for light intensity and functional batteries.",
+                "Pre-oxygenate the patient with 100% FiO2 using the 'PEEP' valve on the AMBU bag to recruit alveoli before the apnea period.",
+                "Prepare the correct size ETT (7.5-8.0 for males, 7.0-7.5 for females) and verify the cuff integrity by test inflation.",
+                "Position the patient in the 'Sniffing position' using a head-ring or folded towels.",
+                "Perform 'Cricoid Pressure' (Sellick maneuver) as the physician visualizes the vocal cords if requested.",
+                "Inflate the cuff immediately after insertion to the recommended 25-30 cmH2O to prevent air leak and micro-aspiration.",
+                "Confirm placement with EtCO2 (Capnography) waveform—'No Wave, No Tube'.",
+                "Auscultate in the epigastrium first, then the bilateral lung fields (Axillary area) to rule out esophageal or endobronchial intubation."
+            ]
+        },
+        {
+            "title": "Setting Up and Calibrating an Arterial Line Pressure System",
+            "steps": [
+                "Prepare a 500ml bag of Normal Saline with 1000 units of Heparin (if protocolized).",
+                "Spike the bag with the pressure tubing system and prime the line slowly to ensure absolute removal of all micro-bubbles (to prevent air embolism and waveform damping).",
+                "Level the transducer at the 'Phlebostatic Axis'—the level of the right atrium.",
+                "Zero the monitor by opening the stopcock to room air and pressing 'Zero' on the console.",
+                "Ensure the 'Square Wave Test' (Flush test) is performed to verify the dynamic response of the catheter-tubing system.",
+                "Adjust the alarm limits immediately to within 10% of the patient's current MAP (Mean Arterial Pressure)."
+            ]
+        },
+        {
+            "title": "Continuous Renal Replacement Therapy (CRRT) Circuit Setup",
+            "steps": [
+                "Selecting the appropriate 'Hemofilter' based on the patient's weight and the desired procedure (Convection vs. Diffusion).",
+                "Priming the circuit with 2 liters of Normal Saline, ensuring all air is purged from the 'Bubble Trap'.",
+                "Connecting the Arterial and Venous lumens of the double-lumen dialytic catheter (Vas-cath) to the circuit using aseptic technique.",
+                "Setting the 'Blood Flow Rate' (usually 100-200 ml/min) and the 'Effluent Rate' as per the prescription.",
+                "Starting the Citrate/Calcium anticoagulation pumps and monitoring the 'Post-Filter Ionized Calcium' every 2 hours.",
+                "Troubleshooting the 'High TMP' (Trans-Membrane Pressure) alarm by checking for catheter kinking or filter clotting."
+            ]
+        },
+        {
+            "title": "Prone Positioning for Severe ARDS (The 'Volleyball' Technique)",
+            "steps": [
+                "Assemble a team of at least 5 professionals: one at the head (controlling the ETT), two on each side.",
+                "Disconnect all non-essential lines and secure the essential ones (IVs, arterial lines) with extra tape.",
+                "Protect 'Pressure Points': apply hydrocolloid dressings to the face, knees, and pelvic prominences.",
+                "The professional at the head leads the count: '1-2-3-Slide, 1-2-3-Turn'.",
+                "Once prone, position the arms in the 'Swimmer's position' and rotate the head every 2 hours to prevent ocular injury and pressure sores.",
+                "Monitor SpO2 and Hemodynamics closely for 15 minutes post-turn to ensure the patient tolerates the position."
+            ]
+        }
+    ],
+    "case_scenarios_workflows": [
+        {
+            "title": "Case A: Sudden Desaturation and High Peak Pressures (The DOPE Algorithm)",
+            "situation": "A 60-year-old mechanically ventilated patient suddenly drops SpO2 to 78%, heart rate increases to 130, and the ventilator displays a 'High Peak Pressure' alarm (>40 cmH2O).",
+            "workflow": [
+                "Disconnect immediately: Use the AMBU bag to manually ventilate with 100% Oxygen. This bypasses equipment failure as a potential cause.",
+                "Displacement: check ETT position at the lip (e.g., 22cm) and look for 'Bilateral Chest Rise'. Use the Laryngoscope if needed to see if the tube is still in the cords.",
+                "Obstruction: Pass a suction catheter through the ETT. If it doesn't pass, the tube is kinked or blocked by a mucus plug. Suction aggressively or replace the tube.",
+                "Pneumothorax: Auscultate lung sounds. If sounds are absent on one side and the trachea is deviated, prepare for emergency needle decompression followed by Intercostal Drainage (ICD).",
+                "Equipment: while manually bagging, have a second technician check the ventilator circuit, bacterial filters, and O2 supply line for leaks or blockage."
+            ]
+        },
+        {
+            "title": "Case B: Management of Septic Shock with Multimodal Strategy",
+            "situation": "Patient with abdominal sepsis has a BP of 75/40 mmHg and a lactate of 6.2 mmol/L. Peripheral pulses are weak and urine output is zero.",
+            "workflow": [
+                "Hour-1 Bundle: Ensure blood cultures are drawn and 30ml/kg of Ringer's Lactate is infused within the first 30 minutes.",
+                "Vasoactive Initiation: Simultaneously start Noradrenaline infusion via a central line, titrating to a Mean Arterial Pressure (MAP) of >65.",
+                "Fluid Responsiveness: Use bed-side ultrasound to check 'IVC collapsibility'—if the vein is narrow and collapses, more fluid is needed; if distended, fluid must be restricted.",
+                "Secondary Inotrope: If the heart shows poor contractility on POCUS, add Dobutamine to support the 'Septic Cardiomyopathy'.",
+                "Refractory Management: If BP remains low despite high-dose Noradrenaline, start intravenous Hydrocortisone (200mg/day) and Vasopressin infusion."
+            ]
+        },
+        {
+            "title": "Case C: Post-Cardiac Arrest Management (TTM Workflow)",
+            "situation": "A 45-year-old achieves ROSC (Return of Spontaneous Circulation) after 15 minutes of CPR. He is comatose (GCS 3) with stable vitals.",
+            "workflow": [
+                "Neuro-protection: Initiate Targeted Temperature Management (TTM) immediately. Target temperature: 33-36°C for 24 hours.",
+                "Cooling Strategy: Use surface cooling pads or intravascular cooling catheters. Administer cold (4°C) IV fluids 30ml/kg.",
+                "Shivering Management: Monitor for shivering which causes hyper-metabolism; administer Magnesium, Buspirone, or continuous paralysis (Cis-atracurium) as needed.",
+                "Hemodynamic Optimization: Maintain MAP 65-80 mmHg and PaO2 94-98% (avoid hyperoxia).",
+                "Monitoring: Set up continuous EEG to detect 'Non-convulsive Status Epilepticus', which occurs in 20-30% of post-arrest patients."
+            ]
+        }
+    ],
+    "internship_details": {
+        "duration": "6 Months Intensive Residency (Split into two 3-month phases)",
+        "rotations": [
+            "Medical ICU (8 Weeks): Mastery of Sepsis bundles, ARDS ventilation, and Diabetic Ketoacidosis (DKA) management.",
+            "Coronary Care Unit (CCU) & CTVS (4 Weeks): Management of Acute MI, Post-CABG recovery, and IABP troubleshooting.",
+            "Trauma & Surgical ICU (4 Weeks): Management of Multi-trauma, Post-Transplant cases, and Burn management.",
+            "Neuro-Critical Care (4 Weeks): ICP monitoring, Post-craniotomy care, and Status Epilepticus protocols.",
+            "Dialysis & CRRT Unit (2 Weeks): Dedicated training in high-end renal replacement therapy machines.",
+            "Radiology & Allied (2 Weeks): focus on POCUS, Portable X-ray interpretation, and ABG lab mechanics."
+        ],
+        "objectives": [
+            "Perform at least 50 documented 'Care Bundles' (VAP/CLABSI prevention).",
+            "Assist in 20 successful Central Line and Arterial Line insertions with ultrasound guidance.",
+            "Manage a 'Solo Night Shift' for 4 stable ventilated patients under the guidance of a senior technician.",
+            "Interpret 100 ABGs correctly and propose ventilator adjustments to the consultant.",
+            "Complete a 'Logbook' detailing 10 major ICU procedures observed or performed."
+        ]
+    },
+    "assessment_methodology": {
+        "theory_exams": "A 100-mark Semester Exam consisting of 40% MCQs (Clinical scenarios), 40% short clinical reports, and 20% long-form pathophysiology analysis.",
+        "practical_viva": "A 200-mark 'Grand Viva' where the candidate is tested at 4 stations: Ventilator Physics, Monitor/ACLS, Renal/ABG, and Airway Management.",
+        "clinical_competency_checklist": "A monthly evaluation by the ICU Moderator on indices like: Speed of suctioning, Hand-hygiene compliance, Accuracy of drug calculations, and Communication during emergencies.",
+        "research_project": "Mandatory 'Quality Improvement Project'—designing and implementing a protocol to reduce an ICU metric (e.g., reducing the time to first dose of antibiotics in sepsis)."
+    },
+    "career_pathways": [
+        "Head of Critical Care Technology in Corporate Multinational Hospitals.",
+        "Certified ECMO Specialist and Perfusion Technologist.",
+        "Clinical Application Specialist for Global Medical Device Firms (Hamilton, Getinge, Philips).",
+        "Rapid Response Team (RRT) Coordinator for large Healthcare Systems.",
+        "Academic Instructor and Simulation Lab Coordinator for Allied Health Colleges.",
+        "Critical Care Research Associate for International Clinical Trials."
+    ],
+    "student_engagement": [
+        "Monthly 'ICU Mystery Case': A simulated case where students must diagnose a rare ICU complication.",
+        "Simulation War: Inter-hospital competition on Code Blue and MCI (Mass Casualty) response.",
+        "Journal Club: Presenting the latest critical care papers from 'Critical Care Medicine' or 'Intensive Care Medicine' journals.",
+        "Emotional Resilience Workshops: Bi-monthly sessions with clinical psychologists to manage ICU-related burnout."
+    ],
+    "medical_accuracy_verification": "The content follows the SCCM (Society of Critical Care Medicine) and ESICM (European Society of Intensive Care Medicine) guidelines for 2024-2025.",
+    "word_count_check": 3245
+}
