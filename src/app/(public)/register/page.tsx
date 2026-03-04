@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCheckCircle, FaChevronRight, FaEye, FaEyeSlash } from 'react-icons/fa';
 
-interface BatchOption { _id: string; batchCode?: string; name: string; intakeMonth: string; joiningYear: number; status: string; program?: { name: string; code: string; duration_years: number; }; }
+interface BatchOption { _id: string; batchCode?: string; name: string; intakeMonth: string; joiningYear: number; status: string; program?: { name: string; code: string; duration_years: number; }; session?: { name: string; }; }
 
 const inputCls = 'w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:border-transparent transition-all text-sm';
 const inputErrCls = 'w-full bg-red-500/10 border border-red-500/40 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all text-sm';
@@ -287,7 +287,7 @@ export default function RegisterPage() {
                                         <option value="" className="bg-[#0A192F]">— Select your assigned Batch —</option>
                                         {filteredBatches.map(b => (
                                             <option key={b._id} value={b._id} className="bg-[#0A192F]">
-                                                {b.batchCode || b.name} {b.program?.name ? `— ${b.program.name}` : ''}
+                                                {b.batchCode || b.name} {b.program?.name ? `— ${b.program.name}` : ''} {b.session?.name ? `(${b.session.name})` : ''}
                                             </option>
                                         ))}
                                     </select>
@@ -302,8 +302,14 @@ export default function RegisterPage() {
                                     <div className="flex flex-col gap-1 bg-[#10B981]/10 border border-[#10B981]/30 rounded-xl px-3 py-2 text-sm text-[#10B981]">
                                         <div className="flex items-center gap-2">
                                             <span className="text-base">🎓</span>
-                                            <span>Your generated Batch: <strong>{classPreview}</strong></span>
+                                            <span>Your Batch: <strong>{classPreview}</strong></span>
                                         </div>
+                                        {selectedBatch?.session?.name && (
+                                            <div className="flex items-center gap-2 text-[#10B981]/80 text-xs">
+                                                <span className="text-transparent">🎓</span>
+                                                <span>Session: <strong>{selectedBatch.session.name}</strong></span>
+                                            </div>
+                                        )}
                                         <div className="flex items-center gap-2 text-[#10B981]/80 text-xs">
                                             <span className="text-transparent">🎓</span>
                                             <span>Est. Graduation: <strong>{courseEndPreview}</strong></span>

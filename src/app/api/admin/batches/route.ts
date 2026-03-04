@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
-import { Batch, Program } from '@/models/Academic';
+import { Batch, Program, Session } from '@/models/Academic';
 
 // ── GET /api/admin/batches — list batches with filters ─────────────────────
 export async function GET(req: NextRequest) {
@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
 
     const batches = await Batch.find(query)
         .populate('program', 'name code duration_years')
+        .populate('session', 'name')
         .sort({ joiningYear: -1, intakeMonth: 1 })
         .lean();
 
@@ -68,10 +69,24 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, message: `Batch "${existing.name}" already exists for this program, year, and intake.` }, { status: 409 });
     }
 
+    // ── Auto-find or create a matching academic session ─────────────────────
+    const endYear = Number(joiningYear) + (program.duration_years || 3);
+    const sessionName = `${joiningYear}-${endYear}`;
+    let academicSession = await Session.findOne({ name: sessionName });
+    if (!academicSession) {
+        academicSession = await Session.create({
+            name: sessionName,
+            start_date: startDate,
+            end_date: expectedEndDate,
+            is_active: status === 'active',
+        });
+    }
+
     const batch = await Batch.create({
         name: batchCode,
         batchCode,
         program: programId,
+        session: academicSession._id,
         intakeMonth,
         joiningYear: Number(joiningYear),
         courseDurationYears: program.duration_years || 3,
@@ -84,6 +99,9 @@ export async function POST(req: NextRequest) {
         is_active: status !== 'completed',
     });
 
-    const populated = await Batch.findById(batch._id).populate('program', 'name code').lean();
+    const populated = await Batch.findById(batch._id)
+        .populate('program', 'name code')
+        .populate('session', 'name')
+        .lean();
     return NextResponse.json({ success: true, batch: populated }, { status: 201 });
 }

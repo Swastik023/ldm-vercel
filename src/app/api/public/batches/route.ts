@@ -8,7 +8,8 @@ export async function GET() {
     await dbConnect();
     const batches = await Batch.find({ is_active: true })
         .populate('program', 'name code duration_years')
-        .select('name batchCode intakeMonth joiningYear status program')
+        .populate('session', 'name')
+        .select('name batchCode intakeMonth joiningYear status program session')
         .sort({ joiningYear: -1, intakeMonth: 1 })
         .lean();
 
