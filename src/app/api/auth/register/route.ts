@@ -5,6 +5,7 @@ import { User } from '@/models/User';
 import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
 import { isValidEmail, isValidObjectId, sanitizeString, safeParseJSON } from '@/lib/validate';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 /**
  * Compute course end date from joining month/year + program duration.
@@ -19,6 +20,10 @@ function computeCourseEndDate(joiningMonth: 'January' | 'July', joiningYear: num
 }
 
 export async function POST(req: NextRequest) {
+    // Rate limit: 5 registrations per minute per IP
+    const rateLimited = checkRateLimit(req, 'auth-register', 5);
+    if (rateLimited) return rateLimited;
+
     await dbConnect();
 
     const [body, parseErr] = await safeParseJSON(req);

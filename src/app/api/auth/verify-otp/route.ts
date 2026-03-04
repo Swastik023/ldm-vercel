@@ -5,8 +5,13 @@ import { EmailOTP } from '@/models/EmailOTP';
 import { StudentProfile } from '@/models/StudentProfile';
 import { User } from '@/models/User';
 import { safeParseJSON } from '@/lib/validate';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 export async function POST(req: Request) {
+    // Rate limit: 5 OTP verifications per minute per IP
+    const rateLimited = checkRateLimit(req, 'otp-verify', 5);
+    if (rateLimited) return rateLimited;
+
     await dbConnect();
 
     const [body, parseErr] = await safeParseJSON(req);

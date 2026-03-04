@@ -15,13 +15,15 @@ export async function GET() {
 
     await dbConnect();
 
-    const [totalUsers, students, teachers, employees, activeNotices, unreadMessages] = await Promise.all([
+    const [totalUsers, students, teachers, employees, activeNotices, unreadMessages, pendingStudents, rejectedStudents] = await Promise.all([
         User.countDocuments({}),
         User.countDocuments({ role: 'student' }),
         User.countDocuments({ role: 'teacher' }),
         User.countDocuments({ role: 'employee' }),
         Notice.countDocuments({ isActive: true }),
         Contact.countDocuments({ status: 'unread' }),
+        User.countDocuments({ role: 'student', status: { $in: ['pending', 'under_review'] } }),
+        User.countDocuments({ role: 'student', status: 'rejected' }),
     ]);
 
     return NextResponse.json({
@@ -33,6 +35,8 @@ export async function GET() {
             employees,
             activeNotices,
             unreadMessages,
+            pendingStudents,
+            rejectedStudents,
         },
     });
 }

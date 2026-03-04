@@ -5,6 +5,9 @@ import dbConnect from '@/lib/db';
 import { Attendance } from '@/models/Attendance';
 import '@/models/Academic';
 
+const VALID_STATUSES = ['present', 'absent', 'late', 'excused'];
+const VALID_ACTIONS = ['lock', 'unlock'];
+
 // GET /api/admin/attendance?date=YYYY-MM-DD&subject=ID&section=A
 export async function GET(request: Request) {
     const session = await getServerSession(authOptions);
@@ -67,8 +70,8 @@ export async function PATCH(request: Request) {
     await dbConnect();
 
     const { action, attendanceIds } = await request.json();
-    if (!action || !attendanceIds?.length) {
-        return NextResponse.json({ success: false, message: 'Missing params' }, { status: 400 });
+    if (!action || !VALID_ACTIONS.includes(action) || !attendanceIds?.length) {
+        return NextResponse.json({ success: false, message: 'Invalid action or missing IDs. Action must be lock or unlock.' }, { status: 400 });
     }
 
     await Attendance.updateMany(
@@ -91,6 +94,9 @@ export async function PUT(request: Request) {
     const { attendanceId, studentId, status, remarks } = await request.json();
     if (!attendanceId || !studentId || !status) {
         return NextResponse.json({ success: false, message: 'Missing params' }, { status: 400 });
+    }
+    if (!VALID_STATUSES.includes(status)) {
+        return NextResponse.json({ success: false, message: `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}` }, { status: 400 });
     }
 
     const attendance = await Attendance.findById(attendanceId);

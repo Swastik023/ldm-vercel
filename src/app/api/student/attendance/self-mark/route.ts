@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { Attendance } from '@/models/Attendance';
+import { User } from '@/models/User';
 import mongoose from 'mongoose';
 
 // POST /api/student/attendance/self-mark
@@ -38,6 +39,14 @@ export async function POST(request: Request) {
 
     if (attendance.status === 'finalized') {
         return NextResponse.json({ success: false, message: 'Session is finalized' }, { status: 403 });
+    }
+
+    // ── Batch verification — student must belong to the same batch ──────
+    if (attendance.batch) {
+        const student = await User.findById(session.user.id).select('batch').lean();
+        if (!student?.batch || student.batch.toString() !== attendance.batch.toString()) {
+            return NextResponse.json({ success: false, message: 'This attendance session is not for your batch.' }, { status: 403 });
+        }
     }
 
     // Check if student already has a record

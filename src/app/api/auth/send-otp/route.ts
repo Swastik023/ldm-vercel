@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import dbConnect from '@/lib/db';
 import { EmailOTP } from '@/models/EmailOTP';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.hostinger.com',
@@ -19,6 +20,10 @@ function generateOTP(): string {
 }
 
 export async function POST(req: Request) {
+    // Rate limit: 3 OTP sends per minute per IP
+    const rateLimited = checkRateLimit(req, 'otp-send', 3);
+    if (rateLimited) return rateLimited;
+
     await dbConnect();
 
     const { email } = await req.json();

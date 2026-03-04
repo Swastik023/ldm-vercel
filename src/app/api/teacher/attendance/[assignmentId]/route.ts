@@ -7,6 +7,9 @@ import '@/models/Academic';
 import { Attendance } from '@/models/Attendance';
 import { User } from '@/models/User';
 import mongoose from 'mongoose';
+import { safeParseJSON } from '@/lib/validate';
+
+const VALID_STATUSES = ['present', 'absent', 'late', 'excused'];
 
 // GET /api/teacher/attendance/[assignmentId] — fetch students for this assignment
 export async function GET(request: Request, { params }: { params: Promise<{ assignmentId: string }> }) {
@@ -68,8 +71,23 @@ export async function POST(request: Request, { params }: { params: Promise<{ ass
 
     await dbConnect();
 
-    const [{ assignmentId }, { date, records }] = await Promise.all([params, request.json()]);
+    const { assignmentId } = await params;
+    const [body, parseErr] = await safeParseJSON(request);
+    if (parseErr) return parseErr;
+
+    const { date, records } = body;
     // records: Array<{ studentId: string; status: 'present' | 'absent' | 'late' | 'excused'; remarks?: string }>
+
+    if (!date || !Array.isArray(records) || records.length === 0) {
+        return NextResponse.json({ success: false, message: 'Date and records array are required.' }, { status: 400 });
+    }
+
+    // Validate all status values
+    for (const r of records) {
+        if (!r.studentId || !VALID_STATUSES.includes(r.status)) {
+            return NextResponse.json({ success: false, message: `Invalid record: each must have studentId and status (${VALID_STATUSES.join('/')}).` }, { status: 400 });
+        }
+    }
 
     const assignment = await Assignment.findById(assignmentId).lean();
     if (!assignment) {
@@ -111,7 +129,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ ass
         const exist: any = existingMap.get(r.studentId);
 
         // If it's a new record or status changed, default to teacher
-        let markedBy = 'teacher';
+        let markedBy: 'teacher' | 'admin' | 'self' = 'teacher';
 
         if (exist) {
             // Keep original marked_by if status didn't change
