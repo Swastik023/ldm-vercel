@@ -59,11 +59,15 @@ export default function BatchManager({
 
     // Filter states
     const [filterProgram, setFilterProgram] = useState('');
-    const [filterSession, setFilterSession] = useState('');
+    const [filterYear, setFilterYear] = useState('');
+    const [filterMonth, setFilterMonth] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
 
     const filteredBatches = batches.filter(batch => {
         if (filterProgram && batch.program?._id !== filterProgram) return false;
-        if (filterSession && batch.session?._id !== filterSession) return false;
+        if (filterYear && batch.joiningYear !== parseInt(filterYear)) return false;
+        if (filterMonth && batch.intakeMonth !== filterMonth) return false;
+        if (filterStatus && batch.status !== filterStatus) return false;
         return true;
     });
 
@@ -171,6 +175,9 @@ export default function BatchManager({
         }
     };
 
+    // Unique years from batches for the year filter dropdown
+    const availableYears = [...new Set(batches.map(b => b.joiningYear))].sort((a, b) => b - a);
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center mb-4">
@@ -256,8 +263,8 @@ export default function BatchManager({
             </Card>
 
             {/* Filters */}
-            <div className="flex gap-4 bg-white p-4 rounded-lg shadow-sm">
-                <div className="flex-1">
+            <div className="flex gap-4 bg-white p-4 rounded-lg shadow-sm flex-wrap">
+                <div className="flex-1 min-w-[150px]">
                     <label className="text-xs font-medium text-gray-500 uppercase">Filter Program</label>
                     <select
                         className="w-full mt-1 p-2 border rounded"
@@ -268,15 +275,40 @@ export default function BatchManager({
                         {programs.map(p => <option key={p._id} value={p._id}>{p.name}</option>)}
                     </select>
                 </div>
-                <div className="flex-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Filter Session</label>
+                <div className="flex-1 min-w-[120px]">
+                    <label className="text-xs font-medium text-gray-500 uppercase">Filter Year</label>
                     <select
                         className="w-full mt-1 p-2 border rounded"
-                        value={filterSession}
-                        onChange={(e) => setFilterSession(e.target.value)}
+                        value={filterYear}
+                        onChange={(e) => setFilterYear(e.target.value)}
                     >
-                        <option value="">All Sessions</option>
-                        {sessions.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                        <option value="">All Years</option>
+                        {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
+                    </select>
+                </div>
+                <div className="flex-1 min-w-[120px]">
+                    <label className="text-xs font-medium text-gray-500 uppercase">Filter Month</label>
+                    <select
+                        className="w-full mt-1 p-2 border rounded"
+                        value={filterMonth}
+                        onChange={(e) => setFilterMonth(e.target.value)}
+                    >
+                        <option value="">All Months</option>
+                        <option value="January">January</option>
+                        <option value="July">July</option>
+                    </select>
+                </div>
+                <div className="flex-1 min-w-[120px]">
+                    <label className="text-xs font-medium text-gray-500 uppercase">Filter Status</label>
+                    <select
+                        className="w-full mt-1 p-2 border rounded"
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                    >
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="completed">Completed</option>
                     </select>
                 </div>
             </div>
