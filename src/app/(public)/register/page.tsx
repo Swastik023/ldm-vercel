@@ -51,7 +51,22 @@ export default function RegisterPage() {
     const [registeredEmail, setRegisteredEmail] = useState('');
     const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-    const selectedBatch = batches.find(b => b._id === form.batchId);
+    // ── Batch filter state ────────────────────────────────────────────
+    const [filterMonth, setFilterMonth] = useState('');
+    const [filterYear, setFilterYear] = useState('');
+
+    // Derive unique months and years from all batches for filter dropdowns
+    const availableMonths = [...new Set(batches.map(b => b.intakeMonth))].sort();
+    const availableYears = [...new Set(batches.map(b => b.joiningYear))].sort((a, b) => b - a);
+
+    // Filter batches based on selected month and year
+    const filteredBatches = batches.filter(b => {
+        if (filterMonth && b.intakeMonth !== filterMonth) return false;
+        if (filterYear && b.joiningYear !== Number(filterYear)) return false;
+        return true;
+    });
+
+    const selectedBatch = filteredBatches.find(b => b._id === form.batchId);
 
     // Auto-calculate course end date preview
     const courseEndPreview = (() => {
@@ -247,17 +262,38 @@ export default function RegisterPage() {
                                     <FieldErr field="mobileNumber" />
                                 </div>
 
+                                {/* Batch Filters — Month & Year */}
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Intake Month</label>
+                                        <select className={selectCls} value={filterMonth} onChange={e => { setFilterMonth(e.target.value); setForm(prev => ({ ...prev, batchId: '' })); }}>
+                                            <option value="" className="bg-[#0A192F]">All Months</option>
+                                            {availableMonths.map(m => <option key={m} value={m} className="bg-[#0A192F]">{m}</option>)}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-white/80 mb-1.5">Joining Year</label>
+                                        <select className={selectCls} value={filterYear} onChange={e => { setFilterYear(e.target.value); setForm(prev => ({ ...prev, batchId: '' })); }}>
+                                            <option value="" className="bg-[#0A192F]">All Years</option>
+                                            {availableYears.map(y => <option key={y} value={String(y)} className="bg-[#0A192F]">{y}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+
                                 {/* Batch Selection */}
                                 <div>
                                     <label className="block text-sm font-semibold text-white/80 mb-1.5">Select Batch <span className="text-red-400">*</span></label>
                                     <select className={sc('batchId')} value={form.batchId} onChange={set('batchId')}>
                                         <option value="" className="bg-[#0A192F]">— Select your assigned Batch —</option>
-                                        {batches.map(b => (
+                                        {filteredBatches.map(b => (
                                             <option key={b._id} value={b._id} className="bg-[#0A192F]">
                                                 {b.batchCode || b.name} {b.program?.name ? `— ${b.program.name}` : ''}
                                             </option>
                                         ))}
                                     </select>
+                                    {filteredBatches.length === 0 && (filterMonth || filterYear) && (
+                                        <p className="text-yellow-400/80 text-xs mt-1">No batches found for the selected filters. Try different month/year.</p>
+                                    )}
                                     <FieldErr field="batchId" />
                                 </div>
 
