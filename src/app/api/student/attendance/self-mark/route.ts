@@ -49,29 +49,36 @@ export async function POST(request: Request) {
         }
     }
 
-    // Check if student already has a record
-    const existingRecord = attendance.records.find(
-        (r: any) => r.student.toString() === session.user.id
+    // M-05 fix: Atomic self-mark — prevents TOCTOU race condition
+    // Uses $push with condition that student doesn't already exist in records
+    const result = await Attendance.findOneAndUpdate(
+        {
+            _id: attendanceId,
+            'records.student': { $ne: studentId },  // Only if student NOT already in records
+        },
+        {
+            $push: {
+                records: {
+                    student: studentId,
+                    status: 'present',
+                    marked_by: 'self',
+                    remarks: '',
+                },
+            },
+        },
+        { new: true }
     );
 
-    if (existingRecord) {
-        // Already marked (by teacher or self)
-        if (existingRecord.marked_by === 'self') {
+    if (!result) {
+        // Student already exists in records — either self-marked or teacher-marked
+        const existing = attendance.records.find(
+            (r: any) => r.student.toString() === session.user.id
+        );
+        if (existing?.marked_by === 'self') {
             return NextResponse.json({ success: false, message: 'You have already marked your attendance' }, { status: 409 });
         }
-        // If teacher already marked them, don't override
         return NextResponse.json({ success: false, message: 'Your attendance has already been recorded by the teacher' }, { status: 409 });
     }
-
-    // Add student as present (self-marked)
-    attendance.records.push({
-        student: studentId,
-        status: 'present',
-        marked_by: 'self',
-        remarks: '',
-    } as any);
-
-    await attendance.save();
 
     return NextResponse.json({ success: true, message: 'Attendance marked successfully!' });
 }

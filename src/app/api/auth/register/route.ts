@@ -75,6 +75,10 @@ export async function POST(req: NextRequest) {
     if (!batch.program) {
         return NextResponse.json({ success: false, message: 'Batch program details are missing.' }, { status: 400 });
     }
+    // M-02: Check batch capacity
+    if (batch.capacity && batch.current_students >= batch.capacity) {
+        return NextResponse.json({ success: false, message: 'This batch is full. Please select a different batch or contact admin.' }, { status: 400 });
+    }
 
     const programId = batch.program._id;
     const joiningMonth = batch.intakeMonth;

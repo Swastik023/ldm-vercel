@@ -60,7 +60,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ success: true, data: JSON.parse(JSON.stringify(flatRecords)) });
 }
 
-// PATCH /api/admin/attendance — bulk lock/unlock
+// PATCH /api/admin/attendance — bulk lock/unlock with state enforcement
 export async function PATCH(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id || session.user.role !== 'admin') {
@@ -74,12 +74,18 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ success: false, message: 'Invalid action or missing IDs. Action must be lock or unlock.' }, { status: 400 });
     }
 
-    await Attendance.updateMany(
-        { _id: { $in: attendanceIds } },
-        { $set: { is_locked: action === 'lock' } }
+    // M-06: Enforce state transitions — lock only unlocked, unlock only locked
+    const targetState = action === 'lock';
+    const result = await Attendance.updateMany(
+        { _id: { $in: attendanceIds }, is_locked: { $ne: targetState } },
+        { $set: { is_locked: targetState, status: targetState ? 'finalized' : 'in_progress' } }
     );
 
-    return NextResponse.json({ success: true, message: `Records ${action}ed` });
+    return NextResponse.json({
+        success: true,
+        message: `${result.modifiedCount} record(s) ${action}ed. ${attendanceIds.length - result.modifiedCount} were already in the target state.`,
+        modifiedCount: result.modifiedCount,
+    });
 }
 
 // PUT /api/admin/attendance — edit single student record
@@ -102,6 +108,11 @@ export async function PUT(request: Request) {
     const attendance = await Attendance.findById(attendanceId);
     if (!attendance) {
         return NextResponse.json({ success: false, message: 'Record not found' }, { status: 404 });
+    }
+
+    // M-06: Reject edits on finalized/locked records
+    if (attendance.is_locked || attendance.status === 'finalized') {
+        return NextResponse.json({ success: false, message: 'Cannot edit a locked/finalized attendance record. Unlock it first.' }, { status: 403 });
     }
 
     const studentRecord = attendance.records.find((r: any) => r.student.toString() === studentId);

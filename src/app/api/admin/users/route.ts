@@ -3,10 +3,15 @@ import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { Batch } from '@/models/Academic';
 import '@/models/Academic';
+import { Class } from '@/models/Class';
 import bcrypt from 'bcryptjs';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { autoCreateStudentFee } from '@/lib/autoCreateStudentFee';
+import { StudentFee } from '@/models/StudentFee';
+import { StudentDocuments } from '@/models/StudentDocuments';
+import { FeePayment } from '@/models/FeePayment';
+import { ProTestAttempt } from '@/models/TestAttempt';
 
 // GET /api/admin/users - list all users
 export async function GET(request: NextRequest) {
@@ -63,6 +68,29 @@ export async function POST(request: NextRequest) {
         await Batch.findByIdAndUpdate(batchId, { $inc: { current_students: 1 } });
     }
 
+    // M-08: Auto-create Class record for admin-created students
+    if (role === 'student' && batchId) {
+        try {
+            const batchData = await Batch.findById(batchId).populate('program', 'name code duration_years').lean() as any;
+            if (batchData) {
+                const jy = batchData.joiningYear;
+                const dur = batchData.program?.duration_years || 3;
+                let cls = await Class.findOne({ batchId: batchData._id, sessionFrom: jy, sessionTo: jy + dur });
+                if (!cls) {
+                    cls = await Class.create({
+                        batchId: batchData._id,
+                        sessionFrom: jy,
+                        sessionTo: jy + dur,
+                        className: `${batchData.program?.name || batchData.name} (${jy}-${jy + dur})`,
+                    });
+                }
+                await User.findByIdAndUpdate(newUser._id, { classId: cls._id, session: batchData.session });
+            }
+        } catch (e) {
+            console.warn('[admin/users POST] Class auto-create failed:', e);
+        }
+    }
+
     // Auto-create default fee record from CoursePricing (best-effort — never blocks user creation)
     let feeAutoCreated = false;
     let feeAutoMessage = 'No batch assigned — fee not auto-created.';
@@ -92,12 +120,30 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ success: false, message: 'User ID required' }, { status: 400 });
 
+    // L-07: Prevent admin self-delete
+    if (id === session.user.id) {
+        return NextResponse.json({ success: false, message: 'You cannot delete your own account.' }, { status: 403 });
+    }
+
     await dbConnect();
-    // If student had a batch, decrement count before deleting
     const userToDelete = await User.findById(id).select('role batch').lean();
-    if (userToDelete?.role === 'student' && userToDelete.batch) {
+    if (!userToDelete) {
+        return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+    }
+
+    // If student had a batch, decrement count before deleting
+    if (userToDelete.role === 'student' && userToDelete.batch) {
         await Batch.findByIdAndUpdate(userToDelete.batch, { $inc: { current_students: -1 } });
     }
+
+    // M-09: Cascade delete — remove orphaned data
+    await Promise.all([
+        StudentDocuments.deleteMany({ userId: id }),
+        StudentFee.deleteMany({ studentId: id }),
+        FeePayment.deleteMany({ student: id }),
+        ProTestAttempt.deleteMany({ studentId: id }),
+    ]);
+
     await User.findByIdAndDelete(id);
-    return NextResponse.json({ success: true, message: 'User deleted' });
+    return NextResponse.json({ success: true, message: 'User and related records deleted.' });
 }

@@ -71,6 +71,8 @@ export async function PATCH(req: NextRequest) {
                 } catch (e) {
                     console.warn('[approve] Fee auto-create failed (non-blocking):', e);
                 }
+                // M-01 fix: Increment batch student count on approval
+                await Batch.findByIdAndUpdate(updated.batch, { $inc: { current_students: 1 } });
             }
 
             return NextResponse.json({

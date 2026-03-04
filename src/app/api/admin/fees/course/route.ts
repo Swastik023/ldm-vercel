@@ -70,20 +70,28 @@ export async function PATCH(req: NextRequest) {
             { 'pricing.totalFee': base }
         );
 
-        // Update all linked StudentFee records
-        const fees = await StudentFee.find({ courseId });
-        let updatedCount = 0;
-        for (const fee of fees) {
-            fee.baseFee = base;
-            fee.finalFee = round2(base - (base * fee.discountPct) / 100);
-            await fee.save();
-            updatedCount++;
-        }
+        // M-10 fix: Bulk update all linked StudentFee records in a single atomic operation
+        const result = await StudentFee.updateMany(
+            { courseId },
+            [
+                {
+                    $set: {
+                        baseFee: base,
+                        finalFee: {
+                            $round: [
+                                { $subtract: [base, { $multiply: [base, { $divide: ['$discountPct', 100] }] }] },
+                                2,
+                            ],
+                        },
+                    },
+                },
+            ]
+        );
 
         return NextResponse.json({
             success: true,
-            message: `Course fee updated to ₹${base.toLocaleString('en-IN')}. ${updatedCount} student fee records updated.`,
-            updatedCount,
+            message: `Course fee updated to ₹${base.toLocaleString('en-IN')}. ${result.modifiedCount} student fee records updated.`,
+            updatedCount: result.modifiedCount,
         });
     } catch (err: any) {
         return NextResponse.json({ success: false, message: err?.message }, { status: 500 });

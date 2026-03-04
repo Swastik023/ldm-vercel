@@ -228,36 +228,40 @@ export async function POST(req: NextRequest) {
 
         const courseEndDate = computeCourseEndDate(joiningMonth as 'January' | 'July', jyInt, program.duration_years);
 
-        // ── Determine Auto-Batch ──
-        const batchName = joiningMonth === 'January' ? `${jyInt}${program.code}` : `${jyInt + 2}${program.code}`;
-
-        let batch = await Batch.findOne({ name: batchName, program: program._id });
+        // ── Find or create batch using compound index (same as admin batch creation) ──
+        let batch = await Batch.findOne({ program: program._id, joiningYear: jyInt, intakeMonth: joiningMonth });
         if (!batch) {
-            let sessionDoc = await Session.findOne({ is_active: true }).sort({ start_date: -1 });
-            if (!sessionDoc) sessionDoc = await Session.findOne().sort({ start_date: -1 });
+            const monthCode = joiningMonth === 'January' ? 'JAN' : 'JUL';
+            const batchCode = `${program.code.toUpperCase()}_${jyInt}_${monthCode}`;
+            const startDate = joiningMonth === 'January' ? new Date(jyInt, 0, 1) : new Date(jyInt, 6, 1);
+            const endYear = jyInt + (program.duration_years || 3);
+            const sessionName = `${jyInt}-${endYear}`;
 
+            let sessionDoc = await Session.findOne({ name: sessionName });
             if (!sessionDoc) {
                 sessionDoc = await Session.create({
-                    name: `Session ${jyInt}-${jyInt + program.duration_years}`,
-                    start_date: new Date(jyInt, 0, 1),
-                    end_date: new Date(jyInt + program.duration_years, 11, 31),
-                    is_active: true
+                    name: sessionName,
+                    start_date: startDate,
+                    end_date: courseEndDate,
+                    is_active: true,
                 });
             }
+
             batch = await Batch.create({
-                name: batchName,
+                name: batchCode,
+                batchCode,
                 program: program._id,
                 session: sessionDoc._id,
                 intakeMonth: joiningMonth,
                 joiningYear: jyInt,
                 courseDurationYears: program.duration_years,
-                startDate: joiningMonth === 'January' ? new Date(jyInt, 0, 1) : new Date(jyInt, 6, 1),
+                startDate,
                 expectedEndDate: courseEndDate,
                 status: 'upcoming',
                 capacity: 60,
                 current_students: 0,
                 current_semester: 1,
-                is_active: true
+                is_active: true,
             });
         }
 

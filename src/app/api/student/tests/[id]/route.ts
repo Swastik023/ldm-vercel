@@ -76,6 +76,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             subject: test.subject,
         },
         questions,
+        // M-03: Server-side start timestamp for timing enforcement
+        serverStartedAt: new Date().toISOString(),
     });
 }
 
@@ -94,9 +96,24 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const answerKey = await TestAnswerKey.findOne({ testId: id }).lean();
     if (!answerKey) return NextResponse.json({ success: false, message: 'Answer key not found. Contact admin.' }, { status: 500 });
 
-    const { answers } = await req.json(); // [{ questionId, selectedOption }]
+    const body = await req.json();
+    const { answers, startedAt: clientStartedAt } = body;
     if (!Array.isArray(answers)) {
         return NextResponse.json({ success: false, message: 'Invalid answers format.' }, { status: 400 });
+    }
+
+    // M-03: Server-side timing enforcement
+    const GRACE_MINUTES = 2; // Allow 2 extra minutes for network latency
+    if (clientStartedAt) {
+        const started = new Date(clientStartedAt);
+        const now = new Date();
+        const elapsedMinutes = (now.getTime() - started.getTime()) / (1000 * 60);
+        if (elapsedMinutes > test.durationMinutes + GRACE_MINUTES) {
+            return NextResponse.json({
+                success: false,
+                message: `Time limit exceeded. Test duration: ${test.durationMinutes} minutes. You took ${Math.round(elapsedMinutes)} minutes.`,
+            }, { status: 400 });
+        }
     }
 
     // Build student answer map
@@ -159,7 +176,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         attempt = await ProTestAttempt.create({
             testId: id,
             studentId: session.user.id,
-            startedAt: new Date(Date.now() - test.durationMinutes * 60 * 1000), // Approx
+            startedAt: clientStartedAt ? new Date(clientStartedAt) : new Date(),
             submittedAt: new Date(),
             status: 'submitted',
             answers: test.questions.map(q => ({
