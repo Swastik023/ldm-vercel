@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db';
 import { FeeRecord } from '@/models/FeeRecord';
 import { calcFees } from '@/lib/feeCalculator';
 import { User } from '@/models/User';
+import { escapeRegex } from '@/lib/validate';
 
 // GET /api/admin/finance/fee-records — list with optional filters
 export async function GET(req: Request) {
@@ -18,7 +19,7 @@ export async function GET(req: Request) {
     const status = searchParams.get('status'); // 'paid' | 'partial' | 'unpaid'
 
     const query: Record<string, unknown> = {};
-    if (course) query.course = { $regex: course, $options: 'i' };
+    if (course) query.course = { $regex: escapeRegex(course), $options: 'i' };
     if (status === 'paid') query.remainingAmount = 0;
     else if (status === 'unpaid') query.amountPaid = 0;
     else if (status === 'partial') query.$and = [{ amountPaid: { $gt: 0 } }, { remainingAmount: { $gt: 0 } }];

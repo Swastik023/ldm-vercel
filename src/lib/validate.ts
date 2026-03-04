@@ -59,6 +59,14 @@ export function sanitizeString(value: unknown, maxLength = 200): string | null {
 }
 
 /**
+ * Escape special regex characters in user input before passing to MongoDB $regex.
+ * Prevents ReDoS and NoSQL regex injection attacks.
+ */
+export function escapeRegex(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * Safe JSON body parser. Wraps req.json() in try-catch.
  * Returns [body, null] on success or [null, Response] on failure.
  */

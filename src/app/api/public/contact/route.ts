@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         }
 
         // Phone format check (if provided)
-        if (phone && !/^[\d\s\+\-\(\)]{7,15}$/.test(phone)) {
+        if (phone && !/(?=.*\d)^[\d\s\+\-\(\)]{7,15}$/.test(phone)) {
             return NextResponse.json({ success: false, message: 'Please enter a valid phone number.' }, { status: 400 });
         }
 

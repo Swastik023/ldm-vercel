@@ -5,6 +5,7 @@ import { User } from '@/models/User';
 import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
 import { Class } from '@/models/Class';
+import { EmailOTP } from '@/models/EmailOTP';
 import { isValidEmail, isValidObjectId, sanitizeString, safeParseJSON } from '@/lib/validate';
 import { checkRateLimit } from '@/lib/rateLimit';
 
@@ -61,11 +62,25 @@ export async function POST(req: NextRequest) {
     if (password.length < 8) {
         return NextResponse.json({ success: false, message: 'Password must be at least 8 characters.' }, { status: 400 });
     }
+    // HIGH-05: Require at least one uppercase, one lowercase, and one digit
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+        return NextResponse.json({ success: false, message: 'Password must include at least one uppercase letter, one lowercase letter, and one number.' }, { status: 400 });
+    }
     if (!isValidObjectId(batchId)) {
         return NextResponse.json({ success: false, message: 'Invalid batch selection.' }, { status: 400 });
     }
 
     const roll = String(rollNumber).trim();
+
+    // ── CRIT-04: Verify email is OTP-verified before allowing registration ──
+    const normalizedEmail = email.toLowerCase().trim();
+    const otpRecord = await EmailOTP.findOne({ email: normalizedEmail, verified: true });
+    if (!otpRecord) {
+        return NextResponse.json({
+            success: false,
+            message: 'Please verify your email with OTP before registering.'
+        }, { status: 400 });
+    }
 
     // ── Validate Batch ────────────────────────────────────────────────────────
     const batch = await Batch.findById(batchId).populate('program');

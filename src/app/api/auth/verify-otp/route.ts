@@ -38,6 +38,8 @@ export async function POST(req: Request) {
     }
 
     if (record.attempts >= 3) {
+        // MED-08: Clean up the record after max failures
+        await EmailOTP.findOneAndDelete({ email: normalizedEmail });
         return NextResponse.json({ success: false, message: 'Too many wrong attempts. Please request a new code.' }, { status: 429 });
     }
 

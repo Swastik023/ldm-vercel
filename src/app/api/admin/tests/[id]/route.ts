@@ -21,12 +21,16 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         .lean();
     if (!test) return NextResponse.json({ success: false, message: 'Test not found.' }, { status: 404 });
 
+    // HIGH-03: Teachers can only see full questions of their own tests
+    const isOwner = session.user.role === 'admin' || String(test.createdBy) === session.user.id;
+    const testResponse = isOwner ? test : { ...test, questions: undefined, questionCount: (test.questions ?? []).length };
+
     const attempts = await ProTestAttempt.find({ testId: id })
         .populate('studentId', 'fullName email rollNumber')
-        .sort({ marksObtained: -1 })   // Leaderboard order
+        .sort({ marksObtained: -1 })
         .lean();
 
-    return NextResponse.json({ success: true, test, attempts });
+    return NextResponse.json({ success: true, test: testResponse, attempts });
 }
 
 // ── PATCH /api/admin/tests/[id] — toggle isActive / toggle isPublished ──────
@@ -42,8 +46,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const allowedFields: Record<string, unknown> = {};
     if (typeof body.isActive === 'boolean') allowedFields.isActive = body.isActive;
 
-    const test = await ProTest.findByIdAndUpdate(id, allowedFields, { new: true });
-    if (!test) return NextResponse.json({ success: false, message: 'Test not found.' }, { status: 404 });
+    // HIGH-02: Teachers can only toggle their own tests
+    const query = session.user.role === 'admin' ? { _id: id } : { _id: id, createdBy: session.user.id };
+    const test = await ProTest.findOneAndUpdate(query, allowedFields, { new: true });
+    if (!test) return NextResponse.json({ success: false, message: 'Test not found or not owned by you.' }, { status: 404 });
     return NextResponse.json({ success: true, test });
 }
 
@@ -56,9 +62,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const { id } = await params;
     await dbConnect();
 
-    await ProTest.findByIdAndDelete(id);
-    await TestAnswerKey.deleteOne({ testId: id });
-    await ProTestAttempt.deleteMany({ testId: id });
+    // MED-06: Check test exists before cascading delete
+    const test = await ProTest.findById(id);
+    if (!test) return NextResponse.json({ success: false, message: 'Test not found.' }, { status: 404 });
+
+    await Promise.all([
+        ProTest.findByIdAndDelete(id),
+        TestAnswerKey.deleteOne({ testId: id }),
+        ProTestAttempt.deleteMany({ testId: id }),
+    ]);
 
     return NextResponse.json({ success: true, message: 'Test, answer key, and all attempts deleted.' });
 }

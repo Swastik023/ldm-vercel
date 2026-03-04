@@ -31,10 +31,11 @@ export async function GET() {
         .populate('programId', 'name')
         .lean();
 
-    // Fetch attendance records where this student appears
-    const attendanceRecords = await Attendance.find({
-        'records.student': studentId
-    }).lean();
+    // MED-01: Filter attendance by student's batch for performance
+    const attendanceQuery: any = { 'records.student': studentId };
+    if (userDoc?.batch) attendanceQuery.batch = (userDoc.batch as any)._id || userDoc.batch;
+
+    const attendanceRecords = await Attendance.find(attendanceQuery).lean();
 
     let present = 0;
     let absent = 0;

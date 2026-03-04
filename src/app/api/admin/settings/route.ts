@@ -34,7 +34,11 @@ export async function PATCH(req: NextRequest) {
         }
         settings.intakeMonths = filtered;
     }
-    if (body.collegeName !== undefined) settings.collegeName = body.collegeName;
+    if (body.collegeName !== undefined) {
+        const name = typeof body.collegeName === 'string' ? body.collegeName.trim().slice(0, 200) : '';
+        if (!name) return NextResponse.json({ success: false, message: 'College name cannot be empty.' }, { status: 400 });
+        settings.collegeName = name;
+    }
 
     await settings.save();
     return NextResponse.json({ success: true, settings });

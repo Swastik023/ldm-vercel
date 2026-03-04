@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import connectDB from "@/lib/db";
 import { User } from "@/models/User";
 import bcrypt from "bcryptjs";
+import { rateLimit } from "@/lib/rateLimit";
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -18,10 +19,16 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid credentials");
                 }
 
+                // CRIT-02: Rate limit login — 5 attempts per minute per identifier
+                const identifier = credentials.username.trim().toLowerCase();
+                const loginLimit = rateLimit(identifier, 'auth-login', 5, 60_000);
+                if (!loginLimit.allowed) {
+                    throw new Error(`Too many login attempts. Please try again in ${loginLimit.retryAfterSeconds} seconds.`);
+                }
+
                 await connectDB();
 
                 // Accept login by username, email, OR roll number
-                const identifier = credentials.username.trim().toLowerCase();
                 const user = await User.findOne({
                     $or: [
                         { username: identifier },

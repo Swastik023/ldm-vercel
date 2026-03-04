@@ -115,7 +115,7 @@ export async function PUT(
         return NextResponse.json({ success: true, requirement: updated });
     } catch (error: any) {
         console.error('Update Requirement Error:', error);
-        return NextResponse.json({ success: false, message: 'Update failed', error: error.message }, { status: 500 });
+        return NextResponse.json({ success: false, message: 'Update failed',  }, { status: 500 });
     }
 }
 
@@ -156,6 +156,6 @@ export async function DELETE(
         return NextResponse.json({ success: true, message: 'Requirement deactivated' });
     } catch (error: any) {
         console.error('Delete Requirement Error:', error);
-        return NextResponse.json({ success: false, message: 'Delete failed', error: error.message }, { status: 500 });
+        return NextResponse.json({ success: false, message: 'Delete failed',  }, { status: 500 });
     }
 }

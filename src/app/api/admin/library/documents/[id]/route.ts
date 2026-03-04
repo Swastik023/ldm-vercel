@@ -74,7 +74,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     } catch (error: any) {
         await sessionObj.abortTransaction();
         sessionObj.endSession();
-        return NextResponse.json({ success: false, message: 'Failed to update document version', error: error.message }, { status: 500 });
+        return NextResponse.json({ success: false, message: 'Failed to update document version',  }, { status: 500 });
     }
 }
 

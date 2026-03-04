@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import dbConnect from '@/lib/db';
 import { EmailOTP } from '@/models/EmailOTP';
@@ -15,8 +16,9 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// CRIT-03 fix: Use cryptographically secure random number generator
 function generateOTP(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    return crypto.randomInt(100000, 999999).toString();
 }
 
 export async function POST(req: Request) {

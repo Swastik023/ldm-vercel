@@ -12,8 +12,9 @@ import { StudentFee } from '@/models/StudentFee';
 import { StudentDocuments } from '@/models/StudentDocuments';
 import { FeePayment } from '@/models/FeePayment';
 import { ProTestAttempt } from '@/models/TestAttempt';
+import { AuditLog } from '@/models/AuditLog';
 
-// GET /api/admin/users - list all users
+// GET /api/admin/users - list all users (with pagination)
 export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== 'admin') {
@@ -21,13 +22,22 @@ export async function GET(request: NextRequest) {
     }
 
     await dbConnect();
-    const users = await User.find({})
-        .select('-password')
-        .populate('session', 'name')
-        .populate('batch', 'name')
-        .sort({ createdAt: -1 })
-        .lean();
-    return NextResponse.json({ success: true, users });
+
+    const { searchParams } = new URL(request.url);
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+    const limit = Math.min(100, parseInt(searchParams.get('limit') || '50'));
+
+    const [users, total] = await Promise.all([
+        User.find({})
+            .select('-password')
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean(),
+        User.countDocuments({}),
+    ]);
+
+    return NextResponse.json({ success: true, users, total, page, pages: Math.ceil(total / limit) });
 }
 
 // POST /api/admin/users - create a new user
@@ -50,7 +60,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: false, message: 'Username or email already exists' }, { status: 409 });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = await User.create({
         username,
         email,
@@ -105,6 +115,17 @@ export async function POST(request: NextRequest) {
     }
 
     const { password: _pw, ...userWithoutPw } = newUser.toObject();
+
+    // HIGH-06: Audit log for user creation
+    await AuditLog.create({
+        action: 'CREATE',
+        entityType: 'User',
+        entityId: newUser._id,
+        performedBy: session.user.id,
+        changes: [{ field: 'all', old: null, new: { username, email, role, fullName } }],
+        ipAddress: request.headers.get('x-forwarded-for') || '127.0.0.1',
+    });
+
     return NextResponse.json({ success: true, user: userWithoutPw, feeAutoCreated, feeAutoMessage }, { status: 201 });
 }
 
@@ -145,5 +166,16 @@ export async function DELETE(request: NextRequest) {
     ]);
 
     await User.findByIdAndDelete(id);
+
+    // HIGH-06: Audit log for user deletion
+    await AuditLog.create({
+        action: 'DELETE',
+        entityType: 'User',
+        entityId: id,
+        performedBy: session.user.id,
+        changes: [{ field: 'deleted', old: { role: userToDelete.role }, new: null }],
+        ipAddress: request.headers.get('x-forwarded-for') || '127.0.0.1',
+    });
+
     return NextResponse.json({ success: true, message: 'User and related records deleted.' });
 }

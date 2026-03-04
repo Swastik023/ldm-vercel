@@ -6,6 +6,7 @@ import { Assignment, Batch } from '@/models/Academic';
 import { User } from '@/models/User';
 import { Result } from '@/models/Result';
 import '@/models/Academic';
+import { safeParseJSON } from '@/lib/validate';
 
 export async function GET(
     req: Request,
@@ -69,7 +70,8 @@ export async function POST(
     const session = await getServerSession(authOptions);
     if (session?.user?.role !== 'teacher') return NextResponse.json({ success: false }, { status: 401 });
 
-    const body = await req.json();
+    const [body, parseErr] = await safeParseJSON(req);
+    if (parseErr) return parseErr;
     const { exam_type, max_marks, marks } = body;
 
     if (!exam_type || !max_marks || !marks || !Array.isArray(marks)) {

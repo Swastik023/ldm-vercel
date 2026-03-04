@@ -21,9 +21,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ as
     const { assignmentId } = await params;
     const { action, durationMinutes = 30, date } = await request.json();
 
-    const assignment = await Assignment.findById(assignmentId).lean();
+    const assignment = await Assignment.findOne({
+        _id: assignmentId,
+        teacher: session.user.id,
+    }).lean();
     if (!assignment) {
-        return NextResponse.json({ success: false, message: 'Assignment not found' }, { status: 404 });
+        return NextResponse.json({ success: false, message: 'Assignment not found or not assigned to you' }, { status: 404 });
     }
 
     const attendanceDate = new Date(date || new Date().toISOString().split('T')[0]);
@@ -124,9 +127,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ assi
     const { searchParams } = new URL(request.url);
     const dateStr = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
-    const assignment = await Assignment.findById(assignmentId).lean();
+    const assignment = await Assignment.findOne({
+        _id: assignmentId,
+        teacher: session.user.id,
+    }).lean();
     if (!assignment) {
-        return NextResponse.json({ success: false, message: 'Assignment not found' }, { status: 404 });
+        return NextResponse.json({ success: false, message: 'Assignment not found or not assigned to you' }, { status: 404 });
     }
 
     const attendanceDate = new Date(dateStr);

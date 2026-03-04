@@ -71,6 +71,6 @@ export async function PUT(
         return NextResponse.json({ success: true, submission });
     } catch (error: any) {
         console.error('Review Submission Error:', error);
-        return NextResponse.json({ success: false, message: 'Review failed', error: error.message }, { status: 500 });
+        return NextResponse.json({ success: false, message: 'Review failed',  }, { status: 500 });
     }
 }

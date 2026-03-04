@@ -30,6 +30,13 @@ export default withAuth(
                 );
             }
         }
+        // MED-09: Block pending/under_review students from calling student APIs
+        if (path.startsWith('/api/student/') && role === 'student' && status !== 'active') {
+            return NextResponse.json(
+                { success: false, message: 'Your account is not yet approved. Please wait for admin approval.' },
+                { status: 403 }
+            );
+        }
         if (path.startsWith('/api/teacher/') && role !== 'teacher') {
             return NextResponse.json(
                 { success: false, message: 'Unauthorized — teacher access required' },

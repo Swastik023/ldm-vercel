@@ -106,6 +106,6 @@ export async function POST(req: Request) {
         await sessionObj.abortTransaction();
         sessionObj.endSession();
         console.error('Document Upload Failed:', error);
-        return NextResponse.json({ success: false, message: 'Failed to create document', error: error.message }, { status: 500 });
+        return NextResponse.json({ success: false, message: 'Failed to create document',  }, { status: 500 });
     }
 }

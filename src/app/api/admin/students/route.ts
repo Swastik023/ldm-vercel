@@ -6,6 +6,7 @@ import { User } from '@/models/User';
 // Must import these so Mongoose registers the schemas before populate() runs
 import '@/models/Class';
 import '@/models/Academic';
+import { escapeRegex } from '@/lib/validate';
 
 // GET /api/admin/students?batchId=&classId=&sessionFrom=&sessionTo=&rollNumber=&page=&limit=
 export async function GET(req: NextRequest) {
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
         if (classId) filter.classId = classId;
         if (sessionFrom) filter.sessionFrom = parseInt(sessionFrom);
         if (sessionTo) filter.sessionTo = parseInt(sessionTo);
-        if (rollNumber) filter.rollNumber = { $regex: rollNumber, $options: 'i' };
+        if (rollNumber) filter.rollNumber = { $regex: escapeRegex(rollNumber), $options: 'i' };
 
         const [students, total] = await Promise.all([
             User.find(filter)
