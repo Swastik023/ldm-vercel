@@ -3,10 +3,11 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
-// Must import so Mongoose registers schemas before populate() runs
-import '@/models/Class';
+import { Class } from '@/models/Class';
 import { Batch } from '@/models/Academic';
 import '@/models/Academic';
+import '@/models/Class';
+import { autoCreateStudentFee } from '@/lib/autoCreateStudentFee';
 
 // PATCH /api/admin/users/approve
 // Approve:  { userId, action: 'approve' }
@@ -32,10 +33,44 @@ export async function PATCH(req: NextRequest) {
                 userId,
                 { status: 'active', rejectionReasons: null },
                 { new: true }
-            ).select('fullName email status');
+            ).select('fullName email status batch programId joiningYear courseEndDate');
 
             if (!updated) {
                 return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+            }
+
+            // ── Auto-link: Create Class record if missing ─────────────────
+            if (updated.batch && !updated.classId) {
+                try {
+                    const batch = await Batch.findById(updated.batch).populate('program', 'name code duration_years').lean() as any;
+                    if (batch) {
+                        const jy = batch.joiningYear;
+                        const dur = batch.program?.duration_years || 3;
+                        const existingClass = await Class.findOne({ batchId: batch._id, sessionFrom: jy, sessionTo: jy + dur });
+                        if (!existingClass) {
+                            const cls = await Class.create({
+                                batchId: batch._id,
+                                sessionFrom: jy,
+                                sessionTo: jy + dur,
+                                className: `${batch.program?.name || batch.name} (${jy}-${jy + dur})`,
+                            });
+                            await User.findByIdAndUpdate(userId, { classId: cls._id });
+                        } else {
+                            await User.findByIdAndUpdate(userId, { classId: existingClass._id });
+                        }
+                    }
+                } catch (e) {
+                    console.warn('[approve] Class auto-create failed (non-blocking):', e);
+                }
+            }
+
+            // ── Auto-link: Create StudentFee record if missing ────────────
+            if (updated.batch) {
+                try {
+                    await autoCreateStudentFee(userId, updated.batch);
+                } catch (e) {
+                    console.warn('[approve] Fee auto-create failed (non-blocking):', e);
+                }
             }
 
             return NextResponse.json({
@@ -92,9 +127,11 @@ export async function GET(req: NextRequest) {
         const statusFilter = searchParams.get('status') || 'pending';
 
         const users = await User.find({ status: statusFilter, role: 'student' })
-            .select('fullName email mobileNumber rollNumber sessionFrom sessionTo createdAt status batch classId provider rejectionReasons isProfileComplete')
-            .populate('batch', 'name')
+            .select('fullName email mobileNumber rollNumber sessionFrom sessionTo isProfileComplete status createdAt batch classId provider rejectionReasons programId session joiningMonth joiningYear')
+            .populate('batch', 'name batchCode')
             .populate('classId', 'className')
+            .populate('programId', 'name code')
+            .populate('session', 'name')
             .sort({ createdAt: -1 })
             .lean();
 

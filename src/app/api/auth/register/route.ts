@@ -4,6 +4,7 @@ import dbConnect from '@/lib/db';
 import { User } from '@/models/User';
 import { Program, Batch, Session } from '@/models/Academic';
 import '@/models/Academic';
+import { Class } from '@/models/Class';
 import { isValidEmail, isValidObjectId, sanitizeString, safeParseJSON } from '@/lib/validate';
 import { checkRateLimit } from '@/lib/rateLimit';
 
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await (User.create as any)({
+    const newUser = await (User.create as any)({
         fullName: safeName,
         email: email.toLowerCase().trim(),
         username,
@@ -124,6 +125,25 @@ export async function POST(req: NextRequest) {
         status: 'pending',
         isProfileComplete: false,
     });
+
+    // ── Auto-create Class record — so user.classId is linked from start ─────
+    try {
+        const dur = (batch.program as any)?.duration_years || 3;
+        const endY = jyInt + dur;
+        let cls = await Class.findOne({ batchId: batch._id, sessionFrom: jyInt, sessionTo: endY });
+        if (!cls) {
+            cls = await Class.create({
+                batchId: batch._id,
+                sessionFrom: jyInt,
+                sessionTo: endY,
+                className: `${(batch.program as any)?.name || batch.name} (${jyInt}-${endY})`,
+            });
+        }
+        await User.findByIdAndUpdate(newUser._id, { classId: cls._id });
+    } catch (e) {
+        // Non-blocking — Class creation failure shouldn't prevent registration
+        console.warn('[register] Class auto-create failed:', e);
+    }
 
     return NextResponse.json({
         success: true,
