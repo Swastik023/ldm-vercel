@@ -11,8 +11,8 @@ export interface IAttendance extends Document {
     date: Date;
     subject: mongoose.Types.ObjectId;
     teacher: mongoose.Types.ObjectId;
-    session: mongoose.Types.ObjectId;
-    section: string;
+    session?: mongoose.Types.ObjectId;   // Optional — assignments may not have a session
+    section?: string;
     batch?: mongoose.Types.ObjectId;
     records: IAttendanceRecord[];
     is_locked: boolean;
@@ -26,8 +26,8 @@ const AttendanceSchema = new Schema<IAttendance>({
     date: { type: Date, required: true },
     subject: { type: Schema.Types.ObjectId, ref: 'Subject', required: true },
     teacher: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    session: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
-    section: { type: String, required: true },
+    session: { type: Schema.Types.ObjectId, ref: 'Session' },       // Optional
+    section: { type: String, default: '' },
     batch: { type: Schema.Types.ObjectId, ref: 'Batch' },
     records: [{
         student: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -42,8 +42,8 @@ const AttendanceSchema = new Schema<IAttendance>({
     marked_at: { type: Date, default: Date.now }
 }, { timestamps: true });
 
-// Index for quick lookup of attendance by date/subject/section
-AttendanceSchema.index({ date: 1, subject: 1, section: 1 }, { unique: true });
+// Index for quick lookup of attendance by date/subject/batch
+AttendanceSchema.index({ date: 1, subject: 1, batch: 1 }, { unique: true });
 // Fast student-specific attendance lookups (student dashboard)
 AttendanceSchema.index({ 'records.student': 1, date: -1 });
 

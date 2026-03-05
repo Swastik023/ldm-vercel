@@ -36,7 +36,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ as
     let attendance = await Attendance.findOne({
         date: attendanceDate,
         subject: assignment.subject,
-        section: assignment.section,
+        batch: (assignment as any).batch || undefined,
     });
 
     if (!attendance) {
@@ -44,9 +44,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ as
             date: attendanceDate,
             subject: assignment.subject,
             teacher: new mongoose.Types.ObjectId(session.user.id),
-            session: assignment.session,
-            section: assignment.section,
-            batch: assignment.batch || undefined,
+            ...((assignment as any).session ? { session: (assignment as any).session } : {}),
+            batch: (assignment as any).batch || undefined,
             records: [],
             status: 'open',
         });
@@ -141,7 +140,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ assi
     const attendance = await Attendance.findOne({
         date: attendanceDate,
         subject: assignment.subject,
-        section: assignment.section,
+        batch: (assignment as any).batch || undefined,
     }).populate('records.student', 'fullName username').lean();
 
     // Count students in batch

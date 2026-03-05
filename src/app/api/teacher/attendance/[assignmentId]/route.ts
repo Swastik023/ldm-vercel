@@ -101,7 +101,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ ass
     let attendance = await Attendance.findOne({
         date: attendanceDate,
         subject: assignment.subject,
-        section: assignment.section,
+        batch: assignment.batch || undefined,
     });
 
     if (attendance && (attendance.is_locked || attendance.status === 'finalized')) {
@@ -114,8 +114,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ ass
             date: attendanceDate,
             subject: assignment.subject,
             teacher: new mongoose.Types.ObjectId(session.user.id),
-            session: assignment.session,
-            section: assignment.section,
+            ...(assignment.session ? { session: assignment.session } : {}),
             batch: assignment.batch || undefined,
             records: [],
             status: 'open',

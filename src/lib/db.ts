@@ -49,6 +49,22 @@ async function repairUserIndexes(conn: typeof mongoose) {
     } catch (e) {
         console.warn('[dbConnect] Index repair skipped:', (e as Error).message);
     }
+
+    // Also repair attendance indexes — drop old {date,subject,section} unique,
+    // recreate as {date,subject,batch} so attendance works when section is empty/null
+    try {
+        const attCol = conn.connection.db?.collection('attendances');
+        if (attCol) {
+            try { await attCol.dropIndex('date_1_subject_1_section_1'); } catch { /* ok */ }
+            await attCol.createIndex(
+                { date: 1, subject: 1, batch: 1 },
+                { unique: true, sparse: true, background: true }
+            ).catch(() => { });
+            console.log('[dbConnect] Attendance index repaired: using {date,subject,batch}.');
+        }
+    } catch (e) {
+        console.warn('[dbConnect] Attendance index repair skipped:', (e as Error).message);
+    }
 }
 
 async function dbConnect() {
