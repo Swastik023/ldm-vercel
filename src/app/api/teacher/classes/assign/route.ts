@@ -19,7 +19,12 @@ export async function GET(req: Request) {
 
         // Allow teachers to view all active batches to assign themselves
         if (view === 'available-batches') {
-            const activeSession = await Session.findOne({ status: 'active' }).sort({ start_date: -1 }).lean();
+            // Fetch all sessions sorted by most recent — prefer 'active' but don't block if none exists
+            const sessions = await Session.find().sort({ start_date: -1 }).lean();
+
+            // Pick the best session: first active one, or else the most recent
+            const activeSession = sessions.find((s: any) => s.status === 'active') || sessions[0] || null;
+
             const batches = await Batch.find({ is_active: true })
                 .populate('program', 'name code')
                 .sort({ joiningYear: -1, intakeMonth: 1, name: 1 })
@@ -30,6 +35,7 @@ export async function GET(req: Request) {
             return NextResponse.json({
                 success: true,
                 activeSession,
+                sessions,   // return all so UI can show dropdown if needed
                 batches,
                 subjects
             });
