@@ -52,38 +52,38 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: false, message: 'Subject and section are required' }, { status: 400 });
         }
 
-        // Auto-resolve session: prefer active, else most recent — teacher doesn't pick it
+        // Auto-resolve session: prefer active, else most recent — null is fine if none exists
         const resolvedSession = await Session.findOne({ status: 'active' }).sort({ start_date: -1 }).lean()
-            || await Session.findOne().sort({ start_date: -1 }).lean();
+            || await Session.findOne().sort({ start_date: -1 }).lean()
+            || null;
 
-        if (!resolvedSession) {
-            return NextResponse.json({ success: false, message: 'No academic session exists. Ask admin to create one.' }, { status: 400 });
-        }
+        const sessionId = resolvedSession ? (resolvedSession as any)._id : null;
 
         // Check for duplicate assignment
         const existing = await Assignment.findOne({
             teacher: userSession.user.id,
             subject: subjectId,
-            ...(batchId ? { batch: batchId } : {}),
-            session: resolvedSession._id,
+            ...(batchId ? { batch: batchId } : { batch: { $exists: false } }),
             section,
         });
 
         if (existing) {
-            return NextResponse.json({ success: false, message: 'You are already assigned to this class in the current session.' }, { status: 400 });
+            return NextResponse.json({ success: false, message: 'You are already assigned to this subject and batch.' }, { status: 400 });
         }
 
         const newAssignment = await Assignment.create({
             teacher: userSession.user.id,
             subject: subjectId,
             batch: batchId || undefined,
-            session: resolvedSession._id,
+            session: sessionId,
             section,
         });
 
         return NextResponse.json({
             success: true,
-            message: `Assigned successfully under session: ${(resolvedSession as any).name}`,
+            message: resolvedSession
+                ? `Assigned successfully under session: ${(resolvedSession as any).name}`
+                : 'Assigned successfully!',
             assignment: newAssignment,
         });
 

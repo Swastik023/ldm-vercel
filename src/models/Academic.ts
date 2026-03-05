@@ -119,7 +119,7 @@ export interface IAssignment extends Document {
     teacher: mongoose.Types.ObjectId; // Reference to User (Teacher)
     subject: mongoose.Types.ObjectId;
     batch?: mongoose.Types.ObjectId;
-    session: mongoose.Types.ObjectId;
+    session?: mongoose.Types.ObjectId;
     section: string; // "A", "B", etc.
     assigned_at: Date;
 }
@@ -258,7 +258,7 @@ const AssignmentSchema = new Schema<IAssignment>({
     teacher: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     subject: { type: Schema.Types.ObjectId, ref: 'Subject', required: true },
     batch: { type: Schema.Types.ObjectId, ref: 'Batch' }, // Optional, maybe assigned to entire section without batch ID?
-    session: { type: Schema.Types.ObjectId, ref: 'Session', required: true },
+    session: { type: Schema.Types.ObjectId, ref: 'Session', default: null }, // Optional — not all setups use sessions
     section: { type: String, required: true }, // e.g. 'A'
     assigned_at: { type: Date, default: Date.now },
 }, { timestamps: true });
