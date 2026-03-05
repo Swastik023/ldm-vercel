@@ -15,7 +15,6 @@ export default function TeacherSelfAssignment() {
 
     const [selectedBatch, setSelectedBatch] = useState('');
     const [selectedSubject, setSelectedSubject] = useState('');
-    const [section, setSection] = useState('A');
     const [submitting, setSubmitting] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -45,14 +44,13 @@ export default function TeacherSelfAssignment() {
                 body: JSON.stringify({
                     subjectId: selectedSubject,
                     batchId: selectedBatch || null,
-                    section,
+                    section: 'A',
                 }),
             });
             const data = await res.json();
             if (data.success) {
                 toast.success(data.message || 'Successfully assigned!');
                 setSelectedSubject('');
-                setSection('A');
                 setSelectedBatch('');
             } else {
                 toast.error(data.message || 'Failed to assign');
@@ -146,10 +144,10 @@ export default function TeacherSelfAssignment() {
                     <div>
                         <h2 className="text-base font-bold text-gray-800 flex items-center gap-2 mb-4">
                             <span className="bg-amber-100 text-amber-700 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                            Batch & Section
+                            Select Batch
                         </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                                     Batch <span className="font-normal text-xs text-gray-400">(leave blank for open electives)</span>
@@ -169,20 +167,6 @@ export default function TeacherSelfAssignment() {
                                 {batches.length === 0 && (
                                     <p className="text-xs text-amber-600 mt-1">No active batches. Ask admin to create batches.</p>
                                 )}
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Section <span className="text-red-500">*</span></label>
-                                <select
-                                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none font-semibold"
-                                    value={section}
-                                    onChange={e => setSection(e.target.value)}
-                                    required
-                                >
-                                    {['A', 'B', 'C', 'D', 'E', 'F', 'Group 1', 'Group 2', 'Lab 1', 'Lab 2'].map(sec => (
-                                        <option key={sec} value={sec}>{sec}</option>
-                                    ))}
-                                </select>
                             </div>
                         </div>
                     </div>
