@@ -130,12 +130,7 @@ const collaborations = [
     },
 ];
 
-const popularCourses = [
-    { id: 'dmlt', title: 'B.Voc in Medical Laboratory Technology', abbr: 'B.Voc MLT', duration: '3 Years', eligibility: '12th Pass (Science)', borderColor: 'border-blue-600', badgeColor: 'bg-blue-100 text-blue-700' },
-    { id: 'drit', title: 'B.Voc in Radiology & Imaging Technology', abbr: 'B.Voc RIT', duration: '3 Years', eligibility: '12th Pass (Science)', borderColor: 'border-indigo-500', badgeColor: 'bg-indigo-100 text-indigo-700' },
-    { id: 'dott', title: 'B.Voc in Operation Theatre Technology', abbr: 'B.Voc OT', duration: '3 Years', eligibility: '12th Pass (Science)', borderColor: 'border-cyan-500', badgeColor: 'bg-cyan-100 text-cyan-700' },
-    { id: 'dpt', title: 'Diploma in Physiotherapy (DPT)', abbr: 'DPT', duration: '2 Years', eligibility: '12th Pass (Science)', borderColor: 'border-teal-500', badgeColor: 'bg-teal-100 text-teal-700' },
-];
+// popularCourses removed — now fetched dynamically from API
 
 const certificates = [
     { title: 'NAAC Certificate', desc: 'National Assessment & Accreditation', file: '/CERTIFICATE/1  NAAC_CERTIFICATE__2022.pdf', icon: <FaAward className="w-5 h-5 text-blue-600" />, color: 'text-blue-600' },
@@ -145,7 +140,28 @@ const certificates = [
 ];
 
 // ─── Page Component ────────────────────────────────────────────────────────────
+interface HomeCourse {
+    id: string;
+    _id: string;
+    title: string;
+    duration: string;
+    eligibility: string;
+    image: string;
+    course_type: string;
+}
+
+const BORDER_COLORS = ['border-blue-600', 'border-indigo-500', 'border-cyan-500', 'border-teal-500', 'border-violet-500', 'border-amber-500', 'border-rose-500', 'border-emerald-500'];
+const BADGE_COLORS = ['bg-blue-100 text-blue-700', 'bg-indigo-100 text-indigo-700', 'bg-cyan-100 text-cyan-700', 'bg-teal-100 text-teal-700', 'bg-violet-100 text-violet-700', 'bg-amber-100 text-amber-700', 'bg-rose-100 text-rose-700', 'bg-emerald-100 text-emerald-700'];
+
 export default function HomePage() {
+    const [homeCourses, setHomeCourses] = useState<HomeCourse[]>([]);
+
+    useEffect(() => {
+        fetch('/api/public/homepage-courses')
+            .then(r => r.json())
+            .then(d => { if (d.success && d.courses.length > 0) setHomeCourses(d.courses); })
+            .catch(() => { });
+    }, []);
     return (
         <>
             {/* ── Hero ── */}
@@ -256,32 +272,46 @@ export default function HomePage() {
                         </Link>
                     </motion.div>
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                        {popularCourses.map((c, i) => (
-                            <motion.div
-                                key={c.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 }}
-                                className={`group bg-white rounded-xl border-l-4 ${c.borderColor} border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col`}
-                            >
-                                <div className="flex items-center justify-between mb-3">
-                                    <span className={`px-2.5 py-1 text-xs font-bold rounded-lg ${c.badgeColor}`}>{c.abbr}</span>
-                                    <span className="text-xs text-gray-400 flex items-center gap-1"><FaClock className="w-3 h-3" />{c.duration}</span>
+                    <div className={`grid sm:grid-cols-2 ${homeCourses.length > 2 ? 'lg:grid-cols-4' : 'lg:grid-cols-2'} gap-5`}>
+                        {homeCourses.length === 0 ? (
+                            // Skeleton while loading
+                            Array.from({ length: 4 }).map((_, i) => (
+                                <div key={i} className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm animate-pulse">
+                                    <div className="h-4 bg-gray-100 rounded w-1/3 mb-4" />
+                                    <div className="h-5 bg-gray-100 rounded w-3/4 mb-3" />
+                                    <div className="h-3 bg-gray-100 rounded w-1/2 mb-6" />
+                                    <div className="h-9 bg-gray-100 rounded-lg" />
                                 </div>
-                                <h3 className="text-sm font-semibold text-gray-800 mb-2 leading-tight flex-1">{c.title}</h3>
-                                <div className="flex items-center gap-1 text-xs text-gray-500 mb-4">
-                                    <FaGraduationCap className="w-3 h-3" /> {c.eligibility}
-                                </div>
-                                <Link
-                                    href={`/courses/${c.id}`}
-                                    className="mt-auto text-center py-2 rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs font-semibold hover:shadow-md hover:shadow-violet-200 transition-shadow"
+                            ))
+                        ) : (
+                            homeCourses.map((c, i) => (
+                                <motion.div
+                                    key={c._id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className={`group bg-white rounded-xl border-l-4 ${BORDER_COLORS[i % BORDER_COLORS.length]} border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col`}
                                 >
-                                    View Course
-                                </Link>
-                            </motion.div>
-                        ))}
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className={`px-2.5 py-1 text-xs font-bold rounded-lg ${BADGE_COLORS[i % BADGE_COLORS.length]}`}>
+                                            {c.course_type?.toUpperCase()}
+                                        </span>
+                                        <span className="text-xs text-gray-400 flex items-center gap-1"><FaClock className="w-3 h-3" />{c.duration}</span>
+                                    </div>
+                                    <h3 className="text-sm font-semibold text-gray-800 mb-2 leading-tight flex-1">{c.title}</h3>
+                                    <div className="flex items-center gap-1 text-xs text-gray-500 mb-4">
+                                        <FaGraduationCap className="w-3 h-3" /> {c.eligibility}
+                                    </div>
+                                    <Link
+                                        href={`/courses/${c._id}`}
+                                        className="mt-auto text-center py-2 rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs font-semibold hover:shadow-md hover:shadow-violet-200 transition-shadow"
+                                    >
+                                        View Course
+                                    </Link>
+                                </motion.div>
+                            ))
+                        )}
                     </div>
                 </div>
             </section>

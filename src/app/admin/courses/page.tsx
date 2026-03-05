@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     BookOpen, Plus, Search, Edit2, Trash2, X,
     GraduationCap, Award, Users, ToggleLeft, ToggleRight,
-    Save, AlertCircle, Tag, Upload, CheckCircle2, ChevronDown, RefreshCw
+    Save, AlertCircle, Tag, Upload, CheckCircle2, ChevronDown, RefreshCw,
+    Globe, ChevronUp, Home
 } from 'lucide-react';
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
@@ -35,6 +36,7 @@ interface Course {
     syllabus: string[];
     careerOptions: string[];
     displayOrder: number;
+    showOnHomepage: boolean;
     pricing: Pricing;
     studentCount: number;
 }
@@ -108,6 +110,37 @@ export default function AdminCoursesPage() {
         fetchCourses();
     };
 
+    const handleHomepageToggle = async (course: Course) => {
+        await fetch(`/api/admin/courses/${course._id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ showOnHomepage: !course.showOnHomepage }),
+        });
+        fetchCourses();
+    };
+
+    const handleMoveOrder = async (course: Course, direction: 'up' | 'down') => {
+        const sorted = [...courses].sort((a, b) => a.displayOrder - b.displayOrder);
+        const idx = sorted.findIndex(c => c._id === course._id);
+        const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+        if (swapIdx < 0 || swapIdx >= sorted.length) return;
+        const swapCourse = sorted[swapIdx];
+        // Swap displayOrder values
+        await Promise.all([
+            fetch(`/api/admin/courses/${course._id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ displayOrder: swapCourse.displayOrder }),
+            }),
+            fetch(`/api/admin/courses/${swapCourse._id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ displayOrder: course.displayOrder }),
+            }),
+        ]);
+        fetchCourses();
+    };
+
     const handleMigrate = async () => {
         if (!confirm('Populate all 31 programs with full descriptions, syllabus and career data?')) return;
         setMigrating(true); setMigrateMsg('');
@@ -137,7 +170,7 @@ export default function AdminCoursesPage() {
             return c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
         }
         return true;
-    });
+    }).sort((a, b) => a.displayOrder - b.displayOrder);
 
     const totalActive = courses.filter(c => c.is_active).length;
     const diplomas = courses.filter(c => c.course_type === 'diploma').length;
@@ -225,7 +258,9 @@ export default function AdminCoursesPage() {
                                     <th className="text-left px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Duration</th>
                                     <th className="text-left px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Fee (Offer)</th>
                                     <th className="text-center px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Students</th>
-                                    <th className="text-center px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
+                                    <th className="text-center px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider" title="Show on homepage"><Home className="w-3.5 h-3.5 inline" /></th>
+                                    <th className="text-center px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Order</th>
+                                    <th className="text-center px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Active</th>
                                     <th className="text-center px-4 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
@@ -272,6 +307,33 @@ export default function AdminCoursesPage() {
                                                 <Users className="w-3.5 h-3.5 text-gray-400" /> {course.studentCount}
                                             </span>
                                         </td>
+                                        {/* Homepage toggle */}
+                                        <td className="px-4 py-4 text-center">
+                                            <button
+                                                onClick={() => handleHomepageToggle(course)}
+                                                title={course.showOnHomepage ? 'Showing on homepage — click to hide' : 'Hidden from homepage — click to show'}
+                                                className={`p-1.5 rounded-lg transition-colors ${course.showOnHomepage ? 'bg-violet-100 text-violet-600 hover:bg-violet-200' : 'text-gray-300 hover:text-gray-500 hover:bg-gray-100'}`}
+                                            >
+                                                <Home className="w-4 h-4" />
+                                            </button>
+                                        </td>
+                                        {/* Order controls */}
+                                        <td className="px-4 py-4 text-center">
+                                            <div className="flex flex-col items-center gap-0.5">
+                                                <button onClick={() => handleMoveOrder(course, 'up')}
+                                                    className="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                                    title="Move up">
+                                                    <ChevronUp className="w-3.5 h-3.5" />
+                                                </button>
+                                                <span className="text-[10px] font-bold text-gray-400 leading-none">{course.displayOrder}</span>
+                                                <button onClick={() => handleMoveOrder(course, 'down')}
+                                                    className="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                                    title="Move down">
+                                                    <ChevronDown className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                        {/* Active toggle */}
                                         <td className="px-4 py-4 text-center">
                                             <button onClick={() => handleToggle(course)} title={course.is_active ? 'Click to deactivate' : 'Click to activate'}>
                                                 {course.is_active ? (
@@ -473,8 +535,8 @@ function CourseFormModal({ course, onClose, onSaved }: { course: Course | null; 
                             <label
                                 htmlFor="course-img-upload"
                                 className={`relative flex flex-col items-center justify-center gap-2 w-full h-32 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200 ${imageUploading
-                                        ? 'border-blue-300 bg-blue-50'
-                                        : 'border-gray-200 bg-gray-50 hover:border-blue-400 hover:bg-blue-50/40'
+                                    ? 'border-blue-300 bg-blue-50'
+                                    : 'border-gray-200 bg-gray-50 hover:border-blue-400 hover:bg-blue-50/40'
                                     }`}
                             >
                                 {imageUploading ? (

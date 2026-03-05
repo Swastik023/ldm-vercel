@@ -74,6 +74,7 @@ export interface IProgram extends Document {
     syllabus: string[];
     careerOptions: string[];
     displayOrder: number;
+    showOnHomepage: boolean;
     // Embedded pricing
     pricing: IProgramPricing;
     // Rich curriculum data (optional)
@@ -204,6 +205,7 @@ const ProgramSchema = new Schema<IProgram>({
     syllabus: [{ type: String }],
     careerOptions: [{ type: String }],
     displayOrder: { type: Number, default: 0 },
+    showOnHomepage: { type: Boolean, default: false },
     // Embedded pricing
     pricing: { type: PricingSubSchema, default: () => ({}) },
     // Rich curriculum data (optional)
