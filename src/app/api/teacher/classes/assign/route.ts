@@ -88,7 +88,7 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
-        console.error('Teacher Assign POST error:', error);
-        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+        console.error('Teacher Assign POST error:', error?.message, error?.stack);
+        return NextResponse.json({ success: false, message: error?.message || 'Server error' }, { status: 500 });
     }
 }

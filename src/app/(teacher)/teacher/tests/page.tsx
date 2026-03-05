@@ -54,7 +54,7 @@ export default function TeacherTestsPage() {
                     <h1 className="text-2xl font-bold text-gray-900">MCQ Tests</h1>
                     <p className="text-gray-500 text-sm mt-0.5">Manage tests and track student attempts.</p>
                 </div>
-                <Link href="/admin/tests/create" className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-sm font-bold shadow-lg hover:shadow-orange-200 transition-all">
+                <Link href="/teacher/tests/create" className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-sm font-bold shadow-lg hover:shadow-orange-200 transition-all">
                     + Create Test
                 </Link>
             </div>
@@ -63,7 +63,7 @@ export default function TeacherTestsPage() {
                 <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
                     <p className="text-4xl mb-3">📝</p>
                     <p className="text-gray-500 font-medium">No tests created yet.</p>
-                    <Link href="/admin/tests/create" className="mt-4 inline-block px-6 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold">Create your first test</Link>
+                    <Link href="/teacher/tests/create" className="mt-4 inline-block px-6 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold">Create your first test</Link>
                 </div>
             ) : (
                 <div className="grid gap-4">
