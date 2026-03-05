@@ -245,6 +245,6 @@ export async function POST(req: NextRequest) {
         }
     } catch (err) {
         console.error('POST /api/admin/tests error:', err);
-        return NextResponse.json({ success: false, message: 'Failed to create test. Please try again.' }, { status: 500 });
+        return NextResponse.json({ success: false, message: `Failed: ${err instanceof Error ? err.message : String(err)}` }, { status: 500 });
     }
 }

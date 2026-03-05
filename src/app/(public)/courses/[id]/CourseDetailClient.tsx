@@ -246,7 +246,7 @@ export default function CourseDetailClient({ course, related }: Props) {
 
             {/* ── Main Content ── */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid lg:grid-cols-3 gap-8 items-start">
                     {/* Left: Rich Content */}
                     <div className="lg:col-span-2 space-y-7">
 
@@ -493,8 +493,8 @@ export default function CourseDetailClient({ course, related }: Props) {
                     </div>
 
                     {/* Right: Sticky Sidebar */}
-                    <div className="lg:col-span-1">
-                        <div className="sticky top-20 space-y-5">
+                    <div className="lg:col-span-1 self-start">
+                        <div className="sticky top-24 space-y-5">
                             <CoursePricingBlock courseId={course.id} />
 
                             {/* Apply Card */}
