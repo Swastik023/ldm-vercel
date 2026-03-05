@@ -70,10 +70,10 @@ async function dbConnect() {
         throw e;
     }
 
-    // Run index repair once per server restart — non-blocking
+    // Run index repair once per server restart — AWAITED so indexes are ready before first write
     if (!cached!.indexesFixed) {
         cached!.indexesFixed = true;
-        repairUserIndexes(cached!.conn).catch(() => { });
+        await repairUserIndexes(cached!.conn);
     }
 
     return cached!.conn;
