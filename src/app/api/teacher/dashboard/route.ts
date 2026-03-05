@@ -19,15 +19,14 @@ export async function GET() {
 
     const teacherId = new mongoose.Types.ObjectId(session.user.id);
 
-    // Get all subject assignments for this teacher
+    // Get all subject assignments for this teacher (session is optional)
     const assignments = await Assignment.find({ teacher: teacherId })
         .populate('subject', 'name code')
-        .populate('batch', 'name')
-        .populate('session', 'name')
+        .populate('batch', 'name intakeMonth joiningYear')
         .lean();
 
     // Count unique subjects
-    const subjectIds = new Set(assignments.map(a => a.subject?._id?.toString()));
+    const subjectIds = new Set(assignments.map(a => (a.subject as any)?._id?.toString()).filter(Boolean));
     const subjectCount = subjectIds.size;
 
     // Today's attendance marked by this teacher
@@ -45,7 +44,7 @@ export async function GET() {
     let presentToday = 0;
     todayAttendance.forEach(record => {
         markedToday += record.records.length;
-        presentToday += record.records.filter(r => r.status === 'present').length;
+        presentToday += record.records.filter((r: any) => r.status === 'present').length;
     });
 
     // Active notices
@@ -55,14 +54,14 @@ export async function GET() {
         .limit(5)
         .lean();
 
-    // Build class list from assignments (unique per subject+section)
+    // Build class list from assignments
     const classes = assignments.map(a => ({
         id: a._id?.toString(),
         subject_name: (a.subject as any)?.name || 'Unknown Subject',
         subject_code: (a.subject as any)?.code || '',
         batch_name: (a.batch as any)?.name || null,
         section: a.section,
-        session_name: (a.session as any)?.name || '',
+        session_name: '',
     }));
 
     return NextResponse.json({
