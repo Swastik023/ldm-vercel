@@ -17,14 +17,7 @@ export async function GET(req: Request) {
         const url = new URL(req.url);
         const view = url.searchParams.get('view');
 
-        // Allow teachers to view all active batches to assign themselves
         if (view === 'available-batches') {
-            // Fetch all sessions sorted by most recent — prefer 'active' but don't block if none exists
-            const sessions = await Session.find().sort({ start_date: -1 }).lean();
-
-            // Pick the best session: first active one, or else the most recent
-            const activeSession = sessions.find((s: any) => s.status === 'active') || sessions[0] || null;
-
             const batches = await Batch.find({ is_active: true })
                 .populate('program', 'name code')
                 .sort({ joiningYear: -1, intakeMonth: 1, name: 1 })
@@ -32,13 +25,7 @@ export async function GET(req: Request) {
 
             const subjects = await Subject.find().sort({ semester: 1, name: 1 }).lean();
 
-            return NextResponse.json({
-                success: true,
-                activeSession,
-                sessions,   // return all so UI can show dropdown if needed
-                batches,
-                subjects
-            });
+            return NextResponse.json({ success: true, batches, subjects });
         }
 
         return NextResponse.json({ success: false, message: 'Invalid view' }, { status: 400 });
@@ -59,38 +46,45 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
-        const { subjectId, batchId, sessionId, section } = body;
+        const { subjectId, batchId, section } = body;
 
-        if (!subjectId || !sessionId || !section) {
-            return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
+        if (!subjectId || !section) {
+            return NextResponse.json({ success: false, message: 'Subject and section are required' }, { status: 400 });
         }
 
-        // Check if assignment already exists
-        const existingAssignment = await Assignment.findOne({
+        // Auto-resolve session: prefer active, else most recent — teacher doesn't pick it
+        const resolvedSession = await Session.findOne({ status: 'active' }).sort({ start_date: -1 }).lean()
+            || await Session.findOne().sort({ start_date: -1 }).lean();
+
+        if (!resolvedSession) {
+            return NextResponse.json({ success: false, message: 'No academic session exists. Ask admin to create one.' }, { status: 400 });
+        }
+
+        // Check for duplicate assignment
+        const existing = await Assignment.findOne({
             teacher: userSession.user.id,
             subject: subjectId,
-            batch: batchId || { $exists: false },
-            session: sessionId,
-            section: section
+            ...(batchId ? { batch: batchId } : {}),
+            session: resolvedSession._id,
+            section,
         });
 
-        if (existingAssignment) {
-            return NextResponse.json({ success: false, message: 'You are already assigned to this class' }, { status: 400 });
+        if (existing) {
+            return NextResponse.json({ success: false, message: 'You are already assigned to this class in the current session.' }, { status: 400 });
         }
 
-        // Create the assignment
         const newAssignment = await Assignment.create({
             teacher: userSession.user.id,
             subject: subjectId,
             batch: batchId || undefined,
-            session: sessionId,
-            section: section
+            session: resolvedSession._id,
+            section,
         });
 
         return NextResponse.json({
             success: true,
-            message: 'Self-assignment successful',
-            assignment: newAssignment
+            message: `Assigned successfully under session: ${(resolvedSession as any).name}`,
+            assignment: newAssignment,
         });
 
     } catch (error: any) {
