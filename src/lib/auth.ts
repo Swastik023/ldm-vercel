@@ -72,9 +72,7 @@ export const authOptions: NextAuthOptions = {
 
                 let dbUser = await User.findOne({ email });
                 if (!dbUser) {
-                    // New Google user — start as pending, admin must approve
-                    let baseUsername = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
-                    if (!baseUsername) baseUsername = 'user';
+                    let baseUsername = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '') || 'user';
                     let username = baseUsername;
                     let counter = 0;
                     while (await User.findOne({ username })) {
@@ -82,16 +80,27 @@ export const authOptions: NextAuthOptions = {
                         username = `${baseUsername}${counter}`;
                     }
 
-                    dbUser = await User.create({
-                        username,
-                        email,
-                        fullName: user.name || email.split('@')[0],
-                        role: 'student',
-                        provider: 'google',
-                        image: user.image || undefined,
-                        status: 'pending',
-                        isEmailVerified: true,
-                    });
+                    try {
+                        dbUser = await User.create({
+                            username,
+                            email,
+                            fullName: user.name || email.split('@')[0],
+                            role: 'student',
+                            provider: 'google',
+                            image: user.image || undefined,
+                            status: 'pending',
+                            isEmailVerified: true,
+                        });
+                    } catch (createErr: any) {
+                        // E11000: duplicate key — another request already created this user
+                        // or stale non-sparse index conflict; fall back to finding by email
+                        if (createErr?.code === 11000) {
+                            dbUser = await User.findOne({ email });
+                            if (!dbUser) return false; // truly can't resolve — deny
+                        } else {
+                            throw createErr;
+                        }
+                    }
                 } else {
                     // Link Google, mark verified
                     await User.findByIdAndUpdate(dbUser._id, {

@@ -8,14 +8,10 @@ if (!MONGODB_URI) {
     );
 }
 
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections growing exponentially
- * during API Route usage.
- */
 interface MongooseCache {
     conn: typeof mongoose | null;
     promise: Promise<typeof mongoose> | null;
+    indexesFixed: boolean;
 }
 
 declare global {
@@ -26,7 +22,33 @@ declare global {
 let cached = global.mongoose;
 
 if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
+    cached = global.mongoose = { conn: null, promise: null, indexesFixed: false };
+}
+
+/**
+ * One-time repair: drop non-sparse unique indexes on the users collection
+ * and recreate them as sparse so Google users with null rollNumber don't collide.
+ * Runs silently in background after first connection.
+ */
+async function repairUserIndexes(conn: typeof mongoose) {
+    try {
+        const col = conn.connection.db?.collection('users');
+        if (!col) return;
+
+        const badIndexes = ['classId_1_rollNumber_1', 'rollNumber_1', 'batch_1_rollNumber_1'];
+        for (const name of badIndexes) {
+            try { await col.dropIndex(name); } catch { /* already dropped or doesn't exist */ }
+        }
+
+        // Recreate as sparse — null values won't be indexed, so multiple nulls are fine
+        await col.createIndex({ classId: 1, rollNumber: 1 }, { unique: true, sparse: true, background: true }).catch(() => { });
+        await col.createIndex({ rollNumber: 1 }, { unique: true, sparse: true, background: true }).catch(() => { });
+        await col.createIndex({ batch: 1, rollNumber: 1 }, { unique: true, sparse: true, background: true }).catch(() => { });
+
+        console.log('[dbConnect] User indexes repaired: sparse indexes in place.');
+    } catch (e) {
+        console.warn('[dbConnect] Index repair skipped:', (e as Error).message);
+    }
 }
 
 async function dbConnect() {
@@ -35,10 +57,7 @@ async function dbConnect() {
     }
 
     if (!cached!.promise) {
-        const opts = {
-            bufferCommands: false,
-        };
-
+        const opts = { bufferCommands: false };
         cached!.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
             return mongoose;
         });
@@ -49,6 +68,12 @@ async function dbConnect() {
     } catch (e) {
         cached!.promise = null;
         throw e;
+    }
+
+    // Run index repair once per server restart — non-blocking
+    if (!cached!.indexesFixed) {
+        cached!.indexesFixed = true;
+        repairUserIndexes(cached!.conn).catch(() => { });
     }
 
     return cached!.conn;
