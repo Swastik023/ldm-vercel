@@ -86,7 +86,7 @@ export default function TeacherTestsPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Link href={`/admin/tests/${test._id}`} className="px-3 py-2 border border-gray-200 text-gray-700 rounded-lg text-xs font-semibold hover:border-amber-300 hover:text-amber-600 transition-colors">
+                                    <Link href={`/teacher/tests/${test._id}`} className="px-3 py-2 border border-gray-200 text-gray-700 rounded-lg text-xs font-semibold hover:border-amber-300 hover:text-amber-600 transition-colors">
                                         View Results
                                     </Link>
                                     <button onClick={() => toggleActive(test._id, test.isActive)} className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${test.isActive ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100' : 'bg-green-50 text-green-700 hover:bg-green-100'}`}>

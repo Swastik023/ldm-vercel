@@ -145,6 +145,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         const isCorrect = !!studentAns && studentAns === correctAns;
         const isSkipped = studentAns === null;
 
+        // Map option letters to their full texts
+        const studentAnsOption = q.options?.find(o => o.label === studentAns);
+        const correctAnsOption = q.options?.find(o => o.label === correctAns);
+
         let marksAwarded = 0;
         if (isCorrect) {
             marksAwarded = q.marks;
@@ -162,8 +166,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         return {
             questionId: q.questionId,
             questionText: q.questionText,
-            studentAnswer: studentAns,
-            correctAnswer: correctAns,
+            studentAnswer: studentAns ? `${studentAns} - ${studentAnsOption?.text ?? 'Unknown'}` : null,
+            correctAnswer: correctAns ? `${correctAns} - ${correctAnsOption?.text ?? 'Unknown'}` : null,
             reason: key?.reason ?? '',
             marksAwarded,
             isCorrect,
