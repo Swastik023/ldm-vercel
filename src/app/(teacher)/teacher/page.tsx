@@ -100,6 +100,10 @@ export default function TeacherDashboard() {
                             className="p-2 text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition text-center font-medium border border-blue-100">
                             <BookOpen size={14} className="inline mr-1" />Marks Entry
                         </Link>
+                        <Link href="/teacher/classes/assign"
+                            className="p-2 text-sm bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition text-center font-medium border border-purple-100 col-span-2 mt-1 flex justify-center items-center gap-1">
+                            <Users size={14} /> Self-Assign to a Course
+                        </Link>
                     </div>
                 </div>
             </div>
