@@ -25,9 +25,11 @@ interface UserData {
     programId?: { _id: string; name: string; code: string };
 }
 
-interface AcademicOption { _id: string; name: string; session?: { name: string }; program?: { name: string; code: string } }
+interface AcademicOption { _id: string; name: string; intakeMonth?: string; joiningYear?: number; session?: { name: string }; program?: { name: string; code: string } }
 
-const emptyForm = { username: '', email: '', password: '', fullName: '', role: 'student', sessionId: '', batchId: '' };
+
+
+const emptyForm = { username: '', email: '', password: '', fullName: '', role: 'student', filterMonth: '', filterYear: '', batchId: '' };
 
 const roleBadge = (role: string) => {
     const m: Record<string, string> = { admin: 'bg-purple-100 text-purple-700', teacher: 'bg-blue-100 text-blue-700', employee: 'bg-cyan-100 text-cyan-700', student: 'bg-green-100 text-green-700' };
@@ -60,7 +62,6 @@ export default function ManageUsers() {
     const [showForm, setShowForm] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState(emptyForm);
-    const [sessions, setSessions] = useState<AcademicOption[]>([]);
     const [batches, setBatches] = useState<AcademicOption[]>([]);
     const [academicLoaded, setAcademicLoaded] = useState(false);
 
@@ -86,7 +87,6 @@ export default function ManageUsers() {
             const res = await fetch('/api/admin/academic-options');
             const data = await res.json();
             if (data.success) {
-                setSessions(data.sessions || []);
                 setBatches(data.batches || []);
                 setAcademicLoaded(true);
             }
@@ -103,12 +103,15 @@ export default function ManageUsers() {
         if (editUser) fetchAcademicOptions();
     }, [editUser, fetchAcademicOptions]);
 
-    const filteredBatches = formData.sessionId
-        ? batches.filter((b: any) => {
-            const bSessionId = typeof b.session === 'object' ? b.session?._id : b.session;
-            return bSessionId === formData.sessionId;
-        })
-        : batches;
+    // Filter batches by intake month and/or joining year
+    const filteredBatches = batches.filter((b: any) => {
+        if (formData.filterMonth && b.intakeMonth !== formData.filterMonth) return false;
+        if (formData.filterYear && b.joiningYear !== Number(formData.filterYear)) return false;
+        return true;
+    });
+
+    // Derive available years from all batches
+    const availableYears = [...new Set(batches.map((b: any) => b.joiningYear))].filter(Boolean).sort((a, b) => (b as number) - (a as number));
 
     // Open edit drawer and pre-fill form
     const openEdit = (u: UserData) => {
@@ -268,7 +271,7 @@ export default function ManageUsers() {
                                 <div>
                                     <label className={labelClass}>Role *</label>
                                     <select className={inputClass} value={formData.role}
-                                        onChange={e => setFormData({ ...formData, role: e.target.value, sessionId: '', batchId: '' })}>
+                                        onChange={e => setFormData({ ...formData, role: e.target.value, filterMonth: '', filterYear: '', batchId: '' })}>
                                         <option value="student">Student</option>
                                         <option value="teacher">Teacher</option>
                                         <option value="employee">Employee</option>
@@ -280,26 +283,41 @@ export default function ManageUsers() {
                                         <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 uppercase tracking-wide">
                                             <GraduationCap size={14} /> Enrollment Details
                                         </div>
-                                        <div>
-                                            <label className={labelClass}>Session</label>
-                                            <select className={inputClass} value={formData.sessionId}
-                                                onChange={e => setFormData({ ...formData, sessionId: e.target.value, batchId: '' })}>
-                                                <option value="">— Select Session —</option>
-                                                {sessions.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
-                                            </select>
+                                        {/* Intake Month + Year filters */}
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <label className={labelClass}>Intake Month</label>
+                                                <select className={inputClass} value={formData.filterMonth}
+                                                    onChange={e => setFormData({ ...formData, filterMonth: e.target.value, batchId: '' })}>
+                                                    <option value="">All Months</option>
+                                                    <option value="January">January</option>
+                                                    <option value="July">July</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className={labelClass}>Joining Year</label>
+                                                <select className={inputClass} value={formData.filterYear}
+                                                    onChange={e => setFormData({ ...formData, filterYear: e.target.value, batchId: '' })}>
+                                                    <option value="">All Years</option>
+                                                    {availableYears.map(y => <option key={y as number} value={y as number}>{y as number}</option>)}
+                                                </select>
+                                            </div>
                                         </div>
                                         <div>
                                             <label className={labelClass}>Batch</label>
                                             <select className={inputClass} value={formData.batchId}
-                                                onChange={e => setFormData({ ...formData, batchId: e.target.value })}
-                                                disabled={!formData.sessionId}>
+                                                onChange={e => setFormData({ ...formData, batchId: e.target.value })}>
                                                 <option value="">— Select Batch —</option>
                                                 {filteredBatches.map((b: any) => (
                                                     <option key={b._id} value={b._id}>
                                                         {b.name}{b.program ? ` (${b.program.code || b.program.name})` : ''}
+                                                        {b.intakeMonth ? ` · ${b.intakeMonth} ${b.joiningYear}` : ''}
                                                     </option>
                                                 ))}
                                             </select>
+                                            {filteredBatches.length === 0 && (formData.filterMonth || formData.filterYear) && (
+                                                <p className="text-xs text-amber-600 mt-1">No batches found for selected filters.</p>
+                                            )}
                                         </div>
                                     </div>
                                 )}
@@ -488,19 +506,13 @@ export default function ManageUsers() {
                                             </select>
                                         </div>
                                         <div>
-                                            <label className={labelClass}>Session</label>
-                                            <select className={inputClass} value={editForm.sessionId || ''} onChange={e => setEditForm(p => ({ ...p, sessionId: e.target.value, batchId: '' }))}>
-                                                <option value="">— Select Session —</option>
-                                                {sessions.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className={labelClass}>Batch</label>
+                                            <label className={labelClass}>Intake — Batch</label>
                                             <select className={inputClass} value={editForm.batchId || ''} onChange={e => setEditForm(p => ({ ...p, batchId: e.target.value }))}>
                                                 <option value="">— Select Batch —</option>
                                                 {batches.map((b: any) => (
                                                     <option key={b._id} value={b._id}>
                                                         {b.name}{b.program ? ` (${b.program.code})` : ''}
+                                                        {b.intakeMonth ? ` · ${b.intakeMonth} ${b.joiningYear}` : ''}
                                                     </option>
                                                 ))}
                                             </select>
