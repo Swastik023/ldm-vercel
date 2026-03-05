@@ -1,0 +1,290 @@
+# SecureChat Development Tasks
+
+> Stages for AI-assisted development based on Production Timeline
+
+---
+
+## Current Focus: Stage 2 - Backend Hardening
+
+---
+
+## Stage 1: Backend Hardening ✅
+**Duration**: 7-10 days | **Priority**: P0 | **Status**: ✅ Complete
+
+### Rate Limiting & Security
+- [x] Add `express-rate-limit` to all API routes
+- [x] Implement account lockout after 5 failed login attempts
+- [x] Add IP-based rate limiting for OTP requests
+- [x] Create brute-force protection middleware
+
+### Auth Enhancements
+- [x] Implement password reset flow (send email with reset token)
+- [x] Add email verification for new accounts
+- [x] Multi-device session management (list/revoke sessions)
+- [x] Add session activity logging
+
+### API Improvements
+- [x] Add API versioning (`/api/v1/` prefix)
+- [x] Implement request ID tracking (correlation IDs)
+- [x] Add request/response logging middleware
+- [x] Standardize error response format
+
+---
+
+## Stage 2: Mobile App Polish
+**Duration**: 7-10 days | **Priority**: P0 | **Status**: 🔄 In Progress
+
+### Store Readiness
+- [x] Optimize splash screen and app icon (service created)
+- [x] Implement deep linking for chat invites
+- [x] Fix Native Crash: Enabled Core Library Desugaring (fixes `NoSuchMethodError`)
+- [x] Add app lifecycle handling (background/foreground)
+- [x] Setup Sentry for crash reporting
+
+### Analytics & Performance
+- [x] Integrate Firebase Analytics
+- [x] Audit accessibility (a11y labels)
+- [x] Optimize FlatLists with `memo` and `getItemLayout`
+- [ ] Profile and fix memory leaks
+
+### Disabled Features (Pending API Keys)
+- [ ] Push Notifications (requires Firebase)
+- [ ] Location Sharing (requires Google Maps)
+
+### Store Assets
+- [ ] Create store screenshots (all device sizes)
+- [x] Write app description and metadata
+- [ ] Prepare promotional graphics
+
+---
+
+## Stage 3: Infrastructure (Terraform)
+**Duration**: 8-10 days | **Priority**: P0
+
+### Network Layer
+- [ ] Define VPC with public/private subnets
+- [ ] Create security groups for each tier
+- [ ] Setup NAT gateway for private subnets
+- [ ] Configure route tables
+
+### Compute & Container
+- [ ] Create ECS cluster (Fargate)
+- [ ] Setup ECR for Docker images
+- [ ] Create ECS task definitions
+- [ ] Configure ECS services with ALB
+
+### Data Layer
+- [ ] Configure MongoDB Atlas connection
+- [ ] Setup ElastiCache (Redis) cluster
+- [ ] Create S3 buckets (media, backups)
+- [ ] Setup CloudFront distribution
+
+### DNS & SSL
+- [ ] Setup Route 53 hosted zone
+- [ ] Create ACM certificates
+- [ ] Configure ALB HTTPS listener
+
+### Outputs
+- [ ] Create Terraform modules structure
+- [ ] Setup S3 backend for state
+- [ ] Document variables and outputs
+
+---
+
+## Stage 4: Configuration (Ansible)
+**Duration**: 5-7 days | **Priority**: P0
+
+### Base Playbooks
+- [ ] Create `base.yml` - OS hardening, users, SSH
+- [ ] Create `docker.yml` - Docker + compose installation
+- [ ] Create `app.yml` - Application deployment
+- [ ] Create `nginx.yml` - Reverse proxy config
+
+### Security Playbooks
+- [ ] Create `security.yml` - Fail2ban, UFW rules
+- [ ] Create `ssl.yml` - Let's Encrypt renewal
+- [ ] Create `backup.yml` - Automated backup scripts
+
+### Monitoring Playbooks
+- [ ] Create `monitoring.yml` - Node exporter, Promtail
+- [ ] Setup log forwarding
+
+### Inventory
+- [ ] Create inventory for dev/staging/prod
+- [ ] Document ansible-vault usage
+
+---
+
+## Stage 5: CI/CD (Jenkins)
+**Duration**: 10-12 days | **Priority**: P0
+
+### Pipeline Setup
+- [ ] Install and configure Jenkins
+- [ ] Create Jenkinsfile for backend
+- [ ] Create Jenkinsfile for mobile
+
+### Backend Pipeline Stages
+- [ ] Checkout + dependency caching
+- [ ] Lint (ESLint + Prettier)
+- [ ] Unit tests (Jest)
+- [ ] Integration tests
+- [ ] Docker build + push to ECR
+- [ ] Deploy to staging
+- [ ] Manual approval gate
+- [ ] Deploy to production
+
+### Mobile Pipeline
+- [ ] Setup Fastlane for iOS
+- [ ] Setup Fastlane for Android
+- [ ] TestFlight distribution
+- [ ] Play Store internal track
+
+### Notifications
+- [ ] Slack/email on build status
+- [ ] Semantic versioning setup
+
+---
+
+## Stage 6: Security & Testing
+**Duration**: 12-14 days | **Priority**: P0
+
+### Security Audit
+- [ ] OWASP Top 10 checklist review
+- [ ] Input sanitization audit
+- [ ] NoSQL injection prevention check
+- [ ] XSS prevention (CSP headers)
+- [ ] CORS configuration review
+- [ ] Add Helmet.js security headers
+- [ ] Dependency vulnerability scan (npm audit, Snyk)
+
+### Test Coverage
+- [ ] Write unit tests for auth service (80% coverage)
+- [ ] Write unit tests for chat service
+- [ ] Write unit tests for message service
+- [ ] Create API integration test suite
+- [ ] Write E2E tests for critical flows
+
+### Load Testing
+- [ ] Create k6/Artillery load test scripts
+- [ ] Run load tests (target: 1000 concurrent users)
+- [ ] Document performance benchmarks
+- [ ] Identify and fix bottlenecks
+
+---
+
+## Stage 7: Production Deployment
+**Duration**: 5-7 days | **Priority**: P0
+
+### Pre-Deployment
+- [ ] DNS records ready
+- [ ] SSL certificates validated
+- [ ] Database migration scripts ready
+- [ ] Feature flags configured
+
+### Deployment
+- [ ] Deploy to production environment
+- [ ] Blue-green deployment verification
+- [ ] Run smoke tests
+- [ ] Verify WebSocket connections
+
+### Documentation
+- [ ] Create runbooks for common issues
+- [ ] Document incident response plan
+- [ ] Setup on-call rotation
+- [ ] Create rollback procedures
+
+---
+
+## Stage 8: Monitoring
+**Duration**: 7-10 days | **Priority**: P1
+
+### Prometheus + Grafana
+- [ ] Setup Prometheus server
+- [ ] Create API health dashboard
+- [ ] Create database metrics dashboard
+- [ ] Create WebSocket dashboard
+- [ ] Create business metrics dashboard
+
+### Logging
+- [ ] Setup Loki for log aggregation
+- [ ] Configure Promtail on servers
+- [ ] Create log dashboards
+
+### Alerting
+- [ ] Configure AlertManager
+- [ ] Create critical alert rules (error rate, latency)
+- [ ] Create warning alert rules (resources)
+- [ ] Setup alert routing (Slack/PagerDuty)
+
+---
+
+## Stage 9: Store Submission
+**Duration**: 10-14 days | **Priority**: P0
+
+### App Store (iOS)
+- [ ] Setup App Store Connect
+- [ ] Configure provisioning profiles
+- [ ] Submit TestFlight beta
+- [ ] Gather beta feedback
+- [ ] Submit for App Store review
+- [ ] Monitor review status
+- [ ] Prepare for launch
+
+### Play Store (Android)
+- [ ] Setup Play Console
+- [ ] Configure app signing
+- [ ] Deploy to internal testing track
+- [ ] Deploy to closed beta (20+ testers)
+- [ ] Submit for production review
+- [ ] Staged rollout (20% → 50% → 100%)
+
+### Optimization
+- [ ] App Store Optimization (ASO)
+- [ ] Setup review response workflow
+
+---
+
+## Stage 10: Post-Launch
+**Duration**: Ongoing | **Priority**: P1
+
+### Week 1
+- [ ] Monitor crash rates
+- [ ] Fix any critical bugs
+- [ ] Respond to store reviews
+- [ ] Gather user feedback
+
+### First 30 Days
+- [ ] Analytics deep-dive
+- [ ] Top crash fixes
+- [ ] UX friction fixes
+- [ ] Server cost optimization
+- [ ] Database index tuning
+
+---
+
+## Future Stages (Post-Launch)
+
+### Stage 11: End-to-End Encryption
+- [ ] Signal Protocol research
+- [ ] Key generation system
+- [ ] X3DH implementation
+- [ ] Double Ratchet implementation
+- [ ] Safety number verification
+
+### Stage 12: Voice/Video Calls
+- [ ] WebRTC integration
+- [ ] Signaling server
+- [ ] TURN server setup
+- [ ] Call UI screens
+- [ ] Call notifications
+
+### Stage 13: Advanced Features
+- [ ] Message reactions
+- [ ] Reply to messages
+- [ ] Disappearing messages
+- [ ] Stories/Status
+- [ ] Message editing
+
+---
+
+**Last Updated**: 2026-02-07

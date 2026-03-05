@@ -1,0 +1,38 @@
+# Academic ERP UI - Production-Readiness Tasks
+
+## Phase 1-4: Foundation & Screen Enhancements ✅ COMPLETE
+All 8 screens enhanced with empty/error/loading states, toast notifications, functional buttons, ARIA labels.
+
+## Phase 5: Accessibility Pass 🔄 IN PROGRESS (65% Complete)
+
+### Modal Accessibility ✅ COMPLETE
+- [x] **AcademicSessions:** Focus trap, Escape key, aria-modal, role="dialog", focus return
+- [x] **ExamBuilder:** Focus trap, Escape key, aria-modal, role="dialog", focus return
+
+### Testing & Verification ⏳ REMAINING
+- [ ] Manual keyboard navigation test (all 8 screens)
+- [ ] L ighthouse accessibility audit
+- [ ] Color contrast verification (WC AG AA)
+- [ ] Screen reader spot check
+
+## Phase 6: Component Extraction ⏳ PENDING
+Extract common patterns (PageHeader, DataTable, StatsCard, Modal, etc.)
+
+## Progress Summary
+**Overall: 80% Complete**
+- Phases 1-4: ✅ 100%
+- Phase 5: 🔄 65% (modal accessibility complete)
+- Phase 6: ⏳ 0%
+
+## Key Phase 5 Accomplishments
+✅ Modal focus traps (Tab/Shift+Tab cycles within modal)
+✅ Escape key closes modals
+✅ Focus returns to trigger button
+✅ ARIA attributes (aria-modal, role, aria-labelledby)
+✅ Backdrop click closes modal
+✅ Auto-focus first input on modal open
+
+## Next Steps
+1. Test keyboard navigation
+2. Run Lighthouse audit  
+3. Begin Phase 6 component extraction

@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Comprehensive implementation plan for AI job-hunting agent using OpenClaw with Gemini API. Covers installation completion, custom skill development for resume/cover letter generation, interview prep, job search automation, company research, application tracking, and CLI wrapper. Includes verification steps for each module.",
+  "updatedAt": "2026-01-30T22:08:23.223738869Z"
+}

@@ -1,0 +1,145 @@
+# College Management System Logic Update
+
+Complete restructure of admissions, registration, sessions, documents, and login logic.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Breaking changes to student login:** Roll Number becomes the default username. Existing students whose username ≠ rollNumber will still work because auth.ts matches by username OR email OR rollNumber. New students will have `username = rollNumber`.
+
+> [!IMPORTANT]
+> **Batch removal:** The [Batch](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/students/page.tsx#14-15) model and [Class](file:///media/swastik/focus/ldm%20feb/src/models/Class.ts#3-10) model are NOT deleted (other parts of the system — attendance, exams, assignments — still reference them). Instead, we stop exposing batch selection in the student registration flow. The student is directly assigned to a **Program** (course). The admin can still manage batches internally for attendance/scheduling.
+
+> [!WARNING]
+> **Document schema change:** [StudentDocuments](file:///media/swastik/focus/ldm%20feb/src/models/StudentDocuments.ts#10-28) model gets new fields (`aadhaarFrontUrl`, `aadhaarBackUrl`, `documentMeta`). Existing Aadhaar data stored in `aadhaarIdUrl` will remain accessible. A migration is not needed — old records just won't have the new fields populated.
+
+---
+
+## 1. Intake & Joining Logic
+
+### [NEW] [CollegeSettings.ts](file:///media/swastik/focus/ldm%20feb/src/models/CollegeSettings.ts)
+- New model to store configurable settings:
+  - `academicSession` (string, e.g. `"2024-25"`)
+  - `intakeMonths` (array, default `["January", "July"]`)
+  - Singleton pattern — only one document, fetched via `CollegeSettings.getSingleton()`
+
+### [MODIFY] [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts)
+- **Add**: `joiningMonth` (enum: `'January' | 'July'`), `joiningYear` (Number)
+- **Add**: `courseEndDate` (Date) — auto-calculated
+- **Remove from required**: `sessionFrom`, `sessionTo` (keep in schema for legacy, make optional)
+
+### [MODIFY] [register route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts)
+- Replace `sessionFrom`/`sessionTo` inputs with `joiningMonth` + `joiningYear`
+- Auto-calculate `courseEndDate = joiningMonth/joiningYear + Program.duration_years`
+- Batch is looked up from Program + active session, NOT selected by student
+- Username = rollNumber
+
+### [MODIFY] [complete-profile page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/complete-profile/page.tsx)
+- Replace "Session From / Session To" dropdowns with:
+  - **Joining Month**: dropdown with only "January" / "July"
+  - **Joining Year**: dropdown (years list)
+- Auto-show calculated course end date
+- Remove batch dropdown — student selects **Program** (course) instead
+- Show auto-calculated "Course End: Month Year"
+
+### [MODIFY] [complete-profile route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/complete-profile/route.ts)
+- Same logic: accept `joiningMonth`, `joiningYear`, `programId` instead of `batchId`, `sessionFrom`, `sessionTo`
+- Auto-calculate course end date from `Program.duration_years`
+
+---
+
+## 2. Roll Number = Primary Login
+
+### [MODIFY] [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts)
+- `rollNumber` uniqueness: add a unique constraint (sparse index so non-students don't collide)
+
+### [MODIFY] [register route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts)
+- Set `username = rollNumber` (no email-derived username)
+- Validate Roll Number uniqueness globally (not just within a class)
+
+### [MODIFY] [auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts)
+- Already supports login by `username` or `email` — add `rollNumber` to the `$or` lookup so all three work
+
+### [MODIFY] [login page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(auth)/login/page.tsx)
+- Change label from "Username" to "Roll Number / Email"
+- Placeholder: "Enter your Roll Number or Email"
+
+---
+
+## 3. Academic Session & Remove Batch from Registration
+
+### [NEW] [CollegeSettings.ts](file:///media/swastik/focus/ldm%20feb/src/models/CollegeSettings.ts) *(same as §1)*
+
+### [NEW] [admin/settings route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/settings/route.ts)
+- **GET**: fetch current CollegeSettings (academicSession, intakeMonths)
+- **PATCH**: update academicSession, intakeMonths
+
+### [MODIFY] [public/batches route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/batches/route.ts)
+- Rename to `/api/public/programs` — return active Programs (not Batches) for registration dropdown
+
+### [MODIFY] [complete-profile page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/complete-profile/page.tsx)
+- Replace batch dropdown → Program dropdown (fetches from `/api/public/programs`)
+- Display fixed academic session from settings
+
+### [MODIFY] [admin/students page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(admin)/admin/students/page.tsx)
+- Replace batch filter with program filter
+- Show `joiningMonth` + `joiningYear` and `courseEndDate` instead of `sessionFrom`/`sessionTo`
+
+---
+
+## 4. Document Upload & Verification
+
+### [MODIFY] [StudentDocuments.ts](file:///media/swastik/focus/ldm%20feb/src/models/StudentDocuments.ts)
+- **Add**: `aadhaarFrontUrl`, `aadhaarFrontType`, `aadhaarBackUrl`, `aadhaarBackType` (all required)
+- **Add**: `documentMeta` array — `{ docType, docNumber, docRollNumber?, docPercentage? }`
+  - Ex: `{ docType: '10th', docRollNumber: '12345', docPercentage: '85.2' }`
+  - Ex: `{ docType: 'Aadhaar', docNumber: '1234-5678-9012' }`
+- Make aadhaar fields required (both front + back)
+
+### [MODIFY] [complete-profile page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/complete-profile/page.tsx)
+- Move Aadhaar from OPTIONAL_DOCS → REQUIRED_DOCS (split into front + back)
+- Add metadata form fields per document:
+  - **10th**: Roll Number + Percentage
+  - **12th**: Roll Number + Percentage
+  - **Aadhaar**: Aadhaar Number (12 digits)
+  - **Other**: Relevant ID Number
+- Validate mandatory fields before submission
+
+### [MODIFY] [complete-profile route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/complete-profile/route.ts)
+- Accept `aadhaarFront` and `aadhaarBack` files (both mandatory)
+- Accept `docMeta` JSON field with document metadata
+- Validate Aadhaar number format, 10th/12th roll + percentage
+- Save to `StudentDocuments.documentMeta`
+
+### [MODIFY] [student/profile page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(student)/student/profile/page.tsx)
+- Show Aadhaar Front + Back separately
+- Display document metadata (roll numbers, aadhaar number, percentages)
+
+### [MODIFY] [admin/students page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(admin)/admin/students/page.tsx)
+- Render Aadhaar Front + Back in document viewer
+- Show document metadata in student detail modal
+
+---
+
+## 5. Cross-check & Validation
+
+- Ensure dropdowns for all selection fields (no free text)
+- Validate all required fields before API accepts submission
+- TypeScript build check for all changes
+
+---
+
+## Verification Plan
+
+### Automated
+```bash
+npx tsc --noEmit   # zero non-test errors
+```
+
+### Manual
+1. Register a new student → verify joiningMonth/joiningYear dropdowns, course end auto-calc
+2. Login with roll number → should work
+3. Login with email → should work
+4. Upload Aadhaar front + back → verify both required
+5. Admin settings → change academic session → verify reflected
+6. Admin student view → verify new fields shown

@@ -1,0 +1,15 @@
+# Tasks
+
+- [ ] Design PHP Backend Architecture <!-- id: 8 -->
+    - [x] Create Design Document <!-- id: 8.1 -->
+- [ ] Implement Database Layer <!-- id: 9 -->
+    - [ ] Create `schema.sql` <!-- id: 9.1 -->
+    - [ ] Create `config/db.php` <!-- id: 9.2 -->
+- [ ] Implement Core Logic <!-- id: 10 -->
+    - [ ] Create `includes/functions.php` (Helpers) <!-- id: 10.1 -->
+    - [ ] Create `includes/auth.php` (Middleware) <!-- id: 10.2 -->
+    - [ ] Create `login.php` & `logout.php` <!-- id: 10.3 -->
+- [ ] Implement Panels <!-- id: 11 -->
+    - [ ] Admin Dashboard (Includes User/Notice CRUD) <!-- id: 11.1 -->
+    - [ ] Teacher Dashboard <!-- id: 11.2 -->
+    - [ ] Student/Employee Dashboard <!-- id: 11.3 -->

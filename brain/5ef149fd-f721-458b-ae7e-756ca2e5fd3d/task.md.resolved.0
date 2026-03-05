@@ -1,0 +1,39 @@
+# LDM College ERP - Forensic Audit & Recovery
+
+## Objective
+Transform a UI-heavy, disconnected ERP into a production-grade system.
+
+## Tasks
+
+- [/] **Phase 1: Forensic System Audit**
+  - [ ] Gather database schema
+  - [ ] Map backend API routes
+  - [ ] Map frontend routes
+  - [ ] Audit JWT/auth structure
+  - [ ] Produce feature audit table
+  - [ ] Create architecture diagram
+  - [ ] Document broken assumptions
+
+- [ ] **Phase 2: Canonical Data Model**
+  - [ ] Define production-grade schema
+  - [ ] Document relationships and keys
+  - [ ] Produce executable SQL
+
+- [ ] **Phase 3: RBAC Enforcement**
+  - [ ] Create access control matrix
+  - [ ] Define JWT payload structure
+  - [ ] Define middleware logic
+
+- [ ] **Phase 4: API ↔ UI Contract**
+  - [ ] Document endpoint contracts
+  - [ ] Identify missing APIs
+  - [ ] Map UI components to APIs
+
+- [ ] **Phase 5: Directory Structure**
+  - [ ] Propose frontend structure
+  - [ ] Propose backend structure
+
+- [ ] **Phase 6: Recovery Execution Plan**
+  - [ ] Create time-estimated checklist
+  - [ ] Identify features to delete
+  - [ ] Prioritize fixes

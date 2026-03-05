@@ -1,0 +1,67 @@
+# DMS V2 — Implementation Walkthrough
+
+## Summary
+
+Upgraded the Document Management System from V1 (basic file upload/review) to V2 with **dynamic form builder**, **dedicated teacher APIs/UI**, **bulk ZIP downloads**, and **secure temporary download links**.
+
+---
+
+## Changes Made
+
+### Schema Upgrades (Phase 1)
+
+| File | Changes |
+|------|---------|
+| [DocumentRequirement.ts](file:///media/swastik/focus/ldm%20feb/src/models/DocumentRequirement.ts) | Added `custom_fields[]` (7 field types), `requires_file_upload` flag |
+| [DocumentSubmission.ts](file:///media/swastik/focus/ldm%20feb/src/models/DocumentSubmission.ts) | Added `form_responses` Map, `additional_files[]`, made file fields optional |
+| [AuditLog.ts](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts) | Added `APPROVE`, `REJECT`, `UPLOAD`, `BULK_DOWNLOAD` actions |
+
+### Teacher APIs (Phase 2) — 7 Routes
+
+| Route | Purpose |
+|-------|---------|
+| [GET requirements](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/documents/requirements/route.ts) | List scoped to teacher's assigned subjects |
+| [POST requirements](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/documents/requirements/route.ts) | Create assignment-type with custom fields |
+| [GET/PUT/DELETE requirements/id](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/documents/requirements/%5Bid%5D/route.ts) | Manage own requirements + submission stats |
+| [GET submissions](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/documents/submissions/route.ts) | Paginated, filtered by status/requirement |
+| [PUT submissions/id/review](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/documents/submissions/%5Bid%5D/review/route.ts) | Approve/reject with history archiving |
+| [GET submissions/id/download](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/documents/submissions/%5Bid%5D/download/route.ts) | Secure Cloudinary signed URL (15min) |
+
+### Bulk Download (Phase 3)
+
+| Route | Purpose |
+|-------|---------|
+| [Admin bulk download](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/submissions/bulk-download/route.ts) | ZIP all submissions per requirement (max 200) |
+| [Teacher bulk download](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/documents/submissions/bulk-download/route.ts) | Same but scoped to teacher's requirements |
+
+### Student API Updates (Phase 4)
+
+- [Upload route](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/upload/route.ts): Handles `form_responses`, validates required custom fields, uploads additional files
+- [List route](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/route.ts): Returns `custom_fields` for dynamic rendering
+
+### Admin API Updates
+
+- [Admin requirements route](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/route.ts): Accepts `custom_fields` + `requires_file_upload`
+- [Admin requirements/id route](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/%5Bid%5D/route.ts): Update supports custom fields
+
+### UI Changes
+
+| Page | Key Features |
+|------|-------------|
+| [Teacher documents](file:///media/swastik/focus/ldm%20feb/src/app/(teacher)/teacher/documents/page.tsx) | Two-tab UI, form builder (7 types), bulk download, review modal with form responses |
+| [Teacher sidebar](file:///media/swastik/focus/ldm%20feb/src/components/teacher/TeacherSidebar.tsx) | Added "Assignments" nav link |
+| [Admin documents](file:///media/swastik/focus/ldm%20feb/src/app/admin/documents/page.tsx) | Form builder, bulk download button, `requires_file_upload` toggle, form responses in review |
+| [Student documents](file:///media/swastik/focus/ldm%20feb/src/app/(student)/student/documents/page.tsx) | Dynamic form renderer, additional file uploads, client-side validation |
+
+---
+
+## Verification
+
+- **TypeScript build**: `npx tsc --noEmit` — **0 errors**, exit code 0
+- **Dependencies**: `archiver` + `@types/archiver` installed
+
+## Custom Field Types Supported
+
+`text` · `textarea` · `number` · [date](file:///media/swastik/focus/ldm%20feb/src/app/admin/documents/page.tsx#209-212) · `dropdown` · `checkbox` · `file`
+
+Each field supports: label, required flag, placeholder, options (dropdown), file type/size limits (file type)

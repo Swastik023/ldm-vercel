@@ -1,0 +1,43 @@
+# Task: Enhance E-Library Content
+
+- [x] Analyze current seeding/content generation <!-- id: 0 -->
+- [x] Design professional academic content templates <!-- id: 1 -->
+- [x] Update library documents with rich content <!-- id: 2 -->
+    - [x] Update Master Curriculum & Syllabus <!-- id: 3 -->
+    - [x] Add initial detailed Notes and Lab Manuals <!-- id: 4 -->
+- [x] Expand E-Library with complete module list <!-- id: 6 -->
+    - [x] Map Sections A-Q to Programs and Categories <!-- id: 7 -->
+    - [x] Generate "Cheat Notes" content for initial major modules <!-- id: 8 -->
+    - [x] Create bulk seeding script for all 100+ modules <!-- id: 9 -->
+- [x] Implement Program-Based Navigation <!-- id: 10 -->
+    - [x] Update public library API with course data <!-- id: 11 -->
+    - [x] Create public programs API <!-- id: 12 -->
+    - [x] Restructure library UI sidebar and filtering <!-- id: 13 -->
+- [x] Phase 4: Admin File CRUD & UI Fixes <!-- id: 40 -->
+    - [x] Fix "Invalid Date" bug in Category Board <!-- id: 41 -->
+    - [x] Create local file upload API endpoint <!-- id: 42 -->
+    - [x] Implement file upload selector in Document Modal <!-- id: 43 -->
+    - [x] Verify full CRUD (Add/Edit/Delete) with real files <!-- id: 44 -->
+- [x] Deploy and Finalize <!-- id: 50 -->
+- [x] Phase 5: Premium Stitch Reader UI <!-- id: 60 -->
+    - [x] Design high-end "Medical Study Interface" in Stitch <!-- id: 61 -->
+    - [x] Implement Chapter Navigation and Sidebars <!-- id: 62 -->
+    - [x] Add format-specific handlers (Rich-Text vs PDF Embed) <!-- id: 63 -->
+    - [x] Implement Markdown (.md) support for AI content <!-- id: 65 -->
+    - [x] Fix raw Markdown rendering and add robust auto-detection <!-- id: 68 -->
+    - [x] Prioritize MD rendering over rich-text for pasted content <!-- id: 69 -->
+    - [x] Integrate Premium Reader into Public Library Portal <!-- id: 66 -->
+    - [x] Add "Save as PDF" (Print) functionality for Academic Content <!-- id: 67 -->
+    - [x] Final Verification and Vercel Readiness <!-- id: 64 -->
+- [x] Verify content display and navigation logic <!-- id: 5 -->
+- [x] Phase 6: Simplified Reader Interface <!-- id: 70 -->
+    - [x] Remove Related Modules & High Yield Facts <!-- id: 71 -->
+    - [x] Remove Table of Contents sidebar <!-- id: 72 -->
+    - [x] Remove Study Tools (Quick Ref, Highlights) <!-- id: 73 -->
+    - [x] Streamline header and content-first layout <!-- id: 74 -->
+    - [x] Clean up library portal integrations <!-- id: 75 -->
+- [x] Phase 7: Notion-style TOC Navigation <!-- id: 80 -->
+    - [x] Implement robust heading extraction for .md content <!-- id: 81 -->
+    - [x] Add minimalist sidebar for "Fast Access" headings <!-- id: 82 -->
+    - [x] Implement smooth-scroll navigation to headings <!-- id: 83 -->
+    - [x] Add active-heading highlighting (Notion-style) <!-- id: 84 -->

@@ -1,0 +1,52 @@
+# Frontend API URL Migration & Integration
+
+## Current Status
+- [x] Backend API fully operational at `/api/`
+- [x] Database connected and tested locally
+- [x] Backend-frontend mapping analysis complete
+- [x] Frontend API URLs updated
+- [x] Admin user created successfully
+- [x] Login working with backend
+- [ ] Components tested with new URLs
+- [ ] Missing backend endpoints identified
+
+## Phase 1: Update Frontend API URLs ✅ COMPLETE
+- [x] Update `ldm_test/src/pages/Login.tsx`
+- [x] Update `ldm_test/src/context/AuthContext.tsx`
+- [x] Update `ldm_test/src/pages/Gallery.tsx`
+- [x] Update `ldm_test/src/pages/Notices.tsx`
+- [x] Update `ldm_test/src/components/PopupContact.tsx`
+- [x] Update `ldm_test/src/components/Marquee.tsx`
+- [x] Update `ldm_test/src/components/NotificationBell.tsx`
+- [x] Update all admin pages (9 files)
+- [x] Fix Vite proxy configuration
+- [x] Fix backend login query (passwordStrong)
+
+## Phase 2: Test Updated Components ✅ LOGIN WORKING
+- [x] Test login with new `/api/auth/login`
+- [x] Test authentication state management
+- [x] Create admin user in database
+- [ ] Test student list (if integrated)
+- [ ] Test timetable display (if integrated)
+- [ ] Identify features needing backend endpoints
+
+## Phase 3: Backend Endpoints Needed
+- [ ] Gallery API (`GET/POST/DELETE /api/gallery`)
+- [ ] Notices API (`GET/POST/PUT/DELETE /api/notices`)
+- [ ] Contact API (`POST /api/contact`)
+- [ ] Marquee API (`GET/POST /api/marquee`)
+- [ ] Admin stats API (`GET /api/admin/stats`)
+- [ ] Other admin endpoints as needed
+
+## Phase 4: Integration Testing
+- [x] End-to-end login flow
+- [x] Protected routes working
+- [ ] All API calls returning expected data
+- [ ] Error handling working properly
+
+## Next Steps
+1. Test existing ERP features (students, timetable, attendance)
+2. Decide which missing features to implement
+3. Create backend endpoints for critical features
+4. Remove or disable non-essential broken features
+

@@ -1,0 +1,42 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+[0] (133,80)<a aria-label='Home' class='hover:opacity-90 transition-opacity min-w-[5rem] sm:min-w-[5.5rem]' href='/' />
+	[1] (133,80)<div  />
+		[2] (133,80)<img  />
+LDM College
+In collaboration with Dr. Dharam Dev Hospital & Institute
+[3] (867,80)<a aria-label='Visit Hospital Page' class='relative group hidden sm:block' href='/hospital' />
+	[4] (875,80)<img  />
+📢 Updates
+check checkkkkkkkk
+heyyyyyy
+check checkkkkkkkk
+heyyyyyy
+[5] (85,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-blue-600' href='/'>Home />
+[6] (156,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/about'>About Us />
+	[7] (181,256)<span  />
+[8] (230,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/notices'>Notices />
+[9] (300,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/library'>E-Library />
+[10] (378,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/courses'>Courses />
+	[11] (409,256)<span  />
+[12] (457,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/gallery'>Gallery />
+[13] (530,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/facilities'>Facilities />
+[14] (627,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/collaborations'>Collaborations />
+	[15] (672,256)<span  />
+[16] (727,256)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/contact'>Contact />
+	[17] (757,256)<span  />
+[18] (790,256)<button class='relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none' />
+[19] (845,256)<a class='inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors' href='/admin'>Dashboard />
+[20] (916,256)<button class='inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors'>Logout />
+Welcome to LDM Paramedical
+Empowering Healthcare Professionals of Tomorrow
+[21] (427,854)<button class='group w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-4 text-lg sm:text-xl font-medium text-white rounded-full overflow-hidden transition-all duration-300 hover:scale-105 transform shadow-lg hover:shadow-xl bg-gradient-to-r from-blue-600 to-purple-600'>Explore Courses />
+	Explore Courses
+[22] (588,854)<button class='w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-4 text-lg sm:text-xl font-medium text-white bg-green-600 rounded-full overflow-hidden transition-all duration-300 hover:bg-green-700 hover:scale-105 transform shadow-lg hover:shadow-xl group'>Contact Us />
+	Contact Us
+[23] (961,900)<button class='fixed bottom-12 right-8 bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg z-50'>Contact Us />
+	Contact Us
+
+</current_dom>

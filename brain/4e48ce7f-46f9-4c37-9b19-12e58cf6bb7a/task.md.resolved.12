@@ -1,0 +1,26 @@
+# Course Configuration Panel + Pricing Merge
+
+## Phase 0: Analysis
+- [/] Analyze Program/Course model structure
+- [ ] Analyze CoursePricing model
+- [ ] Analyze existing APIs (admin + public)
+- [ ] Analyze website frontend course display
+- [ ] Identify gaps and conflicts
+
+## Phase 1: Planning
+- [ ] Design unified model changes
+- [ ] Design unified API
+- [ ] Design admin UI (table + modal)
+- [ ] Write implementation plan
+- [ ] Get user approval
+
+## Phase 2: Implementation
+- [ ] Model updates
+- [ ] API routes (CRUD + public)
+- [ ] Admin UI with Stitch design
+- [ ] Update website course listing
+- [ ] Sidebar link
+
+## Phase 3: Verification
+- [ ] TypeScript check
+- [ ] Push to git

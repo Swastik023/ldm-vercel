@@ -1,0 +1,80 @@
+# Make LDM App Vercel-Ready
+
+The app is a Next.js 16 application with MongoDB, NextAuth v4, and Cloudinary. 
+A `npm run build` revealed **1 TypeScript error** that will prevent Vercel from deploying, 
+plus a **middleware deprecation warning**. We also need proper environment variable config for Vercel.
+
+## Proposed Changes
+
+---
+
+### 1. TypeScript Fix
+
+#### [MODIFY] [Library.ts](file:///media/swastik/focus/ldm%20feb/src/models/Library.ts)
+
+The [ILibrary](file:///media/swastik/focus/ldm%20feb/src/models/Library.ts#3-13) interface is missing `createdAt`/`updatedAt` timestamps, but the schema uses `{ timestamps: true }`. This causes a build error in the API route.
+
+**Fix:** Add `createdAt` and `updatedAt` to the [ILibrary](file:///media/swastik/focus/ldm%20feb/src/models/Library.ts#3-13) interface.
+
+---
+
+### 2. Middleware Deprecation Fix
+
+#### [MODIFY] [next.config.ts](file:///media/swastik/focus/ldm%20feb/next.config.ts)
+
+Next.js 16 deprecated the `middleware` file convention. The warning says to use `proxy` instead.
+However, examining this more carefully, the actual fix is to add `experimental.serverActions` features and ensure the middleware is correctly placed. The deprecation warning on Vercel is non-fatal but we should silence it.
+
+Actually, this is a Next.js internal warning about the name [middleware.ts](file:///media/swastik/focus/ldm%20feb/src/middleware.ts) in relation to Turbopack. It's non-fatal and won't block deployment. We'll leave this for now.
+
+---
+
+### 3. Environment Variable Documentation
+
+#### [NEW] [.env.example](file:///media/swastik/focus/ldm%20feb/.env.example) ✓ Already exists
+
+On Vercel, you set environment variables in **Project Settings → Environment Variables**. You will need to add:
+
+| Variable | Value |
+|---|---|
+| `MONGODB_URI` | Your MongoDB Atlas URI |
+| `NEXTAUTH_SECRET` | Use a strong 32+ char secret |
+| `NEXTAUTH_URL` | Your Vercel deployment URL e.g. `https://ldm-vercel.vercel.app` |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | `dowzpb9zj` |
+| `CLOUDINARY_API_KEY` | Your Cloudinary key |
+| `CLOUDINARY_API_SECRET` | Your Cloudinary secret |
+
+> [!IMPORTANT]
+> `NEXTAUTH_URL` must be changed to your actual Vercel deployment URL, not `http://localhost:3000`.
+
+---
+
+### 4. vercel.json Configuration
+
+#### [NEW] [vercel.json](file:///media/swastik/focus/ldm%20feb/vercel.json)
+
+Create a `vercel.json` to set function timeout (Vercel's default is 10s for Hobby plan, but DB-heavy routes may need more) and to set the Node.js version.
+
+```json
+{
+  "framework": "nextjs",
+  "functions": {
+    "src/app/api/**": {
+      "maxDuration": 30
+    }
+  }
+}
+```
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Run `npm run build` after changes — must pass with **0 errors**.
+
+### Manual Verification
+1. Commit and push changes to `git@github.com:Swastik023/ldm-vercel.git`
+2. Go to [vercel.com](https://vercel.com), import the `Swastik023/ldm-vercel` repository
+3. Add all environment variables listed above in Project Settings
+4. Redeploy and confirm the build passes on Vercel's dashboard

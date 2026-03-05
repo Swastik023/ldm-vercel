@@ -1,0 +1,94 @@
+# SecureChat Mobile - Production Fix Plan
+
+## Issue Analysis Summary
+
+After comprehensive scanning of JS + native Android code, here are ALL identified issues:
+
+---
+
+## 🔴 CRITICAL ISSUES
+
+### 1. AsyncStorage Native Module Not Linked
+**WHY**: Package `@react-native-async-storage/async-storage@2.2.0` installed in package.json but native module wasn't rebuilt into APK. The app was built before the package was added.
+
+**SYMPTOMS**: 
+- "NativeModule: AsyncStorage is null"
+- "Cannot read property 'useThemeStore' of undefined"
+
+**FIX**: Clean rebuild of Android app (✅ DONE - build successful)
+
+---
+
+### 2. Babel Config Missing Reanimated Plugin
+**WHY**: `react-native-reanimated@3.11.0` requires babel plugin for proper worklet transformation.
+
+**SYMPTOMS**: Potential runtime errors with animations, especially shared values.
+
+**FIX**: Add `react-native-reanimated/plugin` to babel.config.js
+
+---
+
+## 🟡 CODE QUALITY ISSUES (Stubs to Remove)
+
+### 3. Push Notification Stub  
+**File**: [src/services/pushNotification.ts](file:///media/swastik/focus/projects%202026/chat%20app/0.0/mobile/src/services/pushNotification.ts)
+**WHY**: Firebase packages (`@react-native-firebase/messaging`, `@notifee/react-native`) not installed.
+
+**OPTIONS**:
+- A) Install Firebase packages and implement properly (requires Firebase project setup)
+- B) Remove push notification feature entirely until ready
+- C) Keep stub but mark clearly as "feature not available"
+
+**RECOMMENDATION**: Option B or C until Firebase is configured
+
+---
+
+### 4. LocationPickerScreen Stub
+**File**: [src/screens/main/LocationPickerScreen.tsx](file:///media/swastik/focus/projects%202026/chat%20app/0.0/mobile/src/screens/main/LocationPickerScreen.tsx)  
+**WHY**: `react-native-maps` and `@react-native-community/geolocation` not installed.
+
+**OPTIONS**:
+- A) Install and configure react-native-maps (requires Google Maps API key)
+- B) Remove location feature from navigation until ready
+
+**RECOMMENDATION**: Option B until Maps API key is available
+
+---
+
+## 🟢 CONFIGURATION FIXES NEEDED
+
+### 5. App Name Mismatch (✅ Already Fixed)
+- [app.json](file:///media/swastik/focus/projects%202026/chat%20app/0.0/mobile/app.json): `name: "HelloWorld"` ✅
+- `MainActivity.kt`: `getMainComponentName() = "HelloWorld"` ✅
+
+---
+
+### 6. Metro Config (✅ Already Fixed)
+- Updated to extend `@react-native/metro-config` ✅
+
+---
+
+## Implementation Steps
+
+### Phase 1: Critical Fixes (Required Now)
+- [x] Clean rebuild Android APK with native modules
+- [x] Fix babel.config.js for reanimated
+- [x] Test app launch after clean install
+
+### Phase 2: Code Cleanup (Address Stubs)
+- [ ] Decide: Keep or remove push notification feature
+- [ ] Decide: Keep or remove location sharing feature
+- [ ] Remove/update stub implementations accordingly
+
+### Phase 3: Optional Enhancements
+- [ ] Install Firebase for push notifications (if needed)
+- [ ] Configure Google Maps API (if needed)
+
+---
+
+## Verification Checklist
+- [ ] App launches without crash
+- [ ] No "NativeModule is null" errors
+- [ ] Login screen displays correctly
+- [ ] Theme switching works
+- [ ] Navigation between screens works

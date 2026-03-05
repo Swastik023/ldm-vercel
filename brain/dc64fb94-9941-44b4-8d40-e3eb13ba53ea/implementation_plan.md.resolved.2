@@ -1,0 +1,288 @@
+# Finance Management Module — LDM College ERP
+
+Small-college design (≤60 users). Simple, practical, maintainable.
+
+---
+
+## 1. Database Schema
+
+Four Mongoose models. No calculated fields stored; all computed at query time.
+
+---
+
+### 1.1 `FeeStructure` — Define what a student owes
+
+```ts
+{
+  program: ObjectId → Program,   // e.g., DMLT
+  session: ObjectId → Session,   // e.g., 2024-2025
+  semester: Number,              // 1, 2, ...
+  total_amount: Number,          // e.g., 25000 (rupees)
+  due_date: Date,
+  description: String,           // "Sem 1 Tuition Fee"
+  is_active: Boolean,
+  createdAt, updatedAt           // timestamps: true
+}
+```
+
+---
+
+### 1.2 `FeePayment` — Track what a student actually paid
+
+```ts
+{
+  student: ObjectId → User,      // role: 'student'
+  fee_structure: ObjectId → FeeStructure,
+  amount_paid: Number,           // cumulative total paid so far
+  payments: [                    // array of individual transactions
+    {
+      amount: Number,
+      paid_on: Date,
+      mode: 'cash' | 'online' | 'cheque' | 'DD',
+      receipt_no: String,        // manually assigned
+      remarks: String,
+      recorded_by: ObjectId → User (admin)
+    }
+  ],
+  status: 'unpaid' | 'partial' | 'paid',  // computed + stored for fast lookup
+  createdAt, updatedAt
+}
+```
+
+> **Status rule** (recalculate on every payment update):
+> - `amount_paid === 0` → `unpaid`
+> - `amount_paid < total_amount` → `partial`
+> - `amount_paid >= total_amount` → `paid`
+
+---
+
+### 1.3 `Expense` — College operating expenses
+
+```ts
+{
+  title: String,                 // "Electricity Bill"
+  amount: Number,
+  category: 'utilities' | 'maintenance' | 'supplies' | 'events' | 'other',
+  paid_on: Date,
+  paid_to: String,               // vendor/person name
+  remarks: String,
+  recorded_by: ObjectId → User (admin),
+  createdAt, updatedAt
+}
+```
+
+---
+
+### 1.4 `Salary` — Staff salary records (monthly)
+
+```ts
+{
+  employee: ObjectId → User,     // role: 'teacher' | 'employee'
+  month: String,                 // "2025-01" (YYYY-MM)
+  base_amount: Number,
+  deductions: Number,            // default 0
+  net_amount: Number,            // computed: base - deductions (stored for record)
+  status: 'pending' | 'paid',
+  paid_on: Date,                 // null if pending
+  paid_by: ObjectId → User (admin),
+  remarks: String,
+  createdAt, updatedAt
+}
+```
+
+> `net_amount` is stored (not computed) because it is a **historical financial record** — the base salary may change later.
+
+---
+
+## 2. Business Logic
+
+### 2.1 Fee Payment Flow
+
+```
+Admin opens Student → Payment
+      ↓
+Select FeeStructure (program + session + semester)
+      ↓
+If no FeePayment exists → create one with amount_paid: 0
+      ↓
+Admin enters payment amount + mode + receipt_no
+      ↓
+Push to payments[] array
+Recalculate amount_paid = sum(payments[].amount)
+Update status: unpaid / partial / paid
+      ↓
+Save FeePayment document
+```
+
+**Remaining balance** (never stored, always computed):
+```
+remaining = fee_structure.total_amount - fee_payment.amount_paid
+```
+
+**Overpayment rule:** Reject if `new amount + amount_paid > total_amount`. Show clear error.
+
+---
+
+### 2.2 Expense Flow
+
+```
+Admin → Add Expense
+      Enter: title, amount, category, paid_on, paid_to
+      Save → Expense document created
+```
+
+No approval workflow needed for a 60-user system. Admin is sole authority.
+
+---
+
+### 2.3 Salary Flow
+
+```
+Each month:
+Admin → Add Salary Record for each employee
+      Enter: base_amount, deductions, month
+      net_amount = base - deductions → stored
+      status: 'pending'
+      
+When paid:
+Admin → Mark as Paid
+      status → 'paid'
+      paid_on → today's date
+```
+
+---
+
+### 2.4 Finance Dashboard Calculations
+
+All aggregated at query time. No pre-computed totals stored.
+
+```
+Total Revenue   = SUM(FeePayment.amount_paid) for current session
+Total Expenses  = SUM(Expense.amount) + SUM(Salary.net_amount WHERE status='paid')
+Net Balance     = Total Revenue - Total Expenses
+Pending Fees    = SUM(FeeStructure.total_amount - FeePayment.amount_paid) for status != 'paid'
+Pending Salary  = SUM(Salary.net_amount WHERE status='pending')
+```
+
+---
+
+## 3. API Structure (Next.js Route Handlers)
+
+### Fee Structure
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/admin/finance/fee-structures` | List all fee structures |
+| POST | `/api/admin/finance/fee-structures` | Create fee structure |
+| PUT | `/api/admin/finance/fee-structures/[id]` | Update fee structure |
+| DELETE | `/api/admin/finance/fee-structures/[id]` | Delete (if no payments linked) |
+
+### Fee Payments
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/admin/finance/payments` | List all payments (filterable by session, status) |
+| GET | `/api/admin/finance/payments/[studentId]` | Student's full payment history |
+| POST | `/api/admin/finance/payments/[studentId]` | Add a payment entry |
+| GET | `/api/student/finance/payments` | Student views own payments |
+
+### Expenses
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/admin/finance/expenses` | List expenses (filterable by month/category) |
+| POST | `/api/admin/finance/expenses` | Add expense |
+| PUT | `/api/admin/finance/expenses/[id]` | Edit expense |
+| DELETE | `/api/admin/finance/expenses/[id]` | Delete expense |
+
+### Salary
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/admin/finance/salary` | List salary records (filterable by month) |
+| POST | `/api/admin/finance/salary` | Create monthly salary records |
+| PUT | `/api/admin/finance/salary/[id]` | Mark as paid / update |
+
+### Dashboard
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/admin/finance/dashboard` | Returns all summary stats |
+
+---
+
+## 4. UI/UX Structure
+
+### Admin Finance Panel — Navigation
+```
+Finance
+├── Dashboard          ← Revenue, Expenses, Balance cards + charts
+├── Fee Management
+│   ├── Fee Structures ← Create/edit program fees
+│   └── Payments       ← Search student → view/add payments
+├── Expenses           ← Add/list expenses
+└── Salary             ← Monthly salary list + mark-paid button
+```
+
+### Key Screens
+
+**Dashboard:**
+- 4 stat cards: Total Revenue | Total Expenses | Net Balance | Pending Fees
+- Bar chart: Monthly Revenue vs Expenses (last 6 months)
+- Table: Top 5 pending student payments
+
+**Payments (Admin):**
+- Search bar: Student name/username
+- On select: Show table of fee structures for their program+session
+- For each row: Amount Due | Paid | Remaining | Status badge | "Add Payment" button
+- "Add Payment" modal: amount, mode, receipt_no, date, remarks
+
+**Student Fee Panel (`/student/fees`):**
+- Simple table: Subject/Semester | Total Fee | Paid | Remaining | Status
+- No payment actions — read only
+
+---
+
+## 5. Validation Rules
+
+| Field | Rule |
+|---|---|
+| Payment amount | `> 0` AND `<= remaining balance` |
+| FeeStructure total_amount | `> 0` |
+| Expense amount | `> 0` |
+| Salary base_amount | `> 0`, `deductions >= 0`, `deductions <= base_amount` |
+| Duplicate salary | Reject if same `employee + month` already exists |
+| Delete FeeStructure | Only allowed if no `FeePayment` documents reference it |
+| Receipt number | Unique per payment transaction (admin-assigned) |
+
+---
+
+## 6. Edge Case Handling
+
+| Edge Case | Handling |
+|---|---|
+| Student overpay attempt | API returns 400: "Amount exceeds remaining balance" |
+| Delete structure with payments | API returns 409: "Cannot delete: payments exist" |
+| Salary created twice for same month | API returns 409: "Salary already exists for this month" |
+| Student with no FeePayment record | GET returns empty state — show "No fee assigned" |
+| Expense in wrong month | Allow backdating — admin is responsible |
+| Net balance goes negative | Allowed — show in red on dashboard, no business rule block |
+
+---
+
+## 7. Data Consistency Strategy
+
+- **Atomic updates only:** When adding a payment, push to `payments[]` array AND update `amount_paid` AND `status` in a single `findByIdAndUpdate` call. Never split across two operations.
+- **Session-scoped queries:** Always filter Fee data by the active session to avoid cross-year confusion.
+- **No orphan records:** When a Student user is deleted, their `FeePayment` data should be kept (financial audit trail). Never cascade-delete financial records.
+- **Salary is historical:** Once `status: 'paid'`, only `remarks` can be edited. Amount cannot change.
+- **Soft delete for FeeStructures:** Add `is_active: false` instead of deleting, if payments exist.
+
+---
+
+## 8. Implementation Phases
+
+| Phase | Deliverable |
+|---|---|
+| Phase 1 | Models: `FeeStructure`, `FeePayment`, `Expense`, `Salary` |
+| Phase 2 | Admin API: Fee Structure + Fee Payments CRUD |
+| Phase 3 | Admin API: Expenses + Salary |
+| Phase 4 | Dashboard API + aggregation queries |
+| Phase 5 | Admin UI: Payments + Expenses + Salary screens |
+| Phase 6 | Student UI: `/student/fees` — read-only view |
+| Phase 7 | Dashboard UI: Cards + chart |

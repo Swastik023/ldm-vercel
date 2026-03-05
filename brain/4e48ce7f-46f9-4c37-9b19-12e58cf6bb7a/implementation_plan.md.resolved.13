@@ -1,0 +1,114 @@
+# Batch Management Fix — Implementation Plan
+
+## Root Causes Found
+
+| # | Problem | Impact |
+|---|---|---|
+| 1 | `BatchSchema` requires [session](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#142-153) field — but test/assignment uploads don't have it | Seeds fail silently |
+| 2 | Only `{ name: 1 }` unique index — no `{ program, joiningYear, intakeMonth }` dedup guard | Can create orphaned duplicates |
+| 3 | Old batch name format: `2025BTECH` — client wants `BTECH_2025_JAN` | Name collisions, confusing UI |
+| 4 | No CRUD REST API for batches — only a server action | Can't call from client-side TestManager |
+| 5 | `academic-options` API requires `admin` role — teachers can't fetch batches for test upload | Teacher upload dropdowns are empty |
+| 6 | [populateBatches](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts#132-189) only seeds 2020-2040 for `active` programs — if no programs exist yet, seeds nothing | Empty dropdown |
+| 7 | `User.batch` references [Batch](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/students/page.tsx#16-17) ObjectId, but no migration ensures existing students are linked | Students have no batch → no tests shown |
+
+---
+
+## Proposed Changes
+
+### Component 1 — Schema
+
+---
+
+#### [MODIFY] [Academic.ts](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts)
+
+- Make [session](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#142-153) field **optional** on BatchSchema (programs exist independently of sessions)
+- Add compound unique index `{ program: 1, joiningYear: 1, intakeMonth: 1 }` with `unique: true`
+- Keep `{ name: 1 }` unique index
+- Add `batchCode` field in new format: `PROGRAM_CODE_YEAR_MONTH` e.g. `CSE_2026_JAN`
+- Update [IBatch](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#53-69) interface accordingly
+
+---
+
+### Component 2 — Seeding Action
+
+---
+
+#### [MODIFY] [academic.ts](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts)
+
+Update [populateBatches()](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts#132-189):
+- Use new batch code format `{CODE}_{YEAR}_{MONTH}` as both `name` and `batchCode`
+- Remove hard [session](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#142-153) dependency — set to `null` if not available
+- Seed current year + next year by default (simpler, predictable)
+- Also offer a full historical seed (2020-2040) as a separate admin action
+- Add `{ upsert: true }` with compound key as filter (not just name)
+- Return proper count of created vs skipped
+
+---
+
+### Component 3 — Batch CRUD API
+
+---
+
+#### [NEW] `/api/admin/batches/route.ts`
+
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/student/fees/route.ts#7-48) — list batches, filterable by `?programId=`, `?year=`, `?intakeMonth=`, `?active=true`; populate program
+- [POST](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/self-mark/route.ts#8-69) — create single batch with dedup check
+- Server also exposes batch list to teachers (role check: `['admin', 'teacher']`)
+
+#### [NEW] `/api/admin/batches/seed/route.ts`
+
+- [POST](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/self-mark/route.ts#8-69) — trigger full seed (2020-2040, all active programs, both intakes)
+- Idempotent — uses `updateOne({ filter }, { $setOnInsert: {...} }, { upsert: true })`
+- Returns `{ created, skipped }`
+
+#### [MODIFY] [academic-options/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/academic-options/route.ts)
+
+- Allow both `admin` and `teacher` roles (teachers need it for test upload dropdowns)
+- Return batches in new format with `batchCode`, `intakeMonth`, `joiningYear`
+
+#### [MODIFY] [public/batches/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/batches/route.ts)
+
+- Return `batchCode` and `intakeMonth` for registration form display
+
+---
+
+### Component 4 — Test Module Integration
+
+---
+
+#### [MODIFY] [admin/tests/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/route.ts)
+
+- After upload, verify batchId is a valid ProTest-linked Batch ObjectId
+
+#### [MODIFY] [TestManager.tsx](file:///media/swastik/focus/ldm%20feb/src/components/admin/TestManager.tsx)
+
+- Fetch batches from `/api/admin/batches?active=true` (new endpoint, same role)
+- Display batch as `CSE_2026_JAN (Computer Science Engineering)` in dropdown
+
+---
+
+### Component 5 — Admin Batch Dashboard
+
+---
+
+#### [MODIFY] [BatchManager.tsx](file:///media/swastik/focus/ldm%20feb/src/components/admin/BatchManager.tsx)
+
+- Add "Seed Batches" button that calls `/api/admin/batches/seed`  
+- Shows created/skipped count in toast
+- Refresh list after seed
+
+---
+
+## Verification Plan
+
+### Automated
+- `tsc --noEmit`
+- API calls to `GET /api/admin/batches` → should return seeded batches
+- `POST /api/admin/batches/seed` → should correctly create+skip
+
+### Manual
+1. Admin clicks "Seed Batches" → batches for current year + next year appear in dropdown
+2. Teacher opens test upload → batch dropdown is populated
+3. Same (program + year + intakeMonth) created twice → 2nd is silently skipped (no duplicate error)
+4. Student assigned to batch → sees only that batch's tests

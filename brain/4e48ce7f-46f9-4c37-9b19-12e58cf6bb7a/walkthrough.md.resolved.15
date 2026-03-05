@@ -1,0 +1,44 @@
+# Data Validation Hardening — Walkthrough
+
+## What was done
+
+Audited all 101 API routes and fixed **18+ data validation edge cases** across 12 files. Created a shared [validate.ts](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts) utility for consistent validation.
+
+## Changes by category
+
+### New utility
+| File | Purpose |
+|---|---|
+| [validate.ts](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts) | [isValidEmail](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#10-13), [isValidPhone](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#16-19), [isValidMonth](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#22-25), [isValidObjectId](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#26-30), [toSafeNumber](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#31-40), [isValidDate](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#41-49), [sanitizeString](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#50-60), [safeParseJSON](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#61-79) |
+
+### Auth (public routes — highest risk)
+| Route | Fix |
+|---|---|
+| [register](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts) | Email format check, name trim+100 char cap, ObjectId validation for batchId, safe JSON parse |
+| [verify-otp](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/verify-otp/route.ts) | Safe JSON parse (was crashing with 500 on malformed body) |
+
+### Finance (money at stake)
+| Route | Fix |
+|---|---|
+| [expenses](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/expenses/route.ts) | `amount` coerced to [Number](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#31-40), `paid_on` date validated, string-trimmed fields |
+| [fee-structures](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/fee-structures/route.ts) | `total_amount` + `semester` coerced to [Number](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#31-40) |
+| [salary](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/salary/route.ts) | `base_amount`/`deductions` coerced, `month` validated as YYYY-MM format |
+| [payments](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/payments/%5BstudentId%5D/route.ts) | Payment `amount` coerced, `paid_on` date validated |
+
+### Admin CRUD
+| Route | Fix |
+|---|---|
+| [students PATCH](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/%5Bid%5D/route.ts) | `status` whitelist (prevents arbitrary values like `"hacked"`) |
+| [marquee](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/marquee/route.ts) | PATCH: [id](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#41-49) presence check, `isActive` boolean check, 404 on missing. POST: message capped at 500 chars |
+| [settings](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/settings/route.ts) | `intakeMonths` whitelisted to only `['January', 'July']` |
+
+### Student / Job
+| Route | Fix |
+|---|---|
+| [referral](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/%5Bid%5D/refer/route.ts) | Candidate email format check, phone 10-digit check, resume limit changed from 5MB to shared 4MB |
+| [doc requirements](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/route.ts) | Default `max_file_size_mb` capped at 4 (was 5, exceeding Vercel limit) |
+
+## Verification
+
+- **Build**: `npm run build` passed clean with 0 errors
+- **Commit**: `893c1d1` pushed to `main`

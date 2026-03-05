@@ -1,0 +1,84 @@
+# Library Auth + Admin Approval Flow
+
+Two separate features to implement.
+
+---
+
+## Proposed Changes
+
+### Feature 1 — Library: Login Required
+
+Library is currently fully public (`/library` → no auth check anywhere).
+
+#### [MODIFY] [PublicNavbar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/layout/PublicNavbar.tsx)
+- Hide `E-Library` nav item when user is not logged in.
+
+#### [MODIFY] [library/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/library/page.tsx)
+- Add [useSession()](file:///media/swastik/focus/ldm%20feb/tests/unit/components/navbar.test.tsx#13-14) at the top of [PublicLibrary](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/library/page.tsx#75-396).
+- If session is loading → show spinner.
+- If no session → show a lock screen (blur overlay) with a "Login to Access the Library" button instead of the actual content.
+
+#### [MODIFY] [middleware.ts](file:///media/swastik/focus/ldm%20feb/src/middleware.ts)
+- Add `/library` to the matcher so unauthenticated users are redirected to `/login`.
+
+---
+
+### Feature 2 — Admin Approval Gate
+
+**Flow:**
+1. Student registers (email or Google) → `status: 'pending'` in DB.
+2. Student sees a **"Pending Approval"** screen after registration/login. Cannot access dashboard.
+3. Admin sees a list of pending students and can **Approve** or **Reject** each one.
+4. On approval → `status: 'active'` → student can now access dashboard.
+5. On rejection → `status: 'rejected'` → student sees rejection message.
+
+#### [MODIFY] [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts)
+- Add `'pending'` and `'rejected'` to the `status` enum.
+- Change default from `'active'` to `'pending'` for new users.
+- Admins stay `'active'` always — so the register API must explicitly set admin accounts to active.
+
+#### [MODIFY] [auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts)
+- Add `status` field to JWT and Session.
+- Block login for `rejected` users with a clear error message.
+
+#### [MODIFY] [next-auth.d.ts](file:///media/swastik/focus/ldm%20feb/src/types/next-auth.d.ts)
+- Add `status` to User, Session, and JWT types.
+
+#### [MODIFY] [middleware.ts](file:///media/swastik/focus/ldm%20feb/src/middleware.ts)
+- Add check: if `token.status === 'pending'` or `'rejected'` → redirect to `/pending-approval` instead of dashboard.
+- Add `/pending-approval` to matcher.
+
+#### [NEW] `src/app/pending-approval/page.tsx`
+- Beautiful page shown to students whose account is pending admin review.
+- Shows college logo, status message, and email.
+- If `status === 'rejected'` → shows rejection message.
+
+#### [MODIFY] [register/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts)
+- Set `status: 'pending'` on new email/password registrations.
+
+#### [MODIFY] [auth.ts signIn callback](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts)
+- Set `status: 'pending'` on new Google users created via signIn callback.
+
+#### [NEW] `src/app/api/admin/users/approve/route.ts`
+- `PATCH /api/admin/users/approve` — set `status: 'active'` for a user by ID.
+- `PATCH /api/admin/users/reject` — set `status: 'rejected'` for a user by ID.
+- Admin role required.
+
+#### [MODIFY] [admin/students/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/students/page.tsx)
+- Add a **"Pending Approvals"** tab at the top showing students with `status: 'pending'`.
+- Each row has **Approve** ✅ and **Reject** ❌ buttons.
+- After action, row moves out of pending list.
+
+---
+
+## Verification Plan
+
+### Automated
+- `npx tsc --noEmit` — zero errors in production code.
+
+### Manual
+1. Register a new student → immediately see "Pending Approval" page.
+2. Login page should show a blocked message for rejected users.
+3. Admin: go to Students → Pending tab → approve → verify student can now access dashboard.
+4. Guest (not logged in): `/library` link hidden in navbar; navigating directly to `/library` → redirected to login.
+5. Logged-in student: `/library` works normally.

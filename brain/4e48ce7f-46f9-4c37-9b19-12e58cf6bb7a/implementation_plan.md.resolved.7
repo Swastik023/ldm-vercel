@@ -1,0 +1,150 @@
+# Job Portal Module — Implementation Plan
+
+Student job portal with admin-controlled postings, automatic eligibility engine, application & referral flows.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **CGPA & Backlog**: The system has **no CGPA field** and **no backlog tracking**. Two options:
+> - **Option A (Recommended)**: Skip CGPA/backlog eligibility rules for now — focus on program, graduation year, 10th/12th percentage which already exist in `StudentDocuments.documentMeta`
+> - **Option B**: Add CGPA/backlog fields to the User or StudentProfile model (more work, needs data entry)
+>
+> **I'm going with Option A unless you say otherwise.**
+
+> [!NOTE]
+> **Graduation year** will be derived from `User.courseEndDate`. **10th/12th percentage** will be pulled from `StudentDocuments.documentMeta`.
+
+---
+
+## Models (3 new files)
+
+### [NEW] `src/models/JobPosting.ts`
+
+| Field | Type | Notes |
+|---|---|---|
+| `title` | String | required |
+| `company` | String | required |
+| `jobType` | `'fulltime' \| 'internship'` | |
+| `location` | `'remote' \| 'onsite' \| 'hybrid'` | |
+| `ctc` | String | e.g. "₹6 LPA" or "₹15K/month" |
+| `description` | String | rich text |
+| `skillsRequired` | String[] | tags |
+| `deadline` | Date | |
+| `status` | `'draft' \| 'published' \| 'closed'` | |
+| `createdBy` | ObjectId → User | |
+| **Eligibility** | | |
+| `eligibility.programs` | ObjectId[] → Program | empty = all |
+| `eligibility.graduationYears` | Number[] | e.g. [2025, 2026] |
+| `eligibility.min10thPct` | Number | default 0 |
+| `eligibility.min12thPct` | Number | default 0 |
+| **Referral** | | |
+| `referral.enabled` | Boolean | default false |
+| `referral.maxPerStudent` | Number | default 3 |
+| `referral.reward` | String | optional label |
+
+---
+
+### [NEW] `src/models/JobApplication.ts`
+
+| Field | Type | Notes |
+|---|---|---|
+| `jobId` | ObjectId → JobPosting | |
+| `studentId` | ObjectId → User | |
+| `resumeUrl` | String | Cloudinary URL |
+| `resumeType` | String | |
+| `status` | `'applied' \| 'shortlisted' \| 'rejected' \| 'selected'` | |
+| `adminNotes` | String | optional |
+| `appliedAt` | Date | |
+
+Unique: `{ jobId, studentId }`
+
+---
+
+### [NEW] `src/models/JobReferral.ts`
+
+| Field | Type | Notes |
+|---|---|---|
+| `jobId` | ObjectId → JobPosting | |
+| `referredBy` | ObjectId → User | student who referred |
+| `candidateName` | String | |
+| `candidateEmail` | String | |
+| `candidatePhone` | String | |
+| `resumeUrl` | String | |
+| `resumeType` | String | |
+| `status` | `'referred' \| 'shortlisted' \| 'rejected' \| 'hired'` | |
+| `rewardApproved` | Boolean | default false |
+| `adminNotes` | String | |
+
+Unique: `{ jobId, candidateEmail }`
+
+---
+
+## APIs (6 routes)
+
+| # | Route | Method | Auth | Purpose |
+|---|---|---|---|---|
+| 1 | `/api/admin/jobs` | GET, POST | admin | List all jobs, create job |
+| 2 | `/api/admin/jobs/[id]` | PATCH, DELETE | admin | Edit/close/delete job |
+| 3 | `/api/admin/jobs/[id]/applications` | GET, PATCH | admin | View & update application statuses |
+| 4 | `/api/admin/jobs/[id]/referrals` | GET, PATCH | admin | View & update referral statuses |
+| 5 | `/api/student/jobs` | GET | student | List published jobs + eligibility check |
+| 6 | `/api/student/jobs/[id]/apply` | POST | student | Apply (resume upload) |
+| 7 | `/api/student/jobs/[id]/refer` | POST | student | Refer candidate (if enabled) |
+
+---
+
+## Eligibility Engine (pure function)
+
+```
+checkEligibility(job, student, docMeta) → { eligible: boolean, reasons: string[] }
+```
+
+Checks:
+1. ✅ Student profile complete + status active
+2. ✅ Job not closed / past deadline
+3. ✅ Program in `eligibility.programs` (or all programs allowed)
+4. ✅ Graduation year in `eligibility.graduationYears` (derived from `courseEndDate`)
+5. ✅ 10th percentage ≥ `min10thPct` (from `documentMeta`)
+6. ✅ 12th percentage ≥ `min12thPct` (from `documentMeta`)
+
+---
+
+## UI Pages (3 pages)
+
+### Admin: `/admin/jobs` — Job Management
+- Table of all jobs (title, company, status, deadline, application count)
+- Create/Edit job modal (all fields + eligibility rules + referral config)
+- Click into a job → tabbed view: Applications / Referrals
+- Status update dropdowns, admin notes
+
+### Student: `/student/jobs` — Job Board
+- Cards layout with eligibility badge (✅ / ❌ with reasons)
+- Apply button (disabled if not eligible or already applied)
+- Refer button (if referral enabled)
+- My Applications tab
+
+### No standalone pages needed for:
+- Referral form — modal inside the job card
+- Application detail — inline in admin table
+
+---
+
+## Execution Order
+
+| Phase | Files | Est. effort |
+|---|---|---|
+| **Phase 1: Models** | 3 model files | Light |
+| **Phase 2: APIs** | 7 route files + eligibility helper | Medium |
+| **Phase 3: Admin UI** | 1 page (admin/jobs) | Medium-heavy |
+| **Phase 4: Student UI** | 1 page (student/jobs) | Medium |
+
+---
+
+## Edge Cases Handled
+
+- ❌ Block apply/refer if `isProfileComplete === false`
+- ❌ Block if job `status !== 'published'` or past `deadline`
+- ❌ Block self-referral (same email)
+- ❌ Duplicate candidateEmail per job
+- ✅ Eligibility changes after apply do NOT retroactively invalidate
+- ⚠️ Referral + direct application conflict flagged in admin view

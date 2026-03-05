@@ -1,0 +1,47 @@
+# Task: Student Registration + Resume Builder System
+
+## Phase 1 – Planning & Design
+- [x] Analyze existing codebase (User model, student routes, API structure)
+- [x] Write implementation plan
+- [x] Get user approval on plan
+
+## Phase 2 – Database Models (MongoDB / Mongoose)
+- [x] [StudentProfile](file:///media/swastik/focus/ldm%20feb/src/models/StudentProfile.ts#3-15) model (extended registration data)
+- [x] [EmailOTP](file:///media/swastik/focus/ldm%20feb/src/models/EmailOTP.ts#3-11) model (hashed OTP, expiry, attempts)
+- [x] [Resume](file:///media/swastik/focus/ldm%20feb/src/models/Resume.ts#25-41) model (career objective, skills, education, training, experience, languages)
+- [x] `ResumeSkill` (embedded in Resume model)
+- [x] `ResumeExperience` (embedded)
+- [x] `ResumeInternship` (embedded)
+
+## Phase 3 – Backend APIs
+- [x] `POST /api/auth/register` – student self-registration
+- [x] `POST /api/auth/send-otp` – send email OTP via Hostinger SMTP
+- [x] `POST /api/auth/verify-otp` – verify OTP (max 3 attempts, 5-min expiry)
+- [x] `POST /api/auth/resend-otp` – resend with rate limiting
+- [x] `GET /api/student/resume` – fetch resume data
+- [x] `POST /api/student/resume` – create/update resume
+- [x] `GET /api/student/resume/pdf` – generate & download PDF
+
+## Phase 4 – Stitch UI Design
+- [x] Generate multi-step registration form (Stitch)
+- [x] Generate resume preview page (Stitch)
+- [x] Generate student dashboard updated with resume section (Stitch)
+
+## Phase 5 – Frontend Implementation
+- [x] `/register` – multi-step registration form component
+- [x] OTP input step with timer + resend
+- [x] `/student/resume` – guided resume builder (multi-step)
+- [x] `/student/resume/preview` – resume preview page (A4 layout)
+- [x] PDF download button using `html2pdf.js` or `react-to-pdf`
+- [x] Update student dashboard with resume/profile quick-links
+
+## Phase 6 – Security & Validation
+- [x] Zod/Yup input validation on all forms
+- [x] Rate limiting on OTP endpoints
+- [x] Prevent duplicate account creation
+- [x] Protect resume routes with auth session check
+
+## Phase 7 – Verification
+- [x] TypeScript build check (`npm run build`)
+- [x] Manual flow: Register → OTP → Dashboard → Resume Builder → Preview → Download PDF
+- [x] Check OTP expiry & max attempt enforcement

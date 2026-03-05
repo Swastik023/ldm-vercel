@@ -1,0 +1,37 @@
+# Walkthrough: Express Typo Fix
+
+I have successfully fixed the typo that was preventing your application from running.
+
+## Changes Made
+
+### Package Configuration
+
+Corrected the typo in [package.json](file:///media/swastik/focus/projects%202026/webdev/package.json) where `express` was misspelled as `expres`.
+
+```diff
+-    "expres": "^0.0.5"
++    "express": "^4.21.2"
+```
+
+### Dependency Management
+
+1.  Installed the correct `express` package using `npm install express`.
+2.  Removed the incorrect `expres` package using `npm uninstall expres`.
+
+## Verification Results
+
+### Debugging index.js
+
+I have debugged the routes in `index.js` to ensure they return data correctly and handle parameters properly.
+
+#### Fixed `/todos` route
+The route was previously returning an empty array. It now correctly returns the `todos` list.
+- **Test**: `http://localhost:3000/todos` now returns the full array of todos.
+
+#### Fixed `/todos/:id` route
+The route was previously hanging because it didn't send a response. It now finds and returns the specific todo, or a 404 message if not found.
+- **Valid ID**: `http://localhost:3000/todos/1` returns the first todo.
+- **Invalid ID**: `http://localhost:3000/todos/999` returns `{"message": "Todo not found"}` with a 404 status.
+
+#### Clean Logs
+Removed `console.log(req)` to prevent the terminal from being flooded with large request objects.

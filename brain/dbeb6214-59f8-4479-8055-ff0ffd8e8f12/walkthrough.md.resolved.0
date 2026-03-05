@@ -1,0 +1,29 @@
+# Walkthrough: Express Typo Fix
+
+I have successfully fixed the typo that was preventing your application from running.
+
+## Changes Made
+
+### Package Configuration
+
+Corrected the typo in [package.json](file:///media/swastik/focus/projects%202026/webdev/package.json) where `express` was misspelled as `expres`.
+
+```diff
+-    "expres": "^0.0.5"
++    "express": "^4.21.2"
+```
+
+### Dependency Management
+
+1.  Installed the correct `express` package using `npm install express`.
+2.  Removed the incorrect `expres` package using `npm uninstall expres`.
+
+## Verification Results
+
+### Server Test
+
+I verified the fix by running `node index.js`. The server started successfully and is now listening on the configured port.
+
+```text
+Example app listening on port 3000
+```

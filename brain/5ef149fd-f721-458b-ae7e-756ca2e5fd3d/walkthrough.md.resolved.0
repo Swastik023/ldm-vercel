@@ -1,0 +1,74 @@
+# LDM College ERP — Recovery Walkthrough
+
+## Completed Fixes
+
+### 1. RBAC Enforcement ✅
+
+**Problem:** Any authenticated user could access `/admin/*` endpoints.  
+**Solution:** Created [RoleMiddleware.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php) and applied [adminOnly()](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php#59-66) to 16 admin routes.
+
+#### Changes Made
+- [RoleMiddleware.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php) — New middleware with [requireRole()](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php#16-58), [adminOnly()](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php#59-66), [teacherOrAdmin()](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php#75-82)
+- [index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php) — Added `->add(RoleMiddleware::adminOnly())` to all admin routes
+
+#### Verification
+```bash
+# Student trying to access admin endpoint → 403 Forbidden
+curl -H "Authorization: Bearer $STUDENT_TOKEN" http://localhost:8000/admin/users
+# {"success":false,"error":"Forbidden","your_role":"student"}
+
+# Admin accessing same endpoint → 200 OK
+curl -H "Authorization: Bearer $ADMIN_TOKEN" http://localhost:8000/admin/users
+# {"success":true,"users":[...]}
+```
+
+---
+
+### 2. Attendance API ✅
+
+**Problem:** `POST /attendance/mark` was a stub returning fake success.  
+**Solution:** Implemented real DB operations with `gibbonAttendanceLogPerson`.
+
+#### Changes Made
+- Replaced stub with full implementation (~200 lines)
+- Added `GET /attendance` for fetching class/form group attendance
+- Applied [teacherOrAdmin()](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php#75-82) RBAC to both endpoints
+
+#### API Contract
+
+```bash
+# POST /attendance/mark
+curl -X POST http://localhost:8000/attendance/mark \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "date": "2026-02-08",
+    "records": [
+      {"student_id": "0000000002", "code": "001"},
+      {"student_id": "0000000003", "code": "004", "comment": "Sick"}
+    ]
+  }'
+# Response: {"success":true,"records_saved":2,"errors":[]}
+```
+
+#### DB Evidence
+
+| gibbonPersonID | date | type | context | timestampTaken |
+|----------------|------|------|---------|----------------|
+| 0000000002 | 2026-02-08 | Present | Person | 2026-02-08 03:27:42 |
+| 0000000003 | 2026-02-08 | Absent | Person | 2026-02-08 03:27:42 |
+
+---
+
+## Summary
+
+| Before | After |
+|--------|-------|
+| RBAC: ❌ None | RBAC: ✅ adminOnly() on 16 routes |
+| Attendance: Stub | Attendance: Real DB insert/update |
+| Fake features: 6 | Fake features: 5 (dashboards remain) |
+
+### Remaining Work
+- [ ] Student/Teacher/Employee dashboard APIs
+- [ ] Frontend route guards (ProtectedRoute.tsx)
+- [ ] Timetable API (still a stub)

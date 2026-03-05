@@ -1,0 +1,68 @@
+# Job Portal Module — Walkthrough
+
+## What Was Built
+
+Complete Job Portal module — **13 files, 2100+ lines, zero TypeScript errors**. UI redesigned with Google Stitch.
+
+## Architecture
+
+```mermaid
+graph TD
+    A["Admin: /admin/jobs"] -->|CRUD| B["API: /api/admin/jobs"]
+    A -->|"View apps/refs"| C["API: .../applications"]
+    A -->|"View referrals"| D["API: .../referrals"]
+    E["Student: /student/jobs"] -->|"List + eligibility"| F["API: /api/student/jobs"]
+    E -->|"Apply"| G["API: .../apply"]
+    E -->|"Refer"| H["API: .../refer"]
+    F --> I["checkEligibility.ts"]
+    G --> I
+    I -->|"Checks"| J["Program, Grad Year, 10th/12th %"]
+```
+
+## Files Created
+
+| Layer | File | Purpose |
+|---|---|---|
+| **Models** | [JobPosting.ts](file:///media/swastik/focus/ldm%20feb/src/models/JobPosting.ts) | Job with eligibility rules + referral config |
+| | [JobApplication.ts](file:///media/swastik/focus/ldm%20feb/src/models/JobApplication.ts) | Student application (unique per job+student) |
+| | [JobReferral.ts](file:///media/swastik/focus/ldm%20feb/src/models/JobReferral.ts) | Referral (unique candidate email per job) |
+| **Engine** | [checkEligibility.ts](file:///media/swastik/focus/ldm%20feb/src/lib/checkEligibility.ts) | Pure function: 6 eligibility checks |
+| **Admin APIs** | [admin/jobs/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/route.ts) | GET list + POST create |
+| | [admin/jobs/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/%5Bid%5D/route.ts) | PATCH update + DELETE |
+| | [.../applications/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/%5Bid%5D/applications/route.ts) | GET list + PATCH status |
+| | [.../referrals/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/%5Bid%5D/referrals/route.ts) | GET list + PATCH status + reward |
+| **Student APIs** | [student/jobs/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/route.ts) | GET published jobs + eligibility |
+| | [.../apply/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/%5Bid%5D/apply/route.ts) | POST apply with resume |
+| | [.../refer/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/%5Bid%5D/refer/route.ts) | POST refer candidate |
+| **UI** | [admin/jobs/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/jobs/page.tsx) | Admin dashboard (Stitch design) |
+| | [student/jobs/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/jobs/page.tsx) | Student job board (Stitch design) |
+
+## Stitch UI Design
+
+Used Google Stitch to generate 2 premium screen designs, then adapted them into React components:
+
+- **Gradient hero headers** with decorative circles and blurred overlays
+- **Stat cards** with gradient icon badges and corner decorations
+- **Company avatar badges** (first letter, gradient fill)
+- **Dot-prefixed status chips** with semantic colors
+- **Spring animations** on table rows and job cards
+- **Gradient CTA buttons** with box-shadow accents
+- **Elevated modal headers** with color-matched gradients (blue=apply, purple=refer)
+
+## Validation
+
+- ✅ TypeScript build: **zero errors**
+- ✅ Git commits: `6e5a38e` (feature) + `3755525` (Stitch redesign)
+
+## Edge Cases Handled
+
+| Check | Behavior |
+|---|---|
+| Profile incomplete | ❌ Blocked from apply/refer |
+| Job closed / past deadline | ❌ Blocked from apply/refer |
+| Duplicate application | ❌ One per student per job |
+| Self-referral | ❌ Same email match blocked |
+| Duplicate referral email | ❌ Per job uniqueness |
+| Max referrals exceeded | ❌ Count enforced at API level |
+| Eligibility at apply time | ✅ Re-checked server-side |
+| Post-apply eligibility change | ✅ Does NOT invalidate existing application |

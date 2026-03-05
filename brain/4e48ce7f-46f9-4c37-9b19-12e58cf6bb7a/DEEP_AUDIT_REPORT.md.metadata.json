@@ -1,0 +1,5 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_OTHER",
+  "summary":  "Deep line-by-line audit of all 50+ API routes. Contains critical security findings (NoSQL regex injection, OTP weakness, missing ownership checks), authorization gaps, data integrity issues, performance problems, and edge case bugs — all with exact file paths, line numbers, and severity ratings.",
+  "updatedAt":  "2026-03-04T04:40:31.708900936Z"
+}

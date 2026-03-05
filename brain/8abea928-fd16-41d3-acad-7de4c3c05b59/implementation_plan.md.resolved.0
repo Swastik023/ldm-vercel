@@ -1,0 +1,375 @@
+# SecureChat Documentation Structure Plan
+
+> A professional, audience-based documentation architecture for sales, clients, developers, and interview preparation.
+
+---
+
+## Overview
+
+This document defines the complete restructuring of SecureChat documentation into **four audience-specific directories** with clear separation of concerns, no content repetition, and professional organization.
+
+---
+
+## Directory Structure
+
+```
+documents/
+├── README.md                      # Master index with navigation guide
+│
+├── sales-docs/                    # 🌐 Public, website-safe, sales-ready
+│   ├── README.md
+│   ├── Product_Overview.md
+│   ├── Key_Features.md
+│   ├── Security_at_a_Glance.md
+│   ├── Scalability_and_Reliability.md
+│   ├── Industries_and_Use_Cases.md
+│   ├── Why_Choose_SecureChat.md
+│   ├── Pricing_Tiers.md
+│   └── FAQ_for_Buyers.md
+│
+├── client-docs/                   # 👔 Post-purchase, functional documentation
+│   ├── README.md
+│   ├── Getting_Started.md
+│   ├── User_Guide.md
+│   ├── Admin_Guide.md
+│   ├── Feature_Reference/
+│   │   ├── Authentication.md
+│   │   ├── Private_Chat.md
+│   │   ├── Group_Chat.md
+│   │   ├── Media_Messages.md
+│   │   ├── Voice_Messages.md
+│   │   ├── Location_Sharing.md
+│   │   ├── Push_Notifications.md
+│   │   └── Search.md
+│   ├── Deployment_Overview.md
+│   ├── Maintenance_and_Support.md
+│   └── Troubleshooting.md
+│
+├── developer-docs/                # 👨‍💻 Technical implementation
+│   ├── README.md
+│   ├── setup/
+│   │   ├── Quick_Start.md
+│   │   ├── Environment_Variables.md
+│   │   ├── Docker_Setup.md
+│   │   └── Git_Workflow.md
+│   ├── architecture/
+│   │   ├── System_Architecture.md
+│   │   ├── Database_Schema.md
+│   │   └── Socket_Events.md
+│   ├── backend/
+│   │   ├── API_Reference.md
+│   │   ├── Authentication_Flow.md
+│   │   └── Backend_Services.md
+│   ├── mobile/
+│   │   ├── React_Native_Setup.md
+│   │   ├── UI_Components.md
+│   │   └── State_Management.md
+│   ├── devops/
+│   │   ├── DevOps_Story.md
+│   │   ├── Deployment_Guide.md
+│   │   ├── Production_Checklist.md
+│   │   └── Monitoring_Setup.md
+│   └── security/
+│       └── End_to_End_Encryption.md
+│
+└── interview-prep/                # 🧠 Personal, private, interview-only
+    └── SecureChat/
+        ├── README.md
+        ├── 01_Project_Story.md
+        ├── 02_System_Architecture.md
+        ├── 03_Request_to_Message_Flow.md
+        ├── 04_Security_and_Encryption.md
+        ├── 05_Backend_Design.md
+        ├── 06_Database_and_Data_Modeling.md
+        ├── 07_Real_Time_Communication.md
+        ├── 08_DevOps_and_Deployment.md
+        ├── 09_AWS_and_Scaling_Strategy.md
+        ├── 10_Tradeoffs_and_Lessons.md
+        ├── 11_Must_Know_Interview_Questions.md
+        └── 12_Frequently_Asked_Questions.md
+```
+
+---
+
+## Directory Purposes
+
+### 1. `sales-docs/` — Public & Website-Safe
+
+| Attribute | Value |
+|-----------|-------|
+| **Audience** | Potential clients, website visitors, sales team |
+| **Tone** | Executive, confident, trust-building |
+| **Contains** | Value propositions, features, security overview |
+| **Never Contains** | Code, credentials, internal architecture, pricing internals |
+| **Shareable** | Yes — website, PDF, demos |
+
+**Files to Include:**
+
+| File | Purpose |
+|------|---------|
+| `Product_Overview.md` | High-level what SecureChat is and does |
+| `Key_Features.md` | Feature list with business benefits |
+| `Security_at_a_Glance.md` | End-to-end encryption, compliance, privacy (conceptual) |
+| `Scalability_and_Reliability.md` | Enterprise-grade, uptime, architecture highlights |
+| `Industries_and_Use_Cases.md` | Healthcare, finance, legal, enterprises |
+| `Why_Choose_SecureChat.md` | Differentiators, comparison points |
+| `Pricing_Tiers.md` | Starter, Business, Enterprise tiers (if applicable) |
+| `FAQ_for_Buyers.md` | Common pre-sale questions |
+
+---
+
+### 2. `client-docs/` — Post-Purchase Functional Docs
+
+| Attribute | Value |
+|-----------|-------|
+| **Audience** | Paying clients, their admins, end-users |
+| **Tone** | Helpful, instructional, professional |
+| **Contains** | How-to guides, feature explanations, admin controls |
+| **Never Contains** | Internal code, secrets, infrastructure details |
+| **Shareable** | Yes — to paying clients only |
+
+**Files to Include:**
+
+| File | Purpose |
+|------|---------|
+| `Getting_Started.md` | First steps after purchase |
+| `User_Guide.md` | How end-users use the app |
+| `Admin_Guide.md` | Admin panel, user management, settings |
+| `Feature_Reference/` | Detailed feature usage (one file per feature) |
+| `Deployment_Overview.md` | High-level deployment expectations |
+| `Maintenance_and_Support.md` | How updates work, support channels |
+| `Troubleshooting.md` | Common issues and solutions |
+
+**Cross-Reference Rule:**
+> For feature lists, reference `../sales-docs/Key_Features.md` instead of repeating.
+
+---
+
+### 3. `developer-docs/` — Technical Implementation
+
+| Attribute | Value |
+|-----------|-------|
+| **Audience** | Developers, engineers, DevOps |
+| **Tone** | Technical, precise, actionable |
+| **Contains** | Setup, architecture, APIs, deployment |
+| **Never Contains** | Interview answers, sales language |
+| **Shareable** | Internal team only |
+
+**Subdirectory Structure:**
+
+| Directory | Purpose | Files |
+|-----------|---------|-------|
+| `setup/` | Getting development running | Quick_Start, Environment, Docker, Git |
+| `architecture/` | System design | Architecture, Database, Socket Events |
+| `backend/` | API and server | APIs, Auth Flow, Services |
+| `mobile/` | React Native | Setup, Components, State |
+| `devops/` | Deployment & operations | DevOps Story, Deploy Guide, Monitoring |
+| `security/` | Encryption implementation | E2E Encryption technical details |
+
+**Anti-Repetition Rules:**
+1. Database schema appears ONLY in `architecture/Database_Schema.md`
+2. API endpoints appear ONLY in `backend/API_Reference.md`
+3. Docker commands appear ONLY in `setup/Docker_Setup.md`
+4. Other files reference these instead of repeating
+
+---
+
+### 4. `interview-prep/` — Personal Interview Preparation
+
+| Attribute | Value |
+|-----------|-------|
+| **Audience** | You only |
+| **Tone** | Conversational, Q&A format |
+| **Contains** | Stories, trade-offs, lessons, interview answers |
+| **Never Contains** | Raw technical docs (reference developer-docs instead) |
+| **Shareable** | Never |
+
+**Existing Files (Already Organized):**
+- [01_Project_Story.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/01_Project_Story.md) → "Tell me about a project"
+- [02_System_Architecture.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/02_System_Architecture.md) → Architecture interview answers
+- [03_Request_to_Message_Flow.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/03_Request_to_Message_Flow.md) → "Walk me through..."
+- [04_Security_and_Encryption.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/04_Security_and_Encryption.md) → Security questions
+- [05_Backend_Design.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/05_Backend_Design.md) → Backend decisions
+- [06_Database_and_Data_Modeling.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/06_Database_and_Data_Modeling.md) → Database questions
+- [07_Real_Time_Communication.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/07_Real_Time_Communication.md) → WebSocket questions
+- [08_DevOps_and_Deployment.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/08_DevOps_and_Deployment.md) → DevOps questions
+- [09_AWS_and_Scaling_Strategy.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/09_AWS_and_Scaling_Strategy.md) → Cloud/scaling questions
+- [10_Tradeoffs_and_Lessons.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/10_Tradeoffs_and_Lessons.md) → "What would you do differently?"
+- [11_Must_Know_Interview_Questions.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/11_Must_Know_Interview_Questions.md) → Quick reference
+- [12_Frequently_Asked_Questions.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Interview/SecureChat/12_Frequently_Asked_Questions.md) → Rapid-fire prep
+
+**Anti-Repetition Rule:**
+> For technical details, reference `../developer-docs/` files. Interview-prep translates technical knowledge into stories and answers.
+
+---
+
+## Mapping Existing Files
+
+### Files to Move → `sales-docs/`
+
+| Current File | New Location | Action |
+|--------------|--------------|--------|
+| `Project Overview.md` | `sales-docs/Product_Overview.md` | Rewrite for sales tone |
+| `Future Roadmap.md` | `sales-docs/Why_Choose_SecureChat.md` | Extract relevant parts |
+
+### Files to Move → `client-docs/`
+
+| Current File | New Location | Action |
+|--------------|--------------|--------|
+| `Getting Started.md` | `client-docs/Getting_Started.md` | Keep, enhance |
+| `02 Authentication.md` | `client-docs/Feature_Reference/Authentication.md` | Rewrite for users |
+| `04 Private Chat.md` | `client-docs/Feature_Reference/Private_Chat.md` | Rewrite for users |
+| `05 Group Chat.md` | `client-docs/Feature_Reference/Group_Chat.md` | Rewrite for users |
+| `06 Media Messages.md` | `client-docs/Feature_Reference/Media_Messages.md` | Rewrite for users |
+| `07 Voice Messages.md` | `client-docs/Feature_Reference/Voice_Messages.md` | Rewrite for users |
+| `08 Location Sharing.md` | `client-docs/Feature_Reference/Location_Sharing.md` | Rewrite for users |
+| `09 Push Notifications.md` | `client-docs/Feature_Reference/Push_Notifications.md` | Rewrite for users |
+| `10 Search.md` | `client-docs/Feature_Reference/Search.md` | Rewrite for users |
+| `11 Settings.md` | `client-docs/Admin_Guide.md` | Merge |
+| `UI-UX Reference Guide.md` | `client-docs/User_Guide.md` | Extract user-facing parts |
+
+### Files to Move → `developer-docs/`
+
+| Current File | New Location | Action |
+|--------------|--------------|--------|
+| `01 Project Setup.md` | `developer-docs/setup/Quick_Start.md` | Keep |
+| `Environment Variables.md` | `developer-docs/setup/Environment_Variables.md` | Keep |
+| `13 Docker Setup.md` | `developer-docs/setup/Docker_Setup.md` | Keep |
+| `Git Workflow.md` | `developer-docs/setup/Git_Workflow.md` | Keep |
+| [Architecture.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/docs/Architecture.md) | `developer-docs/architecture/System_Architecture.md` | Keep |
+| `Database Schema.md` | `developer-docs/architecture/Database_Schema.md` | Keep |
+| `Socket Events.md` | `developer-docs/architecture/Socket_Events.md` | Keep |
+| `API Reference.md` | `developer-docs/backend/API_Reference.md` | Keep |
+| `API Endpoints.md` | Merge into API_Reference.md | Delete after merge |
+| `Backend Reference.md` | `developer-docs/backend/Backend_Services.md` | Merge |
+| `Mobile App.md` | `developer-docs/mobile/React_Native_Setup.md` | Keep |
+| `Mobile Reference.md` | Merge into Mobile folder | Delete after merge |
+| [DevOps_Story.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/DevOps_Story.md) | `developer-docs/devops/DevOps_Story.md` | Keep (excellent) |
+| `14 Production Deploy.md` | `developer-docs/devops/Deployment_Guide.md` | Merge |
+| `Deployment Guide.md` | Merge with Production Deploy | Delete after merge |
+| `Docker Commands.md` | Merge into Docker_Setup.md | Delete after merge |
+| `End-to-End Encryption.md` | `developer-docs/security/End_to_End_Encryption.md` | Keep |
+
+### Files to Move → `interview-prep/`
+
+| Current File | New Location | Action |
+|--------------|--------------|--------|
+| `Interview/SecureChat/*` | `interview-prep/SecureChat/` | Already organized ✓ |
+| [Development_Journey.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Development_Journey.md) | Reference only | Keep in root as historical |
+| `Complete Technical Story.md` | Extract interview parts | Reference in interview-prep |
+
+### Files to Archive or Delete
+
+| Current File | Action | Reason |
+|--------------|--------|--------|
+| `Day 1-7` files | Archive to `_archive/` | Historical, replaced by journey |
+| [Index.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/Index.md) | Replace with new README | Outdated |
+| [SecureChat.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/docs/SecureChat.md) | Delete | Redundant with Project Overview |
+| [README.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/README.md) | Rewrite | New master index needed |
+| `Database Models.md` | Merge into Database Schema | Duplicate |
+| `DevOps Reference.md` | Merge into DevOps Story | Incomplete |
+| `Production Timeline.md` | Archive | Historical planning doc |
+| [App_Store_Metadata.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/documents/App_Store_Metadata.md) | Move to `sales-docs/` | Marketing material |
+
+---
+
+## Content Rules by Directory
+
+### Rule 1: No Repetition Within Directory
+> Each concept explained ONCE per directory. Other files reference it.
+
+### Rule 2: Cross-Directory References OK
+```markdown
+For technical details, see [API Reference](../developer-docs/backend/API_Reference.md)
+```
+
+### Rule 3: Audience-Appropriate Language
+
+| Directory | Language Style |
+|-----------|---------------|
+| `sales-docs/` | "SecureChat provides enterprise-grade security..." |
+| `client-docs/` | "To send a message, tap the compose button..." |
+| `developer-docs/` | "The endpoint accepts POST with JSON body..." |
+| `interview-prep/` | "I designed it this way because..." |
+
+### Rule 4: README in Every Directory
+
+Each directory must have a [README.md](file:///media/swastik/focus/projects%202026/chat%20app/0.0/README.md) with:
+1. Who this documentation is for
+2. List of files with one-line descriptions
+3. How to navigate / where to start
+4. What NOT to expect here
+
+---
+
+## README Templates
+
+### Root README.md
+```markdown
+# SecureChat Documentation
+
+## Quick Navigation
+
+| Audience | Directory | Start Here |
+|----------|-----------|------------|
+| Potential Clients | [sales-docs/](./sales-docs/) | Product Overview |
+| Paying Clients | [client-docs/](./client-docs/) | Getting Started |
+| Developers | [developer-docs/](./developer-docs/) | Quick Start |
+| Interview Prep | [interview-prep/](./interview-prep/) | Project Story |
+
+## Documentation Principles
+- Each directory serves ONE audience
+- No secrets in sales or client docs
+- Technical details live in developer-docs
+- Interview prep references, doesn't repeat
+```
+
+### sales-docs/README.md
+```markdown
+# Sales Documentation
+
+## Audience
+Potential clients, website visitors, sales team
+
+## Safe to Share
+✅ Website ✅ PDF ✅ Email ✅ Demos
+
+## Files
+| File | Purpose |
+|------|---------|
+| Product_Overview.md | What SecureChat is |
+| Key_Features.md | Feature benefits |
+| ... | ... |
+
+## Not Included Here
+❌ Code ❌ Credentials ❌ Internal architecture ❌ Pricing internals
+```
+
+---
+
+## Implementation Order
+
+1. **Create directory structure** (empty folders)
+2. **Write all README.md files**
+3. **Move existing files** (with renaming)
+4. **Merge duplicate files**
+5. **Write new sales-docs** (from scratch)
+6. **Rewrite client feature docs** (user-friendly versions)
+7. **Archive historical files**
+8. **Final review for repetition**
+
+---
+
+## Verification Checklist
+
+- [ ] Every directory has README.md
+- [ ] No secrets in sales-docs or client-docs
+- [ ] No duplicate explanations within single directory
+- [ ] Cross-references work correctly
+- [ ] Interview-prep references developer-docs
+- [ ] All existing files mapped to new location
+- [ ] Archive folder for historical docs
+
+---
+
+*Structure Designed: 2026-02-07*

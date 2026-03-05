@@ -1,0 +1,14 @@
+# Production-Ready Architecture Review Tasks
+
+## Chat App v0.0 - Security & Production Hardening
+
+- [/] Production-Ready Architecture Review
+  - [/] Create comprehensive architecture enhancement document
+  - [ ] Client-side hardening recommendations
+  - [ ] Backend hardening recommendations
+  - [ ] WebRTC reliability & TURN best practices
+  - [ ] Security checklist for beta launch
+  - [ ] App Store & Play Store compliance notes
+  - [ ] Common pitfalls and how to avoid them
+
+- [ ] Review and finalize deliverable

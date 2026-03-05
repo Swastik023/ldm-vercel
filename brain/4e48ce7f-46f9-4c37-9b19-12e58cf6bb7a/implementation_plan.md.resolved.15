@@ -1,0 +1,71 @@
+# Data Validation Hardening — Edge Case Fixes
+
+Comprehensive audit of all 101 API routes. 16 edge cases found, grouped by severity.
+
+## Proposed Changes
+
+### Auth Routes (Public — highest risk)
+
+#### [MODIFY] [register/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts)
+1. **Missing email format validation** — accepts `"not-an-email"` currently. Add regex check.
+2. **Missing `fullName` length/trim** — allows empty after whitespace trim, or 1000-char names. Cap at 100 chars.
+3. **No `try-catch` around `req.json()`** — invalid JSON body crashes with 500 instead of 400.
+4. **Missing `batchId` ObjectId validation** — arbitrary string passed to `Batch.findById()` causes a Mongoose CastError (500).
+
+#### [MODIFY] [verify-otp/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/verify-otp/route.ts)
+5. **No `try-catch` around `req.json()`** — malformed body = 500.
+
+---
+
+### Finance Routes (Admin — money at stake)
+
+#### [MODIFY] [expenses/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/expenses/route.ts)
+6. **`amount` not coerced to Number** — string `"100"` from frontend passes `> 0` check (JS string comparison) but stores as string. Use `Number(amount)` + `isNaN()` guard.
+7. **`paid_on` date not validated** — `new Date("garbage")` creates `Invalid Date` which Mongo silently stores.
+
+#### [MODIFY] [fee-structures/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/fee-structures/route.ts)
+8. **`total_amount` / `semester` not coerced to Number** — same string comparison risk.
+
+#### [MODIFY] [salary/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/salary/route.ts)
+9. **`month` format not validated** — should match `YYYY-MM` pattern. Arbitrary strings like `"hacked"` break the system silently.
+
+#### [MODIFY] [payments/[studentId]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/payments/%5BstudentId%5D/route.ts)
+10. **`amount` in POST not coerced to Number** — same issue. `"abc"` would pass the `<= 0` check.
+
+---
+
+### Admin CRUD Routes
+
+#### [MODIFY] [students/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/%5Bid%5D/route.ts)
+11. **PATCH allows arbitrary `status` values** — no enum whitelist. Someone could set `status: "hacked"`. Need to whitelist `['active','inactive','suspended','pending','under_review','rejected']`.
+
+#### [MODIFY] [marquee/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/marquee/route.ts)
+12. **PATCH missing [id](file:///media/swastik/focus/ldm%20feb/src/lib/uploadLimits.client.ts#60-67) validation** — `findByIdAndUpdate(undefined)` silently fails. Should check `if (!id)` and return 400.
+13. **POST: `message` max-length uncapped** — user can submit a 1MB marquee string. Cap at 500 chars.
+
+#### [MODIFY] [settings/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/settings/route.ts)
+14. **`intakeMonths` array not validated** — allows arbitrary values. Should only accept `['January','July']` entries.
+
+---
+
+### Student / Job Routes
+
+#### [MODIFY] [jobs/[id]/refer/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/%5Bid%5D/refer/route.ts)
+15. **Resume size limit hardcoded at 5MB** — should use shared [checkFileSizeBackend](file:///media/swastik/focus/ldm%20feb/src/lib/uploadLimits.ts#26-45) (4MB limit).
+16. **`candidateEmail` format not validated** — accepts any string. Add email regex.
+17. **`candidatePhone` format not validated** — accepts any string. Add phone regex.
+
+#### [MODIFY] [documents/requirements/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/route.ts)
+18. **`max_file_size_mb` defaults to 5** — exceeds Vercel payload limit. Default should be capped at `MAX_UPLOAD_MB` (4).
+
+---
+
+## Verification Plan
+
+### Automated
+- `npm run build` must pass cleanly after all changes.
+
+### Manual
+- Test registration with invalid email, empty body, oversized name.
+- Test expense creation with string amounts, invalid dates.
+- Test referral with oversized resume, invalid phone/email.

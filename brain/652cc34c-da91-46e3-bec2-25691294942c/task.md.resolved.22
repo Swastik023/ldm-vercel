@@ -1,0 +1,46 @@
+# Tasks
+
+- [ ] Design PHP Backend Architecture <!-- id: 8 -->
+    - [x] Create Design Document <!-- id: 8.1 -->
+- [x] Implement Database Layer <!-- id: 9 -->
+    - [x] Create [schema.sql](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/sql/schema.sql) <!-- id: 9.1 -->
+    - [x] Create [config/db.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/config/db.php) <!-- id: 9.2 -->
+- [x] Implement Core Logic <!-- id: 10 -->
+    - [x] Create [includes/functions.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/includes/functions.php) (Helpers) <!-- id: 10.1 -->
+    - [x] Create [includes/auth.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/includes/auth.php) (Middleware) <!-- id: 10.2 -->
+    - [x] Create [login.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/login.php) & [logout.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/logout.php) <!-- id: 10.3 -->
+- [x] **1. Dynamic Notices (Public)**
+    - [x] React: [Notices.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/Notices.tsx)
+    - [x] API: [get_notices.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/get_notices.php)
+- [x] **2. Contact Form & Messages**
+    - [x] Frontend Submit: [PopupContact.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/PopupContact.tsx)
+    - [x] API Submit: [submit_contact.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/submit_contact.php)
+    - [x] Admin View React: `ManageMessages.tsx`
+    - [x] Admin API: [messages_crud.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/admin/messages_crud.php)
+- [x] **3. Login System**
+    - [x] React: [Login.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/Login.tsx)
+    - [x] API: [login.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/login.php), [auth_check.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/auth_check.php)
+- [x] **4. Admin Dashboard**
+    - [x] React: [AdminDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/admin/AdminDashboard.tsx)
+    - [x] API: [admin/stats.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/admin/stats.php)
+- [x] **5. User Management**
+    - [x] React: [ManageUsers.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/admin/ManageUsers.tsx)
+    - [x] API: [users_crud.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/admin/users_crud.php) (Create/Delete Users)
+- [x] **6. Notifications**
+    - [x] React: [NotificationBell.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/NotificationBell.tsx)
+    - [x] API: [notifications.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/notifications.php)
+- [x] **9. Gallery Management**
+    - [x] React Public: [Gallery.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/Gallery.tsx)
+    - [x] React Admin: [ManageGallery.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/admin/ManageGallery.tsx)
+    - [x] API: [gallery.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/gallery.php) (Public), [admin/gallery_crud.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/admin/gallery_crud.php) (Admin)
+- [x] **10. Marquee / Announcements**
+    - [x] React Component: [Marquee.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/Marquee.tsx)
+    - [x] React Admin: [ManageMarquee.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/admin/ManageMarquee.tsx)
+    - [x] API: [marquee.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/marquee.php) (Public), [admin/marquee_crud.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/admin/marquee_crud.php) (Admin) <!-- id: 11.3 -->
+- [x] **7. Website Content Management**
+    - [x] React: [ManageContent.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/admin/ManageContent.tsx)
+    - [x] API: [content_crud.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/dist/php_backend/api/admin/content_crud.php)
+- [x] **8. Role Dashboards**
+    - [x] React: [StudentDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/student/StudentDashboard.tsx)
+    - [x] React: [TeacherDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/teacher/TeacherDashboard.tsx) <!-- id: 11.2 -->
+    - [x] Student/Employee Dashboard <!-- id: 11.3 -->

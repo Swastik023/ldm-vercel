@@ -1,0 +1,57 @@
+# Course Configuration Panel — Walkthrough
+
+## Problem Found
+
+Three disconnected systems managed courses:
+
+| System | Source | Problem |
+|---|---|---|
+| [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/BatchManager.tsx#11-16) model | DB (Academic.ts) | No admin CRUD UI |
+| [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) | Hardcoded (551 lines) | Requires code deployment to change |
+| [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15) | Separate DB model | Missing admin page, separate from courses |
+
+## Solution: Unified Program Model
+
+Extended [IProgram](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#17-35) to be single source of truth:
+
+```mermaid
+graph TD
+    A["Program Model<br/>(Academic.ts)"] --> B["Basic: name, code, type, duration"]
+    A --> C["Website: shortDescription, image, syllabus, career"]
+    A --> D["Pricing: totalFee, paymentType, offer, seatLimit"]
+    A --> E["Status: is_active toggle"]
+    F["Admin /admin/courses"] -->|CRUD| G["API /api/admin/courses"]
+    H["Website"] -->|Read| I["API /api/public/courses"]
+    G --> A
+    I --> A
+```
+
+## Files Created / Modified
+
+| Action | File | Purpose |
+|---|---|---|
+| **MODIFY** | [Academic.ts](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts) | Extended IProgram + PricingSubSchema |
+| **NEW** | [admin/courses/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/courses/route.ts) | GET list + POST create |
+| **NEW** | [admin/courses/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/courses/%5Bid%5D/route.ts) | PATCH update + DELETE soft-disable |
+| **NEW** | [admin/courses/migrate/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/courses/migrate/route.ts) | Import 22 legacy courses + pricing |
+| **NEW** | [public/courses/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/courses/route.ts) | Public API with computed pricing |
+| **NEW** | [admin/courses/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/courses/page.tsx) | Admin UI (Stitch design) |
+| **MODIFY** | [Sidebar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/layout/Sidebar.tsx) | "Course Pricing" → "Courses" |
+
+## Admin UI Features
+
+- **Gradient hero header** with Import Legacy + Add Course buttons
+- **4 stat cards**: Total Courses, Active, Diplomas, Certificates
+- **Searchable/filterable table** with type badges, toggle switches, student counts
+- **3-tab modal** (Basic Info / Website Content / Pricing)
+- **Offer config**: toggle, price, label, validity, seat limit
+- **Safety**: soft-disables courses with enrolled students instead of hard delete
+
+## First-Time Setup
+
+After deploy, admin should click **"Import Legacy"** button to migrate the 22 hardcoded courses + any existing CoursePricing data into the Program collection.
+
+## Validation
+
+- ✅ TypeScript: zero errors
+- ✅ Git: committed `2fdcc7e`, pushed to main

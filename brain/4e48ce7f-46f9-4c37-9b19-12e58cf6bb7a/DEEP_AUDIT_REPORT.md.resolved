@@ -1,0 +1,435 @@
+# 🔬 Deep Route-by-Route Audit Report
+
+> **Date**: 2026-03-04 | **Method**: Line-by-line code review of every API handler  
+> **Scope**: 50+ route files across auth, admin, student, teacher, public modules
+
+---
+
+# 🔴 CRITICAL — Fix Immediately
+
+---
+
+### CRIT-01 · NoSQL Regex Injection via `rollNumber` and `course` search
+
+**Files**:
+- [admin/students/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/route.ts#L34) — `filter.rollNumber = { $regex: rollNumber, $options: 'i' }`
+- [admin/finance/fee-records/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/fee-records/route.ts#L21) — `query.course = { $regex: course, $options: 'i' }`
+
+**What**: User-supplied strings are passed directly into `$regex` without escaping. An attacker (any admin) can craft a ReDoS (Regular Expression Denial of Service) payload like [(a+)+b](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/register/page.tsx#162-163) that hangs the database.
+
+**Impact**: DB thread lockup → global service outage.
+
+**Fix**:
+```typescript
+// Escape special regex characters before use
+function escapeRegex(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+filter.rollNumber = { $regex: escapeRegex(rollNumber), $options: 'i' };
+```
+
+---
+
+### CRIT-02 · Login endpoint has ZERO rate limiting
+
+**File**: [lib/auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#L16) — [authorize()](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#16-53) callback
+
+**What**: The [authorize()](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#16-53) function in the NextAuth credentials provider has no rate limiting. The [checkRateLimit](file:///media/swastik/focus/ldm%20feb/src/lib/rateLimit.ts#89-121) helper is only applied to `/api/auth/register`, `/api/auth/send-otp`, and `/api/auth/verify-otp`. The login endpoint (`/api/auth/[...nextauth]`) is completely unprotected.
+
+**Impact**: Unlimited brute-force password guessing. At 100 requests/sec, a weak 8-char password can be cracked in hours.
+
+**Fix**: Create a custom `/api/auth/login` wrapper route that applies [checkRateLimit](file:///media/swastik/focus/ldm%20feb/src/lib/rateLimit.ts#89-121) before calling [signIn()](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#60-104), or rate-limit inside the [authorize()](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#16-53) callback by IP.
+
+---
+
+### CRIT-03 · OTP generated with `Math.random()` — not cryptographically secure
+
+**File**: [auth/send-otp/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/send-otp/route.ts#L18-L20)
+
+```typescript
+function generateOTP(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+```
+
+**What**: `Math.random()` is predictable in V8. If an attacker can observe the timing/output of a few OTPs, they can predict the next ones.
+
+**Impact**: OTP bypass → account takeover.
+
+**Fix**:
+```typescript
+import crypto from 'crypto';
+function generateOTP(): string {
+    return crypto.randomInt(100000, 999999).toString();
+}
+```
+
+---
+
+### CRIT-04 · Registration creates user BEFORE email OTP is verified
+
+**File**: [auth/register/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts#L115)
+
+**What**: The register endpoint creates the [User](file:///media/swastik/focus/ldm%20feb/src/models/User.ts#5-35) document immediately with `status: 'pending'`. There is no check that `EmailOTP.verified === true` for the submitted email. A user can register with any email address without ever verifying it.
+
+**Impact**: Fake accounts with unverified emails. Someone can claim someone else's email address.
+
+**Fix**: Add before user creation:
+```typescript
+const otpRecord = await EmailOTP.findOne({ email: normalizedEmail, verified: true });
+if (!otpRecord) {
+    return NextResponse.json({ success: false, message: 'Please verify your email first.' }, { status: 400 });
+}
+```
+
+---
+
+### CRIT-05 · Error response leaks internal error messages to client
+
+**File**: [student/documents/upload/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/upload/route.ts#L289)
+
+```typescript
+return NextResponse.json({ success: false, message: 'Upload failed', error: error.message }, { status: 500 });
+```
+
+**What**: `error.message` is sent directly to the client. This can leak Cloudinary API keys, MongoDB connection strings, internal paths, and stack traces.
+
+**Impact**: Information disclosure → aids further attacks.
+
+**Other occurrences**: Search for `error: error.message` or `err?.message` across all routes.
+
+**Fix**: Log the error server-side, return generic message to client:
+```typescript
+console.error('Upload error:', error);
+return NextResponse.json({ success: false, message: 'Upload failed. Please try again.' }, { status: 500 });
+```
+
+---
+
+# 🟠 HIGH — Fix Soon
+
+---
+
+### HIGH-01 · Teacher can take attendance for ANY assignment (no ownership check)
+
+**File**: [teacher/attendance/[assignmentId]/session/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/attendance/%5BassignmentId%5D/session/route.ts#L24)
+
+```typescript
+const assignment = await Assignment.findById(assignmentId).lean();
+```
+
+**What**: No `teacher: session.user.id` filter. Any teacher can open/close/finalize attendance for any subject's assignment.
+
+**Contrast**: The marks route DOES check: `Assignment.findOne({ _id: assignmentId, teacher: session.user.id })` ✅
+
+**Fix**:
+```typescript
+const assignment = await Assignment.findOne({
+    _id: assignmentId,
+    teacher: session.user.id
+}).lean();
+```
+
+---
+
+### HIGH-02 · Any teacher can toggle any test's active status
+
+**File**: [admin/tests/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/%5Bid%5D/route.ts#L44)
+
+```typescript
+const test = await ProTest.findByIdAndUpdate(id, allowedFields, { new: true });
+```
+
+**What**: No ownership check. A teacher can activate/deactivate another teacher's test.
+
+**Fix**: For teacher role, add `createdBy: session.user.id` to the query:
+```typescript
+const query = session.user.role === 'admin' ? { _id: id } : { _id: id, createdBy: session.user.id };
+const test = await ProTest.findOneAndUpdate(query, allowedFields, { new: true });
+```
+
+---
+
+### HIGH-03 · Admin test GET leaks full question bank + answer key data
+
+**File**: [admin/tests/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/%5Bid%5D/route.ts#L18-L28)
+
+**What**: The GET response includes the full `test` object with all questions. Since any teacher can access this endpoint, Teacher A can see Teacher B's full question bank. For teachers, this should be restricted to their own tests.
+
+---
+
+### HIGH-04 · No security headers (CSP, X-Frame-Options, HSTS)
+
+**File**: [next.config.ts](file:///media/swastik/focus/ldm%20feb/next.config.ts#L35)
+
+**What**: The [headers()](file:///media/swastik/focus/ldm%20feb/next.config.ts#35-94) function only sets `Cache-Control`. No security headers:
+- No `Content-Security-Policy` → XSS risk
+- No `X-Frame-Options` → clickjacking risk
+- No `X-Content-Type-Options` → MIME sniffing risk
+- No `Strict-Transport-Security` → downgrade attack risk
+- No `Referrer-Policy` → referrer leakage
+
+**Fix**: Add to the headers array in [next.config.ts](file:///media/swastik/focus/ldm%20feb/next.config.ts):
+```typescript
+{
+    source: '/(.*)',
+    headers: [
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'X-Frame-Options', value: 'DENY' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+    ],
+},
+```
+
+---
+
+### HIGH-05 · Password policy too weak
+
+**File**: [auth/register/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts#L61)
+
+```typescript
+if (password.length < 8) { ... }
+```
+
+**What**: Only length ≥ 8 is enforced. No requirements for uppercase, lowercase, number, or special character. Combined with NO login rate limiting (CRIT-02), this makes brute-force trivial.
+
+**Fix**: Add complexity check:
+```typescript
+const strongPw = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+if (!strongPw.test(password)) {
+    return NextResponse.json({ message: 'Password must include uppercase, lowercase, and a number.' }, { status: 400 });
+}
+```
+
+---
+
+### HIGH-06 · Admin user CRUD has NO audit logging
+
+**File**: [admin/users/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/route.ts)
+
+**What**: Finance routes (salary, expenses) have `AuditLog.create()` on every mutation. But user CRUD (create, delete, approve) has NO audit logging. No record of who created/deleted/approved which user.
+
+**Contrast**: Document upload ✅, salary ✅, expenses ✅ all have audit logs.
+
+---
+
+### HIGH-07 · Cloudinary URLs are publicly accessible
+
+**File**: [student/documents/upload/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/upload/route.ts#L131-L138)
+
+```typescript
+// No access_mode:'authenticated' — security enforced at API level.
+```
+
+**What**: Files uploaded without `access_mode: 'authenticated'`. The Cloudinary `secure_url` is public — anyone with the URL can access it. The URL is stored in MongoDB and returned via API (which is role-protected), but if the URL ever leaks (browser history, logs, screenshots), private student documents are exposed.
+
+**Fix**: Use Cloudinary signed URLs with expiration for sensitive documents.
+
+---
+
+# 🟡 MEDIUM — Should Fix
+
+---
+
+### MED-01 · Student dashboard scans ALL attendance records (no batch filter)
+
+**File**: [student/dashboard/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/dashboard/route.ts#L35-L37)
+
+```typescript
+const attendanceRecords = await Attendance.find({
+    'records.student': studentId
+}).lean();
+```
+
+**What**: Queries ALL attendance documents containing this student. With 1000 attendance sessions, this becomes a full collection scan.
+
+**Fix**: Add batch filter and date range:
+```typescript
+const attendanceRecords = await Attendance.find({
+    'records.student': studentId,
+    batch: student.batch,
+}).lean();
+```
+
+---
+
+### MED-02 · Admin users GET returns ALL users without pagination
+
+**File**: [admin/users/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/route.ts#L24)
+
+```typescript
+const users = await User.find({}).select('-password')...
+```
+
+**What**: No `skip`/`limit` pagination. At 1000 users, this returns a large JSON payload.
+
+**Contrast**: [admin/students/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/route.ts) ✅ already has pagination.
+
+---
+
+### MED-03 · `admin/settings` PATCH — no input length sanitization
+
+**File**: [admin/settings/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/settings/route.ts#L37)
+
+```typescript
+if (body.collegeName !== undefined) settings.collegeName = body.collegeName;
+```
+
+**What**: `collegeName` is saved as-is. No length cap, no trim. Someone could set it to a 10MB string.
+
+---
+
+### MED-04 · Teacher marks POST uses raw `req.json()` without [safeParseJSON](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#61-79)
+
+**File**: [teacher/marks/[assignmentId]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/marks/%5BassignmentId%5D/route.ts#L72)
+
+```typescript
+const body = await req.json();
+```
+
+**What**: No try-catch on JSON parsing. If body is invalid JSON, this throws an unhandled error, returning a 500 with stack trace.
+
+**Contrast**: Finance routes use [safeParseJSON()](file:///media/swastik/focus/ldm%20feb/src/lib/validate.ts#61-79) ✅.
+
+---
+
+### MED-05 · Student attendance `self-mark` needs batch check before teacher query
+
+**File**: [student/attendance/self-mark/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/self-mark/route.ts)
+
+**What**: The batch verification queries the [User](file:///media/swastik/focus/ldm%20feb/src/models/User.ts#5-35) model separately. If the attendance has no `batch` field set (old records), the check is skipped, potentially allowing cross-batch attendance marking.
+
+---
+
+### MED-06 · Test DELETE doesn't verify existence before cascading
+
+**File**: [admin/tests/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/%5Bid%5D/route.ts#L60)
+
+```typescript
+await ProTest.findByIdAndDelete(id);
+await TestAnswerKey.deleteOne({ testId: id });
+await ProTestAttempt.deleteMany({ testId: id });
+```
+
+**What**: If the test doesn't exist, the function still deletes answer keys and attempts for that ID (no-ops), then returns success. Should check existence first and return 404.
+
+---
+
+### MED-07 · Finance dashboard has no try-catch
+
+**File**: [admin/finance/dashboard/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/dashboard/route.ts)
+
+**What**: Aggregation queries can fail. No error handling wrapping the dashboard GET.
+
+---
+
+### MED-08 · Verify-OTP doesn't delete records after max attempts
+
+**File**: [auth/verify-otp/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/verify-otp/route.ts#L40)
+
+```typescript
+if (record.attempts >= 3) {
+    return NextResponse.json({ message: 'Too many wrong attempts.' }, { status: 429 });
+}
+```
+
+**What**: After 3 wrong attempts, the record stays in DB indefinitely. User must request a new OTP to reset the counter. The old record lingers.
+
+---
+
+### MED-09 · Google OAuth user auto-created with `status: 'pending'` but can immediately login
+
+**File**: [lib/auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#L78-L86)
+
+**What**: When a new Google user signs in, they're created with `status: 'pending'` and `isProfileComplete: false`. The middleware redirects them to `/complete-profile` or `/pending-approval`. However, the JWT is issued immediately, so they have a valid session token. If they know the API endpoint URLs, they could call student APIs directly before being approved.
+
+**Mitigation**: Middleware blocks page access ✅. API middleware blocks wrong-role access ✅. But the session token IS valid — the `status` check only happens at the page level, not at the API level for their own role's routes.
+
+---
+
+### MED-10 · Missing database indexes on frequently queried fields
+
+**Current indexes found**: Only `CoursePricing.courseId` (unique) and `User.rollNumber+classId` (compound unique).
+
+**Missing indexes that will hurt at 500+ records**:
+
+| Collection | Fields | Query Location |
+|---|---|---|
+| [Attendance](file:///media/swastik/focus/ldm%20feb/src/models/Attendance.ts#10-24) | `{ 'records.student': 1 }` | student dashboard |
+| [Attendance](file:///media/swastik/focus/ldm%20feb/src/models/Attendance.ts#10-24) | `{ date: 1, subject: 1, section: 1 }` | teacher session lookup |
+| [StudentFee](file:///media/swastik/focus/ldm%20feb/src/models/StudentFee.ts#11-31) | `{ studentId: 1 }` | student fees page |
+| [StudentFee](file:///media/swastik/focus/ldm%20feb/src/models/StudentFee.ts#11-31) | `{ courseId: 1 }` | admin fee course listing |
+| `ProTestAttempt` | `{ testId: 1 }` | admin test detail |
+| [FeePayment](file:///media/swastik/focus/ldm%20feb/src/models/FeePayment.ts#13-33) | `{ student: 1 }` | cascade delete |
+| `Salary` | `{ employee: 1, month: 1 }` | duplicate check |
+| `DocumentSubmission` | `{ requirement: 1, student: 1 }` | upload duplicate check |
+
+---
+
+# 🟢 LOW — Nice to Have
+
+---
+
+### LOW-01 · Admin bcrypt rounds inconsistent
+- Register: `bcrypt.hash(password, 12)` — 12 rounds ✅
+- Admin user create: `bcrypt.hash(password, 10)` — 10 rounds
+- Standard: Both should use 12.
+
+### LOW-02 · No `try-catch` on several routes
+Routes missing top-level try-catch (will crash with unhandled exception):
+- [admin/attendance/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/attendance/route.ts) (GET, PATCH, PUT)
+- [admin/users/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/route.ts) (GET, POST, DELETE)
+- [student/attendance/self-mark/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/self-mark/route.ts)
+- `teacher/attendance/[id]/session/route.ts`
+
+### LOW-03 · `EmailOTP` records never cleaned up
+No TTL index or cleanup job. Old OTP records accumulate forever.
+
+### LOW-04 · Contact form validates phone but accepts non-numeric chars
+Phone regex: `^[\d\s\+\-\(\)]{7,15}$` — allows `+---(())` without any digits to be valid.
+
+### LOW-05 · Test `startedAt` from client is trusted for timing
+The M-03 fix accepts `startedAt` from the client. A sophisticated user could send a `startedAt` 1 minute ago to bypass the time limit. Should store `startedAt` server-side (in a Redis/DB record) when GET is called.
+
+### LOW-06 · Complete-profile uploads files sequentially
+Additional files in document upload are processed one-by-one in a `for` loop. Should use `Promise.all` for parallel upload.
+
+### LOW-07 · Salary duplicate check is not atomic
+```typescript
+const exists = await Salary.findOne({ employee, month });
+if (exists) return 409;
+// ... gap here — another request could create one ...
+const record = await Salary.create({ ... });
+```
+Between the check and the create, a duplicate could slip through under concurrent requests. Fix: Add a unique compound index on `{ employee, month }`.
+
+---
+
+# Summary Matrix
+
+| Severity | Count | Examples |
+|---|---|---|
+| 🔴 CRITICAL | 5 | Regex injection, login no rate limit, Math.random OTP, unverified email registration, error leaking |
+| 🟠 HIGH | 7 | Teacher no ownership check, test cross-access, no security headers, weak password, no audit logs, public Cloudinary URLs |
+| 🟡 MEDIUM | 10 | Full collection scans, no pagination, missing indexes, raw JSON parsing, status bypass |
+| 🟢 LOW | 7 | Inconsistent bcrypt rounds, missing try-catch, OTP cleanup, sequential uploads |
+
+**Total issues found: 29**
+
+---
+
+# Recommended Fix Order
+
+1. **CRIT-02** — Rate limit login (5 min fix, highest ROI)
+2. **CRIT-03** — `crypto.randomInt` for OTP (1 line change)
+3. **CRIT-01** — Escape regex inputs (2 line change)
+4. **CRIT-05** — Remove error.message from responses (grep + replace)
+5. **CRIT-04** — Verify OTP before registration
+6. **HIGH-04** — Security headers in next.config (copy-paste)
+7. **HIGH-01** — Teacher attendance ownership check (1 line)
+8. **HIGH-02** — Teacher test ownership check (2 lines)
+9. **HIGH-06** — AuditLog on user CRUD (copy pattern from salary)
+10. **HIGH-05** — Stronger password policy
+11. **MED-10** — Database indexes (schema changes)
+12. Rest by priority

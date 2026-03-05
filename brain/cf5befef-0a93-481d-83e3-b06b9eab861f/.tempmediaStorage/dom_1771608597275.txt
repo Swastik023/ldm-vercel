@@ -1,0 +1,179 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+LDM E-Library
+Paramedical College
+[0] (83,412)<nav class='flex-1 overflow-y-auto py-4 px-3 space-y-6' scrollable='true' />
+	Courses / Programs
+	[1] (138,117)<button class='text-teal-400 hover:text-teal-300 normal-case tracking-normal'>Clear />
+	[2] (79,159)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Common & All />
+		Common & All
+	[3] (79,345)<div class='max-h-60 overflow-y-auto pr-1 mt-1 scrollbar-thin scrollbar-thumb-white/10' scrollable='true' />
+		CAND
+		-
+		Certificate in Ayurveda Nutrition & Dietetics
+		CAP
+		-
+		Certificate in Ayurveda Parasurgery
+		CACSBC
+		-
+		Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+		DAT
+		-
+		Diploma in Anaesthesia Technology (DAT)
+		DCP
+		-
+		Diploma in Community Care Provider
+		[4] (74,217)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DCCM
+-
+Diploma in Critical Care Management />
+			DCCM
+			-
+			Diploma in Critical Care Management
+		[5] (74,260)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DETC
+-
+Diploma in Emergency & Trauma Care Technician />
+			DETC
+			-
+			Diploma in Emergency & Trauma Care Technician
+		[6] (74,302)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DHSI
+-
+Diploma in Health & Sanitary Inspector />
+			DHSI
+			-
+			Diploma in Health & Sanitary Inspector
+		[7] (74,345)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DHCP
+-
+Diploma in Home Care Provider />
+			DHCP
+			-
+			Diploma in Home Care Provider
+		[8] (74,387)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DHA
+-
+Diploma in Hospital Administration />
+			DHA
+			-
+			Diploma in Hospital Administration
+		[9] (74,429)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all bg-teal-500/20 text-teal-300 font-medium'>DHM
+-
+Diploma in Hospital Management />
+			DHM
+			-
+			Diploma in Hospital Management
+		[10] (74,472)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DHWM
+-
+Diploma in Hospital Waste Management />
+			DHWM
+			-
+			Diploma in Hospital Waste Management
+		DMLT
+		-
+		Diploma in Medical Laboratory Technology (DMLT)
+		DNT
+		-
+		Diploma in Nanny Training
+		DOTT
+		-
+		Diploma in Operation Theatre Technology (DOTT)
+		DP
+		-
+		Diploma in Panchkarma
+		DRIT
+		-
+		Diploma in Radiology & Imaging Technology (DRIT)
+		MPHW
+		-
+		Multipurpose Health Worker (MPHW)
+	Collections
+	[11] (79,587)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all bg-teal-500/10 text-teal-300'>All Categories />
+		All Categories
+	[12] (79,632)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Module Notes />
+		Module Notes
+	[13] (79,678)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Foundation Modules />
+		Foundation Modules
+	[14] (79,723)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Master Curriculum & Syllabus />
+		Master Curriculum & Syllabus
+	Recently Viewed
+	DHM - Master Curriculum
+	CAIM-05: Panchakarma in Infertility
+	F-12: Nutrition Fundamentals
+234
+curated resources
+[15] (468,49)<input class='w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-gray-50 outline-none focus:ring-2 focus:ring-teal-400 focus:bg-white transition' placeholder='Search in DHM...' />
+[16] (814,49)<select class='text-sm border border-gray-200 rounded-lg py-2 px-3 bg-white outline-none focus:ring-2 focus:ring-teal-400' />
+DHM: Diploma in Hospital Management
+20 Feb 2026
+Foundation Modules
+12
+[17] (776,112)<button class='flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition px-2 py-1 rounded-md hover:bg-teal-50'>Expand all 12 />
+[18] (500,203)<div  />
+	[19] (217,203)<div  />
+	[20] (451,203)<div  />
+		[21] (451,189)<div  />
+			[22] (315,189)<h3 >F-12: Nutrition Fundamentals />
+			[23] (420,189)<span >Foundation />
+		[24] (451,218)<div  />
+			[25] (281,218)<div  />
+				[26] (281,218)<span >Multi-program Resource />
+	[27] (735,203)<div  />
+		[28] (692,203)<div  />
+			[29] (692,191)<p >Rich Text />
+			[30] (692,214)<p >20 Feb 2026 />
+		[31] (765,203)<div  />
+			[32] (765,203)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+[33] (500,327)<div  />
+	[34] (217,327)<div  />
+	[35] (451,327)<div  />
+		[36] (451,313)<div  />
+			[37] (332,313)<h3 >F-11: Biomedical Waste Management />
+			[38] (452,313)<span >Foundation />
+		[39] (451,342)<div  />
+			[40] (281,342)<div  />
+				[41] (281,342)<span >Multi-program Resource />
+	[42] (735,327)<div  />
+		[43] (692,327)<div  />
+			[44] (692,315)<p >Rich Text />
+			[45] (692,338)<p >20 Feb 2026 />
+		[46] (765,327)<div  />
+			[47] (765,327)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+[48] (500,451)<div  />
+	[49] (217,451)<div  />
+	[50] (451,451)<div  />
+		[51] (451,437)<div  />
+			[52] (301,437)<h3 >F-10: Infection Control />
+			[53] (390,437)<span >Foundation />
+		[54] (451,466)<div  />
+			[55] (281,466)<div  />
+				[56] (281,466)<span >Multi-program Resource />
+	[57] (735,451)<div  />
+		[58] (692,451)<div  />
+			[59] (692,439)<p >Rich Text />
+			[60] (692,462)<p >20 Feb 2026 />
+		[61] (765,451)<div  />
+			[62] (765,451)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+Master Curriculum & Syllabus
+1
+[63] (500,673)<div  />
+	[64] (217,673)<div  />
+	[65] (451,673)<div  />
+		[66] (451,660)<div  />
+			[67] (306,660)<h3 >DHM - Master Curriculum />
+		[68] (451,688)<div  />
+			[69] (306,688)<div  />
+				[70] (306,688)<span >DHM: Diploma in Hospital Management />
+	[71] (735,673)<div  />
+		[72] (692,673)<div  />
+			[73] (692,661)<p >Rich Text />
+			[74] (692,685)<p >20 Feb 2026 />
+		[75] (765,673)<div  />
+			[76] (765,673)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+LDM College
+Excellence in Medical Education
+Empowering future healthcare professionals with comprehensive medical education, practical training, and innovative learning methodologies with our Experienced Doctors at Dr Dharam Dev Hospital & Institute.
+Our Collaborations
+Hospital Partners
+Ayurvedic Partners
+Location
+
+</current_dom>

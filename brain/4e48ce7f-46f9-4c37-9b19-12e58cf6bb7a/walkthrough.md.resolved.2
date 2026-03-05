@@ -1,0 +1,63 @@
+# Google OAuth + Email OTP — Walkthrough
+
+## Changes Made
+
+### 4 files modified, 0 new files
+
+| File | Change |
+|------|--------|
+| [.env](file:///media/swastik/focus/ldm%20feb/.env) | Added `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, updated `SMTP_PASS` |
+| [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts) | `password` → optional, added `provider` and `image` fields |
+| [auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts) | Added GoogleProvider, signIn callback (auto-register), JWT DB lookup |
+| [login/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(auth)/login/page.tsx) | Google button with icon, "or" divider, "Register here" link |
+
+## Auth Flow
+
+```mermaid
+graph TD
+    A[Login Page] --> B{Method}
+    B -->|Username + Password| C[CredentialsProvider]
+    B -->|Google Button| D[GoogleProvider → Google Consent]
+    C --> E{Username exists + password matches?}
+    E -->|Yes| F[JWT Token]
+    E -->|No| G[Error message]
+    D --> H[signIn Callback]
+    H --> I{Email exists in DB?}
+    I -->|Yes| J[Use existing user]
+    I -->|No| K[Auto-create as student]
+    J --> F
+    K --> F
+    F --> L[Role-based redirect]
+    L -->|admin| M[/admin]
+    L -->|teacher| N[/teacher]
+    L -->|student| O[/student]
+```
+
+## Duplicate Prevention Logic
+
+- **Email is unique**: `email` field has `unique: true` index in MongoDB
+- **signIn callback**: Before creating new user, queries `User.findOne({ email })`
+- **Cross-provider**: Google user with `test@gmail.com` and OTP user with `test@gmail.com` → same account
+- **Username collision**: Auto-increments (`john` → `john1` → `john2` …)
+
+## Verification
+
+### Unit Tests — 108/108 pass
+```
+Test Suites: 16 passed, 16 total
+Tests:       108 passed, 108 total
+Time:        2.129 s
+```
+
+### Browser Testing
+
+Start dev server and test manually:
+```bash
+npm run dev
+```
+
+1. Go to `/login` → verify Google button visible
+2. Click "Sign in with Google" → Google consent → redirect to dashboard
+3. Verify user created in MongoDB with `provider: 'google'`
+4. Login with credentials → still works
+5. Logout → works for both methods

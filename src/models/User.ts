@@ -21,6 +21,7 @@ export interface IUser extends Document {
     // Student registration fields
     classId?: mongoose.Types.ObjectId;
     rollNumber?: string;
+    semester?: number;  // Current semester (1-10)
     sessionFrom?: number;  // Legacy — kept for backward compat
     sessionTo?: number;    // Legacy — kept for backward compat
     // New intake/joining fields
@@ -52,6 +53,7 @@ const UserSchema = new Schema<IUser>({
     // Student registration academic fields
     classId: { type: Schema.Types.ObjectId, ref: 'Class', default: null },
     rollNumber: { type: String, default: null },
+    semester: { type: Number, min: 1, max: 10, default: null },
     sessionFrom: { type: Number, default: null },  // Legacy
     sessionTo: { type: Number, default: null },    // Legacy
     // New intake/joining fields

@@ -1,0 +1,76 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+[0] (130,69)<a aria-label='Home' href='/' />
+	[1] (130,69)<div  />
+		[2] (130,69)<img  />
+LDM College of Pharmacy
+In collaboration with Dr. Dharam Dev Hospital & Institute
+[3] (639,69)<a aria-label='Hospital Partner' class='relative group hidden sm:block' href='/hospital' />
+	[4] (639,69)<img  />
+[5] (701,69)<a aria-label='Visit Hospital Page' class='hidden sm:block' href='/hospital' />
+	[6] (701,69)<img  />
+[7] (770,69)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 border-2 border-[#10B981] text-[#10B981] rounded-full text-sm font-bold hover:bg-[#10B981]/10 transition-all duration-300 whitespace-nowrap' href='/register'>Register />
+[8] (851,69)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#10B981] to-[#047857] text-white rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap' href='/collect-info'>Apply Now />
+📢 Updates
+[9] (154,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/'>Home />
+[10] (217,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/about'>About />
+	[11] (239,232)<span  />
+[12] (285,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/notices'>Notices />
+[13] (354,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/library'>E-Library />
+[14] (430,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/courses'>Courses />
+	[15] (457,232)<span  />
+[16] (501,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/gallery'>Gallery />
+[17] (586,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/collaborations'>Collaborations />
+	[18] (627,232)<span  />
+[19] (673,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#10B981] border-[#10B981]' href='/contact'>Contact />
+[20] (738,230)<button class='relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none' />
+[21] (793,230)<a class='inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors' href='/admin'>Dashboard />
+[22] (865,230)<button class='inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-[#0A192F] hover:text-red-500 transition-colors'>Logout />
+Emergency:
++91 8957570000
+Mon–Sat: 9:00 AM – 5:00 PM
+Get in Touch
+Have a question or need more information? We're here to help.
+Contact Information
+Reach us through any of these channels
+[23] (269,595)<a class='flex items-start gap-4 p-5 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/20 transition-colors cursor-pointer' href='https://maps.google.com/?q=Dr.%20Dharam%20Dev%20Hospital%20%26%20Institute%2C%20Kachhwa%2C%20Karnal-132001%20(Haryana)' />
+	[24] (172,582)<div  />
+	[25] (287,595)<div  />
+		[26] (287,563)<p >Visit Us />
+		[27] (287,607)<div >Dr. Dharam Dev Hospital & Institute, Kachhwa, Karnal-132001 (Haryana) />
+Call Us
+[28] (230,752)<a class='hover:text-blue-200 transition-colors' href='tel:+918957570000'>+91 8957570000 />
+[29] (269,873)<a class='flex items-start gap-4 p-5 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/20 transition-colors cursor-pointer' href='mailto:ldmparamedical@gmail.com' />
+	[30] (172,875)<div  />
+	[31] (253,872)<div  />
+		[32] (253,856)<p >Email Us />
+		[33] (253,884)<div >ldmparamedical@gmail.com />
+Working Hours
+Send us a Message
+We'll respond within 24–48 hours
+[34] (551,545)<label class='block text-sm font-medium text-gray-700 mb-1.5'>Full Name
+* />
+	*
+[35] (551,596)<input class='w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-200 border-gray-200 focus:ring-violet-500 focus:border-violet-400' placeholder='e.g. Ravi Kumar' />
+[36] (757,545)<label class='block text-sm font-medium text-gray-700 mb-1.5'>Email Address
+* />
+	*
+[37] (757,596)<input class='w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-200 border-gray-200 focus:ring-violet-500 focus:border-violet-400' placeholder='you@example.com' />
+[38] (551,666)<label class='block text-sm font-medium text-gray-700 mb-1.5'>Phone Number
+(optional) />
+	(optional)
+[39] (551,718)<input class='w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-200 border-gray-200 focus:ring-violet-500 focus:border-violet-400' placeholder='+91 98XXXXXXXX' />
+[40] (757,666)<label class='block text-sm font-medium text-gray-700 mb-1.5'>Subject
+* />
+	*
+[41] (757,718)<select class='w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-200 border-gray-200 focus:ring-violet-500 focus:border-violet-400 appearance-none' />
+[42] (654,788)<label class='block text-sm font-medium text-gray-700 mb-1.5'>Message
+* />
+	*
+[43] (654,892)<textarea class='w-full px-4 py-3 rounded-xl border bg-white text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-200 border-gray-200 focus:ring-violet-500 focus:border-violet-400 resize-none' placeholder='Please describe how we can help you…' />
+0
+/2000
+
+</current_dom>

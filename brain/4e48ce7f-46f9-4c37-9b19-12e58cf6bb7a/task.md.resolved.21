@@ -1,0 +1,33 @@
+# Production-Grade Test Module — Tasks
+
+## Models
+- [x] Rebuild [src/models/Test.ts](file:///media/swastik/focus/ldm%20feb/src/models/Test.ts) → ProTest schema
+- [x] Create `src/models/TestAnswerKey.ts`
+- [x] Rebuild [src/models/TestAttempt.ts](file:///media/swastik/focus/ldm%20feb/src/models/TestAttempt.ts) → ProTestAttempt schema
+
+## Lib
+- [x] Create `src/lib/testSchemaValidator.ts`
+
+## Admin APIs
+- [x] `POST /api/admin/tests` — dual JSON upload, validate, store
+- [x] `GET /api/admin/tests` — list with attempt counts
+- [x] `GET/PATCH/DELETE /api/admin/tests/[id]`
+- [x] `PATCH /api/admin/tests/[id]/publish` — publish results
+
+## Student APIs
+- [x] `GET /api/student/tests` — filtered by batch
+- [x] `GET /api/student/tests/[id]` — load test, check attempted
+- [x] `POST /api/student/tests/[id]` — submit, grade, store
+- [x] `GET /api/student/tests/[id]/result`
+
+## Teacher Admin UI
+- [x] `src/components/admin/TestManager.tsx`
+
+## Student UI
+- [x] `src/app/(student)/student/tests/page.tsx`
+- [x] `src/app/(student)/student/tests/[id]/page.tsx`
+- [x] `src/app/(student)/student/tests/[id]/result/page.tsx`
+
+## Verification
+- [ ] TypeScript check (`tsc --noEmit`)
+- [ ] Git commit & push

@@ -40,7 +40,7 @@ export default function RegisterPage() {
     const [batches, setBatches] = useState<BatchOption[]>([]);
     const [form, setForm] = useState({
         fullName: '', email: '', mobileNumber: '',
-        batchId: '', rollNumber: '', password: '',
+        batchId: '', rollNumber: '', semester: '', password: '',
     });
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [showPassword, setShowPassword] = useState(false);
@@ -324,6 +324,19 @@ export default function RegisterPage() {
                                     </label>
                                     <input className={ic('rollNumber')} placeholder="e.g. 01, A-12" value={form.rollNumber} onChange={set('rollNumber')} />
                                     <FieldErr field="rollNumber" />
+                                </div>
+
+                                {/* Semester */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-white/80 mb-1.5">Current Semester <span className="text-white/30 font-normal text-xs">(optional)</span></label>
+                                    <select className={selectCls} value={form.semester} onChange={set('semester')}>
+                                        <option value="" className="bg-[#0A192F]">— Select Semester —</option>
+                                        {Array.from({ length: 10 }, (_, i) => i + 1).map(s => (
+                                            <option key={s} value={s} className="bg-[#0A192F]">
+                                                {s === 1 ? '1st' : s === 2 ? '2nd' : s === 3 ? '3rd' : `${s}th`} Semester
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 {/* Password */}

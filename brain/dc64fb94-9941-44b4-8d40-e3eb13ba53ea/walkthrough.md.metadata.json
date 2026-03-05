@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Updated the walkthrough to include the Enterprise Finance Security architecture (Root Admin, Audit Logs, Soft Deletes, Period Locking).",
+  "updatedAt": "2026-02-20T10:04:29.764377030Z",
+  "version": "6"
+}

@@ -1,0 +1,29 @@
+# Academic ERP UI Generation via Google Stitch
+
+## Phase 1: Planning & Audit
+- [x] Audit existing frontend (pages, components, routes)
+- [x] Audit existing API endpoints (70+ routes found)
+- [x] Audit database schema (academic + exam tables)
+- [x] Identify design language (Tailwind, Framer Motion, gradient headers)
+- [x] Complete gap analysis
+- [x] Write implementation plan
+- [x] Get user approval on plan
+
+## Phase 2: Stitch UI Generation (Phase 1: 8 Critical Screens)
+- [x] Create Stitch project (using existing `5304011400071064164`)
+- [x] Generate Screen 1: Academic Sessions Manager (Admin)
+- [x] Convert Screen 1 to React component
+- [x] Generate Screen 2: Programs & Curriculum Builder (Admin)
+- [x] Generate Screen 3: Teacher-Subject Assignment (Admin)
+- [x] Generate Screen 4: Exam Builder (Admin)
+- [x] Generate Screen 5: Marks Entry Interface (Teacher)
+- [x] Generate Screen 6: Result Processing Dashboard (Admin)
+- [x] Generate Screen 7: Student Report Card (Student/Parent)
+- [x] Generate Screen 8: Transcript Generator (Admin)
+
+## Phase 3: Integration
+- [ ] Extract HTML from generated screens
+- [ ] Convert to React+Tailwind components
+- [ ] Wire up to existing API endpoints
+- [ ] Add routes to AppRoutes.tsx
+- [ ] Verify builds

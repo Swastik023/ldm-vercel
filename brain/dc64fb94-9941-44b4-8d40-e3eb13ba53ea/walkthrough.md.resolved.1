@@ -1,0 +1,53 @@
+# Vercel Deployment Walkthrough
+
+## Changes Made
+
+### 1. TypeScript Build Error Fixed
+**File:** [src/models/Library.ts](file:///media/swastik/focus/ldm%20feb/src/models/Library.ts)
+
+The [ILibrary](file:///media/swastik/focus/ldm%20feb/src/models/Library.ts#3-15) interface was missing `createdAt` and `updatedAt` fields (added by `timestamps: true` in the schema), causing a type error in the API route.
+
+```diff
+  uploaded_by: mongoose.Types.ObjectId;
++ createdAt: Date;
++ updatedAt: Date;
+}
+```
+
+### 2. [vercel.json](file:///media/swastik/focus/ldm%20feb/vercel.json) Added
+**File:** [vercel.json](file:///media/swastik/focus/ldm%20feb/vercel.json)
+
+Configures Vercel to allow API routes up to **30 seconds** (Hobby plan max) to handle MongoDB connection time.
+
+### 3. [.env.example](file:///media/swastik/focus/ldm%20feb/.env.example) Updated
+**File:** [.env.example](file:///media/swastik/focus/ldm%20feb/.env.example)
+
+Added clear instructions especially for `NEXTAUTH_URL`.
+
+---
+
+## Verification
+
+- ✅ `npm run build` — **Passed with 0 errors**
+- ✅ Changes committed and pushed to `github.com:Swastik023/ldm-vercel.git`
+
+---
+
+## Next Steps: Deploy on Vercel
+
+1. Go to **[vercel.com](https://vercel.com)** → New Project → Import `Swastik023/ldm-vercel`
+2. Add the following **Environment Variables** in Project Settings:
+
+| Variable | Value |
+|---|---|
+| `MONGODB_URI` | `mongodb+srv://admin:rootroot@cluster0.rokteln.mongodb.net/...` |
+| `NEXTAUTH_SECRET` | `changeme_in_production` (use a strong random value in prod) |
+| `NEXTAUTH_URL` | `https://your-app.vercel.app` ← **change after first deploy** |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | `dowzpb9zj` |
+| `CLOUDINARY_API_KEY` | `176364421865824` |
+| `CLOUDINARY_API_SECRET` | `RyVI6c8GN3QMN7Rkpx0gGoOx0Ow` |
+
+3. Click **Deploy** — the build will succeed ✅
+
+> [!IMPORTANT]
+> After the first deploy, Vercel will give you a URL like `https://ldm-vercel.vercel.app`. Go back to Environment Variables and update `NEXTAUTH_URL` to that URL, then **Redeploy**.

@@ -1,0 +1,18 @@
+# QA Audit Fix — Critical + High Issues
+
+## Critical
+- [x] ISSUE-001: Student fee page field name mismatch (shows ₹0) — FIXED
+
+## High
+- [x] ISSUE-002: Fee page only shows first record, ignores rest — FIXED
+- [x] ISSUE-003: Marks overwrite without confirmation — FIXED
+- [x] ISSUE-004: Attendance duplicate date shows raw DB error — NOT A BUG (already uses upsert)
+- [x] ISSUE-005: Admin-created students forced to complete-profile — FIXED
+- [x] ISSUE-006: Teacher has no test management page — FIXED
+- [x] ISSUE-017: Bulk fee assigns to ALL students if no batch — FIXED
+- [x] ISSUE-018: No marks > maxMarks validation — FIXED
+- [x] ISSUE-024: Test has no auto-submit on timer expiry — NOT A BUG (auto-submit exists)
+
+## Medium (blocking core flow)
+- [x] ISSUE-009: Test result page has no back navigation — NOT A BUG (link exists)
+- [ ] ISSUE-019: Overdue documents permanently locked (no escape) — Known limitation

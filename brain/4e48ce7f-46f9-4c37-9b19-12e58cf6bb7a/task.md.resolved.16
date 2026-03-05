@@ -1,0 +1,25 @@
+# Client Delivery — Fix All Issues
+
+## Phase 1: Security — Route Protection Middleware
+- [x] Add Next.js middleware to protect /api/admin/*, /api/student/*, /api/teacher/* routes
+- [x] Remove temp sync-pricing endpoint (has hardcoded secret)
+
+## Phase 2: Missing Student Features
+- [x] Add GET /api/student/attendance — student sees own attendance
+- [x] Add student attendance page
+- [x] Add GET /api/student/notices — student sees notices
+- [x] Wire notices into student dashboard
+
+## Phase 3: Dead Code Removal
+- [x] Delete /api/student/finance/payments (dead — no page calls it, uses wrong model)
+- [x] Delete old Library model actions/library.ts consumer
+- [x] Remove migrate route (one-time use complete)
+
+## Phase 4: Validation & Error Handling
+- [x] Audit all POST/PATCH handlers for input validation
+- [x] Add meaningful error messages for invalid inputs
+- [x] Ensure consistent error response shape { success: false, message: string }
+
+## Phase 5: Build & Verify
+- [x] TypeScript build check (zero errors)
+- [x] Commit and push all changes

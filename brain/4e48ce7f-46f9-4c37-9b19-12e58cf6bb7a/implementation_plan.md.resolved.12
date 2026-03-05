@@ -1,0 +1,272 @@
+# Production-Grade Test Module — Implementation Plan
+
+## Overview
+
+Complete rebuild of the existing test system into a secure, structured, scalable module. The existing [Test](file:///media/swastik/focus/ldm%20feb/src/models/Test.ts#14-23), [TestAttempt](file:///media/swastik/focus/ldm%20feb/src/models/TestAttempt.ts#8-17) models and related APIs will be replaced by new schemas with full separation of concerns.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Breaking Change:** The existing [Test](file:///media/swastik/focus/ldm%20feb/src/models/Test.ts#14-23) and [TestAttempt](file:///media/swastik/focus/ldm%20feb/src/models/TestAttempt.ts#8-17) MongoDB collections and all existing admin/student test API routes will be replaced by new schemas. Any existing test data in the DB will not auto-migrate.
+
+> [!WARNING]
+> **Old MCQ text-paste system removed.** The current teacher feature that pastes raw MCQ text will be replaced by structured JSON file uploads. Teachers will need to prepare `questions.json` and `answers.json` files.
+
+---
+
+## Proposed Changes
+
+### 1. Data Layer — New Models
+
+---
+
+#### [MODIFY] [Test.ts](file:///media/swastik/focus/ldm%20feb/src/models/Test.ts)
+
+Replace existing flat schema with a fully structured `ProTest` schema:
+
+```typescript
+ProTest {
+  title, description, durationMinutes, totalMarks
+  batch: ObjectId(Batch)   // filter tests per batch
+  subject: ObjectId(Subject) // filter tests per subject
+  negativeMarking: number   // e.g. 0.25 per wrong answer
+  shuffleQuestions: boolean
+  shuffleOptions: boolean
+  resultMode: 'instant' | 'manual'
+  isPublished: boolean     // admin publishes results manually
+  isActive: boolean
+  createdBy: ObjectId(User)
+  sections: [{ sectionId, title, instructions }]
+  questions: [{
+    questionId: string    // unique per test, matches answers.json
+    sectionId?: string
+    type: 'mcq'
+    questionText: string
+    marks: number
+    options: [{ label: 'A'|'B'|'C'|'D', text: string }]
+  }]
+}
+```
+
+#### [NEW] `src/models/TestAnswerKey.ts`
+
+Separate collection — never returned to students:
+```typescript
+TestAnswerKey {
+  testId: ObjectId(ProTest)
+  answers: [{
+    questionId: string
+    correctAnswer: 'A'|'B'|'C'|'D'
+    reason: string
+    marks: number   // per-question marks for negative marking calc
+  }]
+}
+```
+
+#### [MODIFY] [TestAttempt.ts](file:///media/swastik/focus/ldm%20feb/src/models/TestAttempt.ts)
+
+Replace with richer schema:
+```typescript
+ProTestAttempt {
+  testId: ObjectId
+  studentId: ObjectId
+  startedAt: Date
+  submittedAt: Date
+  status: 'in_progress' | 'submitted'
+  answers: [{
+    questionId: string
+    selectedOption: 'A'|'B'|'C'|'D' | null
+  }]
+  // Computed on submit
+  totalMarks: number
+  marksObtained: number
+  negativeMarks: number
+  correctCount: number
+  wrongCount: number
+  skippedCount: number
+  percentage: number
+  // Result details (stored after grading)
+  gradedAnswers: [{
+    questionId, questionText, studentAnswer, correctAnswer, reason, marksAwarded
+  }]
+  resultVisible: boolean  // mirrors test.resultMode at time of submit
+}
+```
+
+---
+
+### 2. Teacher Upload APIs
+
+---
+
+#### [MODIFY] [/api/admin/tests/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/route.ts)
+
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/approve/route.ts#81-107) — list all tests (for teachers/admin), include attempt count
+- [POST](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts#20-163) — accepts `multipart/form-data` with `questions` (File) + `answers` (File)
+  1. Parse & validate `questions.json` — strict schema check
+  2. Parse & validate `answers.json` — verify every `questionId` in answers exists in questions
+  3. Save `ProTest` document
+  4. Save `TestAnswerKey` document (separate collection)
+  5. Return `{ success, testId, parsedQuestions, warnings }`
+
+#### [MODIFY] [/api/admin/tests/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/%5Bid%5D/route.ts)
+
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/approve/route.ts#81-107) — test detail + all attempts populated with student name
+- [PATCH](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/attendance/route.ts#60-81) — toggle [isActive](file:///media/swastik/focus/ldm%20feb/src/components/layout/Sidebar.tsx#85-86), toggle result publishing (`isPublished = true`)
+- [DELETE](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/%5Bid%5D/route.ts#40-52) — cascade delete test + answer key + all attempts
+
+#### [NEW] `/api/admin/tests/[id]/publish/route.ts`
+
+- [PATCH](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/attendance/route.ts#60-81) — set `isPublished = true` and set `resultVisible = true` on all attempts for this test
+
+---
+
+### 3. Student APIs
+
+---
+
+#### [MODIFY] [/api/student/tests/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/tests/route.ts)
+
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/approve/route.ts#81-107) — return tests where `batch` matches student's batch AND `isActive = true`
+- Strip correct answers, return only test meta + questions
+
+#### [MODIFY] [/api/student/tests/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/tests/%5Bid%5D/route.ts)
+
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/approve/route.ts#81-107) — load test questions (no answers), check if already attempted
+- [POST](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts#20-163) — submit answers:
+  1. Check for duplicate attempt
+  2. Load `TestAnswerKey` (server-only)
+  3. Score: `marksObtained = (correct × marks) - (wrong × negativeMarking)`
+  4. Build `gradedAnswers` array with reasons
+  5. Save `ProTestAttempt`
+  6. If `resultMode === 'instant'`, return full result + review
+  7. If `resultMode === 'manual'`, return only `"Result will be published later"`
+
+#### [MODIFY] [/api/student/tests/[id]/result/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/tests/%5Bid%5D/result/route.ts)
+
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/users/approve/route.ts#81-107) — return attempt results if `resultVisible = true` OR `resultMode = 'instant'`
+- Returns `gradedAnswers` including question text, student answer, correct answer, reason, marks
+
+---
+
+### 4. JSON Schema Validation
+
+---
+
+#### [NEW] `src/lib/testSchemaValidator.ts`
+
+Validates uploaded JSON files strictly:
+
+**`questions.json` required shape:**
+```json
+{
+  "testMeta": {
+    "title": "string",
+    "description": "string",
+    "durationMinutes": 60,
+    "totalMarks": 100,
+    "batch": "batchId",
+    "subject": "subjectId",
+    "negativeMarking": 0.25,
+    "shuffleQuestions": false,
+    "shuffleOptions": false,
+    "resultMode": "instant"
+  },
+  "sections": [{ "sectionId": "S1", "title": "Section A", "instructions": "" }],
+  "questions": [{
+    "questionId": "Q1",
+    "sectionId": "S1",
+    "type": "mcq",
+    "questionText": "...",
+    "marks": 2,
+    "options": [
+      { "label": "A", "text": "..." },
+      { "label": "B", "text": "..." },
+      { "label": "C", "text": "..." },
+      { "label": "D", "text": "..." }
+    ]
+  }]
+}
+```
+
+**`answers.json` required shape:**
+```json
+{
+  "testTitle": "same as questions.json testMeta.title",
+  "answers": [{
+    "questionId": "Q1",
+    "correctAnswer": "B",
+    "reason": "Because..."
+  }]
+}
+```
+
+---
+
+### 5. UI — Teacher Dashboard
+
+---
+
+#### [NEW] `src/components/admin/TestManager.tsx`
+
+Replaces the existing `TestManager` (if any). Features:
+- **Upload tab**: Two file pickers (`questions.json`, `answers.json`) with live preview of parsed questions count and validation warnings
+- **Test list table**: Title, Batch, Subject, Questions count, Attempts, Status
+- Clicking a test opens a drawer:
+  - View all attempts sorted by score (leaderboard style)
+  - "Publish Results" button (for `manual` mode tests)
+  - Toggle active/inactive
+
+---
+
+### 6. UI — Student Dashboard
+
+---
+
+#### [MODIFY] `src/app/(student)/student/tests/page.tsx`
+
+- Stats bar: Total / Completed / Avg.%
+- Filter tabs: All / Pending / Done
+- Cards showing: Title, Duration, Questions, Batch, Subject, Score bar (if done)
+- **Only shows tests matching student's batch**
+
+#### [MODIFY] `src/app/(student)/student/tests/[id]/page.tsx`
+
+- Sticky timer with colour-coded progress bar (green → yellow → red)
+- Question palette (answered/unanswered/flagged for review)
+- Per-question Prev/Next nav
+- Auto-submit on timer expiry
+
+#### [MODIFY] `src/app/(student)/student/tests/[id]/result/page.tsx`
+
+- If `resultMode = 'manual'` and not published: show "Awaiting result" card
+- If published/instant: show full scorecard + per-question review with reason
+
+---
+
+### 7. Admin Page Integration
+
+---
+
+#### [MODIFY] `src/app/admin/settings/page.tsx` OR existing admin tabs
+
+Add a "Tests" tab inside the existing admin/teacher panel, mounting `<TestManager />`.
+
+---
+
+## Verification Plan
+
+### Automated Checks
+- `npx tsc --noEmit` — full TypeScript type check
+- JSON schema validator unit test for both valid and invalid payloads
+
+### Manual Verification
+1. Teacher uploads a valid `questions.json` + `answers.json` → Test created, answer key stored separately
+2. Upload with mismatched `questionId` → Show validation error, no data saved
+3. Student (in correct batch) sees the test, student (in wrong batch) does not
+4. Student submits → Score calculated with negative marking
+5. `instant` mode → Full result shown immediately
+6. `manual` mode → "Awaiting result" shown; admin publishes → result becomes visible
+7. Student attempts to re-submit → 409 Conflict

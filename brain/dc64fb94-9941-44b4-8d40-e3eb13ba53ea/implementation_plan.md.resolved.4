@@ -1,0 +1,51 @@
+# Secure Finance Architecture & Root Admin Implementation Plan
+
+To ensure the ERP system meets enterprise-grade security standards for financial data, we will implement a strict Root Administrator hierarchy and an immutable Audit Trail.
+
+## 1. System Overview: Root Admin vs. Power Admin
+Currently, any user with `role: 'admin'` can alter financial records. We will introduce a separation of powers:
+- **Root Admin** (`is_root: true`): The ultimate authority (typically the owner/trustee). Can view audit logs, perform hard deletes (if legally required), adjust historical records, and define locking periods.
+- **Power Admin** (Standard Admin): Can record daily transactions, but **cannot** delete records, edit locked periods, or bypass the audit log.
+
+## 2. Proposed Database Changes
+
+### A. Modify [User](file:///media/swastik/focus/ldm%20feb/src/models/User.ts#3-15) Model
+- Add `is_root: { type: Boolean, default: false }`.
+- Only a Root Admin can grant `is_root` status to another user.
+
+### B. Create `AuditLog` Model
+An immutable ledger tracking **who** did **what**, **when**, and to **which record**.
+```typescript
+interface IAuditLog {
+    action: 'CREATE' | 'UPDATE' | 'DELETE' | 'SOFT_DELETE';
+    entityType: 'FeePayment' | 'Expense' | 'Salary' | 'FeeStructure';
+    entityId: ObjectId;
+    performedBy: ObjectId; // User ID
+    changes: { field: string, old: any, new: any }[]; // Detailed delta
+    reason?: string; 
+    timestamp: Date;
+    ipAddress?: string;
+}
+```
+
+### C. Modify Finance Models ([FeePayment](file:///media/swastik/focus/ldm%20feb/src/models/FeePayment.ts#12-21), [Expense](file:///media/swastik/focus/ldm%20feb/src/app/admin/finance/expenses/page.tsx#10-20), [Salary](file:///media/swastik/focus/ldm%20feb/src/models/Salary.ts#3-16))
+- Add `is_deleted: { type: Boolean, default: false }` (Soft Delete).
+- Add `deleted_by`, `deleted_at`, and `deletion_reason` for tracking.
+- Add `is_locked: { type: Boolean, default: false }` to freeze records after a financial period closes (e.g., month-end).
+
+## 3. API & Backend Enforcement Rules
+
+1. **No Silent Edits**: Every [PUT](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/expenses/%5Bid%5D/route.ts#7-26) or `PATCH` request to a finance route must automatically generate an `AuditLog` entry detailing the exact fields changed.
+2. **No Hard Deletions**: A [DELETE](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/fee-structures/%5Bid%5D/route.ts#37-60) request from a standard admin will flag the record as `is_deleted: true` rather than removing it from the database. It remains visible in the DB but hidden from standard UI views (or shown with a "Cancelled" strike-through).
+3. **Period Locking**: A cron job or manual Root Admin action sets `is_locked: true` on all records older than X days (e.g., end of the fiscal month). Locked records **cannot** be modified by a Power Admin under any edge case.
+4. **Dual Approval (Optional UI handling)**: For high-value transactions (e.g., Expenses > ₹50,000), the system can require a Root Admin to set `status: 'approved'` before the transaction impacts the main ledger.
+
+## 4. UI/UX Additions
+- **Admin Dashboard**: Add an "Audit Logs" viewer (restricted to Root Admin).
+- **Finance Tables**: Highlight cancelled/soft-deleted records in red. Show a "Lock/Unlock" toggle for Root Admins.
+
+## Verification Plan
+1. Create a `Root Admin` test account.
+2. Verify a standard Admin can no longer delete an expense.
+3. Edit a payment and verify the exact old/new values are permanently recorded in the `AuditLog` collection.
+4. Attempt to edit a locked record as a standard admin and confirm the API rejects it with `403 Forbidden`.

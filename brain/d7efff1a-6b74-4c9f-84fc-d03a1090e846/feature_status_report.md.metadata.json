@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Final comprehensive feature status report after migration, categorizing all features by readiness: working with backend, needs backend implementation, or should be removed/made static.",
+  "updatedAt": "2026-02-01T02:38:22.490702152Z"
+}

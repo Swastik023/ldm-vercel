@@ -1,0 +1,27 @@
+# College Management System Logic Update
+
+## 1. Models
+- [x] Create CollegeSettings model (singleton: academicSession, intakeMonths)
+- [x] Update User model (joiningMonth, joiningYear, courseEndDate, rollNumber unique index)
+- [x] Update StudentDocuments model (aadhaarFront/Back, documentMeta)
+
+## 2. APIs — Auth & Registration
+- [x] Update register route (joiningMonth/Year, username=rollNumber, auto courseEndDate)
+- [x] Update complete-profile route (same changes, aadhaar front+back mandatory, docMeta)
+- [x] Update auth.ts (add rollNumber to login lookup)
+
+## 3. APIs — Admin
+- [x] Create admin/settings route (GET/PATCH CollegeSettings)
+- [x] Create public/programs route (replace public/batches for registration)
+- [x] Update admin/students/[id] route (populate programId)
+- [x] Update student dashboard route (return programName, joining, courseEndDate)
+
+## 4. UI Pages
+- [x] Update login page (Roll Number / Email label)
+- [x] Update complete-profile page (joiningMonth/Year, program dropdown, aadhaar front+back, docMeta)
+- [x] Update admin/students page (new interfaces, doc slots for aadhaar front/back/legacy)
+- [x] Update student/profile page (aadhaar front+back, docMeta display, program/joining)
+
+## 5. Verification
+- [x] TypeScript build check — zero new errors
+- [x] Cross-check all logic for consistency

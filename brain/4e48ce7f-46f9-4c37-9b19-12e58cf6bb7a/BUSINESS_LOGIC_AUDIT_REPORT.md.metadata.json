@@ -1,0 +1,5 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_OTHER",
+  "summary":  "Comprehensive business logic audit across all 101 API routes and 35 models. Covers registration, profile completion, batch/class/session linking, dual fee systems, test workflow, attendance, document management, role permissions, and admin controls. Each issue includes severity, root cause, real-world impact, and fix.",
+  "updatedAt":  "2026-03-04T01:04:21.877678018Z"
+}

@@ -1,0 +1,30 @@
+# Task: QA Automation Setup (Playwright)
+
+- [ ] [Phase 3] Setup Playwright Framework
+    - [x] Install Playwright in `frontend` project
+    - [x] Configure [playwright.config.ts](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/playwright.config.ts) (Base URL: http://localhost:5173)
+    - [x] Create `tests/e2e` directory structure
+    - [x] Add `test:e2e` script to [package.json](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/package.json)
+
+- [ ] [Phase 3] Implement Initial Test Suites
+    - [x] Write [admin-login.spec.ts](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/tests/e2e/auth/admin-login.spec.ts) (Happy/Sad paths)
+    - [/] Verify test execution against local dev server (Blocked: Environment timeouts)
+    - [ ] Generate and review HTML test report (Pending successful run)
+    - [x] Sync QA Automation Setup to GitHub
+
+- [ ] [Phase 4] Expand E2E Coverage (Active)
+    - [x] Write [teacher-login.spec.ts](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/tests/e2e/auth/teacher-login.spec.ts)
+    - [x] Write [student-login.spec.ts](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/tests/e2e/auth/student-login.spec.ts)
+    - [x] Commit and Push new tests
+    
+- [ ] [Phase 5] Result Processing Tests (Active)
+    - [ ] Write `results-processing.spec.ts` (Admin process -> Student check)
+    - [ ] Commit and Push results test
+
+---
+# Completed Tasks
+
+- [x] Push to GitHub
+- [x] Deploy to Production
+- [x] Verify Stitch Export (No action needed)
+- [x] Fix Local Test Suite (100% Pass)

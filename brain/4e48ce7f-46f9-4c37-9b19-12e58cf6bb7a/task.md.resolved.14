@@ -1,0 +1,21 @@
+# Backend Cleanup — Fix All Audit Issues
+
+## Critical
+- [ ] Fix #1: Student fees reads wrong collection (StudentFee → FeeRecord mismatch)
+- [ ] Fix #2: Replace CoursePricing with Program model in POST handler
+
+## High
+- [ ] Fix #6: Delete orphaned CoursePricing.ts model
+- [ ] Fix #7: Delete dead admin/course-pricing API route
+- [ ] Fix #3: Mark FeeRecord/FeeStructure/FeePayment as deprecated
+- [ ] Fix #5: Remove legacy aadhaarIdUrl from StudentDocuments
+
+## Medium
+- [ ] Fix #8: Extract round2 to shared lib
+- [ ] Fix #9: Create shared auth guard utility
+- [ ] Fix #10: Remove duplicate /api/public/programs if unused
+- [ ] Fix #11: Remove temp migrate/sync-pricing routes
+
+## Finalize
+- [ ] TypeScript build check
+- [ ] Git commit & push

@@ -1,0 +1,71 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+LDM Admin
+Management Portal
+[0] (83,514)<div class='flex-1 overflow-y-auto py-4 px-3 space-y-1' scrollable='true' />
+	[1] (79,179)<a href='/admin' />
+		[2] (79,179)<div  />
+			[3] (61,179)<span >Dashboard />
+	[4] (79,237)<a href='/admin/users' />
+		[5] (79,237)<div  />
+			[6] (69,237)<span >Manage Users />
+	[7] (79,295)<a href='/admin/academic' />
+		[8] (79,295)<div  />
+			[9] (74,295)<span >Academic Config />
+	[10] (79,354)<a href='/admin/batches' />
+		[11] (79,354)<div  />
+			[12] (56,354)<span >Batches />
+	[13] (79,412)<a href='/admin/academic/assignments' />
+		[14] (79,412)<div  />
+			[15] (65,412)<span >Assignments />
+	[16] (79,471)<a href='/admin/attendance' />
+		[17] (79,471)<div  />
+			[18] (62,471)<span >Attendance />
+	[19] (79,529)<a href='/admin/finance' />
+		[20] (79,529)<div  />
+			[21] (55,529)<span >Finance />
+	[22] (79,587)<a href='/admin/library/documents' />
+		[23] (79,587)<div  />
+			[24] (65,587)<span >Library Docs />
+	[25] (79,646)<a href='/admin/library/categories' />
+		[26] (79,646)<div  />
+			[27] (67,646)<span >Library Folder />
+	[28] (79,704)<a href='/admin/marquee' />
+		[29] (79,704)<div  />
+			[30] (75,704)<span >Scrolling Updates />
+	[31] (79,762)<a href='/admin/notices' />
+		[32] (79,762)<div  />
+			[33] (54,762)<span >Notices />
+	[34] (79,821)<a href='/admin/gallery' />
+		[35] (79,821)<div  />
+			[36] (53,821)<span >Gallery />
+	[37] (79,879)<a href='/admin/messages' />
+		[38] (79,879)<div  />
+			[39] (60,879)<span >Messages />
+Logout
+Library Categories
+Manage organizational folders for digital resources.
+New Category
+[40] (236,267)<label class='text-sm font-medium'>Category Name />
+[41] (313,309)<input class='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50' placeholder='e.g. Syllabus, Assignments' />
+[42] (261,373)<label class='text-sm font-medium'>Semester/Module (Optional) />
+[43] (313,415)<input class='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50' placeholder='e.g. 1' />
+Leave blank if this category applies to all semesters.
+[44] (313,516)<button class='inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full'>Create Category />
+Existing Categories
+ID / Name
+Scope
+Created
+Master Curriculum & Syllabus
+Universal
+N/A
+Foundation Modules
+Universal
+N/A
+Module Notes
+Universal
+N/A
+
+</current_dom>

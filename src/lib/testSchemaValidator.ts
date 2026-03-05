@@ -179,3 +179,105 @@ export function validateAnswersFile(
 
     return { valid: errors.length === 0, errors, warnings };
 }
+
+// ── Combined single-JSON format types ──────────────────────────────────────
+
+export interface CombinedQuestion {
+    question: string;
+    options: { A: string; B: string; C: string; D: string };
+    correctOption: 'A' | 'B' | 'C' | 'D';
+    reason?: string;
+    marks: number;
+    sectionId?: string;
+}
+
+export interface CombinedTestFile {
+    testTitle: string;
+    description?: string;
+    academicYear?: string;
+    durationMinutes: number;
+    totalMarks: number;
+    negativeMarking?: number;
+    shuffleQuestions?: boolean;
+    shuffleOptions?: boolean;
+    resultMode?: 'instant' | 'manual';
+    sections?: UploadedSection[];
+    questions: CombinedQuestion[];
+}
+
+// ── Validate combined single-JSON file ─────────────────────────────────────
+export function validateCombinedFile(data: unknown): ValidationResult {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+        return { valid: false, errors: ['JSON must be a valid object.'], warnings };
+    }
+
+    const d = data as Record<string, unknown>;
+
+    // Root-level metadata
+    if (!d.testTitle || typeof d.testTitle !== 'string' || !(d.testTitle as string).trim()) {
+        errors.push('testTitle is required and must be a non-empty string.');
+    }
+    if (typeof d.durationMinutes !== 'number' || d.durationMinutes < 1) {
+        errors.push('durationMinutes must be a positive number.');
+    }
+    if (typeof d.totalMarks !== 'number' || d.totalMarks < 1) {
+        errors.push('totalMarks must be a positive number.');
+    }
+    if (d.negativeMarking !== undefined && typeof d.negativeMarking !== 'number') {
+        errors.push('negativeMarking must be a number if provided.');
+    }
+    if (d.resultMode !== undefined && !['instant', 'manual'].includes(d.resultMode as string)) {
+        errors.push('resultMode must be "instant" or "manual".');
+    }
+    if (d.academicYear !== undefined && (typeof d.academicYear !== 'string' || !/^\d{4}-\d{2}$/.test(d.academicYear as string))) {
+        warnings.push('academicYear should follow format "YYYY-YY" (e.g., "2025-26").');
+    }
+
+    // Questions array
+    if (!Array.isArray(d.questions) || d.questions.length === 0) {
+        errors.push('questions[] array is required and must not be empty.');
+    } else {
+        let marksSum = 0;
+        (d.questions as unknown[]).forEach((q: unknown, idx: number) => {
+            if (typeof q !== 'object' || q === null) { errors.push(`Question[${idx}] is not a valid object.`); return; }
+            const qObj = q as Record<string, unknown>;
+            const qLabel = `Question[${idx}]`;
+
+            if (!qObj.question || typeof qObj.question !== 'string' || !(qObj.question as string).trim()) {
+                errors.push(`${qLabel}: "question" field is required.`);
+            }
+            if (typeof qObj.marks !== 'number' || (qObj.marks as number) <= 0) {
+                errors.push(`${qLabel}: marks must be a positive number.`);
+            } else {
+                marksSum += qObj.marks as number;
+            }
+
+            // Options: must be object with exactly A, B, C, D keys
+            if (!qObj.options || typeof qObj.options !== 'object' || Array.isArray(qObj.options)) {
+                errors.push(`${qLabel}: options must be an object with keys A, B, C, D.`);
+            } else {
+                const opts = qObj.options as Record<string, unknown>;
+                ['A', 'B', 'C', 'D'].forEach(key => {
+                    if (!opts[key] || typeof opts[key] !== 'string' || !(opts[key] as string).trim()) {
+                        errors.push(`${qLabel}: options.${key} is required and must be a non-empty string.`);
+                    }
+                });
+            }
+
+            // Correct option
+            if (!qObj.correctOption || !['A', 'B', 'C', 'D'].includes((qObj.correctOption as string)?.toUpperCase())) {
+                errors.push(`${qLabel}: correctOption must be one of A, B, C, D.`);
+            }
+        });
+
+        // Warn if marks sum doesn't match totalMarks
+        if (typeof d.totalMarks === 'number' && marksSum !== d.totalMarks) {
+            warnings.push(`Sum of question marks (${marksSum}) does not match totalMarks (${d.totalMarks}).`);
+        }
+    }
+
+    return { valid: errors.length === 0, errors, warnings };
+}

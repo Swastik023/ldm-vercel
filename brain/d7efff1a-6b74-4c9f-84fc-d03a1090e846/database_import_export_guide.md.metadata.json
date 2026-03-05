@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Complete guide for importing and exporting MySQL database between local development and Hostinger production. Includes methods for exporting from both environments (phpMyAdmin and command line), importing databases, creating backups, syncing data bidirectionally, troubleshooting common issues, and best practices for database migration and safety.",
+  "updatedAt": "2026-01-31T13:12:56.117782640Z"
+}

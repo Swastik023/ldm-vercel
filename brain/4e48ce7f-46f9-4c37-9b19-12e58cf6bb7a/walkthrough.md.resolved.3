@@ -1,0 +1,89 @@
+# Academic Structure Upgrade — Walkthrough
+
+## What Was Built
+
+### New Model: [Class](file:///media/swastik/focus/ldm%20feb/src/models/Class.ts#3-10)
+```
+src/models/Class.ts
+```
+- `batchId` → ref Batch
+- `sessionFrom` / `sessionTo` (years)
+- `className` = auto-generated `"BatchName (From-To)"`
+- **Compound unique index**: `{ batchId, sessionFrom, sessionTo }` — no duplicate classes
+
+### Updated Model: [User](file:///media/swastik/focus/ldm%20feb/src/context/AuthContext.tsx#8-15)
+Added fields with a **compound unique index for roll number**:
+```
+classId, rollNumber, sessionFrom, sessionTo
+```
+```ts
+UserSchema.index({ classId: 1, rollNumber: 1 }, { unique: true, sparse: true });
+// sparse: skips admins/teachers who have null values
+```
+
+---
+
+## Registration Flow
+
+### Email + Password
+Form collects: **Full Name · Email · Phone · Batch · Session From · Session To · Roll Number · Password**
+
+Key UX: live **class name preview** appears once all three (Batch + Session From + Session To) are valid:
+> `🎓 Your class: D.Pharma (2024–2026)`
+
+Submit button stays **disabled** until all required academic fields are filled.
+
+### Google Sign-In
+Redirected to `/complete-profile` where they fill:
+- **Academic Details panel**: Batch, Session From/To year pickers, Roll Number, class preview
+- **4 mandatory document uploads** (same as email users)
+
+---
+
+## Validation & Uniqueness
+
+| Check | Where enforced |
+|---|---|
+| `sessionFrom < sessionTo` | Frontend (Session To dropdown filtered) + Backend |
+| Roll number unique per class | DB compound index + API pre-check with human-readable error |
+| All 4 docs required | Frontend (button disabled) + API response 400 |
+| File type explicit | Extension from filename, never from URL |
+| File size ≤ 5MB | Backend per-file check |
+
+Duplicate roll error example:
+> `Roll Number "01" is already taken in D.Pharma (2024-2026). Please check with your administrator.`
+
+---
+
+## API Changes
+
+| Endpoint | Change |
+|---|---|
+| `POST /api/auth/register` | Accepts `sessionFrom, sessionTo, rollNumber`; creates Class doc |
+| `POST /api/auth/complete-profile` | Google users: creates Class, sets `classId/rollNumber` |
+| `GET /api/public/batches` | Unchanged |
+| `GET /api/public/classes` | **New** — lists classes for a given batch |
+| `GET /api/student/dashboard` | Returns `className, rollNumber, sessionFrom, sessionTo` |
+| `GET /api/admin/students` | Filters: `batchId, classId, sessionFrom, sessionTo, rollNumber` |
+
+---
+
+## Dashboard Updates
+
+### Student (`/student/profile`)
+Header card shows:
+- 🎓 Class name (e.g. `D.Pharma (2024–2026)`)
+- Roll No prominently
+
+Info grid shows: Batch, Session From–To, Class, Roll Number, Phone, Username, Profile Status
+
+### Admin (`/admin/students`)
+- **Class column** shows `ClassName (Session)` badge
+- **Roll No column** — monospace font
+- **Filters**: Batch dropdown, Session From year, Session To year, Roll Number search input
+- **Modal** shows all academic fields with document downloads
+
+---
+
+## TypeScript
+`npx tsc --noEmit` — **0 errors** in production code. (2 pre-existing errors in test files only.)

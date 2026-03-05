@@ -1,0 +1,321 @@
+# LDM College CMS API Documentation
+
+> **Version 1.0.0** | Last Updated: February 1, 2026
+
+## Quick Start
+
+**Base URL:** `http://localhost:8000/api`  
+**Auth Type:** JWT Bearer Token  
+**Content-Type:** `application/json` (except file uploads)
+
+```bash
+# Login
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"password"}'
+
+# Use token in subsequent requests
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  http://localhost:8000/api/admin/stats
+```
+
+---
+
+## Authentication
+
+### POST /auth/login
+**Public** - Get JWT token
+
+**Request:**
+```json
+{
+  "username": "admin",
+  "password": "password"
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "token": "eyJ0eXAiOiJKV1Qi...",
+  "user": {
+    "id": "0000000001",
+    "username": "admin",
+    "name": "Admin User",
+    "role": "Administrator"
+  }
+}
+```
+
+### POST /auth/logout
+**Protected** - Logout (client removes token)
+
+### GET /auth/check
+**Protected** - Verify token validity
+
+### GET /auth/user-permissions
+**Protected** - Get user's permissions
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "permissions": ["manage_gallery", "view_audit_logs"],
+    "user_id": "0000000001",
+    "username": "admin"
+  }
+}
+```
+
+---
+
+## Contact Messages
+
+### POST /contact
+**Public** - Submit contact form (rate limited: 3/10min)
+
+**Request:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+91-9876543210",
+  "subject": "Inquiry",
+  "message": "Message text..."
+}
+```
+
+### GET /admin/contact-messages
+**Admin** - List messages (paginated)
+
+**Query Params:**
+- `page` (default: 1)
+- `limit` (default: 20, max: 100)
+- `status` (new/read/replied/archived)
+
+### PATCH /admin/contact-messages/{id}
+**Admin** - Update status
+
+**Request:**
+```json
+{
+  "status": "read"
+}
+```
+
+### DELETE /admin/contact-messages/{id}
+**Admin** - Soft delete message
+
+---
+
+## Notices
+
+### GET /notices
+**Public** - List active notices
+
+**Query Params:**
+- `category` (general/academic/exam/event/urgent)
+- `limit` (default: 10, max: 50)
+
+### POST /admin/notices
+**Admin** (requires `manage_notices`)
+
+**Request:**
+```json
+{
+  "title": "Notice Title",
+  "content": "Notice content...",
+  "category": "general",
+  "priority": "normal",
+  "start_date": "2026-02-01",
+  "end_date": "2026-02-28"
+}
+```
+
+### PUT /admin/notices/{id}
+**Admin** - Update notice
+
+### DELETE /admin/notices/{id}
+**Admin** - Soft delete notice
+
+---
+
+## Gallery
+
+### GET /gallery
+**Public** - List active images
+
+**Query Params:**
+- `category` (events/campus/facilities)
+- `limit` (default: 50, max: 100)
+
+### POST /admin/gallery
+**Admin** (requires `manage_gallery`)  
+**Content-Type:** `multipart/form-data`
+
+**Fields:**
+- `image` (file, max 5MB, JPG/PNG/GIF/WEBP)
+- `title` (string, 3-200 chars)
+- `description` (optional, max 1000 chars)
+- `category` (optional, default: general)
+
+**Image Processing:**
+- Original: Full resolution
+- Medium: 800x800 (aspect ratio maintained)
+- Thumbnail: 300x300 (square crop)
+
+### PUT /admin/gallery/{id}
+**Admin** - Update metadata only
+
+**Request:**
+```json
+{
+  "title": "Updated Title",
+  "description": "New description",
+  "category": "campus",
+  "is_active": true,
+  "display_order": 1
+}
+```
+
+### DELETE /admin/gallery/{id}
+**Admin** - Delete image + all files
+
+---
+
+## Admin Dashboard
+
+### GET /admin/stats
+**Admin** - Aggregated statistics
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "students": {"total": 0, "active": 0},
+    "staff": {"total": 1, "teachers": 1},
+    "notices": {"total": 1, "active": 1},
+    "contact_messages": {"total": 1, "new": 1},
+    "gallery": {"total": 0, "active": 0}
+  }
+}
+```
+
+---
+
+## Audit Logs
+
+### GET /admin/audit-logs
+**Admin** (requires `view_audit_logs`)
+
+**Query Params:**
+- `page` (default: 1)
+- `limit` (default: 50, max: 100)
+- `user_id` - Filter by user
+- `action` - Filter by action (login/logout/create/update/delete)
+- `entity_type` - Filter by entity
+- `date_from` - Start date (YYYY-MM-DD)
+- `date_to` - End date (YYYY-MM-DD)
+
+---
+
+## Permissions
+
+### GET /admin/permissions
+**Admin** (requires `manage_roles`)
+
+**Available Permissions:**
+- `manage_users` - Create/update/delete users
+- `manage_roles` - Assign roles/permissions
+- `manage_content` - Manage website content
+- `manage_gallery` - Upload/delete images
+- `manage_notices` - Create/edit notices
+- `view_audit_logs` - Access audit logs
+- `manage_settings` - System settings
+- `manage_students` - Student information
+- `manage_staff` - Staff information
+- `view_contact_messages` - Contact submissions
+
+---
+
+## Error Responses
+
+All errors follow this format:
+
+```json
+{
+  "success": false,
+  "error": "Error message here"
+}
+```
+
+**Common Status Codes:**
+- `200` - Success
+- `201` - Created
+- `400` - Validation error
+- `401` - Unauthorized
+- `403` - Forbidden (insufficient permissions)
+- `404` - Not found
+- `429` - Rate limit exceeded
+- `500` - Server error
+
+---
+
+## Database Tables
+
+### audit_logs
+Tracks all admin actions and auth events
+
+### contact_messages
+Contact form submissions
+
+### notices
+Notice system with date filtering
+
+### gallery
+Image gallery with file metadata
+
+### permission_definitions
+Available system permissions
+
+**Soft Delete:** All tables include `deleted_at` and `deleted_by` columns
+
+---
+
+## Deployment
+
+**Local:**
+```bash
+php -S localhost:8000 (in api/)
+npm run dev (in ldm_test/)
+```
+
+**Production (Hostinger):**
+1. Upload to `/public_html/ldmcollege.com/`
+2. Create uploads directory: `mkdir -p uploads/gallery/{originals,thumbnails,medium}`
+3. Set permissions: `chmod -R 755 uploads`
+4. Update database config in `api/index.php`
+
+---
+
+## Testing
+
+```bash
+# Test gallery upload
+./test_gallery_upload.sh
+
+# Manual API test
+TOKEN=$(curl -s -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"password"}' | jq -r '.token')
+
+curl -H "Authorization: Bearer $TOKEN" \
+  http://localhost:8000/api/admin/stats | jq
+```
+
+---
+
+**Need Help?** See `PROJECT_NOTES.md` for detailed implementation notes.

@@ -1,0 +1,129 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+1
+/
+1
+Next.js 16.1.6
+Turbopack
+Build Error
+[0] (751,202)<button aria-label='Copy Error Info' class='copy-error-button nextjs-data-copy-button nextjs-data-copy-button--initial' title='Copy Error Info' />
+[1] (773,202)<a aria-label='Go to related documentation' class='docs-link-button' href='https://nextjs.org/docs/messages/module-not-found' title='Go to related documentation' />
+[2] (795,202)<button class='nodejs-inspector-button' title='Attach Node.js inspector' />
+Module not found: Can't resolve '@vercel/analytics/next'
+./src/app/layout.tsx (5:1)
+[3] (788,320)<button aria-label='Open in editor' />
+	[4] (788,319)<span  />
+Module
+not
+found
+:
+Can't
+resolve
+'@vercel/analytics/next'
+3
+|
+import
+"./globals.css"
+;
+4
+|
+import
+{
+AuthProvider
+}
+from
+"@/context/AuthContext"
+;
+>
+5
+|
+import
+{
+Analytics
+}
+from
+"@vercel/analytics/next"
+;
+|
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+^
+6
+|
+7
+|
+const
+geistSans
+=
+Geist
+({
+8
+|
+variable
+:
+"--font-geist-sans"
+,
+[5] (319,565)<a href='https://nextjs.org/docs/messages/module-not-found'>https://nextjs.org/docs/messages/module-not-found />
+1
+2
+[6] (44,950)<div  />
+	[7] (44,950)<div  />
+		[8] (44,950)<div  />
+			[9] (25,950)<button aria-label='Open Next.js Dev Tools' id='next-logo' />
+			[10] (55,950)<div  />
+				[11] (55,950)<button aria-label='Open issues overlay' />
+					[12] (44,950)<div  />
+						[13] (44,950)<div >1 />
+					[14] (59,950)<div >Issue />
+
+</current_dom>

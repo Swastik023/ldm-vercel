@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Comprehensive frontend-backend integration audit for all 8 ERP screens. Documents API endpoint mappings, authentication flow, request/response handling, data flow logic, error handling, and identifies any integration issues or missing backend endpoints.",
+  "updatedAt": "2026-02-10T17:34:31.178008465Z"
+}

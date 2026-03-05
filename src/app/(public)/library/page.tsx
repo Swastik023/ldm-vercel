@@ -174,9 +174,9 @@ export default function PublicLibrary() {
     const currentProgramName = programs.find(p => p.code === activeProgram)?.name || 'All Programs';
 
     return (
-        <div className="bg-[#f0f2f5] flex" style={{ minHeight: 'calc(100vh - 130px)' }}>
+        <div className="bg-[#f0f2f5] flex min-h-screen pt-[136px]">
             {/* Sidebar */}
-            <aside className="w-64 bg-[#1a2332] text-white flex flex-col sticky top-0 self-start" style={{ height: 'calc(100vh - 130px)', overflowY: 'auto' }}>
+            <aside className="w-64 bg-[#1a2332] text-white flex flex-col sticky self-start" style={{ top: '136px', height: 'calc(100vh - 136px)', overflowY: 'auto' }}>
                 <div className="p-6 border-b border-white/10">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-teal-500 flex items-center justify-center shadow-lg">
@@ -273,7 +273,7 @@ export default function PublicLibrary() {
             {/* Main Content */}
             <main className="flex-1 flex flex-col min-h-full">
                 {/* Top Bar */}
-                <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+                <header className="bg-white border-b border-gray-200 px-8 py-4 sticky z-10" style={{ top: '136px' }}>
                     <div className="flex items-center gap-4 max-w-5xl">
                         <div className="relative flex-1">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />

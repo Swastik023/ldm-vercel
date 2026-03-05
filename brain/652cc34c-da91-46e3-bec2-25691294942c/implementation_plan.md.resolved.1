@@ -1,0 +1,61 @@
+# Implementation Plan - Complete PHP CMS Upgrade
+
+The goal is to upgrade the current minimal backend into a robust CMS (Content Management System) that fully replaces the static aspects of the site with dynamic, database-driven content.
+
+## User Review Required
+> [!IMPORTANT]
+> This is a major change. We will be expanding the database significantly.
+> **Action Required:** You will need to import the new `schema_v2.sql` into your database to support these new features.
+
+## Proposed Changes
+
+### 1. Database Schema Upgrade (`php_backend/sql`)
+#### [NEW] `schema_v2.sql`
+- **Users Table**: Verify structure, ensure `is_active` and roles are correct.
+- **Notices Table**: Add `visibility` (public/internal), approval status.
+- **[NEW] `contact_messages` Table**: For storing "Contact Us" form submissions.
+- **[NEW] `website_content` Table**: Key-value store for dynamic page text (About, Vision, Principal Message).
+
+### 2. Admin Panel Overhaul (`php_backend/admin`)
+We will replace the simple dashboard with a professional layout.
+
+#### [NEW] `includes/admin_header.php`, `includes/admin_sidebar.php`, `includes/admin_footer.php`
+- Layout components for a consistent Admin UI.
+
+#### [MODIFY] `dashboard.php`
+- Add statistics cards (Total Users, Notices, Unread Messages).
+
+#### [NEW] `manage_users.php` & `manage_users_action.php`
+- List all users.
+- Add/Edit/Delete users.
+- Reset Password functionality.
+
+#### [NEW] `manage_notices.php` & `manage_notices_action.php`
+- Full CRUD for notices.
+- Approval workflow (Approve/Reject teacher notices).
+
+#### [NEW] `manage_content.php`
+- Forms to update "About Us", "Principal Message", etc.
+
+#### [NEW] `contact_queries.php`
+- View table of messages from the "Contact Us" form.
+- Button to delete/mark as read.
+
+### 3. Public API / Frontend Integration
+#### [NEW] `api/get_content.php`
+- Endpoint for the React frontend to fetch "About Us" and other dynamic text.
+
+#### [NEW] `api/submit_contact.php`
+- Endpoint for the React "Contact Us" form to POST data to the database.
+
+## Verification Plan
+
+### Automated Tests
+- None (PHP is verified manually).
+
+### Manual Verification
+1.  **Database:** Import `schema_v2.sql`.
+2.  **Admin Login:** Verify Admin can log in.
+3.  **User Mgmt:** Create a "Teacher" user, then log out and log in as that Teacher.
+4.  **Content:** Update "Principal Message" in Admin, then check `api/get_content.php` to see the JSON change.
+5.  **Notices:** Post a notice as Admin, verify it appears in the list.

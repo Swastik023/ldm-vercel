@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Complete guide for connecting a local development environment to a Hostinger MySQL database. Includes prerequisites, step-by-step setup instructions, remote access configuration, credential management, connection testing procedures, common troubleshooting solutions, security best practices, and performance considerations. Also provides instructions for switching between local and remote database configurations.",
+  "updatedAt": "2026-01-31T13:06:26.593982847Z"
+}

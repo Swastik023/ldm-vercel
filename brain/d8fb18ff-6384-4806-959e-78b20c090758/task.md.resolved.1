@@ -1,0 +1,36 @@
+# Document Management System - Task Tracker
+
+## Phase 1: Planning
+- [x] Research existing codebase (models, APIs, auth, upload patterns)
+- [x] Write implementation plan
+- [x] Get user approval on plan
+
+## Phase 2: Database Models
+- [x] Create [DocumentRequirement](file:///media/swastik/focus/ldm%20feb/src/models/DocumentRequirement.ts#3-23) model
+- [x] Create [DocumentSubmission](file:///media/swastik/focus/ldm%20feb/src/models/DocumentSubmission.ts#13-32) model
+- [x] Update [AuditLog](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts#3-14) entity types
+
+## Phase 3: Admin/Teacher APIs
+- [x] `POST /api/admin/documents/requirements` — Create requirement
+- [x] `GET /api/admin/documents/requirements` — List requirements
+- [x] `PUT /api/admin/documents/requirements/[id]` — Edit requirement
+- [x] `DELETE /api/admin/documents/requirements/[id]` — Delete requirement
+- [x] `GET /api/admin/documents/submissions` — View all submissions
+- [x] `PUT /api/admin/documents/submissions/[id]/review` — Approve/Reject + comment
+- [x] `GET /api/admin/documents/submissions/[id]/download` — Secure download
+
+## Phase 4: Student APIs
+- [x] `GET /api/student/documents` — List my required documents + status
+- [x] `POST /api/student/documents/upload` — Upload a document (handles resubmit too)
+
+## Phase 5: Admin UI
+- [/] Requirements management page
+- [ ] Submissions review page (with approve/reject/comment)
+
+## Phase 6: Student UI
+- [ ] Student documents dashboard page (pending/approved/rejected)
+- [ ] Upload modal/form
+
+## Phase 7: Verification
+- [ ] Manual testing of full workflow
+- [ ] Role-based access verification

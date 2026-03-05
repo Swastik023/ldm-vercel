@@ -1,0 +1,518 @@
+# Frontend-Backend Integration Guide
+
+## Step-by-Step: Connect Frontend to Hostinger Backend
+
+This guide will walk you through connecting your frontend to the live Hostinger backend API.
+
+---
+
+## Prerequisites
+
+✅ Backend deployed to Hostinger  
+✅ API endpoints accessible (test with `/health`)  
+✅ Frontend files located in `/frontend_integration/`  
+✅ Database configured and populated
+
+---
+
+## Step 1: Update API Base URL
+
+### A. Locate the API Configuration File
+
+Your frontend API configuration is in:
+```
+/frontend_integration/api.ts
+```
+
+### B. Update the Base URL
+
+**Find this line:**
+```typescript
+const API_BASE_URL = 'http://localhost/api';
+```
+
+**Replace with your Hostinger domain:**
+```typescript
+const API_BASE_URL = 'https://yourdomain.com/api';
+// OR
+const API_BASE_URL = 'https://ldmcollege.com/backend/api';
+```
+
+> [!IMPORTANT]
+> Replace `yourdomain.com` with your actual Hostinger domain name.
+
+### C. Environment-Based Configuration (Recommended)
+
+For better flexibility, use environment variables:
+
+```typescript
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost/api';
+
+// In production .env file:
+// REACT_APP_API_URL=https://yourdomain.com/api
+```
+
+---
+
+## Step 2: Verify CORS Configuration ✅
+
+CORS headers have been added to `/api/.htaccess`:
+
+```apache
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+```
+
+> [!WARNING]
+> In production, restrict `Access-Control-Allow-Origin` to your frontend domain:
+> ```apache
+> Header always set Access-Control-Allow-Origin "https://yourfrontend.com"
+> ```
+
+---
+
+## Step 3: Test Health Endpoint
+
+Before testing login, verify the API is accessible:
+
+### Test via Browser
+```
+https://yourdomain.com/api/health
+```
+
+**Expected Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2026-02-01 07:11:38",
+  "checks": {
+    "database": {"status": "ok"},
+    "cache": {"status": "ok"},
+    "php": {"status": "ok"},
+    "disk": {"status": "ok"},
+    "permissions": {"status": "ok"}
+  }
+}
+```
+
+### Test via cURL
+```bash
+curl https://yourdomain.com/api/health
+```
+
+---
+
+## Step 4: Update API Endpoints in Frontend
+
+### Check Current API Endpoints
+
+In `api.ts`, you should have endpoints like:
+
+```typescript
+// Login endpoint
+export const login = async (username: string, password: string) => {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password }),
+  });
+  
+  return response.json();
+};
+
+// Get students endpoint
+export const getStudents = async (token: string, page = 1, limit = 20) => {
+  const response = await fetch(`${API_BASE_URL}/students?page=${page}&limit=${limit}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  
+  return response.json();
+};
+```
+
+### Verify Endpoints Match Backend
+
+Confirm these endpoints exist in your backend:
+- ✅ `POST /auth/login`
+- ✅ `GET /students`
+- ✅ `GET /students/{id}`
+- ✅ `GET /timetable/{personId}`
+- ✅ `GET /health`
+
+---
+
+## Step 5: Test Login Functionality
+
+### A. Prepare Test Credentials
+
+You need valid Gibbon ERP credentials. Test with:
+
+```
+Username: admin
+Password: [your Gibbon admin password]
+```
+
+> [!TIP]
+> If you don't have credentials, create a test user in Gibbon first.
+
+### B. Test Login via cURL (Verify Backend)
+
+```bash
+curl -X POST https://yourdomain.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"your_password"}'
+```
+
+**Expected Response:**
+```json
+{
+  "success": true,
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "name": "Administrator"
+  }
+}
+```
+
+### C. Test Login via Frontend
+
+1. **Run your frontend app:**
+   ```bash
+   npm run dev
+   # OR
+   npm start
+   ```
+
+2. **Open in browser:**
+   ```
+   http://localhost:3000
+   # OR wherever your frontend runs
+   ```
+
+3. **Try to login** with test credentials
+
+4. **Check browser console (F12)** for:
+   - Network requests to API
+   - CORS errors (should be none)
+   - JWT token received
+   - Any error messages
+
+---
+
+## Step 6: Test Dashboard/Students List
+
+After successful login:
+
+### A. Verify Token is Stored
+
+Check if JWT token is saved (usually in localStorage or sessionStorage):
+
+```javascript
+// In browser console
+console.log(localStorage.getItem('token'));
+// OR
+console.log(sessionStorage.getItem('authToken'));
+```
+
+### B. Test Students API Call
+
+The dashboard should automatically fetch students. Verify in Network tab:
+
+```
+Request URL: https://yourdomain.com/api/students?page=1&limit=20
+Request Method: GET
+Headers:
+  Authorization: Bearer eyJ0eXAiOiJKV...
+```
+
+**Expected Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "gibbonPersonID": "1",
+      "surname": "Smith",
+      "preferredName": "John",
+      "email": "john@example.com",
+      "yearGroup": "Year 10",
+      "formGroup": "10A"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "pages": 8
+  },
+  "cached": false
+}
+```
+
+---
+
+## Step 7: Troubleshooting Common Issues
+
+### Issue 1: CORS Error
+
+**Error:**
+```
+Access to fetch at 'https://yourdomain.com/api/auth/login' from origin
+'http://localhost:3000' has been blocked by CORS policy
+```
+
+**Solution:**
+1. Verify `.htaccess` CORS headers are present
+2. Restart Apache/web server
+3. Check `mod_headers` is enabled on Hostinger
+4. Test directly without frontend first (cURL)
+
+---
+
+### Issue 2: 404 Not Found
+
+**Error:**
+```
+GET https://yourdomain.com/api/students 404 (Not Found)
+```
+
+**Solutions:**
+1. **Check .htaccess routing:**
+   ```apache
+   RewriteRule ^(.*)$ index.php [QSA,L]
+   ```
+
+2. **Verify file structure:**
+   ```
+   /api/
+     ├── .htaccess
+     ├── index.php
+     └── ...
+   ```
+
+3. **Test endpoint directly:**
+   ```bash
+   curl https://yourdomain.com/api/health
+   ```
+
+---
+
+### Issue 3: Unauthorized (401)
+
+**Error:**
+```
+GET https://yourdomain.com/api/students 401 (Unauthorized)
+```
+
+**Solutions:**
+1. Check JWT token is being sent:
+   ```javascript
+   Authorization: Bearer [token]
+   ```
+
+2. Verify token is valid (not expired)
+
+3. Check JWT secret matches between environments
+
+4. Test login flow again
+
+---
+
+### Issue 4: Invalid Credentials
+
+**Error:**
+```json
+{
+  "success": false,
+  "error": "Invalid credentials"
+}
+```
+
+**Solutions:**
+1. Verify username exists in `gibbonPerson` table
+2. Check password hash in database matches input
+3. Ensure user has `status = 'Full'`
+4. Try with known working admin credentials
+
+---
+
+### Issue 5: Database Connection Failed
+
+**Error in /health:**
+```json
+{
+  "status": "degraded",
+  "checks": {
+    "database": {
+      "status": "error",
+      "message": "Database connection failed"
+    }
+  }
+}
+```
+
+**Solutions:**
+1. Check database credentials in `config.php`
+2. Verify database name is correct
+3. Test database connection via phpMyAdmin
+4. Check MySQL service is running
+
+---
+
+## Step 8: Production Deployment
+
+### Frontend Deployment
+
+1. **Build production frontend:**
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy to hosting:**
+   - Upload `build/` or `dist/` folder
+   - Configure web server to serve static files
+   - Set production API URL
+
+3. **Update CORS to restrict origin:**
+   ```apache
+   # In .htaccess, change from:
+   Header always set Access-Control-Allow-Origin "*"
+   
+   # To:
+   Header always set Access-Control-Allow-Origin "https://yourfrontend.com"
+   ```
+
+---
+
+## Testing Checklist
+
+Use this checklist to verify integration:
+
+### Backend Health
+- [ ] `/health` endpoint returns 200 OK
+- [ ] Database check passes
+- [ ] Cache check passes
+- [ ] PHP check passes
+
+### Authentication
+- [ ] Login with valid credentials succeeds
+- [ ] JWT token is returned
+- [ ] Token is stored in frontend
+- [ ] Login with invalid credentials fails appropriately
+
+### Protected Endpoints
+- [ ] Students list loads with valid token
+- [ ] Students list fails without token (401)
+- [ ] Pagination works correctly
+- [ ] Cache headers are present
+
+### CORS
+- [ ] No CORS errors in browser console
+- [ ] OPTIONS preflight requests succeed
+- [ ] Authorization header is accepted
+
+### Performance
+- [ ] First request is slower (uncached)
+- [ ] Subsequent requests are faster (cached)
+- [ ] Response times < 200ms for cached requests
+
+---
+
+## Quick Test Commands
+
+### Test All Endpoints
+
+```bash
+# Health check
+curl https://yourdomain.com/api/health
+
+# Login (get token)
+TOKEN=$(curl -s -X POST https://yourdomain.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"password"}' \
+  | jq -r '.token')
+
+echo "Token: $TOKEN"
+
+# Get students (with token)
+curl -H "Authorization: Bearer $TOKEN" \
+  https://yourdomain.com/api/students?page=1&limit=5
+
+# Get specific student
+curl -H "Authorization: Bearer $TOKEN" \
+  https://yourdomain.com/api/students/1
+```
+
+---
+
+## Environment Variables Summary
+
+### Frontend (.env)
+```env
+REACT_APP_API_URL=https://yourdomain.com/api
+NODE_ENV=production
+```
+
+### Backend (.env in /private/)
+```env
+DB_NAME=u542293952_productionldm
+DB_USER=u542293952_ldm
+DB_PASS=your_password
+DB_HOST=localhost
+JWT_SECRET=your_secret_key_here_change_in_production
+```
+
+---
+
+## Support & Debugging
+
+### Enable Debug Mode
+
+Temporarily enable error display (DEVELOPMENT ONLY):
+
+```php
+// In api/index.php (TOP of file)
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+```
+
+> [!CAUTION]
+> **Never leave debug mode on in production!** Remove after debugging.
+
+### Check Error Logs
+
+```bash
+# View PHP errors
+tail -f /home/u542293952/private/logs/php_errors.log
+
+# View API errors
+tail -f /home/u542293952/private/logs/api_errors.log
+```
+
+---
+
+## Next Steps
+
+1. ✅ Update `API_BASE_URL` in frontend
+2. ✅ Deploy frontend (or run locally)
+3. ✅ Test health endpoint
+4. ✅ Test login
+5. ✅ Test dashboard/students
+6. ✅ Verify caching works
+7. ✅ Check all endpoints
+8. ✅ Enable error logging
+9. ✅ Setup monitoring (UptimeRobot)
+10. ✅ Restrict CORS in production
+
+---
+
+**Frontend integration complete! Your app is now connected to Hostinger and ready for testing.** 🎉

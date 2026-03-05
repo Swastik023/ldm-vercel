@@ -1,0 +1,6 @@
+# Task: Fix Syntax Error in index.js
+
+- [/] Investigate line 64 error in [index.js](file:///media/swastik/focus/projects%202026/webdev/index.js) <!-- id: 0 -->
+- [ ] Identify missing brace or syntax issue <!-- id: 1 -->
+- [ ] Fix the error and verify the server starts <!-- id: 2 -->
+- [ ] Address the equality bug in the `/todos/:id` route <!-- id: 3 -->

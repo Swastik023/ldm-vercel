@@ -1,0 +1,40 @@
+# Rate Limiting, Business Logic & Dashboard Fixes — Walkthrough
+
+## What was done
+
+Audited all 101 routes for rate limiting, handler patterns, business logic, and dashboard connections. Implemented fixes across 10 files + 1 new utility.
+
+## Changes
+
+### New: In-Memory Rate Limiter
+| File | Purpose |
+|---|---|
+| [rateLimit.ts](file:///media/swastik/focus/ldm%20feb/src/lib/rateLimit.ts) | IP-based rate limiter with auto-cleanup. [checkRateLimit(req, action, max)](file:///media/swastik/focus/ldm%20feb/src/lib/rateLimit.ts#89-121) returns 429 Response when exceeded |
+
+### Rate limiting applied to auth routes
+| Route | Limit | Why |
+|---|---|---|
+| [register](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts) | 5/min/IP | Prevents registration flooding |
+| [send-otp](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/send-otp/route.ts) | 3/min/IP | + existing 60s DB cooldown — prevents email bombing |
+| [verify-otp](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/verify-otp/route.ts) | 5/min/IP | Prevents brute-forcing 6-digit codes (1M combos) |
+
+### Security: Self-Mark Batch Verification
+| File | Fix |
+|---|---|
+| [self-mark](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/self-mark/route.ts) | **Bug**: Any student could mark attendance for any batch's session. **Fix**: Verify student.batch matches attendance.batch before allowing self-mark |
+
+### Attendance Validation Hardening
+| File | Fix |
+|---|---|
+| [admin/attendance](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/attendance/route.ts) | PUT: status whitelisted to `present/absent/late/excused`. PATCH: action whitelisted to `lock/unlock` |
+| [teacher/attendance](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/attendance/%5BassignmentId%5D/route.ts) | POST: safe JSON parse, per-record status validation, fixed `marked_by` TS type |
+
+### Admin Dashboard
+| File | Fix |
+|---|---|
+| [admin/stats](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/stats/route.ts) | Added `pendingStudents` and `rejectedStudents` counts |
+
+## Verification
+
+- **Build**: `npm run build` passed clean (exit code 0)
+- **Commit**: `8d284ba` pushed to `main`

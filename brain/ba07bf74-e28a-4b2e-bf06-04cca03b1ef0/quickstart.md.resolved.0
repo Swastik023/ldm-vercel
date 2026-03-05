@@ -1,0 +1,69 @@
+# 🎯 JobHunt AI - Quick Start Guide
+
+## Method 1: Command Line (EASIEST)
+
+Open a terminal and use these commands:
+
+```bash
+# See all available commands
+jobhunt help
+
+# Generate a resume
+jobhunt resume
+
+# Create a cover letter for a job
+jobhunt cover https://linkedin.com/jobs/view/1234567
+
+# Prepare for technical interviews
+jobhunt interview tech
+
+# Prepare for interviews at a specific company
+jobhunt interview tech Google
+
+# Research a company
+jobhunt research Microsoft
+
+# Track a job application
+jobhunt track add "Google" "DevOps Engineer"
+
+# See application status
+jobhunt status
+```
+
+## Method 2: Web Dashboard
+
+1. **Open dashboard**: http://127.0.0.1:18789/?token=3d203ae9dff097c830c19a89d02fb671eb1fa258e90059bd
+
+2. **Use slash commands** in the message box:
+   - `/resume` - Generate resume
+   - `/cover [job_url]` - Create cover letter
+   - `/interview tech` - Interview prep
+   - `/research [company]` - Research company
+
+3. **Click "Send"** and wait for response
+
+## Troubleshooting
+
+### "No response" issue
+If you get no response, restart the service:
+```bash
+systemctl --user restart openclaw-gateway.service
+```
+
+### Check if agent is running
+```bash
+openclaw status
+```
+
+Look for:
+- ✅ Gateway: **reachable**
+- ✅ Gateway service: **running**
+- ✅ Agents: **1 · active**
+
+## Your Files
+
+All generated files are saved here:
+- **Resumes**: `~/job-hunt/applications/`
+- **Company Research**: `~/job-hunt/research/`
+- **Interview Notes**: `~/job-hunt/interview-notes/`
+- **Application Tracker**: `~/job-hunt/trackers/`

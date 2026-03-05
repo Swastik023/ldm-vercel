@@ -1,0 +1,55 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+[0] (204,55)<a aria-label='Home' href='/' />
+	[1] (204,55)<div  />
+		[2] (204,55)<img  />
+LDM College
+In collaboration with Dr. Dharam Dev Hospital & Institute
+[3] (610,55)<a aria-label='Hospital Partner' class='relative group hidden sm:block' href='/hospital' />
+	[4] (610,55)<img  />
+[5] (660,55)<a aria-label='Visit Hospital Page' class='hidden sm:block' href='/hospital' />
+	[6] (660,55)<img  />
+[7] (715,55)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 border-2 border-[#10B981] text-[#10B981] rounded-full text-sm font-bold hover:bg-[#10B981]/10 transition-all duration-300 whitespace-nowrap' href='/register'>Register />
+[8] (781,55)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#10B981] to-[#047857] text-white rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap' href='/collect-info'>Apply Now />
+📢 Updates
+💼 From Education to Employment — We Guide You!
+🚀 Build Skills. Get Certified. Get Placed.
+🎯 Skill-Based Learning for Guaranteed Career Growth!
+📢 Admissions Open — Job-Focused Programs with Placement Support!
+💼 From Education to Employment — We Guide You!
+[9] (223,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/'>Home />
+[10] (274,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/about'>About />
+	[11] (292,186)<span  />
+[12] (328,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/notices'>Notices />
+[13] (383,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/library'>E-Library />
+[14] (444,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#10B981] border-[#10B981]' href='/courses'>Courses />
+	[15] (466,186)<span  />
+[16] (501,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/gallery'>Gallery />
+[17] (569,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/collaborations'>Collaborations />
+	[18] (602,186)<span  />
+[19] (638,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/contact'>Contact />
+[20] (691,185)<button class='relative p-2 text-gray-600 hover:text-blue-600 focus:outline-none' />
+[21] (734,185)<a class='inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors' href='/admin'>Dashboard />
+[22] (792,185)<button class='inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-[#0A192F] hover:text-red-500 transition-colors'>Logout />
+Admissions Open 2025
+Build Your Career
+in Healthcare
+Industry-recognized programs in paramedical, Ayurvedic & healthcare management — designed for real-world careers.
+[23] (432,450)<a class='inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-full shadow-lg hover:shadow-amber-300/40 hover:scale-105 transition-all duration-200' href='/collect-info'>Apply Now />
+[24] (549,450)<a class='inline-flex items-center gap-2 px-8 py-3.5 border-2 border-white/40 text-white font-semibold rounded-full hover:bg-white/10 transition-all duration-200' href='/LDM-BROCHURE.pdf'>Download Brochure />
+NAAC Certified
+98% Placement
+5+ Hospital Partners
+31+ Programs
+[25] (445,662)<button class='px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-md shadow-violet-200'>Diploma Courses (31) />
+[26] (553,662)<button class='px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 bg-gray-100 text-gray-600 hover:bg-gray-200'>Certificate Courses (0) />
+3 Years
+B Voc Diploma In Cardiac Care Technology
+3 Years
+B Voc Diploma In Medical Lab Technology
+2 Years
+B Voc Diploma In Multi Purpose Health Worker
+
+</current_dom>

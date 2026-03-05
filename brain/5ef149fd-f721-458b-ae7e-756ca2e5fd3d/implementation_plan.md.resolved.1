@@ -1,0 +1,77 @@
+# LDM College ERP — Implementation Plan
+
+## Hosting Environment: Hostinger Premium (Shared)
+
+### Constraints
+| Restriction | Status | Solution |
+|-------------|--------|----------|
+| No background workers | ✅ | All operations are request-driven |
+| No WebSockets | ✅ | Standard HTTP request/response only |
+| No Docker/Node | ✅ | PHP + MySQL only |
+| No daemons | ✅ | File-based caching, no Redis |
+| Limited file writes | ✅ | Writes only to `public/uploads/` and `api/.cache/` |
+
+### Shared Hosting Safe Features
+- **Cache**: File-based in `api/.cache/` with .htaccess protection
+- **Uploads**: `public/uploads/gallery/` with subdirectories
+- **Logs**: Database-based audit logs, no file logs
+- **Sessions**: PHP native sessions (cookie-based)
+
+---
+
+## Completed Fixes
+
+### 1. RBAC Backend ✅
+- Created [RoleMiddleware.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php)
+- Applied to 16 admin routes
+- Non-admin users get 403 Forbidden
+
+### 2. Attendance API ✅
+- `POST /attendance/mark` — Real DB insert
+- `GET /attendance` — Fetch class attendance
+- Uses `gibbonAttendanceLogPerson` table
+
+### 3. Frontend Route Guards ✅
+- [ProtectedRoute.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/components/ProtectedRoute.tsx)
+- Wraps 12 role-specific routes
+
+### 4. Dashboard APIs ✅
+- `GET /student/dashboard`
+- `GET /teacher/dashboard`
+- `GET /employee/dashboard`
+
+### 5. Shared Hosting Fixes ✅
+- Cache directory: `/tmp` → `api/.cache/`
+- Added `ImageUploader::delete()` method
+- Protected cache files with `.htaccess`
+
+---
+
+## Deployment Checklist
+
+### Pre-Deployment
+- [ ] Update `.htaccess` CORS origin to `https://ldmcollege.com`
+- [ ] Set JWT secret in production
+- [ ] Configure DB credentials
+- [ ] Build frontend: `npm run build`
+
+### Hostinger Setup
+```bash
+# Upload these directories:
+/api/           → /public_html/api/
+/frontend/dist/ → /public_html/
+
+# Ensure writable:
+chmod 755 /public_html/api/.cache/
+chmod 755 /public_html/uploads/gallery/
+```
+
+### Database
+- Import `gibbon_ldm_local` to production
+- Update `api/index.php` with production credentials
+
+---
+
+## Remaining (Optional)
+- [ ] Timetable API implementation
+- [ ] Wire dashboard UIs to APIs

@@ -179,3 +179,51 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true, message: 'User and related records deleted.' });
 }
+
+// PATCH /api/admin/users?id=xxx — edit user registration details
+export async function PATCH(request: NextRequest) {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user?.role !== 'admin') {
+        return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return NextResponse.json({ success: false, message: 'User ID required' }, { status: 400 });
+
+    await dbConnect();
+
+    const body = await request.json();
+    const allowed = ['fullName', 'email', 'mobileNumber', 'rollNumber', 'semester', 'batch', 'session', 'status', 'role', 'programId', 'joiningMonth', 'joiningYear', 'courseEndDate', 'isProfileComplete'];
+    const update: Record<string, unknown> = {};
+    for (const key of allowed) {
+        if (key in body) update[key] = body[key] === '' ? null : body[key];
+    }
+
+    if (Object.keys(update).length === 0) {
+        return NextResponse.json({ success: false, message: 'No valid fields to update.' }, { status: 400 });
+    }
+
+    // If roll number changed, check for conflicts
+    if (update.rollNumber) {
+        const conflict = await User.findOne({ rollNumber: update.rollNumber, _id: { $ne: id } });
+        if (conflict) return NextResponse.json({ success: false, message: `Roll number "${update.rollNumber}" is already taken.` }, { status: 409 });
+        // Keep username in sync with rollNumber
+        update.username = String(update.rollNumber).toLowerCase();
+    }
+
+    const user = await User.findByIdAndUpdate(id, update, { new: true }).select('-password').lean();
+    if (!user) return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+
+    await AuditLog.create({
+        action: 'UPDATE',
+        entityType: 'User',
+        entityId: id,
+        performedBy: session.user.id,
+        changes: Object.entries(update).map(([field, val]) => ({ field, new: val })),
+        ipAddress: request.headers.get('x-forwarded-for') || '127.0.0.1',
+    });
+
+    return NextResponse.json({ success: true, user });
+}
+

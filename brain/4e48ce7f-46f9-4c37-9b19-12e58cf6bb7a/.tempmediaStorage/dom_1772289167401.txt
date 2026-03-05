@@ -1,0 +1,58 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+[0] (204,55)<a aria-label='Home' href='/' />
+	[1] (204,55)<div  />
+		[2] (204,55)<img  />
+LDM College
+In collaboration with Dr. Dharam Dev Hospital & Institute
+[3] (610,55)<a aria-label='Hospital Partner' class='relative group hidden sm:block' href='/hospital' />
+	[4] (610,55)<img  />
+[5] (660,55)<a aria-label='Visit Hospital Page' class='hidden sm:block' href='/hospital' />
+	[6] (660,55)<img  />
+[7] (715,55)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 border-2 border-[#10B981] text-[#10B981] rounded-full text-sm font-bold hover:bg-[#10B981]/10 transition-all duration-300 whitespace-nowrap' href='/register'>Register />
+[8] (781,55)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#10B981] to-[#047857] text-white rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap' href='/collect-info'>Apply Now />
+📢 Updates
+🎯 Skill-Based Learning for Guaranteed Career Growth!
+📢 Admissions Open — Job-Focused Programs with Placement Support!
+[9] (278,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/'>Home />
+[10] (329,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/about'>About />
+	[11] (347,186)<span  />
+[12] (383,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/notices'>Notices />
+[13] (441,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/courses'>Courses />
+	[14] (463,186)<span  />
+[15] (498,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/gallery'>Gallery />
+[16] (566,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#10B981] border-[#10B981]' href='/collaborations'>Collaborations />
+	[17] (599,186)<span  />
+[18] (635,187)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/contact'>Contact />
+[19] (775,185)<a class='inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#0A192F] to-[#1e3a5f] text-white rounded-full text-sm font-bold shadow-[0_4px_15px_rgba(10,25,47,0.3)] hover:shadow-[0_6px_20px_rgba(10,25,47,0.4)] hover:-translate-y-0.5 transition-all duration-300' href='/login'>Student Portal />
+Our Strategic Collaborations
+Partnering with industry leaders to provide world-class education and training in Ayurvedic medicine
+Hospital Partners
+Leading healthcare institutions partnering with us for practical training and placement. Our students gain hands-on experience in modern hospitals equipped with state-of-the-art facilities.
+Clinical rotations in various departments
+Exposure to patient care and management
+Training under experienced medical professionals
+Access to modern medical facilities
+[20] (233,721)<a class='px-6 py-3 rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 flex items-center space-x-2 hover:shadow-lg transform hover:-translate-y-0.5' href='/hospital' />
+	[21] (227,721)<span >Visit />
+Ayurvedic Pharmaceutical Partners
+Collaboration with top Ayurvedic pharmaceutical companies for research, development, and training in traditional medicine manufacturing.
+Industry-standard manufacturing exposure
+Quality control training
+Research and development opportunities
+Product development insights
+[22] (500,698)<a class='px-6 py-3 rounded-full text-white bg-green-600 hover:bg-green-700 transition-all duration-300 flex items-center space-x-2 hover:shadow-lg transform hover:-translate-y-0.5' href='/ayurvedic-pharma' />
+	[23] (494,698)<span >Visit />
+Vaidya Saurabh
+Expert Ayurvedic practitioner and educator with over 15 years of experience in traditional healing practices and modern research.
+Personalized mentorship programs
+Traditional healing techniques
+Clinical case studies
+Research guidance
+[24] (767,696)<a class='px-6 py-3 rounded-full text-white bg-teal-600 hover:bg-teal-700 transition-all duration-300 flex items-center space-x-2 hover:shadow-lg transform hover:-translate-y-0.5' href='/vaid-saurabh' />
+	[25] (760,696)<span >Visit />
+Collaboration Gallery
+
+</current_dom>

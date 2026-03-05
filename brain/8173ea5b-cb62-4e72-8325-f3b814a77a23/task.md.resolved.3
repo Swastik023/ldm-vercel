@@ -1,0 +1,47 @@
+# Task: Student Registration + Resume Builder System
+
+## Phase 1 – Planning & Design
+- [x] Analyze existing codebase (User model, student routes, API structure)
+- [x] Write implementation plan
+- [ ] Get user approval on plan
+
+## Phase 2 – Database Models (MongoDB / Mongoose)
+- [ ] `StudentProfile` model (extended registration data)
+- [ ] `EmailOTP` model (hashed OTP, expiry, attempts)
+- [ ] `Resume` model (career objective, skills, education, training, experience, languages)
+- [ ] `ResumeSkill` (embedded in Resume model)
+- [ ] `ResumeExperience` (embedded)
+- [ ] `ResumeInternship` (embedded)
+
+## Phase 3 – Backend APIs
+- [ ] `POST /api/auth/register` – student self-registration
+- [ ] `POST /api/auth/send-otp` – send email OTP via Hostinger SMTP
+- [ ] `POST /api/auth/verify-otp` – verify OTP (max 3 attempts, 5-min expiry)
+- [ ] `POST /api/auth/resend-otp` – resend with rate limiting
+- [ ] `GET /api/student/resume` – fetch resume data
+- [ ] `POST /api/student/resume` – create/update resume
+- [ ] `GET /api/student/resume/pdf` – generate & download PDF
+
+## Phase 4 – Stitch UI Design
+- [ ] Generate multi-step registration form (Stitch)
+- [ ] Generate resume preview page (Stitch)
+- [ ] Generate student dashboard updated with resume section (Stitch)
+
+## Phase 5 – Frontend Implementation
+- [ ] `/register` – multi-step registration form component
+- [ ] OTP input step with timer + resend
+- [ ] `/student/resume` – guided resume builder (multi-step)
+- [ ] `/student/resume/preview` – resume preview page (A4 layout)
+- [ ] PDF download button using `html2pdf.js` or `react-to-pdf`
+- [ ] Update student dashboard with resume/profile quick-links
+
+## Phase 6 – Security & Validation
+- [ ] Zod/Yup input validation on all forms
+- [ ] Rate limiting on OTP endpoints
+- [ ] Prevent duplicate account creation
+- [ ] Protect resume routes with auth session check
+
+## Phase 7 – Verification
+- [ ] TypeScript build check (`npm run build`)
+- [ ] Manual flow: Register → OTP → Dashboard → Resume Builder → Preview → Download PDF
+- [ ] Check OTP expiry & max attempt enforcement

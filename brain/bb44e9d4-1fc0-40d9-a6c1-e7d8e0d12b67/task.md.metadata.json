@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_TASK",
+  "summary": "Task checklist for directory restructuring with 7 phases: create directories, move docs, organize database, organize scripts, archive duplicates, rename directories, and create README.",
+  "updatedAt": "2026-02-01T19:31:39.845645426Z"
+}

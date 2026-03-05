@@ -1,0 +1,54 @@
+# Job Portal Module — Walkthrough
+
+## What Was Built
+
+A complete Job Portal module for the ERP system — **13 new files, 1656 lines**.
+
+## Architecture
+
+```mermaid
+graph TD
+    A["Admin: /admin/jobs"] -->|CRUD| B["API: /api/admin/jobs"]
+    A -->|"View apps/refs"| C["API: .../applications"]
+    A -->|"View referrals"| D["API: .../referrals"]
+    E["Student: /student/jobs"] -->|"List + eligibility"| F["API: /api/student/jobs"]
+    E -->|"Apply"| G["API: .../apply"]
+    E -->|"Refer"| H["API: .../refer"]
+    F --> I["checkEligibility.ts"]
+    G --> I
+    I -->|"Checks"| J["Program, Grad Year, 10th/12th %"]
+```
+
+## Files Created
+
+| Layer | File | Purpose |
+|---|---|---|
+| **Models** | [JobPosting.ts](file:///media/swastik/focus/ldm%20feb/src/models/JobPosting.ts) | Job with eligibility rules + referral config |
+| | [JobApplication.ts](file:///media/swastik/focus/ldm%20feb/src/models/JobApplication.ts) | Student application (unique per job+student) |
+| | [JobReferral.ts](file:///media/swastik/focus/ldm%20feb/src/models/JobReferral.ts) | Referral (unique candidate email per job) |
+| **Engine** | [checkEligibility.ts](file:///media/swastik/focus/ldm%20feb/src/lib/checkEligibility.ts) | Pure function: 6 eligibility checks |
+| **Admin APIs** | [admin/jobs/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/route.ts) | GET list + POST create |
+| | [admin/jobs/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/%5Bid%5D/route.ts) | PATCH update + DELETE |
+| | [.../applications/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/%5Bid%5D/applications/route.ts) | GET list + PATCH status |
+| | [.../referrals/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/jobs/%5Bid%5D/referrals/route.ts) | GET list + PATCH status + reward |
+| **Student APIs** | [student/jobs/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/route.ts) | GET published jobs + eligibility |
+| | [.../apply/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/%5Bid%5D/apply/route.ts) | POST apply with resume |
+| | [.../refer/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/jobs/%5Bid%5D/refer/route.ts) | POST refer candidate |
+| **UI** | [admin/jobs/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/jobs/page.tsx) | Admin dashboard |
+| | [student/jobs/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/jobs/page.tsx) | Student job board |
+
+## Validation
+
+- ✅ TypeScript build: **zero errors** (`npx tsc --noEmit` exit code 0)
+- ✅ Git commit: `6e5a38e` on `main`
+
+## Edge Cases Handled
+
+- ❌ Block apply if profile incomplete or account not active
+- ❌ Block apply/refer past deadline or on closed jobs
+- ❌ One application per student per job
+- ❌ Self-referral blocked (same email match)
+- ❌ Duplicate candidate email per job blocked
+- ❌ Max referrals per student enforced
+- ✅ Eligibility re-checked at apply time (not just on list)
+- ✅ Existing applications not invalidated by eligibility changes

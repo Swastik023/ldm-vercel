@@ -1,0 +1,21 @@
+# Production Hardening — Walkthrough
+
+All 8 fixes from the SYSTEM_AUDIT_LOG have been applied, build-verified, committed, and deployed.
+
+## Changes Made
+
+| ID | Severity | File | Fix |
+|---|---|---|---|
+| SEC-01 | **Critical** | [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/route.ts) | Restored admin auth check (`if (false)` → proper role gate) |
+| DB-01 | High | [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts) | Added `{ batch, rollNumber }` unique sparse index |
+| DB-02 | Medium | [Attendance.ts](file:///media/swastik/focus/ldm%20feb/src/models/Attendance.ts) | Added `records.student` index for fast dashboard queries |
+| LOG-01 | High | [tests/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/tests/%5Bid%5D/route.ts) | Eliminated TOCTOU race — atomic [create](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts#121-131) with E11000 catch |
+| LOG-02 | Medium | Same file | Shuffled options now re-labeled A→D sequentially |
+| UI-01 | Medium | [tests/[id]/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/tests/%5Bid%5D/page.tsx) | Timer uses absolute `endTime` — immune to tab throttling |
+| API-01 | Medium | [payments/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/payments/route.ts) | Added [page](file:///media/swastik/focus/ldm%20feb/src/lib/gtag.ts#13-22)/`limit` pagination |
+| API-02 | Medium | [admin/tests/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/route.ts) | Added [page](file:///media/swastik/focus/ldm%20feb/src/lib/gtag.ts#13-22)/`limit` pagination |
+
+## Validation
+
+- ✅ `npm run build` — exit code 0, no errors
+- ✅ Git commit `e041ca1` pushed to `main`

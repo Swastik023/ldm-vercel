@@ -1,0 +1,28 @@
+# Google OAuth + Email OTP Integration
+
+## Configuration
+- [ ] Add Google OAuth env vars to [.env](file:///media/swastik/focus/ldm%20feb/.env)
+- [ ] Update SMTP password in [.env](file:///media/swastik/focus/ldm%20feb/.env)
+
+## Model Changes
+- [ ] Make `password` optional in User schema
+- [ ] Add `provider` field (`credentials` | `google`)
+- [ ] Add `image` field (for Google profile picture)
+
+## Auth Logic
+- [ ] Add GoogleProvider to [src/lib/auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts)
+- [ ] Add `signIn` callback: find-or-create user by email
+- [ ] Update [jwt](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#45-53) + [session](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#53-61) callbacks for Google users
+
+## Login UI
+- [ ] Add Google Sign-In button to login page
+- [ ] Add divider between credentials form and Google button
+
+## Tests
+- [ ] Verify existing unit tests still pass (108/108)
+- [ ] Verify TypeScript build passes
+
+## Verification
+- [ ] Google login works in browser
+- [ ] Credential login still works
+- [ ] Both flows share same session

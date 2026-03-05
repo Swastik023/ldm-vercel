@@ -1,0 +1,17 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+L
+LDM College of Pharmacy
+404
+404
+Page Not Found
+The page you're looking for doesn't exist or may have been moved. Double-check the URL or head back home.
+[0] (469,677)<a class='px-6 py-3 bg-gradient-to-r from-[#19e66b] to-[#047857] text-white font-bold text-sm rounded-xl shadow-lg shadow-[#19e66b]/20 hover:shadow-[#19e66b]/30 hover:scale-[1.03] transition-all' href='/'>← Go Home />
+[1] (536,677)<button class='px-6 py-3 bg-white/5 border border-white/10 text-white/70 font-semibold text-sm rounded-xl hover:bg-white/8 hover:text-white hover:border-white/20 transition-all'>Go Back />
+©
+2026
+LDM College of Pharmacy
+
+</current_dom>

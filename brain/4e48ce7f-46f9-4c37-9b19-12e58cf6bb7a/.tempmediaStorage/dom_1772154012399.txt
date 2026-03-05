@@ -1,0 +1,18 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+Students
+0
+registered
+[0] (32,104)<button class='px-4 py-2 text-sm font-semibold rounded-lg transition-all bg-white text-gray-900 shadow-sm'>All Students />
+[1] (92,104)<button class='px-4 py-2 text-sm font-semibold rounded-lg transition-all text-gray-500 hover:text-gray-700'>📝 Pending />
+[2] (160,104)<button class='px-4 py-2 text-sm font-semibold rounded-lg transition-all text-gray-500 hover:text-gray-700'>⏳ Under Review />
+[3] (229,104)<button class='px-4 py-2 text-sm font-semibold rounded-lg transition-all text-gray-500 hover:text-gray-700'>❌ Rejected />
+[4] (459,193)<input class='w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500' placeholder='Search by name, email, roll no…' />
+[5] (954,193)<input class='pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 w-36' placeholder='Roll No' />
+[6] (52,248)<select class='pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none' />
+[7] (115,248)<select class='pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none' />
+[8] (173,248)<select class='pl-3 pr-8 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none' />
+
+</current_dom>

@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Step-by-step guide for connecting React/TypeScript frontend to Hostinger backend API. Covers API URL configuration, CORS setup, authentication testing, and troubleshooting. Includes code examples for updating API endpoints and testing login/dashboard functionality.",
+  "updatedAt": "2026-02-01T01:43:09.466946831Z"
+}

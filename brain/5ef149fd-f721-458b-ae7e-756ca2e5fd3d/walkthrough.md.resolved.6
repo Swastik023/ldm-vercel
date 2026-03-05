@@ -1,0 +1,40 @@
+# LDM College ERP — Production Deployment Report
+
+## 🚀 Deployment Status
+
+| Component | Status | Details |
+|-----------|--------|---------|
+| **Frontend** | ✅ **Live** | Accessible at `https://ldmcollege.com/`. Serving correct build version (Feb 8 2026). |
+| **API** | ✅ **Online** | endpoint `https://ldmcollege.com/api/health` returns JSON response. |
+| **Database** | ⚠️ **Auth Error** | Connection failed due to incorrect password for user `u542293952_admintest`. |
+
+---
+
+## 🔧 Deployment Details
+
+### Configuration Applied
+- **Server:** Hostinger Shared Hosting (LiteSpeed)
+- **Path:** `~/domains/ldmcollege.com/public_html`
+- **Routing:**
+  - Root [.htaccess](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/.htaccess) optimized for LiteSpeed and React SPA.
+  - API requests rewritten to [api/index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php).
+  - [api/index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php) patched with `setBasePath('/api')` for subdirectory support.
+- **Environment:**
+  - [api/.env](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/.env) configured with production DB credentials.
+  - `frontend` built with `VITE_API_URL=https://ldmcollege.com/api`.
+
+### Current Issue: Database Authentication
+The API returns the following error:
+```
+SQLSTATE[HY000] [1045] Access denied for user 'u542293952_admintest'@'localhost' (using password: YES)
+```
+
+**Resolution Steps:**
+1. Log in to Hostinger hPanel > Databases.
+2. Select database `u542293952_test1`.
+3. Reset password for user `u542293952_admintest` to match [.env](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/.env) (currently `Admin@1234`) OR update [.env](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/.env) with the correct password.
+4. Verify by visiting `https://ldmcollege.com/api/health`.
+
+### Application Credentials (Once DB is fixes)
+- **Admin Login:** [admin](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php#59-66) / `password`
+- **Note:** You must import the database schema ([gibbon.sql](file:///media/swastik/focus/ldm%20new%20updae%202.0/gibbon/core-31.0.00/gibbon.sql) + [create_tables.sql](file:///media/swastik/focus/ldm%20new%20updae%202.0/database/schema/create_tables.sql) + [create_admin_user.sql](file:///media/swastik/focus/ldm%20new%20updae%202.0/database/migrations/create_admin_user.sql)) if the database is empty.

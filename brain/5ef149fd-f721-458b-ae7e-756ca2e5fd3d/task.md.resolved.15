@@ -1,0 +1,117 @@
+# LDM College ERP — Implementation Task Checklist
+
+## Phase 1: Core Infrastructure & RBAC
+- [x] Create `audit_logs` table on production database
+- [x] Create [ApiResponse.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/ApiResponse.php) helper class
+- [x] Enhance [RoleMiddleware.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php) with additional methods
+- [x] Update [AuditLogger.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/AuditLogger.php) to use new table
+- [ ] Add RBAC to all existing endpoints
+
+## Phase 2: Admin Module
+### User Management
+- [x] `GET /admin/users/{id}` - Get single user
+- [x] `PUT /admin/users/{id}` - Update user
+- [x] Enhance `POST /admin/users` with validation
+- [x] Enhance `DELETE /admin/users/{id}` with soft delete
+- [x] `POST /admin/users/import` - CSV import
+
+### Course & Class Management
+- [x] `GET /admin/courses` - List courses
+- [x] `POST /admin/courses` - Create course
+- [ ] `PUT /admin/courses/{id}` - Update course (deferred)
+- [ ] `DELETE /admin/courses/{id}` - Delete course (deferred)
+- [x] `GET /admin/classes` - List classes
+- [x] `POST /admin/classes` - Create class
+- [ ] `PUT /admin/classes/{id}` - Update class (deferred)
+- [x] `POST /admin/classes/{id}/enroll` - Enroll student
+- [x] `POST /admin/classes/{id}/assign-teacher` - Assign teacher
+
+### Dashboard Enhancement
+- [ ] Enhance `/admin/stats` with real-time data
+- [ ] Wire [AdminDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/admin/AdminDashboard.tsx) to new endpoints
+
+## Phase 3: Teacher Module
+- [x] `GET /teacher/classes` - My assigned classes
+- [x] `GET /teacher/classes/{id}/students` - Students in class
+- [x] `GET /teacher/schedule` - My timetable
+- [x] `POST /teacher/attendance/mark` - Mark attendance
+- [x] `GET /teacher/attendance/{classId}` - View attendance
+- [x] Enhance `/teacher/dashboard` with real data
+- [x] Wire [TeacherDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/teacher/TeacherDashboard.tsx) to endpoints
+
+## Phase 4: Student Module
+- [x] `GET /student/profile` - My profile
+- [x] `PUT /student/profile` - Update profile
+- [x] `GET /student/attendance` - My attendance
+- [x] `GET /student/timetable` - My schedule
+- [x] `GET /student/grades` - My grades (placeholder)
+- [x] `GET /student/notifications` - My notifications
+- [x] Enhance `/student/dashboard` with real data
+- [x] Wire [StudentDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/student/StudentDashboard.tsx) to endpoints
+
+## Phase 5: Employee Module
+- [x] `GET /employee/profile` - My profile
+- [x] `PUT /employee/profile` - Update profile
+- [x] `GET /employee/attendance` - My attendance
+- [x] Enhance `/employee/dashboard` with real data
+- [ ] Wire [EmployeeDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/employee/EmployeeDashboard.tsx) to endpoints
+
+## Bulk Import Endpoints (Bonus)
+- [x] `POST /admin/users/import` - Bulk user creation from CSV
+- [x] `POST /admin/students/import` - Bulk student creation from CSV
+- [x] `POST /teacher/attendance/import` - Bulk attendance import from CSV
+- [x] `GET /admin/import/template/{type}` - Download CSV templates
+
+## Phase 6: Advanced Features
+### Timetable System
+- [ ] `GET /admin/timetable` - View master timetable
+- [ ] `POST /admin/timetable` - Create timetable entry
+- [ ] Timetable UI components
+
+### Grade Management
+- [ ] `GET /admin/markbook` - Markbook columns
+- [ ] `POST /teacher/grades` - Enter grades
+- [ ] `GET /student/grades` - View grades
+- [ ] Grade UI components
+
+### Reports
+- [ ] Attendance reports
+- [ ] Grade reports
+- [ ] Activity reports
+
+## Phase 7: Academic Core Schema (NEW SYSTEM)
+### Database Schema
+- [x] Academic Sessions table (2023-24, 2024-25, etc.)
+- [x] Programs table (EMGC, XRAY, PHARM, HOSP)
+- [x] Semesters table (semester structure per program)
+- [x] Subjects table (individual courses)
+- [x] Program-Semester-Subject mapping (curriculum)
+- [x] Subject-Teacher Assignment (RBAC enforcement)
+- [x] Student Enrollment (lifecycle tracking)
+- [x] Semester Progression Log (immutable audit)
+
+### API Endpoints
+- [x] `GET /admin/academic/sessions` - List sessions
+- [x] `POST /admin/academic/sessions` - Create session
+- [x] `GET /admin/academic/programs` - List programs
+- [x] `POST /admin/academic/programs` - Create program
+- [x] `POST /admin/academic/programs/{id}/enroll-student` - Enroll student
+- [x] `GET /student/academic/enrollment` - My enrollment details
+- [x] `GET /student/academic/transcript` - My academic history
+
+### Phase 7.2: Examination System (Phase 2) - ✅ COMPLETED
+#### Database Schema (002_exam_system_schema.sql)
+- [x] Exams Table (Midterm/Final)
+- [x] Exam-Subject Mapping (Max Marks)
+- [x] Marks Table (Theory/Practical)
+- [x] Grade Rules Table (GPA Logic)
+
+#### API Endpoints
+- [x] `GET /admin/exams` - List exams
+- [x] `POST /admin/exams` - Create exam
+- [x] `POST /admin/academic/subjects/{id}/assign-teacher` - Assign teacher
+- [x] `GET /teacher/exams` - My exam duties
+- [x] `POST /teacher/marks` - Enter marks
+- [x] `GET /student/exams` - My exam schedule
+- [ ] `POST /admin/exams/{id}/process-results` - Calculate GPA
+- [ ] `GET /student/semester-result` - Report card

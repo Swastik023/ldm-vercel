@@ -1,0 +1,28 @@
+# Course Configuration Panel + Pricing Merge
+
+## Phase 0: Analysis
+- [x] Analyze Program/Course model structure
+- [x] Analyze CoursePricing model
+- [x] Analyze existing APIs (admin + public)
+- [x] Analyze website frontend course display
+- [x] Identify gaps and conflicts
+
+## Phase 1: Planning
+- [x] Design unified model changes
+- [x] Design unified API
+- [x] Design admin UI (table + modal)
+- [x] Write implementation plan
+- [x] Get user approval
+
+## Phase 2: Implementation
+- [x] Model: Extended IProgram + PricingSubSchema
+- [x] API: admin/courses (GET, POST)
+- [x] API: admin/courses/[id] (PATCH, DELETE soft-disable)
+- [x] API: admin/courses/migrate (POST)
+- [x] API: public/courses (GET)
+- [x] Admin UI: /admin/courses (Stitch design)
+- [x] Sidebar: Updated link
+
+## Phase 3: Verification
+- [x] TypeScript check: zero errors
+- [x] Git commit + push (2fdcc7e)

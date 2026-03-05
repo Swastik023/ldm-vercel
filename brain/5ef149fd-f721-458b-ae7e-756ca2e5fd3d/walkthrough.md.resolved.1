@@ -1,0 +1,107 @@
+# LDM College ERP — Recovery Walkthrough
+
+## Summary
+
+| Fix | Status | Evidence |
+|-----|--------|----------|
+| RBAC Backend | ✅ | Student → 403, Admin → 200 |
+| Attendance API | ✅ | 2 records in DB |
+| Frontend Guards | ✅ | ProtectedRoute.tsx + AppRoutes |
+| Dashboard APIs | ✅ | All 3 roles return data |
+
+---
+
+## 1. RBAC Enforcement ✅
+
+**Files Changed:**
+- [RoleMiddleware.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/RoleMiddleware.php) — New file
+- [index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php) — 16 routes updated
+
+```diff
+- })->add($authMiddleware);
++ })->add(RoleMiddleware::adminOnly())->add($authMiddleware);
+```
+
+**Verification:**
+```bash
+# Student → 403
+{"success":false,"error":"Forbidden","your_role":"student"}
+
+# Admin → 200
+{"success":true,"users":[...]}
+```
+
+---
+
+## 2. Attendance API ✅
+
+**Endpoints Added:**
+- `POST /attendance/mark` — Insert/update attendance records
+- `GET /attendance` — Fetch class attendance by date
+
+**DB Evidence:**
+```
++----------------+------------+---------+---------+
+| gibbonPersonID | date       | type    | context |
++----------------+------------+---------+---------+
+| 0000000002     | 2026-02-08 | Present | Person  |
+| 0000000003     | 2026-02-08 | Absent  | Person  |
++----------------+------------+---------+---------+
+```
+
+---
+
+## 3. Frontend Route Guards ✅
+
+**Files Changed:**
+- [ProtectedRoute.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/components/ProtectedRoute.tsx) — New file
+- [AppRoutes.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/routes/AppRoutes.tsx) — 12 routes wrapped
+
+**Usage:**
+```tsx
+<ProtectedRoute allowedRoles={['admin']}>
+  <AdminDashboard />
+</ProtectedRoute>
+```
+
+---
+
+## 4. Dashboard APIs ✅
+
+**Endpoints Added:**
+- `GET /student/dashboard` — Profile, attendance, notifications, classes
+- `GET /teacher/dashboard` — Profile, classes taught, attendance stats
+- `GET /employee/dashboard` — Profile, notifications, notices
+
+**Response Example (Student):**
+```json
+{
+  "success": true,
+  "data": {
+    "profile": {"id": "0000000003", "name": "s User"},
+    "attendance_summary": [{"status": "Absent", "count": 1}],
+    "notifications": [],
+    "today_classes": []
+  }
+}
+```
+
+---
+
+## Before vs After
+
+| Metric | Before | After |
+|--------|--------|-------|
+| REAL Features | 11 | 17 |
+| FAKE Features | 6 | 1 (Timetable stub) |
+| BROKEN Features | 2 | 0 |
+| RBAC Backend | ❌ | ✅ |
+| RBAC Frontend | ❌ | ✅ |
+| Dashboard APIs | ❌ | ✅ |
+
+---
+
+## Remaining (Optional)
+
+- [ ] Timetable API (stub → real)
+- [ ] Connect dashboard UIs to APIs

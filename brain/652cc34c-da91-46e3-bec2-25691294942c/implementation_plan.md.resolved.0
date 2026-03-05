@@ -1,0 +1,51 @@
+# Project Analysis and Fix Plan
+
+I have analyzed the project structure and identified several issues preventing successful development and building.
+
+## User Review Required
+
+> [!WARNING]
+> **Build Failure**: The build is failing due to the `sharp` library (image optimization). This often requires specific system dependencies or a clean reinstall.
+
+> [!IMPORTANT]
+> **Linting Broken**: The `lint` script in [package.json](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/package.json) is incompatible with the new [eslint.config.js](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/eslint.config.js) format.
+
+## Identified Problems
+
+1.  **Dependency Management**: [package.json](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/package.json) enforces `pnpm` but it was not installed in the environment. `sharp` installation is corrupt or incompatible.
+2.  **Linting Configuration**: `npm run lint` fails because it uses deprecated CLI flags (`--ext`) not supported by the Flat Config ([eslint.config.js](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/eslint.config.js)) used in the project. Also, `eslint` dependencies seem to have resolution issues.
+3.  **Code Redundancy**:
+    *   [NavigateWithScroll](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/NavigateWithScroll.tsx#20-33) component is used twice (in [App.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/App.tsx) and [AppRoutes.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/routes/AppRoutes.tsx)), which may cause conflicting scroll behaviors.
+4.  **Code Optimization**:
+    *   [HeroSlider.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/HeroSlider.tsx) creates a new `slides` array on every render, causing inefficient re-renders.
+    *   Hardcoded WhatsApp link in [HeroSlider.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/HeroSlider.tsx).
+5.  **Build Issues**: The `optimize` script (part of build) fails due to `sharp`.
+
+## Proposed Changes
+
+### Configuration & Scripts
+#### [MODIFY] [package.json](file:///media/swastik/focus/ldm new updae 2.0/ldm_test/package.json)
+- Update `lint` script to `eslint .` (compatible with flat config).
+- (Optional) Remove `preinstall` restriction if you prefer standard `npm`.
+
+### Source Code
+#### [MODIFY] [src/components/HeroSlider.tsx](file:///media/swastik/focus/ldm new updae 2.0/ldm_test/src/components/HeroSlider.tsx)
+- Move `slides` array outside the component to prevent re-creation.
+- Fix hardcoded links.
+
+#### [MODIFY] [src/routes/AppRoutes.tsx](file:///media/swastik/focus/ldm new updae 2.0/ldm_test/src/routes/AppRoutes.tsx)
+- Remove redundant `<NavigateWithScroll />` (it is already in [App.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/App.tsx)).
+
+### Dependency Fixes (Command Line)
+- Run `npm rebuild sharp` or reinstall dependencies to fix the build error.
+- Fix `eslint` dependencies if needed.
+
+## Verification Plan
+
+### Automated Tests
+- Run `npm run lint` and ensure it passes without errors.
+- Run `npm run build` and ensure it completes without `sharp` errors.
+
+### Manual Verification
+- **Scroll Behavior**: Verify that navigating between pages searches to top correctly (after removing the redundant component).
+- **Slider**: Verify the home page slider still works and autoplays correctly.

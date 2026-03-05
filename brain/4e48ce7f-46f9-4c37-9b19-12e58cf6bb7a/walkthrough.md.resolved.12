@@ -1,0 +1,102 @@
+# Production-Grade Test Module — Walkthrough
+
+## What Was Built
+
+14 new/modified files, 1,591 lines of code committed to `main` (commit `478fcf1`).
+
+---
+
+## 1. Data Layer — 3 New Models
+
+| File | Model | Purpose |
+|---|---|---|
+| [src/models/Test.ts](file:///media/swastik/focus/ldm%20feb/src/models/Test.ts) | [ProTest](file:///media/swastik/focus/ldm%20feb/src/models/Test.ts#27-46) | Replaces old flat schema. Supports sections, batch/subject filter, negative marking, shuffle, resultMode |
+| [src/models/TestAnswerKey.ts](file:///media/swastik/focus/ldm%20feb/src/models/TestAnswerKey.ts) | [TestAnswerKey](file:///media/swastik/focus/ldm%20feb/src/models/TestAnswerKey.ts#12-18) | **Separate collection** — never returned to students. Stores correct answers + reasons |
+| [src/models/TestAttempt.ts](file:///media/swastik/focus/ldm%20feb/src/models/TestAttempt.ts) | [ProTestAttempt](file:///media/swastik/focus/ldm%20feb/src/models/TestAttempt.ts#21-44) | Rich attempt record: raw answers + graded answers + negative marks + per-student `resultVisible` flag |
+
+---
+
+## 2. JSON Schema Validator
+
+[src/lib/testSchemaValidator.ts](file:///media/swastik/focus/ldm%20feb/src/lib/testSchemaValidator.ts)
+
+- [validateQuestionsFile()](file:///media/swastik/focus/ldm%20feb/src/lib/testSchemaValidator.ts#63-130) — strict structural check, duplicate `questionId` detection, 4-option enforcement
+- [validateAnswersFile()](file:///media/swastik/focus/ldm%20feb/src/lib/testSchemaValidator.ts#131-182) — cross-references every `questionId` with questions.json, warns on missing answers
+- Returns typed `{ valid, errors[], warnings[] }` — no throwing
+
+---
+
+## 3. Admin APIs
+
+| Route | Method | Description |
+|---|---|---|
+| [/api/admin/tests](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests) | GET | Lists tests, attempt counts, populated batch/subject |
+| [/api/admin/tests](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests) | POST | Dual JSON upload → validate → save ProTest + TestAnswerKey atomically |
+| `/api/admin/tests/[id]` | GET | Test detail + leaderboard-sorted attempts |
+| `/api/admin/tests/[id]` | PATCH | Toggle [isActive](file:///media/swastik/focus/ldm%20feb/src/components/layout/Sidebar.tsx#85-86) |
+| `/api/admin/tests/[id]` | DELETE | Cascade deletes test + answer key + all attempts |
+| `/api/admin/tests/[id]/publish` | PATCH | Sets `isPublished = true` on test, `resultVisible = true` on all attempts |
+
+---
+
+## 4. Student APIs
+
+| Route | Method | Description |
+|---|---|---|
+| [/api/student/tests](file:///media/swastik/focus/ldm%20feb/src/app/api/student/tests) | GET | Only returns tests matching student's batch |
+| `/api/student/tests/[id]` | GET | Questions without answers. Applies shuffle if configured. Enforces batch match |
+| `/api/student/tests/[id]` | POST | Grades submission with negative marking. Returns full result (instant) or acknowledgement (manual) |
+| `/api/student/tests/[id]/result` | GET | Returns graded answers if `resultVisible`. Returns pending message if not yet published |
+
+---
+
+## 5. Teacher Dashboard ([TestManager.tsx](file:///media/swastik/focus/ldm%20feb/src/components/admin/TestManager.tsx))
+
+- Drag-and-drop file pickers for `questions.json` + `answers.json`
+- Live validation error display + warnings block
+- Inline JSON format reference (`<details>` expandable)
+- Test list with status/mode/published badges
+- Collapsible **leaderboard** per test (sorted by marks)
+- **Publish Results** button for manual-mode tests
+- Toggle active/inactive + delete with cascade warning
+
+---
+
+## 6. Student UI
+
+### Test List Page ([/student/tests](file:///media/swastik/focus/ldm%20feb/src/app/api/student/tests))
+- Stats bar: Total / Pending / Completed / Avg%
+- Circular SVG performance gauge for overall score
+- Filter tabs: All / Pending / Done
+- Cards show: subject, duration, questions, marks, neg marking, result mode
+- Score bar + correct/wrong/skip counts for completed tests
+- "Awaiting publication" state for manual-mode tests
+
+### Test-Taking Page (`/student/tests/[id]`)
+- **Sticky timer** with colour-coded progress bar (green→yellow→red, pulse at 30 sec)
+- **Question palette** — green (answered), orange (flagged), white (unanswered)
+- **Flag for review** button (🚩) per question
+- Section group headings with instructions
+- Per-question marks visible `[2M]`
+- Prev/Next navigation inside each question card
+- Timer initialised once from `useEffect([test])` — **no restart bug**
+- Auto-submit on timer expiry
+
+### Result Page (`/student/tests/[id]/result`)
+- **Manual pending state** — clean "⏳ Result Pending" screen, no score shown
+- **Instant / published** — gradient scorecard (green/yellow/red by score)
+- 4-stat grid: marks, correct, wrong, skipped
+- Negative marks deduction note
+- Collapsible answer review per question:
+  - Student answer vs correct answer
+  - `marksAwarded` (can be negative)
+  - 💡 Teacher-written explanation (reason)
+
+---
+
+## Security
+
+- Answer key stored in **separate [TestAnswerKey](file:///media/swastik/focus/ldm%20feb/src/models/TestAnswerKey.ts#12-18) collection** — never queried from student-facing routes
+- Batch filter on both list and individual test fetch — students can't access other batches' tests
+- Re-submission blocked at DB level (unique index `{ testId, studentId }`)
+- Result visibility controlled by `resultVisible` flag on each attempt, not just test metadata

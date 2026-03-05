@@ -1,0 +1,19 @@
+# Task: Fix Non-Admin Login Issue
+
+## Root Cause Analysis
+- [ ] Identify why non-admin accounts cannot login
+- [/] Check CORS configuration in API
+- [/] Verify API endpoint routing
+- [ ] Test with non-admin user credentials
+
+## Implementation
+- [ ] Fix CORS headers for local development
+- [ ] Ensure API endpoints are accessible from localhost:5173
+- [ ] Test login with teacher account (role_id 002)
+- [ ] Test login with student account (role_id 003)
+- [ ] Test login with employee account (role_id 006)
+
+## Verification
+- [ ] Verify successful login with non-admin accounts
+- [ ] Confirm role-based redirects work
+- [ ] Check JWT token generation for all roles

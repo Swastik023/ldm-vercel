@@ -1,0 +1,22 @@
+# Fix All Business Logic Audit Issues
+
+## High Priority
+- [ ] H-01: Fix complete-profile batch naming — use compound index lookup instead of name
+- [ ] H-02: Dual fee system — note: architectural, will unify dashboard display
+
+## Medium Priority
+- [ ] M-01: Approve flow — increment batch.current_students
+- [ ] M-02: Register — check batch capacity
+- [ ] M-03: Test submit — server-side time enforcement
+- [ ] M-05: Self-mark attendance — atomic operation to prevent TOCTOU
+- [ ] M-06: Attendance state machine — enforce one-way transitions
+- [ ] M-08: Admin user POST — add Class auto-creation
+- [ ] M-09: User DELETE — cascade orphaned data
+- [ ] M-10: Fee update — bulk updateMany instead of loop
+
+## Low Priority
+- [ ] L-07: Admin self-delete protection
+
+## Verify
+- [ ] Build
+- [ ] Push

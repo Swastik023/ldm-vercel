@@ -1,0 +1,24 @@
+# Task: Clone and Setup LDM Repository
+
+- [x] Clone repository from https://github.com/saatvik-29/ldm.git <!-- id: 0 -->
+- [x] Initialize project environment (if applicable) <!-- id: 1 -->
+- [x] Configure .env file <!-- id: 2 -->
+- [x] Verify application starts <!-- id: 3 -->
+- [x] Switch remote origin to git@github.com:Swastik023/ldm-vercel.git <!-- id: 4 -->
+- [x] Push main branch to new origin <!-- id: 5 -->
+- [x] Re-initialize git repository after .git deletion <!-- id: 6 -->
+- [x] Make app Vercel-ready (TS fix, vercel.json) <!-- id: 7 -->
+- [x] Commit and push Employee Layout <!-- id: 8 -->
+- [x] Troubleshoot Hostinger DNS conflict <!-- id: 9 -->
+- [x] Update database seed data with real LDM College info <!-- id: 10 -->
+- [x] Restore missing images from temp folder <!-- id: 11 -->
+- [x] Create comprehensive Client Documentation and SOPs <!-- id: 12 -->
+    - [x] Research and map all ERP features <!-- id: 13 -->
+    - [x] Draft User Manual for Admin, Teacher, and Student roles <!-- id: 14 -->
+    - [x] Create Standard Operating Procedures (SOPs) for Finance and Gallery <!-- id: 15 -->
+    - [x] Review and finalize documentation with user <!-- id: 16 -->
+- [ ] Perform Comprehensive End-to-End Logic Review <!-- id: 17 -->
+    - [ ] Review Academic and User flow <!-- id: 18 -->
+    - [ ] Review Finance flow (Fees, Expenses, Salaries) <!-- id: 19 -->
+    - [ ] Review Attendance and Library flows <!-- id: 20 -->
+    - [ ] Identify gaps and propose fixes for real-world viability <!-- id: 21 -->

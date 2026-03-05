@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Current status report for LDM College ERP showing both frontend and backend are running successfully, but database connection needs to be configured. Includes troubleshooting steps and testing commands.",
+  "updatedAt": "2026-02-01T14:30:48.609655049Z"
+}

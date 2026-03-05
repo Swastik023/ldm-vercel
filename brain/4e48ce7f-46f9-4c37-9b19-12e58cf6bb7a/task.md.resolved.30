@@ -1,0 +1,10 @@
+# Rate Limiting, Business Logic & Dashboard Fixes
+
+- [/] Rate limiting
+  - [/] Create `rateLimit.ts` utility
+  - [ ] Apply to register, send-otp, verify-otp
+- [ ] Self-mark attendance batch verification
+- [ ] Admin attendance status whitelist
+- [ ] Teacher attendance safe JSON parse
+- [ ] Admin stats: pending/rejected counts
+- [ ] Build + Push

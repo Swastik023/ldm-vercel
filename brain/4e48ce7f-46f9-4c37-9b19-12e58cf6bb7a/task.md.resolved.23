@@ -1,0 +1,12 @@
+# Deep Technical Audit
+
+- [ ] DB Schema Review (Normalization, indexes, security)
+- [ ] Backend API Review (REST, Auth, N+1 queries)
+- [ ] Business Logic Review (Correctness, race conditions)
+- [ ] Frontend Review (Components, state, renders)
+- [ ] Security Review (Exposure, validation)
+- [ ] Performance Review (Queries, payloads)
+- [ ] Code Quality Review (Naming, types, dead code)
+- [ ] Production Readiness (Logging, monitoring)
+- [ ] Overall Score and Top 10 Fixes
+- [ ] Generate SYSTEM_AUDIT_LOG.txt

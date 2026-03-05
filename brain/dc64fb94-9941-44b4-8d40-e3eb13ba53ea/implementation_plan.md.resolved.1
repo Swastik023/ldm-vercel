@@ -1,0 +1,55 @@
+# Update Seed Data with Real LDM College Info
+
+The user wants to replace dummy seed data with real data found in the frontend code.
+I have extracted the following from [src/data/courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) and [src/app/(public)/team/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/team/page.tsx).
+
+## Data Sources
+
+1.  **Faculty (Users)**:
+    *   Dr. Rajesh Sachdeva (Medical Director)
+    *   Dr. Sakshi Sachdeva (Chief Gynecologist)
+    *   Dr. Saurabh Sachdeva (Senior Consultant)
+    *   *System Admin* (Required for management)
+
+2.  **Courses (Programs)**:
+    *   Diploma in Critical Care Management (DCCM)
+    *   Diploma in Hospital Management (DHM)
+    *   Diploma in Anaesthesia Technology (DAT)
+    *   Diploma in Community Care Provider (DCP)
+    *   Diploma in Emergency & Trauma Care Technician (DETC)
+    *   Diploma in Health & Sanitary Inspector (DHSI)
+    *   Diploma in Home Care Provider (DHCP)
+    *   Diploma in Hospital Administration (DHA)
+    *   Diploma in Hospital Waste Management (DHWM)
+    *   Diploma in Medical Laboratory Technology (DMLT)
+    *   Diploma in Nanny Training (DNT)
+    *   Diploma in Operation Theatre Technology (DOTT)
+    *   Diploma in Panchkarma (DP)
+    *   Diploma in Radiology & Imaging Technology (DRIT)
+    *   Multipurpose Health Worker (MPHW)
+    *   Certificate in Ayurveda Infertility Management (CAIM)
+    *   Certificate in Ayurveda Nutrition & Dietetics (CAND)
+    *   Certificate in Ayurveda Parasurgery (CAP)
+    *   Certificate in Ayurvedic Cosmetology, Skin & Beauty Care (CACSBC)
+
+## Proposed Changes
+
+### 1. Create New Seed Script
+
+#### [NEW] [scripts/seed_real.js](file:///media/swastik/focus/ldm%20feb/scripts/seed_real.js)
+
+I will create a new seed script that:
+1.  Connects to MongoDB.
+2.  **Clears existing data** (Users, Programs, Subjects, Batches, Sessions).
+3.  **Seeds Users**: Admin + the 3 doctors as 'teacher' role + 1 dummy student for testing.
+4.  **Seeds Session**: Create a current academic session (e.g., 2024-2025).
+5.  **Seeds Programs**: Loop through the `courseData` array and create [Program](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#5-13) documents.
+6.  **Seeds Subjects**: For each program, create subjects based on the `syllabus` array in `courseData`.
+7.  **Seeds Batches**: Create a default batch for each program (e.g., "Batch 2024").
+
+## Verification Plan
+
+### Manual Verification
+1.  Run `node scripts/seed_real.js`.
+2.  Check database via Compass or by logging into the app.
+3.  Verify Admin can login and see the new programs and subjects.

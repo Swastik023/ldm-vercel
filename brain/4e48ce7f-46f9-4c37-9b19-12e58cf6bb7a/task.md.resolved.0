@@ -1,0 +1,25 @@
+# QA Coverage Upgrade
+
+## Analysis
+- [x] Audit existing test files (4 unit + 12 E2E)
+- [x] Map all source modules (69 API routes, 27 models, 6 actions, 7 lib utils)
+- [x] Identify untested critical business logic
+- [x] Write implementation plan
+
+## New Unit Tests (Business Logic)
+- [ ] [feeCalculator.ts](file:///media/swastik/focus/ldm%20feb/src/lib/feeCalculator.ts) — discount math, edge cases, error guards
+- [ ] [mcqParser.ts](file:///media/swastik/focus/ldm%20feb/src/lib/mcqParser.ts) — parsing, validation, dedup, malformed input
+- [ ] Auth registration — field validation, duplicate email, username generation
+- [ ] OTP verification — expiry, attempts, wrong code, already verified
+- [ ] Expense API — soft-delete guards, lock check, root-only access
+- [ ] Fee record creation — calcFees integration, duplicate prevention
+- [ ] Attendance locking — lock/unlock, locked-record rejection
+
+## New E2E Tests (Critical Flows)
+- [ ] Finance CRUD — create expense, payment recording, fee record flow
+- [ ] Registration + OTP — full signup flow
+- [ ] Student fee payment view — payment history, status
+
+## Verification
+- [ ] All new unit tests pass with `npm run test:unit`
+- [ ] No existing tests broken

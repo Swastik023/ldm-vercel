@@ -1,0 +1,68 @@
+# Unify Course Data Architecture
+
+## Problem
+
+Three independent data sources for "courses":
+
+| Source | Used By | Count |
+|---|---|---|
+| [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) (hardcoded) | Public website, course-pricing admin, old finance/fees | 22 |
+| [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) model (MongoDB) | `/admin/courses` panel | client added more |
+| [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15) model (MongoDB) | `/admin/fees` page | mirrors courseData only |
+
+This means:
+- New courses added in admin panel don't appear on fee management
+- Pricing edited in fee management doesn't sync with admin courses panel
+- Public website always shows exactly 22 hardcoded courses regardless
+
+## Solution: Unify on [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) Model
+
+The [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) model already has an embedded [pricing](file:///media/swastik/focus/ldm%20feb/src/app/admin/course-pricing) sub-document with `totalFee`, `offerPrice`, `isOfferActive`, etc. Make everything read from [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18).
+
+## Proposed Changes
+
+---
+
+### Fee Management
+
+#### [MODIFY] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(admin)/admin/fees/page.tsx)
+- Read courses from `/api/admin/courses` (Program collection) instead of [/api/admin/fees/course](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/fees/course) (CoursePricing)
+- Use `course.pricing.totalFee` as base fee, `course.pricing.offerPrice` as offer price
+- Update fee → PATCH `/api/admin/courses/{id}` updating `pricing.totalFee`
+- Bulk assign still creates [StudentFee](file:///media/swastik/focus/ldm%20feb/src/models/StudentFee.ts#11-31) records but using Program-based pricing
+
+#### [MODIFY] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/fees/course/route.ts)
+- GET: Read from [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) instead of [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15)
+- PATCH: Update `Program.pricing.totalFee` instead of `CoursePricing.originalPrice`
+- POST (assign): Look up pricing from [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) instead of [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15)
+
+---
+
+### Public Website
+
+#### [MODIFY] [courses/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(public)/courses/page.tsx)
+- Fetch courses from `/api/public/courses` (new API reading [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) model) instead of importing `courseData`
+- This way new courses added by client appear automatically
+
+#### [NEW] [/api/public/courses/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/courses/route.ts)
+- Returns all active [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) docs, sorted by `displayOrder`
+- Public endpoint, no auth needed
+
+#### [MODIFY] [courses/[id]/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(public)/courses/[id]/page.tsx)
+- Fetch single course from `/api/public/courses/{code}` instead of `courseData.find()`
+
+---
+
+### Admin Navigation Cleanup
+
+#### [MODIFY] [Sidebar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/layout/Sidebar.tsx)
+- Remove separate "Course Pricing" link (if present) — pricing is now inside Courses panel
+- Keep "Fee Management" for student fee assignments and tracking
+
+## Verification Plan
+
+- `npx tsc --noEmit` passes
+- Admin courses panel shows all courses from DB
+- Fee management shows same courses (from [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18))
+- Public [/courses](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/courses) page dynamically loads from DB
+- Push to GitHub, check Vercel build

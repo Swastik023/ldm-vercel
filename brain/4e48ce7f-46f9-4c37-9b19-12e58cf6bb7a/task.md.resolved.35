@@ -1,0 +1,43 @@
+# Deep Audit - Route-by-Route Code Review
+
+## Auth Routes
+- [ ] auth/register
+- [ ] auth/send-otp
+- [ ] auth/verify-otp
+- [ ] auth/complete-profile
+- [ ] auth/[...nextauth] (login)
+
+## Admin Routes
+- [ ] admin/users (GET/POST/DELETE)
+- [ ] admin/users/approve
+- [ ] admin/batches
+- [ ] admin/academic/batches/[id]/promote
+- [ ] admin/tests (CRUD)
+- [ ] admin/tests/[id]/publish
+- [ ] admin/attendance
+- [ ] admin/fees/course
+- [ ] admin/finance/* (fee-structures, payments, salary, expenses, dashboard)
+- [ ] admin/documents/* (requirements, submissions)
+- [ ] admin/notices, marquee, slider, gallery, settings
+- [ ] admin/library/*
+- [ ] admin/students/*
+
+## Student Routes
+- [ ] student/dashboard
+- [ ] student/tests, tests/[id], tests/[id]/result
+- [ ] student/attendance, attendance/self-mark
+- [ ] student/fees
+- [ ] student/documents/*
+- [ ] student/profile, report-card, resume, notices, help
+
+## Teacher Routes
+- [ ] teacher/attendance/*
+- [ ] teacher/tests/*
+- [ ] teacher/assignments, marks
+- [ ] teacher/notices, documents
+
+## Public Routes
+- [ ] public/batches, courses, notices, library, gallery, contact, admission
+
+## Compile
+- [ ] Write DEEP_AUDIT_REPORT.md

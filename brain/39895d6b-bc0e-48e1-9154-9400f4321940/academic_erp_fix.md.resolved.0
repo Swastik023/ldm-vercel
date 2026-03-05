@@ -1,0 +1,55 @@
+# Academic ERP & User Management Fixes
+
+**Status:** ✅ RESOLVED  
+**Date:** February 11, 2026
+
+## Issue Description
+Users reported that Academic ERP screens were "not working" (crashes or blank screens) despite successful login. Investigation revealed a **response structure mismatch** between the Frontend (React) and Backend (API).
+
+The Frontend components expected nested data structures (e.g., `response.data.data.sessions`), while the Backend was returning flat arrays in the `data` key (e.g., `response.data`). This caused the Frontend to access `undefined` properties and crash.
+
+## Fixes Applied
+
+### 1. Academic Sessions (`/api/admin/academic/sessions`)
+**File:** [api/academic_endpoints.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/academic_endpoints.php)
+- **Change:** Wrapped the sessions list in a `sessions` key.
+- **Before:** `return ApiResponse::success($response, $sessions);`
+- **After:** `return ApiResponse::success($response, ['sessions' => $sessions]);`
+
+### 2. Exam Builder (`/api/admin/exams`)
+**File:** [api/exam_endpoints.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/exam_endpoints.php)
+- **Change:** Wrapped the exams list in an `exams` key.
+- **Before:** `return ApiResponse::success($response, $exams);`
+- **After:** `return ApiResponse::success($response, ['exams' => $exams]);`
+
+### 3. Programs & Curriculum (`/api/academic/programs`)
+**File:** [api/academic_endpoints.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/academic_endpoints.php)
+- **Change 1 (List):** Wrapped programs list in `programs` key.
+- **Change 2 (Details):** Added logic to `GET /programs/{id}` to handle the `semester` query parameter. Now returns `{ subjects: [...] }` when filtering by semester, matching [ProgramsCurriculum.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/admin/ProgramsCurriculum.tsx) expectations.
+
+### 4. Teacher Assignment (`/api/admin/academic/assignments`)
+**File:** [api/missing_endpoints.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/missing_endpoints.php)
+- **Change:** Wrapped the assignments list in an `assignments` key.
+
+### 5. User Management (`/api/admin/users`)
+**File:** [api/index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php)
+- **Change:** Standardized the response using `ApiResponse::success` and wrapped users list in `users` key.
+- **Before:** Manual `json_encode(['success' => true, 'users' => ...])`
+- **After:** `return ApiResponse::success($response, ['users' => $users]);`
+
+## Verification
+Verified all endpoints using `curl` with a live JWT token. Responses now correctly match the structure expected by the deployed Frontend.
+
+**Example Response (Corrected):**
+```json
+{
+  "success": true,
+  "data": {
+    "sessions": [ ... ]
+  }
+}
+```
+
+## Next Steps
+- Verify all screens verify in the browser.
+- Proceed with normal usage of the Academic ERP system.

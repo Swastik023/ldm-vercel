@@ -1,0 +1,94 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+LDM College
+In collaboration with Dr. Dharam Dev Hospital & Institute
+📢 Updates
+heyyyyyy
+Home
+About Us
+Notices
+E-Library
+Courses
+Gallery
+Facilities
+Collaborations
+Contact
+Login
+LDM E-Library
+Paramedical College
+[0] (83,737)<nav class='flex-1 overflow-y-auto py-4 px-3 space-y-6' scrollable='true' />
+	Courses / Programs
+	Clear
+	Common & All
+	[1] (79,669)<div class='max-h-60 overflow-y-auto pr-1 mt-1 scrollbar-thin scrollbar-thumb-white/10' scrollable='true' />
+		CAIM
+		-
+		Certificate in Ayurveda Infertility Management
+		CAND
+		-
+		Certificate in Ayurveda Nutrition & Dietetics
+		CAP
+		-
+		Certificate in Ayurveda Parasurgery
+		CACSBC
+		-
+		Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+		DAT
+		-
+		Diploma in Anaesthesia Technology (DAT)
+		DCP
+		-
+		Diploma in Community Care Provider
+		DCCM
+		-
+		Diploma in Critical Care Management
+		DETC
+		-
+		Diploma in Emergency & Trauma Care Technician
+		DHSI
+		-
+		Diploma in Health & Sanitary Inspector
+		DHCP
+		-
+		Diploma in Home Care Provider
+		DHA
+		-
+		Diploma in Hospital Administration
+		DHM
+		-
+		Diploma in Hospital Management
+	Collections
+	All Categories
+	Module Notes
+	Foundation Modules
+Library
+Diploma in Critical Care Management
+1
+files found
+1
+Results Found
+1
+Program
+Selected
+Access provided by LDM Paramedical College
+DCCM - Master Curriculum
+DCCM: Diploma in Critical Care Management
+Rich Text
+20 Feb 2026
+Open Book
+[2] (500,500)<div  />
+	[3] (500,500)<div  />
+		DCCM - Master Curriculum
+		Master Curriculum & Syllabus
+		Edition v
+		1
+		[4] (686,268)<button class='text-gray-400 hover:text-red-500 flex-shrink-0 p-2 rounded-2xl hover:bg-red-50 transition-all' />
+		Target Course
+		DCCM (Diploma in Critical Care Management)
+		Click "Read Library Book" below to open the rich-text reader.
+		[5] (467,735)<button class='flex-1 py-4 bg-teal-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-teal-700 transition-all shadow-lg shadow-teal-500/20 active:scale-[0.98] flex items-center justify-center gap-2'>Read Library Book />
+		[6] (668,735)<button class='px-6 py-4 border border-gray-200 rounded-2xl font-bold uppercase tracking-widest text-[10px] text-gray-400 hover:bg-gray-50 transition-all'>Close />
+
+</current_dom>

@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Complete walkthrough of connecting local frontend to local backend. Includes Composer installation, dependency setup, router configuration, API testing, and next steps for database configuration and frontend integration.",
+  "updatedAt": "2026-02-01T02:11:42.221215365Z",
+  "version": "1"
+}

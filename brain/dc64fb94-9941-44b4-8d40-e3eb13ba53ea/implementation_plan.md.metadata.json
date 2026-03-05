@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Implementation plan for the Dynamic Academic Library System with version control, soft deletes, and RBAC.",
+  "updatedAt": "2026-02-20T10:32:34.908633698Z",
+  "version": "5"
+}

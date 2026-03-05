@@ -1,0 +1,175 @@
+LDM E-Library
+Paramedical College
+[0] (83,439)<nav class='flex-1 overflow-y-auto py-4 px-3 space-y-6' scrollable='true' />
+	Courses / Programs
+	[1] (138,144)<button class='text-teal-400 hover:text-teal-300 normal-case tracking-normal'>Clear />
+	[2] (79,185)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Common & All />
+		Common & All
+	[3] (79,371)<div class='max-h-60 overflow-y-auto pr-1 mt-1 scrollbar-thin scrollbar-thumb-white/10' scrollable='true' />
+		[4] (74,233)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CAIM
+-
+Certificate in Ayurveda Infertility Management />
+			CAIM
+			-
+			Certificate in Ayurveda Infertility Management
+		[5] (74,276)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CAND
+-
+Certificate in Ayurveda Nutrition & Dietetics />
+			CAND
+			-
+			Certificate in Ayurveda Nutrition & Dietetics
+		[6] (74,318)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CAP
+-
+Certificate in Ayurveda Parasurgery />
+			CAP
+			-
+			Certificate in Ayurveda Parasurgery
+		[7] (74,360)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CACSBC
+-
+Certificate in Ayurvedic Cosmetology, Skin & Beauty Care />
+			CACSBC
+			-
+			Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+		[8] (74,403)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DAT
+-
+Diploma in Anaesthesia Technology (DAT) />
+			DAT
+			-
+			Diploma in Anaesthesia Technology (DAT)
+		[9] (74,445)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DCP
+-
+Diploma in Community Care Provider />
+			DCP
+			-
+			Diploma in Community Care Provider
+		[10] (74,488)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all bg-teal-500/20 text-teal-300 font-medium'>DCCM
+-
+Diploma in Critical Care Management />
+			DCCM
+			-
+			Diploma in Critical Care Management
+		[11] (74,530)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DETC
+-
+Diploma in Emergency & Trauma Care Technician />
+			DETC
+			-
+			Diploma in Emergency & Trauma Care Technician
+		DHSI
+		-
+		Diploma in Health & Sanitary Inspector
+		DHCP
+		-
+		Diploma in Home Care Provider
+		DHA
+		-
+		Diploma in Hospital Administration
+		DHM
+		-
+		Diploma in Hospital Management
+		DHWM
+		-
+		Diploma in Hospital Waste Management
+		DMLT
+		-
+		Diploma in Medical Laboratory Technology (DMLT)
+		DNT
+		-
+		Diploma in Nanny Training
+		DOTT
+		-
+		Diploma in Operation Theatre Technology (DOTT)
+		DP
+		-
+		Diploma in Panchkarma
+		DRIT
+		-
+		Diploma in Radiology & Imaging Technology (DRIT)
+		MPHW
+		-
+		Multipurpose Health Worker (MPHW)
+	Collections
+	[12] (79,614)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all bg-teal-500/10 text-teal-300'>All Categories />
+		All Categories
+	[13] (79,659)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Module Notes />
+		Module Notes
+	[14] (79,704)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Foundation Modules />
+		Foundation Modules
+	[15] (79,749)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Master Curriculum & Syllabus />
+		Master Curriculum & Syllabus
+234
+curated resources
+[16] (468,49)<input class='w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-gray-50 outline-none focus:ring-2 focus:ring-teal-400 focus:bg-white transition' placeholder='Search in DCCM...' />
+[17] (814,49)<select class='text-sm border border-gray-200 rounded-lg py-2 px-3 bg-white outline-none focus:ring-2 focus:ring-teal-400' />
+CCM-08: Neurological Critical Care
+DCCM: Diploma in Critical Care Management
+Rich Text
+20 Feb 2026
+Open Book
+Foundation Modules
+12
+[18] (776,162)<button class='flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition px-2 py-1 rounded-md hover:bg-teal-50'>Expand all 12 />
+[19] (500,254)<div  />
+	[20] (217,254)<div  />
+	[21] (451,254)<div  />
+		[22] (451,240)<div  />
+			[23] (315,240)<h3 >F-12: Nutrition Fundamentals />
+			[24] (420,240)<span >Foundation />
+		[25] (451,269)<div  />
+			[26] (281,269)<div  />
+				[27] (281,269)<span >Multi-program Resource />
+	[28] (735,254)<div  />
+		[29] (692,254)<div  />
+			[30] (692,242)<p >Rich Text />
+			[31] (692,265)<p >20 Feb 2026 />
+		[32] (765,254)<div  />
+			[33] (765,254)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+[34] (500,378)<div  />
+	[35] (217,378)<div  />
+	[36] (451,378)<div  />
+		[37] (451,364)<div  />
+			[38] (332,364)<h3 >F-11: Biomedical Waste Management />
+			[39] (452,364)<span >Foundation />
+		[40] (451,393)<div  />
+			[41] (281,393)<div  />
+				[42] (281,393)<span >Multi-program Resource />
+	[43] (735,378)<div  />
+		[44] (692,378)<div  />
+			[45] (692,366)<p >Rich Text />
+			[46] (692,389)<p >20 Feb 2026 />
+		[47] (765,378)<div  />
+			[48] (765,378)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+[49] (500,502)<div  />
+	[50] (217,502)<div  />
+	[51] (451,502)<div  />
+		[52] (451,488)<div  />
+			[53] (301,488)<h3 >F-10: Infection Control />
+			[54] (390,488)<span >Foundation />
+		[55] (451,517)<div  />
+			[56] (281,517)<div  />
+				[57] (281,517)<span >Multi-program Resource />
+	[58] (735,502)<div  />
+		[59] (692,502)<div  />
+			[60] (692,490)<p >Rich Text />
+			[61] (692,513)<p >20 Feb 2026 />
+		[62] (765,502)<div  />
+			[63] (765,502)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+Master Curriculum & Syllabus
+1
+[64] (500,724)<div  />
+	[65] (217,724)<div  />
+	[66] (451,724)<div  />
+		[67] (451,711)<div  />
+			[68] (309,711)<h3 >DCCM - Master Curriculum />
+		[69] (451,739)<div  />
+			[70] (315,739)<div  />
+				[71] (315,739)<span >DCCM: Diploma in Critical Care Management />
+	[72] (735,724)<div  />
+		[73] (692,724)<div  />
+			[74] (692,712)<p >Rich Text />
+			[75] (692,736)<p >20 Feb 2026 />
+		[76] (765,724)<div  />
+			[77] (765,724)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+LDM College
+Excellence in Medical Education
+Our Collaborations
+Location

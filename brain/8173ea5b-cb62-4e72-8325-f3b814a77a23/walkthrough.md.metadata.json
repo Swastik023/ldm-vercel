@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary":  "Complete walkthrough of all features implemented: MCQ test system (13 files: models, parser, 5 APIs, 5 frontend pages), fee system (8 files: model, calculator, 3 APIs, 2 pages), navigation fixes (Register link, course params bug, map), GA4 script, Apply Now address field, and student dashboard quick-links.",
+  "updatedAt":  "2026-02-22T20:10:54.488722421Z",
+  "version":  "1"
+}

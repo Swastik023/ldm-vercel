@@ -1,0 +1,40 @@
+# Frontend API URL Migration & Integration
+
+## Current Status
+- [x] Backend API fully operational at `/api/`
+- [x] Database connected and tested locally
+- [x] Backend-frontend mapping analysis complete
+- [ ] Frontend API URLs updated
+- [ ] Components tested with new URLs
+- [ ] Missing backend endpoints identified
+
+## Phase 1: Update Frontend API URLs
+- [ ] Update `ldm_test/src/pages/Login.tsx`
+- [ ] Update `ldm_test/src/context/AuthContext.tsx`
+- [ ] Update `ldm_test/src/pages/Gallery.tsx`
+- [ ] Update `ldm_test/src/pages/Notices.tsx`
+- [ ] Update `ldm_test/src/components/PopupContact.tsx`
+- [ ] Update `ldm_test/src/components/Marquee.tsx`
+- [ ] Update `ldm_test/src/components/NotificationBell.tsx`
+- [ ] Update all admin pages (9 files)
+
+## Phase 2: Test Updated Components
+- [ ] Test login with new `/api/auth/login`
+- [ ] Test authentication state management
+- [ ] Test student list (if integrated)
+- [ ] Test timetable display (if integrated)
+- [ ] Identify features needing backend endpoints
+
+## Phase 3: Backend Endpoints Needed
+- [ ] Gallery API (`GET/POST/DELETE /api/gallery`)
+- [ ] Notices API (`GET/POST/PUT/DELETE /api/notices`)
+- [ ] Contact API (`POST /api/contact`)
+- [ ] Marquee API (`GET/POST /api/marquee`)
+- [ ] Admin stats API (`GET /api/admin/stats`)
+- [ ] Other admin endpoints as needed
+
+## Phase 4: Integration Testing
+- [ ] End-to-end login flow
+- [ ] Protected routes working
+- [ ] All API calls returning expected data
+- [ ] Error handling working properly

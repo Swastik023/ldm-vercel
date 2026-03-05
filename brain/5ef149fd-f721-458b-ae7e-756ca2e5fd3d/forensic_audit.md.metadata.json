@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Brutal forensic audit of ERP backend logic exposing actual code paths, transaction handling, data flow gaps, and production readiness. Includes 8 feature-by-feature execution traces with WORKS/BROKEN verdicts and final deployment recommendation.",
+  "updatedAt": "2026-02-08T16:21:17.535228359Z"
+}

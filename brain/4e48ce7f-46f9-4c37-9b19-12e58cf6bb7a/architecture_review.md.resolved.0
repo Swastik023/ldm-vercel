@@ -1,0 +1,212 @@
+# Architecture Review — Role Flow & Reusability
+
+## Executive Summary
+
+The system has **50 admin APIs**, **15 student APIs**, **8 teacher APIs**, and **13 public APIs**. The client is right — features were built independently without a unifying architecture. Here's the detailed map.
+
+---
+
+## Feature Matrix — What Each Role Can See
+
+| Feature | Admin | Teacher | Student | Public | Status |
+|---|---|---|---|---|---|
+| **Dashboard** | ✅ stats | ✅ classes/marks | ✅ profile summary | — | ✅ OK |
+| **Courses/Programs** | ✅ CRUD | ❌ | ❌ | ✅ browse | ✅ OK |
+| **Fees (StudentFee)** | ✅ assign/collect | ❌ | ✅ view own | — | ✅ Fixed |
+| **Finance (FeePayment)** | ✅ dashboard/CRUD | ❌ | ❌ dead endpoint | — | 🟠 See #1 |
+| **Attendance** | ✅ overview | ✅ mark/view | ❌ can't see own | — | 🔴 See #2 |
+| **Documents (DMS)** | ✅ manage reqs | ✅ manage reqs | ✅ upload/view | — | 🟡 See #3 |
+| **Student Docs** | ✅ view uploads | ❌ | ✅ upload | — | ✅ OK |
+| **Tests/Exams** | ✅ create | ❌ | ✅ take/view | — | 🟡 See #4 |
+| **Report Card** | ❌ | ❌ | ✅ view | — | 🟡 See #5 |
+| **Library** | ✅ upload (2 systems) | ❌ | ✅ browse | ✅ browse | 🟠 See #6 |
+| **Jobs** | ✅ post/manage | ❌ | ✅ apply/refer | — | ✅ OK |
+| **Notices** | ✅ create | ❌ | ❌ | ✅ view | 🟡 See #7 |
+| **Gallery** | ✅ upload | ❌ | ❌ | ✅ view | ✅ OK |
+| **Resume** | ❌ | ❌ | ✅ build | — | ✅ OK |
+| **Users** | ✅ manage/approve | ❌ | ❌ | — | ✅ OK |
+| **Marks Entry** | ❌ | ✅ enter marks | ❌ | — | ✅ OK |
+
+---
+
+## 🔴 Critical Disconnects
+
+### #1. Two Parallel Fee Systems — Student Sees Only One
+
+**The Problem:**
+```
+System A: StudentFee model
+  Admin writes → /api/admin/fees/course, /api/admin/students/[id]/fees
+  Student reads → /api/student/fees ✅ (just fixed)
+
+System B: FeePayment + FeeStructure models  
+  Admin writes → /api/admin/finance/fee-structures, /api/admin/finance/payments
+  Student reads → /api/student/finance/payments (DEAD — no page calls it)
+  Finance dashboard → aggregates BOTH systems
+```
+
+**The Confusion:** If admin uses the Finance panel to record payments (System B), those don't show on the student's fee page (System A). And vice versa. The finance dashboard tries to merge both, which doubles the complexity.
+
+**Recommended Fix:** Pick ONE system. [StudentFee](file:///media/swastik/focus/ldm%20feb/src/models/StudentFee.ts#11-31) is simpler and actively used. Either:
+- Migrate FeePayment data into StudentFee and delete System B, OR
+- Keep System B for accounting only (salary, expenses) and remove its fee-related parts
+
+### #2. Students Can't See Their Own Attendance
+
+**The Problem:**
+```
+Teacher marks attendance → /api/teacher/attendance/[assignmentId]
+                         → saved in Attendance model
+
+Admin views attendance  → /admin/attendance page
+                        → reads Attendance model ✅
+
+Student sees attendance → ❌ NO API, NO PAGE
+```
+
+There is no `/api/student/attendance` endpoint and no student attendance page. Students have no visibility into their own attendance records.
+
+**Recommended Fix:** Add `GET /api/student/attendance` that reads from the `Attendance` model filtered by the logged-in student, and a simple student attendance page.
+
+### #3. Documents System — Admin & Teacher Have Duplicated APIs
+
+```
+Admin:   /api/admin/documents/requirements       → DocumentRequirement model
+         /api/admin/documents/submissions         → DocumentSubmission model
+
+Teacher: /api/teacher/documents/requirements      → SAME DocumentRequirement model
+         /api/teacher/documents/submissions       → SAME DocumentSubmission model
+```
+
+Both admin and teacher endpoints are **near-identical copies** hitting the same models. The only difference is the auth check. This should be ONE set of endpoints with role-based filtering.
+
+**Recommended Fix:** Create `/api/documents/requirements` and `/api/documents/submissions` with the shared auth guard checking for `admin OR teacher` role.
+
+---
+
+## 🟠 High Priority
+
+### #4. Tests — Teacher Can't Manage Tests
+
+Admin creates and manages tests (`/admin/tests`). Students take tests (`/student/tests`). But **teacher has no test page at all** — they can't create, grade, or view test results. This is a gap since teachers are the ones who typically manage assessments.
+
+### #5. Report Card — Only Student Has It
+
+Students can view their report card at `/student/report-card`, but **admin has no report card generation/viewing page**. Admin can enter marks via the academic system, but can't preview what students see.
+
+### #6. Library — Two Systems, No Teacher Access
+
+```
+System A (old): Library model → admin/library/upload → public/library  
+System B (new): LibraryDocument model → admin/library/documents → student/library
+
+Teacher: ❌ No library access at all
+```
+
+Teachers should be able to upload study materials. Neither library system gives them access.
+
+### #7. Notices — Students Can't See on Dashboard
+
+Notices are created by admin and shown on the public page. But **the student dashboard doesn't show notices**, and there's no `/api/student/notices` endpoint. Students would have to go to the public notices page.
+
+---
+
+## 🟡 Structural Issues
+
+### Inconsistent Route Organization
+
+Admin pages are split across **two route groups** with no clear pattern:
+```
+/app/(admin)/admin/courses     → route group with layout
+/app/admin/finance             → flat, no route group
+/app/admin/library             → flat, no route group
+/app/admin/academic            → flat, no route group
+```
+
+Student and teacher pages are consistently in [(student)](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/register/page.tsx#155-156) and [(teacher)](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/register/page.tsx#155-156) route groups.
+
+### No Shared Components Between Roles
+
+Each role re-implements common UI patterns independently:
+- **Data tables** — each page builds its own table with filtering, pagination, sorting
+- **Form modals** — independently coded in every admin page
+- **Loading/error states** — inconsistent patterns
+- **Dashboard cards** — different styles per role
+
+### No Middleware Layer
+
+Auth is checked inline in every single API route. There's no Next.js middleware protecting route groups. A student could technically hit `/api/admin/stats` directly in the browser — the only guard is the session check inside each handler.
+
+---
+
+## Recommended Cleanup Roadmap
+
+| Priority | Action | Impact |
+|---|---|---|
+| 1 | Decide on ONE fee system (StudentFee vs FeePayment) | Eliminates confusion |
+| 2 | Add student attendance API + page | Major missing feature |
+| 3 | Merge admin/teacher document APIs into shared routes | Removes 6 duplicate files |
+| 4 | Add Next.js middleware for `/api/admin/*`, `/api/student/*`, `/api/teacher/*` | Security + less boilerplate |
+| 5 | Give teachers test management access | Fills role gap |
+| 6 | Consolidate Library to one model (LibraryDocument) | Removes confusion |
+| 7 | Add student notices endpoint | Better student experience |
+| 8 | Unify admin pages into one route group | Cleaner structure |
+
+---
+
+## Data Flow Diagram
+
+```mermaid
+graph TB
+    subgraph Admin
+        A1[Courses CRUD]
+        A2[Student Fee Mgmt<br/>StudentFee model]
+        A3[Finance Dashboard<br/>FeePayment + StudentFee]
+        A4[Document Reqs]
+        A5[Test Creation]
+        A6[Attendance View]
+        A7[Library Upload<br/>2 systems]
+    end
+
+    subgraph Teacher
+        T1[Attendance Marking]
+        T2[Marks Entry]
+        T3[Document Reqs<br/>DUPLICATED from Admin]
+    end
+
+    subgraph Student
+        S1[Fee View<br/>StudentFee only]
+        S2[Document Upload]
+        S3[Test Taking]
+        S4[Report Card]
+        S5[Library Browse]
+        S6["Attendance View<br/>❌ MISSING"]
+        S7["Notices<br/>❌ MISSING"]
+    end
+
+    subgraph Models
+        M1[(StudentFee)]
+        M2[(FeePayment)]
+        M3[(Attendance)]
+        M4[(DocumentSubmission)]
+        M5[(Test)]
+        M6[(Library)]
+        M7[(LibraryDocument)]
+    end
+
+    A2 --> M1
+    A3 --> M1
+    A3 --> M2
+    S1 --> M1
+    T1 --> M3
+    A6 --> M3
+    S6 -.->|NO CONNECTION| M3
+    A4 --> M4
+    T3 --> M4
+    S2 --> M4
+    A5 --> M5
+    S3 --> M5
+    A7 --> M6
+    A7 --> M7
+    S5 --> M7
+```

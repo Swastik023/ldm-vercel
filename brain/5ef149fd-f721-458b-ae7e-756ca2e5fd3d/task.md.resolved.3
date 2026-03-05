@@ -1,0 +1,23 @@
+# LDM College ERP - Forensic Audit & Recovery
+
+## Objective
+Transform a UI-heavy, disconnected ERP into a production-grade system.
+
+## Tasks
+
+- [x] **Phase 1: Forensic System Audit** ✓
+- [x] **RBAC Middleware Implementation** ✓
+  - [x] Created RoleMiddleware.php
+  - [x] Applied adminOnly() to 16 admin endpoints
+  - [x] Verified: student → 403, admin → 200
+
+- [x] **Attendance API Implementation** ✓
+  - [x] POST /attendance/mark - real DB insert
+  - [x] GET /attendance - fetch class attendance
+  - [x] Verified: 2 records inserted into gibbonAttendanceLogPerson
+
+## Remaining Work
+
+- [ ] Student/Teacher/Employee dashboard APIs
+- [ ] Frontend route guards (ProtectedRoute.tsx)
+- [ ] Timetable API (still a stub)

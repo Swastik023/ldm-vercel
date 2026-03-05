@@ -1,0 +1,25 @@
+# Job Portal Module
+
+## Phase 1: Models
+- [x] JobPosting model (eligibility + referral config)
+- [x] JobApplication model
+- [x] JobReferral model
+
+## Phase 2: APIs + Eligibility Engine
+- [x] Eligibility helper function ([checkEligibility.ts](file:///media/swastik/focus/ldm%20feb/src/lib/checkEligibility.ts))
+- [x] Admin jobs CRUD (GET, POST, PATCH, DELETE)
+- [x] Admin applications route (GET, PATCH)
+- [x] Admin referrals route (GET, PATCH)
+- [x] Student jobs list (GET with eligibility)
+- [x] Student apply route (POST with resume)
+- [x] Student refer route (POST)
+
+## Phase 3: Admin UI
+- [x] Admin jobs page (table + create/edit modal + applications/referrals tabs)
+
+## Phase 4: Student UI
+- [x] Student jobs page (cards + eligibility badges + apply/refer modals)
+
+## Phase 5: Verification
+- [/] TypeScript build check
+- [ ] Push to git

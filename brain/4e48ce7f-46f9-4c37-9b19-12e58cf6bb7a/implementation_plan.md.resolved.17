@@ -1,0 +1,30 @@
+# Generate 3000+ Word Library Content (Healthcare/Ayurveda)
+
+The goal is to generate high-quality, medically accurate, and extremely detailed academic content for the library system, starting with the **B.Voc Diploma in Medical Lab Technology (B.Voc DMLT)**.
+
+## Proposed Changes
+
+### [Library Content Generation]
+#### [NEW] [dmlt_curriculum.md](file:///media/swastik/focus/ldm%20feb/scripts/dmlt_curriculum.md)
+*   Drafting the full 3000+ word Markdown content locally first.
+*   Sections:
+    1.  **Overview**: Role of DMLT in modern diagnostics.
+    2.  **Academic Structure**: 3-year modular framework.
+    3.  **Syllabus**: Unit-wise breakdown for 6 semesters (minimum 200 words per unit).
+    4.  **Practical**: Step-by-step procedures for Hematology, Histopathology, and Biochemistry.
+    5.  **Internship**: Workflow in NABH/NABL accredited labs.
+    6.  **Assessment**: Competency-based evaluation rubrics.
+    7.  **Career**: Entrepreneurship setup for private diagnostics.
+    8.  **Engagement**: 6-month skill development challenges.
+
+#### [NEW] [insert_library_doc.js](file:///media/swastik/focus/ldm%20feb/scripts/insert_library_doc.js)
+*   A Node.js script to read the [.md](file:///media/swastik/focus/ldm%20feb/README.md) file and insert it into the MongoDB [LibraryDocument](file:///media/swastik/focus/ldm%20feb/src/models/LibraryDocument.ts#3-18) collection.
+*   Linking to:
+    *   Course: `B Voc Diploma In Medical Lab Technology` (`69a2e3b8b4b00d98cdeaee9a`)
+    *   Category: `Master Curriculum & Syllabus` (`69984021bcc2648f7956e225`)
+
+## Verification Plan
+### Manual Verification
+*   Execute the script and verify the record is created in MongoDB.
+*   Verify the word count is > 3000 words.
+*   Check the library UI to ensure the Markdown renders correctly.

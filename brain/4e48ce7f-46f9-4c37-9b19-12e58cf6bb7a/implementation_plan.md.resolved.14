@@ -1,0 +1,55 @@
+# Production Hardening — 10/10 Upgrade
+
+Based on the SYSTEM_AUDIT_LOG, applying all Critical/High/Medium fixes across security, database, business logic, API, and frontend.
+
+## Proposed Changes
+
+### Security Fix (P0)
+
+#### [MODIFY] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/route.ts)
+- Restore the admin-only auth check that was accidentally disabled (`if (false)` → proper role check).
+
+---
+
+### Database Schema Hardening
+
+#### [MODIFY] [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts)
+- Add compound unique index `{ batch: 1, rollNumber: 1 }` (sparse) to prevent duplicate roll numbers within a batch.
+
+#### [MODIFY] [Attendance.ts](file:///media/swastik/focus/ldm%20feb/src/models/Attendance.ts)
+- Add index on `records.student` for faster student attendance lookups.
+
+---
+
+### Business Logic Fixes
+
+#### [MODIFY] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/tests/%5Bid%5D/route.ts)
+- **POST handler**: Replace TOCTOU `findOne` + [create](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts#121-131) with atomic `try/catch` on [create](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts#121-131), catching E11000 duplicate key error gracefully as 409.
+- **Shuffle fix**: After shuffling options, re-label them sequentially (A, B, C, D) so the UI always shows options in alphabetical label order.
+
+---
+
+### Frontend Timer Fix
+
+#### [MODIFY] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(student)/student/tests/%5Bid%5D/page.tsx)
+- Replace `setTimeLeft(t - 1)` interval with absolute `endTime = Date.now() + duration` approach. Each tick computes `remaining = endTime - Date.now()` — immune to tab throttling.
+
+---
+
+### API Pagination
+
+#### [MODIFY] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/payments/route.ts)
+- Add [page](file:///media/swastik/focus/ldm%20feb/src/lib/gtag.ts#13-22) and `limit` query params with pagination, matching the pattern already used in `/admin/students`.
+
+#### [MODIFY] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests/route.ts)
+- Add [page](file:///media/swastik/focus/ldm%20feb/src/lib/gtag.ts#13-22) and `limit` query params to the GET handler for test listing.
+
+---
+
+## Verification Plan
+
+### Automated
+- `npm run build` must pass cleanly.
+
+### Manual
+- Verify the `/api/admin/students` endpoint returns 401 when called without auth.

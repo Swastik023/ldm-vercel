@@ -1,0 +1,124 @@
+# Unified Course Configuration + Pricing Panel
+
+## Problem
+
+The system has **two disconnected course systems**:
+
+| System | Source | Used By |
+|---|---|---|
+| [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) model | [Academic.ts](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts) (DB) | Registration, eligibility, batches — but **no admin CRUD UI** |
+| [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) | Hardcoded file (22 courses, 551 lines) | Public website course listing — **not editable** |
+| [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15) model | DB | Pricing overlay on website — separate admin page (link exists but **page is missing**) |
+
+> [!CAUTION]
+> Courses on the website are completely hardcoded. Any course change requires a code deployment. The [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) model (used for student registration) and `courseData` (used for website display) are **not linked at all**.
+
+## Proposed Solution
+
+Extend the **[Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) model** with website display fields + embedded pricing → single source of truth. Delete the hardcoded [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) and [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15) model.
+
+## Proposed Changes
+
+### Model: Extend [IProgram](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#5-14) in [Academic.ts](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts)
+
+Add website display + pricing fields to the existing [Program](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx#11-18) schema:
+
+```diff
+// New fields on Program
++ shortDescription: string        // public website
++ image: string                   // course image URL
++ eligibilitySummary: string      // e.g. "12th Pass"
++ syllabus: string[]              // topic list
++ careerOptions: string[]         // career paths
++ pricing: {
++     totalFee: number
++     paymentType: 'one-time' | 'semester-wise' | 'installments'
++     offerPrice: number | null
++     isOfferActive: boolean
++     offerValidUntil: Date | null
++     offerLabel: string
++     seatLimit: number | null
++     currency: string             // default 'INR'
++     scholarshipAvailable: boolean
++ }
++ displayOrder: number             // sort order on website
+```
+
+> [!IMPORTANT]
+> The existing `is_active` field on Program will serve as the **Active/Inactive toggle** — inactive courses won't appear on the website or in registration.
+
+---
+
+### API Changes
+
+#### [MODIFY] `/api/admin/academic` (existing)
+Already manages Programs via the [AcademicManager.tsx](file:///media/swastik/focus/ldm%20feb/src/components/admin/AcademicManager.tsx) component. We'll add a **new dedicated route** instead to avoid breaking existing academic config.
+
+#### [NEW] `/api/admin/courses/route.ts`
+- **GET** — list all programs with pricing, student counts, sorted by displayOrder
+- **POST** — create new course (program + pricing + website fields)
+- **PATCH** — update any course field (including pricing, status toggle)
+
+#### [NEW] `/api/admin/courses/[id]/route.ts`
+- **PATCH** — update single course
+- **DELETE** — soft-disable (set `is_active = false`), with check: if students linked, block hard delete
+
+#### [MODIFY] [/api/public/course-pricing/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/course-pricing/route.ts)
+Update to read from Program's embedded pricing instead of separate CoursePricing model.
+
+#### [NEW] `/api/public/courses/route.ts`
+Replace hardcoded courseData. Returns active programs with website fields + computed pricing.
+
+---
+
+### Admin UI
+
+#### [NEW] `/admin/courses/page.tsx`
+Single unified panel with:
+
+- **Table view**: Name, Type (Diploma/Certificate), Duration, Fee, Offer Price, Status toggle, Actions
+- **Slide-out panel / Modal** for Add/Edit with tabs:
+  - **Basic Info**: Name, Code, Description, Duration, Eligibility, Course Type
+  - **Website Content**: Image upload, Syllabus list, Career options
+  - **Pricing**: Total Fee, Payment Type, Offer Price, Offer Toggle, Validity, Seat Limit, Scholarship flag
+- **Active/Inactive toggle** directly in the table row
+- **Safety**: Cannot delete courses with enrolled students (soft-disable only)
+
+#### [MODIFY] Admin Sidebar
+Replace "Course Pricing" link with "Courses" pointing to `/admin/courses`
+
+---
+
+### Website Frontend
+
+#### [MODIFY] [CourseDetailClient.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/courses/%5Bid%5D/CourseDetailClient.tsx)
+Change `import { courseData } from '@/data/courseData'` → fetch from `/api/public/courses`
+
+#### [MODIFY] [CoursePricing.tsx](file:///media/swastik/focus/ldm%20feb/src/components/public/CoursePricing.tsx) components
+Update to read pricing from the unified Program response instead of separate endpoint
+
+#### [DELETE] [data/courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) — after migration
+#### [DELETE] [models/CoursePricing.ts](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts) — after migration
+
+---
+
+## Migration Strategy
+
+1. Add new fields to Program model (backward compatible, all optional with defaults)
+2. Create a one-time migration script to seed existing `courseData` entries into Program documents and copy [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15) data into embedded fields
+3. Update APIs and UI
+4. Remove old files
+
+> [!WARNING]
+> The migration script should be run once to copy the 22 hardcoded courses + any existing pricing data into the Program collection. Existing students' `programId` references won't break since we're extending, not replacing.
+
+## Verification Plan
+
+### Automated
+- `npx tsc --noEmit` — zero errors
+- Verify admin CRUD operations work (create, edit, toggle, soft-delete)
+
+### Manual
+- Confirm website course listing renders from DB data
+- Confirm pricing display with countdown still works
+- Confirm registration dropdown still shows active programs

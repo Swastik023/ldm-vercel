@@ -1,0 +1,38 @@
+# Fix All 29 Deep Audit Issues
+
+## 🔴 CRITICAL (5)
+- [ ] CRIT-01: NoSQL regex injection in rollNumber/course search
+- [ ] CRIT-02: Login rate limiting
+- [ ] CRIT-03: crypto.randomInt for OTP
+- [ ] CRIT-04: Verify OTP before registration
+- [ ] CRIT-05: Remove error.message from client responses
+
+## 🟠 HIGH (7)
+- [ ] HIGH-01: Teacher attendance ownership check
+- [ ] HIGH-02: Teacher test ownership check
+- [ ] HIGH-03: Test GET restrict questions for non-owner teachers
+- [ ] HIGH-04: Security headers in next.config
+- [ ] HIGH-05: Stronger password policy
+- [ ] HIGH-06: AuditLog on user CRUD
+- [ ] HIGH-07: Cloudinary signed URLs (note only — requires infrastructure change)
+
+## 🟡 MEDIUM (10)
+- [ ] MED-01: Student dashboard batch filter on attendance
+- [ ] MED-02: Admin users GET pagination
+- [ ] MED-03: Settings PATCH input sanitization
+- [ ] MED-04: Teacher marks safeParseJSON
+- [ ] MED-05: Self-mark batch check fallback
+- [ ] MED-06: Test DELETE existence check
+- [ ] MED-07: Finance dashboard try-catch
+- [ ] MED-08: Verify-OTP cleanup after max attempts
+- [ ] MED-09: Pending user API access block
+- [ ] MED-10: Database indexes
+
+## 🟢 LOW (7)
+- [ ] LOW-01: Consistent bcrypt rounds (12)
+- [ ] LOW-02: Add try-catch to unprotected routes
+- [ ] LOW-03: EmailOTP TTL index
+- [ ] LOW-04: Contact phone regex fix
+- [ ] LOW-05: Server-side test startedAt (note — needs Redis)
+- [ ] LOW-06: Parallel file uploads in complete-profile
+- [ ] LOW-07: Salary duplicate unique compound index

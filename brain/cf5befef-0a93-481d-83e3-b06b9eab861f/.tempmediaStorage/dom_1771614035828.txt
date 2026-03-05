@@ -1,0 +1,142 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+LDM College
+In collaboration with Dr. Dharam Dev Hospital & Institute
+📢 Updates
+heyyyyyy
+check checkkkkkkkk
+heyyyyyy
+Home
+About Us
+Notices
+E-Library
+Courses
+Gallery
+Facilities
+Collaborations
+Contact
+Login
+LDM E-Library
+Paramedical College
+[0] (83,737)<nav class='flex-1 overflow-y-auto py-4 px-3 space-y-6' scrollable='true' />
+	Courses / Programs
+	Common & All
+	[1] (79,669)<div class='max-h-60 overflow-y-auto pr-1 mt-1 scrollbar-thin scrollbar-thumb-white/10' scrollable='true' />
+		CAIM
+		-
+		Certificate in Ayurveda Infertility Management
+		CAND
+		-
+		Certificate in Ayurveda Nutrition & Dietetics
+		CAP
+		-
+		Certificate in Ayurveda Parasurgery
+		CACSBC
+		-
+		Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+		DAT
+		-
+		Diploma in Anaesthesia Technology (DAT)
+		DCP
+		-
+		Diploma in Community Care Provider
+		DCCM
+		-
+		Diploma in Critical Care Management
+		DETC
+		-
+		Diploma in Emergency & Trauma Care Technician
+		DHSI
+		-
+		Diploma in Health & Sanitary Inspector
+		DHCP
+		-
+		Diploma in Home Care Provider
+		DHA
+		-
+		Diploma in Hospital Administration
+		DHM
+		-
+		Diploma in Hospital Management
+	Collections
+	All Categories
+	Module Notes
+	Foundation Modules
+Library
+All Programs
+234
+files found
+234
+Results Found
+19
+Programs
+Selected
+Access provided by LDM Paramedical College
+Module Notes
+203
+Expand all 203
+CACSBC-05: Herbal Cosmetics
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+Academic Book
+20 Feb 2026
+Open Book
+CACSBC-04: Beauty Treatments
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+Academic Book
+20 Feb 2026
+Open Book
+CACSBC-03: Hair Care
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+Academic Book
+20 Feb 2026
+Open Book
+[2] (29,42)<button class='jsx-e2f3cbeeed1be805 w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 hover:bg-white/10 transition' />
+CACSBC-04: Beauty Treatments
+CACSBC
+•
+Module Notes
+[3] (879,42)<button class='jsx-e2f3cbeeed1be805 flex items-center gap-2 px-3 py-1.5 bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 rounded-lg border border-teal-500/30 transition shadow-sm group'>Save as PDF />
+	Save as PDF
+[4] (941,42)<button class='jsx-e2f3cbeeed1be805 p-1.5 text-white/60 hover:text-white transition group'>A- />
+	A-
+[5] (967,42)<button class='jsx-e2f3cbeeed1be805 p-1.5 text-white/60 hover:text-white transition group'>A+ />
+	A+
+Table of Contents
+[6] (91,187)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-3'>1. INTRODUCTION />
+[7] (99,238)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-6 text-[11px] opacity-80'>1.1 The Ayurvedic Concept of Beauty (Saundarya) />
+[8] (99,289)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 bg-teal-50 text-teal-700 border-teal-500 ml-6 text-[11px] opacity-80'>1.2 Learning Objectives />
+[9] (99,330)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-6 text-[11px] opacity-80'>1.3 Scope of Practice />
+[10] (91,383)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-3'>2. FUNDAMENTAL PRINCIPLES FOR BEAUTY TREATMENTS />
+[11] (99,444)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-6 text-[11px] opacity-80'>2.1 Skin and Hair According to Doshas />
+[12] (99,495)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-6 text-[11px] opacity-80'>2.2 The Role of Marma Points />
+[13] (91,558)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-3'>3. CLASSICAL BEAUTY TREATMENTS: PROTOCOLS & PROCEDURES />
+[14] (99,621)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-6 text-[11px] opacity-80'>3.1 Facial Beauty Treatments />
+[15] (99,672)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-6 text-[11px] opacity-80'>3.2 Hair and Scalp Beauty Treatments />
+[16] (99,723)<button class='jsx-e2f3cbeeed1be805 w-full text-left py-1.5 px-3 rounded-lg transition-all text-xs font-medium border-l-2 text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 ml-6 text-[11px] opacity-80'>3.3 Full-Body Beauty Treatments />
+[17] (583,543)<main class='jsx-e2f3cbeeed1be805 flex-1 bg-white overflow-y-auto custom-scrollbar relative' scrollable='true' />
+	with modern clinical protocols. You will learn to move beyond generic facials to provide personalized, constitution-based treatments that nourish the skin, hair, and senses, addressing the root cause of imbalances rather than just masking symptoms .
+	1.2 Learning Objectives
+	Upon completion of this module, students will be able to:
+	Differentiate
+	between cosmetic and therapeutic beauty treatments based on Ayurvedic principles.
+	Assess
+	a client's skin and hair type according to the Tridosha theory (Vata, Pitta, Kapha) .
+	Demonstrate
+	step-by-step protocols for classical Ayurvedic facial and body treatments like Mukhalepa, Abhyanga, and Udvartana .
+	Formulate
+	basic herbal preparations such as Ubtans, Lepas, and medicated oils for specific beauty concerns .
+	Identify
+	key Marma points on the face and head and apply appropriate massage techniques for lifting, detoxification, and rejuvenation .
+	Design
+	customized treatment plans for common conditions like acne (Mukhadooshika), dryness, pigmentation, and premature graying of hair .
+	1.3 Scope of Practice
+	This module prepares students to work in:
+	Ayurvedic wellness centers and spas.
+	Integrative skin clinics.
+	Independent beauty and lifestyle consulting.
+	Herbal cosmetic product formulation.
+	2. FUNDAMENTAL PRINCIPLES FOR BEAUTY TREATMENTS
+
+</current_dom>

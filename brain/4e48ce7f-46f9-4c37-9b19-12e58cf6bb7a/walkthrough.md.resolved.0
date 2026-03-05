@@ -1,0 +1,53 @@
+# QA Coverage Upgrade — Walkthrough
+
+## Result
+
+**11 suites · 66 tests · 0 failures**
+
+```
+ PASS  tests/unit/lib/mcqParser.test.ts
+ PASS  tests/unit/api/finance/feeRecords.test.ts
+ PASS  tests/unit/api/finance/expenses.test.ts
+ PASS  tests/unit/api/attendance/attendance.test.ts
+ PASS  tests/unit/api/auth/verifyOtp.test.ts
+ PASS  tests/unit/api/auth/register.test.ts
+ PASS  tests/unit/lib/auth.test.ts
+ PASS  tests/unit/lib/feeCalculator.test.ts
+ PASS  tests/unit/components/navbar.test.tsx
+ PASS  tests/unit/lib/db.test.ts
+ PASS  tests/unit/middleware/auth.test.ts
+
+Test Suites: 11 passed, 11 total
+Tests:       66 passed, 66 total
+```
+
+## New Files (7)
+
+| File | Module Tested | Cases | Risk Level |
+|------|-------------|-------|------------|
+| [feeCalculator.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/lib/feeCalculator.test.ts) | Fee discount math | 12 | 🔴 Financial |
+| [mcqParser.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/lib/mcqParser.test.ts) | MCQ parsing/validation | 13 | 🔴 Data integrity |
+| [register.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/auth/register.test.ts) | Auth registration API | 4 | 🔴 Security |
+| [verifyOtp.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/auth/verifyOtp.test.ts) | OTP verification API | 7 | 🔴 Security |
+| [expenses.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/finance/expenses.test.ts) | Expense soft-delete | 8 | 🟡 Financial |
+| [feeRecords.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/finance/feeRecords.test.ts) | Fee record creation | 7 | 🔴 Financial |
+| [attendance.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/attendance/attendance.test.ts) | Attendance locking | 8 | 🟡 Data integrity |
+
+## What's Covered
+
+### Pure Business Logic (no mocks)
+- **Fee calculator**: % discount, flat discount, flat capped at base, % priority over flat, negative base throw, out-of-range % throw, zero edge cases, rounding
+- **MCQ parser**: Single/multi question parsing, format variants (Q1./1./Q 1./Ans:/Correct Answer:/A./A)), missing answer, < 4 options, duplicate dedup, empty input, short blocks, out-of-range answers, lowercase normalization
+
+### API Route Logic (mocked DB + auth)
+- **Registration**: Required field validation → 400, duplicate email → 409, username collision auto-increment, success → 201
+- **OTP verification**: Missing fields → 400, no record → 404, already verified → 400, expired → 410, max attempts → 429, wrong code → 401 + increment, correct → 200
+- **Expenses**: Auth guard → 401, missing fields → 400, amount ≤ 0 → 400, non-root delete → 403, locked delete → 403, already-deleted → 400, success soft-delete
+- **Fee records**: Auth guard → 401, missing fields → 400, negative price → 400, student not found → 404, duplicate → 409, calcFees error → 400, success → 201
+- **Attendance**: Locked record rejection, existing update, new record creation, not-found handling, lock/unlock operations
+
+## Existing Tests (preserved, unchanged)
+- [navbar.test.tsx](file:///media/swastik/focus/ldm%20feb/tests/unit/components/navbar.test.tsx) — Component render
+- [auth.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/lib/auth.test.ts) — Auth config
+- [db.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/lib/db.test.ts) — DB connection
+- [middleware/auth.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/middleware/auth.test.ts) — Route protection config

@@ -1,0 +1,40 @@
+# Client Delivery — Backend Cleanup Walkthrough
+
+## What Was Fixed
+
+### 🔒 Security
+- **API route protection via middleware** — `/api/admin/*`, `/api/student/*`, `/api/teacher/*` now reject unauthenticated or wrong-role requests at the edge (before hitting any handler)
+
+### 🔴 Critical Data Flow Fixes
+- **Student fees** — was reading from [FeeRecord](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/students/page.tsx#28-37) (wrong collection), now reads [StudentFee](file:///media/swastik/focus/ldm%20feb/src/models/StudentFee.ts#11-31) (same collection admin writes to)
+- **Auto fee creation** — was using orphaned [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15) model, now reads `Program.pricing`
+- **Course pricing sync** — was failing due to case mismatch (`dccm` vs `DCCM`), fixed with `trim().toLowerCase()` — synced 21/22 courses
+
+### 🆕 New Student Features
+- `GET /api/student/attendance` — detailed subject-wise attendance records
+- `GET /api/student/notices` — active notices with expiry filtering
+- `/student/attendance` page — summary cards, clickable status filters, detailed table with low-attendance warning
+- Attendance link added to student dashboard
+
+### 🧹 Dead Code Removed
+| Deleted | Reason |
+|---|---|
+| [/api/admin/course-pricing](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/course-pricing) | No UI page references it |
+| `/api/admin/courses/sync-pricing` | Temp migration (complete) |
+| `/api/admin/courses/migrate` | Temp migration (complete) |
+| `/api/student/finance/payments` | Dead endpoint using wrong model |
+| [/admin/course-pricing/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/admin/course-pricing/page.tsx) | Used old [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) |
+| [/admin/finance/fees/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/admin/finance/fees/page.tsx) | Superseded by `/admin/fees` |
+
+### 🔧 Shared Utilities Created
+- [lib/math.ts](file:///media/swastik/focus/ldm%20feb/src/lib/math.ts) — [round2()](file:///media/swastik/focus/ldm%20feb/src/lib/math.ts#1-3) extracted from 2 duplicate definitions
+- [lib/auth-guards.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth-guards.ts) — [requireAdmin()](file:///media/swastik/focus/ldm%20feb/src/lib/auth-guards.ts#30-32), [requireStudent()](file:///media/swastik/focus/ldm%20feb/src/lib/auth-guards.ts#32-33), [requireTeacher()](file:///media/swastik/focus/ldm%20feb/src/lib/auth-guards.ts#33-34) helpers
+
+## What Was Validated
+- TypeScript build: **zero errors**
+- Pricing sync: **21/22 courses synced** (verified live at ldmcollege.com/courses)
+- Pricing badges visible with discount % and countdown timers
+
+## Files Changed (Summary)
+- **8 files modified**, **6 files deleted**, **6 files created**
+- All committed and pushed to `main` branch on GitHub

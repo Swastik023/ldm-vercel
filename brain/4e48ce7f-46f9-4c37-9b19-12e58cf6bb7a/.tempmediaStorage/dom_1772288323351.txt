@@ -1,0 +1,21 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+[0] (42,36)<a class='inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 text-sm font-medium transition-colors group' href='/'>Back to Home />
+Welcome back
+Sign in to your LDM account
+[1] (500,398)<label class='block text-sm font-medium text-gray-700 mb-1.5'>Roll Number / Email />
+[2] (500,437)<input class='block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm' id='username' placeholder='Enter your Roll Number or Email' />
+[3] (500,491)<label class='block text-sm font-medium text-gray-700 mb-1.5'>Password />
+[4] (500,530)<input class='block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm' id='password' placeholder='Enter your password' />
+[5] (593,530)<button class='absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600' />
+[6] (500,596)<button class='w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'>Sign in />
+or
+[7] (500,713)<button class='w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors'>Sign in with Google />
+New student?
+[8] (523,767)<a class='text-blue-600 hover:text-blue-700 font-semibold' href='/register'>Register here />
+LDM College Management System ©
+2026
+
+</current_dom>

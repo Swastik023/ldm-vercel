@@ -1,0 +1,31 @@
+# Walkthrough: Express Typo Fix
+
+I have successfully fixed the typo that was preventing your application from running.
+
+## Changes Made
+
+### Package Configuration
+
+Corrected the typo in [package.json](file:///media/swastik/focus/projects%202026/webdev/package.json) where `express` was misspelled as `expres`.
+
+```diff
+-    "expres": "^0.0.5"
++    "express": "^4.21.2"
+```
+
+### Dependency Management
+
+1.  Installed the correct `express` package using `npm install express`.
+2.  Removed the incorrect `expres` package using `npm uninstall expres`.
+
+## Verification Results
+
+### New Endpoints and Changes
+
+The updated code now includes:
+1.  **Updated Homepage**: The `/` route now returns an `<h1>` tag with a welcome message.
+2.  **Todos Endpoint**: A new `/todos` endpoint has been added that returns a list of sample todos as JSON.
+
+I verified these changes by testing the endpoints:
+- `http://localhost:3000/` returns `<h1> Welcome to the home page </h1>`
+- `http://localhost:3000/todos` returns the array of 3 todo objects.

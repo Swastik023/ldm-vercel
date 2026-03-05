@@ -1,0 +1,101 @@
+# Website Update from PDF — LDM Paramedical College
+
+Update the public-facing website to accurately reflect content from `LDM ppt.pdf`.
+
+## Key Content Extracted from PDF
+
+**Branding:** LDM College, Kachhwa Karnal — "Excellence in Paramedical Education", "Since 2022", "Empowering Healthcare Through Education"
+
+**Leadership:**
+- Dr. Rajesh Sachdeva — Chair Person LDM College
+- Dr. Sakshi Sachdeva — Principal LDM College
+- Dr. Saurabh Sachdeva — Director LDM College
+
+**15 Courses:**
+
+| # | Course | Duration | Eligibility |
+|---|--------|----------|-------------|
+| 1 | Diploma in Critical Care Management | 1 Year | 12th |
+| 2 | Diploma in Hospital Management | 1 Year | 12th |
+| 3 | Diploma in Hospital Administration | 1 Year | 12th |
+| 4 | Diploma in Community Care Provider | 1 Year | 12th |
+| 5 | Diploma in Emergency & Trauma Care Technician | 1 Year | 12th |
+| 6 | Diploma in Sanitary Health Inspector | 1 Year | 12th (Science) |
+| 7 | Diploma in Home Care Provider | 1 Year | 12th |
+| 8 | Diploma in Hospital Waste Management | 1 Year | 12th |
+| 9 | Diploma in Nanny Training | 1 Year | 12th |
+| 10 | Diploma in Multipurpose Health Worker | 1 Year | 12th |
+| 11 | Diploma in Anaesthesia (DAT) | 2 Years | 12th (Science) |
+| 12 | B.Voc in Medical Laboratory Technology (DMLT) | 3 Years | 12th (Science) |
+| 13 | B.Voc in Radiology & Imaging Technology | 3 Years | 12th (Science) |
+| 14 | B.Voc in Operation Theatre Technician | 3 Years | 12th (Science) |
+| 15 | Diploma in Physiotherapy (DPT) | 2 Years | 12th (Science) |
+
+**Contact:** Dr. Dharam Dev Hospital & Institute, Kachhwa, Karnal-132001 (Haryana) | +91 8957570000 | ldmparamedical@gmail.com | Strategic Partner: Edu-Konnect
+
+**Testimonials:**
+- Miss Priya — DMLT, Working at Dr Dharam Dev Hospital & Institute
+- Mr. Nishant Kumar — DMLT, Working at Lifecell Lab Karnal
+
+**Career Opportunities (4):** Jobs in Govt & Private Hospitals | Scope in Medical Tourism Abroad | Opportunities in Diagnostic Labs & Emergency Services | Entrepreneurship (Open Own Labs, Clinics, Centres)
+
+**Infrastructure & Facilities (3):** Modern labs (Pathology, Radiology, Physiotherapy etc.) | Library with latest medical journals | Experienced faculty & hospital tie-ups
+
+**Student Support:** Career Guidance | Internship Opportunities | Placement Cell Support | Scholarships (if applicable)
+
+**Accreditations:** NAAC | NCTE | UGC | NABH Pre-Accredited
+
+---
+
+## Proposed Changes
+
+### Homepage — [(public)/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/fees/course/route.ts#13-35)
+
+#### [MODIFY] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/page.tsx)
+- **Stats strip:** Update stats to reflect PDF data — "15+ Courses", "100% Placement Support", "Since 2022", "5+ Partner Hospitals"
+- **Courses Preview:** Replace `popularCourses` with actual courses from PDF (show top 4 featured courses)
+- **CTA:** Update phone to `+91 8957570000`, email to `ldmparamedical@gmail.com`
+- **Add Testimonials section** (after Why Choose Us, before CTA) — Miss Priya & Mr. Nishant Kumar cards with blue/light-teal design from PDF
+- **Add Career Opportunities section** — 4 numbered cards matching PDF style
+- **Welcome/About section:** Update text to match PDF mission & vision
+
+### Navbar & Logo
+
+#### [MODIFY] [PublicNavbar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/layout/PublicNavbar.tsx)
+- Replace current logo `img` with [public/newlogo.png](file:///media/swastik/focus/ldm%20feb/public/newlogo.png)
+
+### Courses Page / Data
+
+#### [MODIFY] courses data
+- Update the 4 popular courses on homepage to reflect B.Voc DMLT, B.Voc Radiology, B.Voc OT, DPT (the science-track courses)
+- These are the most prominent courses mentioned in the PDF
+
+### Contact Page
+
+#### [MODIFY] [contact/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/contact/page.tsx)
+- Update phone: `+91 8957570000`
+- Update email: `ldmparamedical@gmail.com`
+- Update address: Dr. Dharam Dev Hospital & Institute, Kachhwa, Karnal-132001 (Haryana)
+
+### Why Choose Us
+
+#### [MODIFY] [WhyChooseUs.tsx](file:///media/swastik/focus/ldm%20feb/src/components/public/WhyChooseUs.tsx)
+- Update reasons to match PDF: "Shortage of skilled paramedics", "Career opportunities in hospitals, labs, emergency services", "High demand + Respectable profession + Job security"
+
+### Team / About Page
+
+#### [MODIFY] [team/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/team/page.tsx)
+- Add Dr. Rajesh Sachdeva (Chair Person), Dr. Sakshi Sachdeva (Principal), Dr. Saurabh Sachdeva (Director)
+
+---
+
+## Verification Plan
+
+### Browser Check
+- Open homepage and verify new sections appear (Testimonials, Career Opportunities)
+- Verify stats are updated
+- Verify logo shows `newlogo.png`
+- Verify Contact page shows correct phone/email/address
+
+### TypeScript Build
+- `npx tsc --noEmit` — zero type errors

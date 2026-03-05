@@ -1,0 +1,5 @@
+# generate SOP PDF
+- [x] Analyze existing SOP and manual docs
+- [x] Merge into a combined markdown document
+- [/] Convert into a PDF file
+- [ ] List all features to the user

@@ -1,0 +1,239 @@
+# Premium Attendance System — Implementation Plan
+
+## Goal
+Redesign the attendance UX across Teacher, Student, and Admin roles to feel modern, trustworthy, and daily-usable — without rewriting the existing backend core (one Attendance doc per date+subject+section with records[] array and upsert).
+
+---
+
+## Attendance Flow Diagram
+
+```mermaid
+flowchart TB
+    subgraph Teacher
+        T1["Select Class"] --> T2["Start Attendance Session"]
+        T2 --> T3{"Self-Marking Enabled?"}
+        T3 -- Yes --> T4["Students mark on their devices"]
+        T3 -- No --> T5["Teacher marks manually"]
+        T4 --> T6["Timer counts down (30 min default)"]
+        T6 --> T7["Auto-close self-marking"]
+        T7 --> T8["Teacher reviews + fills gaps"]
+        T5 --> T8
+        T8 --> T9["Finalize & Lock"]
+    end
+    subgraph Student
+        S1["Open Attendance Dashboard"] --> S2["Calendar Grid - month view"]
+        S2 --> S3["Tap day → tooltip with subject/teacher/status"]
+        S1 --> S4["Summary Ring - overall %"]
+        S1 --> S5{"Self-Mark window open?"}
+        S5 -- Yes --> S6["Tap 'Mark Present' button"]
+        S5 -- No --> S7["View-only mode"]
+    end
+    subgraph Admin
+        A1["Filter by date / class / subject"] --> A2["View all attendance records"]
+        A2 --> A3["Edit individual student status with reason"]
+        A2 --> A4["Lock / Unlock records"]
+        A3 --> A5["Audit badge shown on edited records"]
+    end
+    T9 -.-> S2
+    T9 -.-> A2
+```
+
+---
+
+## Minimal Backend Additions
+
+> [!IMPORTANT]
+> The core Attendance model (schema, upsert, records[] array) is **NOT changed**. We only add 3 lightweight fields.
+
+### [MODIFY] [Attendance.ts](file:///media/swastik/focus/ldm%20feb/src/models/Attendance.ts)
+
+Add 3 optional fields to the existing schema (no migration needed — Mongoose ignores missing fields on old docs):
+
+```diff
+ records: [{
+     student: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+     status: { type: String, enum: ['present', 'absent', 'late', 'excused'], default: 'present' },
+-    remarks: { type: String }
++    remarks: { type: String },
++    marked_by: { type: String, enum: ['teacher', 'self', 'admin'], default: 'teacher' }
+ }],
+ is_locked: { type: Boolean, default: false },
++status: { type: String, enum: ['open', 'reviewing', 'finalized'], default: 'open' },
++self_mark_open: { type: Boolean, default: false },
++self_mark_deadline: { type: Date },
+ marked_at: { type: Date, default: Date.now }
+```
+
+| Field | Purpose |
+|---|---|
+| `status` | 3-state lifecycle: [open](file:///media/swastik/focus/ldm%20feb/src/components/layout/PublicNavbar.tsx#214-218) → `reviewing` → `finalized` |
+| `self_mark_open` | `true` while students can mark themselves |
+| `self_mark_deadline` | Auto-close timestamp (e.g. now + 30 min) |
+| `records[].marked_by` | Audit trail: who actually marked this (`teacher`, `self`, [admin](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/courses/route.ts#8-14)) |
+
+---
+
+## Proposed Changes
+
+### Student Attendance Dashboard
+
+#### [MODIFY] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(student)/student/attendance/page.tsx)
+
+Complete rewrite of the student attendance page. Current page is a plain table. New page:
+
+**Layout (top → bottom, mobile-first):**
+
+1. **Hero Percentage Ring** — Large animated circular progress showing overall %. Color-coded:
+   - ≥90% → green
+   - ≥75% → amber
+   - <75% → red with warning pulse
+
+2. **Summary Strip** — Horizontal row: Present / Absent / Late / Excused counts as small pills
+
+3. **Self-Mark Banner** (conditional) — If any attendance session is currently open for self-marking, show a prominent CTA: "📍 Mark your attendance — closes in 12:34". Tapping calls `POST /api/student/attendance/self-mark`
+
+4. **Calendar Month Grid** — 7-column grid (Mon–Sun), each day cell shows:
+   - 🟢 dot if all classes present
+   - 🔴 dot if any absent
+   - 🟡 dot if late
+   - ⚪ if no class that day
+   - Tapping a day expands a detail card below the row showing each class (subject, teacher, status)
+   - Month navigation arrows (← Feb 2026 →)
+
+5. **Recent Records List** — Below calendar, last 10 records in a compact timeline format (fallback for clarity)
+
+**Animations:**
+- Calendar cells fade-in staggered on load (framer-motion)
+- Percentage ring animates from 0 → actual on mount
+- Self-mark banner has a gentle pulse
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/self-mark/route.ts)
+
+[POST](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts#20-169) — Student self-marks present for a specific attendance session.
+
+- Validates: session exists, `self_mark_open === true`, `self_mark_deadline > now`, student is in the batch
+- Sets `records[].status = 'present'` and `records[].marked_by = 'self'`
+- Returns success/error
+
+---
+
+#### [MODIFY] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/route.ts)
+
+Add to the response:
+- `open_sessions[]` — Any attendance docs where `self_mark_open === true` and `self_mark_deadline > now` for this student's batch
+- `calendar_data` — Records grouped by date for calendar rendering
+
+---
+
+### Teacher Attendance Dashboard
+
+#### [MODIFY] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(teacher)/teacher/attendance/page.tsx)
+
+Add a **"Today's Sessions" card** at the top showing:
+- Active sessions with live counters (X/Y marked)
+- Status badges: 🟢 Open, 🟡 Reviewing, ⬜ Finalized
+- Quick-resume button for sessions in progress
+
+Below the today card, the existing class list remains.
+
+---
+
+#### [MODIFY] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(teacher)/teacher/attendance/[classId]/page.tsx)
+
+Add session lifecycle controls to the existing marking page:
+
+1. **Session States:**
+   - [open](file:///media/swastik/focus/ldm%20feb/src/components/layout/PublicNavbar.tsx#214-218) — Teacher is actively marking. Shows student list with status toggles
+   - `reviewing` — Self-mark closed. Teacher reviews and fills gaps (unmarked students default to absent)
+   - `finalized` — Locked. Read-only view
+
+2. **Self-Mark Toggle:** A switch in the header: "Allow student self-marking". When toggled ON:
+   - Sets `self_mark_open = true` on the attendance doc
+   - Shows a configurable timer (default 30 min)
+   - Students in the batch see the self-mark banner
+   - Live counter updates as students mark themselves
+
+3. **Finalize Button:** Replaces "Save Attendance". When clicked:
+   - Sets `status = 'finalized'` and `is_locked = true`
+   - Unmarked students auto-set to absent
+   - Confirmation dialog: "X students unmarked — they will be marked absent"
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/attendance/[assignmentId]/session/route.ts)
+
+Controls for the session lifecycle:
+
+- [PATCH](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/%5Bid%5D/fees/route.ts#116-187) — Update session status ([open](file:///media/swastik/focus/ldm%20feb/src/components/layout/PublicNavbar.tsx#214-218) → `reviewing` → `finalized`), toggle self-mark, set deadline
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/marks/%5BassignmentId%5D/route.ts#10-64) — Fetch current session status + live counts (how many students have self-marked)
+
+---
+
+### Admin Attendance View
+
+#### [NEW] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(admin)/admin/attendance/page.tsx)
+
+Replaces the unused [AttendanceManager](file:///media/swastik/focus/ldm%20feb/src/components/admin/AttendanceManager.tsx#12-297) component with a proper admin page.
+
+**Layout:**
+1. **Filter Bar** — Date picker, Subject dropdown, Section dropdown, Batch dropdown
+2. **Stats Row** — Total classes today, % marked, % finalized
+3. **Records Table** — Each row shows: Student, Subject, Date, Status, Marked By, Lock status
+   - Edited records show a small "✏️ Admin edited" badge
+   - Edit button opens a modal with status dropdown + mandatory reason field
+4. **Bulk Actions** — Lock/Unlock selected + Export CSV
+
+Uses the existing server actions ([getAttendance](file:///media/swastik/focus/ldm%20feb/src/actions/attendance.ts#8-67), [updateStudentAttendance](file:///media/swastik/focus/ldm%20feb/src/actions/attendance.ts#115-135), [lockAttendance](file:///media/swastik/focus/ldm%20feb/src/actions/attendance.ts#136-149)) with the `marked_by: 'admin'` field populated on edits.
+
+---
+
+## UX States
+
+| State | Visual | Teacher Action | Student Action |
+|---|---|---|---|
+| **Loading** | Skeleton shimmer cards | — | — |
+| **Open** | 🟢 Green badge, live counters | Mark students, toggle self-mark | Self-mark if enabled |
+| **Reviewing** | 🟡 Yellow badge | Fill gaps, review self-marks | View-only |
+| **Finalized** | ⬜ Gray badge, lock icon | Read-only | View-only |
+| **Low Attendance** | Red pulse on percentage | — | Warning banner |
+| **No Classes** | Empty state with calendar icon | — | "No classes today" |
+
+---
+
+## File Summary
+
+| Action | Path | Size |
+|---|---|---|
+| MODIFY | [src/models/Attendance.ts](file:///media/swastik/focus/ldm%20feb/src/models/Attendance.ts) | +5 lines |
+| MODIFY | [src/app/(student)/student/attendance/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/attendance/page.tsx) | Full rewrite (~350 lines) |
+| MODIFY | [src/app/api/student/attendance/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/route.ts) | +30 lines (calendar data, open sessions) |
+| NEW | `src/app/api/student/attendance/self-mark/route.ts` | ~60 lines |
+| MODIFY | [src/app/(teacher)/teacher/attendance/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28teacher%29/teacher/attendance/page.tsx) | +80 lines (today's sessions card) |
+| MODIFY | [src/app/(teacher)/teacher/attendance/[classId]/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28teacher%29/teacher/attendance/%5BclassId%5D/page.tsx) | +100 lines (lifecycle controls) |
+| NEW | `src/app/api/teacher/attendance/[assignmentId]/session/route.ts` | ~80 lines |
+| NEW | `src/app/(admin)/admin/attendance/page.tsx` | ~300 lines |
+
+---
+
+## Why This Design Works for Daily Usage
+
+1. **Calendar grid** is the fastest way to scan a month of attendance at a glance — students open it for 3 seconds and know exactly where they stand
+2. **Percentage ring** gives immediate emotional feedback (green = safe, red = danger) without cognitive load
+3. **Self-marking** reduces teacher workload by 80% while maintaining trust (teacher finalizes)
+4. **3-state lifecycle** (open → reviewing → finalized) prevents premature lock-out while making attendance feel authoritative
+5. **Mobile-first** — calendar grid, percentage ring, and self-mark banner are all designed for thumb-zone interaction
+6. **Audit trail** (`marked_by`) keeps admin accountability without adding complexity to the student/teacher experience
+
+---
+
+## Verification Plan
+
+### Build Check
+- `npx tsc --noEmit` — zero new errors
+
+### Browser Testing
+1. Teacher: Start session → enable self-mark → timer countdown → finalize → verify locked
+2. Student: See calendar → tap day → see detail → self-mark → verify status updates
+3. Admin: Filter → edit → verify audit badge → lock/unlock

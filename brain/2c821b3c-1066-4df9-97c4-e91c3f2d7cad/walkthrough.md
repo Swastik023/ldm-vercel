@@ -1,0 +1,36 @@
+# Walkthrough - Middleware and Route Fixes
+
+I have fixed the issues in `index.js` where the custom middleware was not running and the `/todos/:id` route was failing to return data.
+
+## Changes Made
+
+### 1. Registered Custom Middleware
+The `custom_middleware` function was defined but not used. I added `app.use(custom_middleware)` to register it globally.
+
+```javascript
+app.use(custom_middleware);
+```
+
+### 2. Fixed ID Comparison Bug
+In the `/todos/:id` route, `req.params.id` is a string, but the `id` in the `todos` array is a number. I wrapped the parameter in `Number()` to ensure a correct match.
+
+```javascript
+let todo = todos.filter((todo) => todo.id === Number(req.params.id));
+```
+
+### 3. Updated /todos Route
+I updated the `/todos` route to return the actual `todos` array instead of an empty one, and removed the heavy `console.log(req)` which was cluttering the terminal.
+
+## Verification Results
+
+### Middleware Console Output
+When visiting any route, the terminal now correctly displays:
+`custom middleware`
+
+### Route Testing
+- **GET /todos**: Returns the full list of todos.
+- **GET /todos/1**: Returns the specific todo with ID 1.
+
+```json
+[{"id":1,"title":"Todo 1","completed":false}]
+```

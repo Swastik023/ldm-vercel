@@ -1,0 +1,86 @@
+[0] (129,81)<a aria-label='Home' class='hover:opacity-90 transition-opacity min-w-[5rem] sm:min-w-[5.5rem]' href='/' />
+	[1] (129,81)<div  />
+		[2] (129,81)<img  />
+LDM College
+In collaboration with Dr. Dharam Dev Hospital & Institute
+[3] (869,81)<a aria-label='Visit Hospital Page' class='relative group hidden sm:block' href='/hospital' />
+	[4] (869,81)<img  />
+📢 Updates
+check checkkkkkkkk
+heyyyyyy
+check checkkkkkkkk
+heyyyyyy
+[5] (131,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/'>Home />
+[6] (207,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/about'>About Us />
+	[7] (236,261)<span  />
+[8] (285,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/notices'>Notices />
+[9] (358,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-blue-600' href='/library'>E-Library />
+[10] (439,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/courses'>Courses />
+	[11] (471,261)<span  />
+[12] (519,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/gallery'>Gallery />
+[13] (593,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/facilities'>Facilities />
+[14] (690,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/collaborations'>Collaborations />
+	[15] (736,261)<span  />
+[16] (792,261)<a class='inline-flex items-center gap-2 px-3 py-5 text-base font-medium transition-colors text-gray-700 hover:text-blue-600' href='/contact'>Contact />
+	[17] (822,261)<span  />
+[18] (871,261)<a class='inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-medium hover:shadow-lg transition-shadow' href='/login'>Login />
+LDM E-Library
+Paramedical College
+Collections
+[19] (84,497)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm mb-0.5 transition-all bg-teal-500/20 text-teal-300'>All Documents
+19 />
+	All Documents
+	19
+[20] (84,548)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm mb-0.5 transition-all text-white/70 hover:bg-white/5 hover:text-white'>Master Curriculum & Syllabus
+19 />
+	Master Curriculum & Syllabus
+	19
+[21] (462,354)<input class='w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-gray-50 outline-none focus:ring-2 focus:ring-teal-400 focus:bg-white transition' placeholder='Search by title or description...' />
+[22] (800,354)<select class='text-sm border border-gray-200 rounded-lg py-2 px-3 bg-white outline-none focus:ring-2 focus:ring-teal-400' />
+19
+Documents
+1
+Categories
+Free access · No login required
+Master Curriculum & Syllabus
+19
+[23] (797,517)<button class='flex items-center gap-1 text-xs font-medium text-teal-600 hover:text-teal-700 transition'>View all 19 />
+[24] (505,602)<div  />
+	[25] (216,602)<div  />
+	[26] (463,602)<div  />
+		[27] (463,586)<div  />
+			[28] (304,586)<h3 >CACSBC - Master Curriculum />
+		[29] (463,615)<div  />
+			[30] (298,615)<span >Master Curriculum & Syllabus />
+			[31] (380,615)<span >Rich Text />
+	[32] (752,602)<div  />
+		[33] (719,602)<div  />
+			[34] (719,602)<p >20 Feb 2026 />
+		[35] (770,602)<div  />
+			[36] (770,602)<button class='text-xs font-medium px-3 py-1.5 rounded-lg border border-teal-500 text-teal-600 hover:bg-teal-50 transition'>Read />
+[37] (505,712)<div  />
+	[38] (216,712)<div  />
+	[39] (463,712)<div  />
+		[40] (463,697)<div  />
+			[41] (294,697)<h3 >CAP - Master Curriculum />
+		[42] (463,725)<div  />
+			[43] (298,725)<span >Master Curriculum & Syllabus />
+			[44] (380,725)<span >Rich Text />
+	[45] (752,712)<div  />
+		[46] (719,712)<div  />
+			[47] (719,712)<p >20 Feb 2026 />
+		[48] (770,712)<div  />
+			[49] (770,712)<button class='text-xs font-medium px-3 py-1.5 rounded-lg border border-teal-500 text-teal-600 hover:bg-teal-50 transition'>Read />
+[50] (505,823)<div  />
+	[51] (216,823)<div  />
+	[52] (463,823)<div  />
+		[53] (463,808)<div  />
+			[54] (298,808)<h3 >CAND - Master Curriculum />
+		[55] (463,836)<div  />
+			[56] (298,836)<span >Master Curriculum & Syllabus />
+			[57] (380,836)<span >Rich Text />
+	[58] (752,823)<div  />
+		[59] (719,823)<div  />
+			[60] (719,823)<p >20 Feb 2026 />
+		[61] (770,823)<div  />
+			[62] (770,823)<button class='text-xs font-medium px-3 py-1.5 rounded-lg border border-teal-500 text-teal-600 hover:bg-teal-50 transition'>Read />

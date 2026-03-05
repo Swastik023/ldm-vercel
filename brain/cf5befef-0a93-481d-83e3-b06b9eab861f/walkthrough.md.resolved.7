@@ -1,0 +1,19 @@
+# Simplified Academic Reader Implementation
+
+The library reader has been streamlined to provide a clean, distraction-free scholarly experience by removing complex sidebars and additional modules.
+
+## Key Changes
+- **Removed Sidebars**: Both the left (TOC/Study Tools) and right (High Yield/Related Modules) sidebars have been removed to focus entirely on the document content.
+- **Removed Table of Contents**: Navigation is now sequential, reflecting a "traditional book" focus.
+- **Removed Study Tools**: Quick Reference and Highlights panels have been removed to reduce UI clutter.
+- **Removed Related Modules**: The "More to Read" and "Related Modules" sections have been stripped out.
+- **Focused Layout**: The content area is now centered and optimized for long-form reading.
+
+## Visual Verification
+The reader now presents a sleek, minimal interface:
+![Simplified Reader Interface](file:///home/swastik/.gemini/antigravity/brain/cf5befef-0a93-481d-83e3-b06b9eab861f/library_page_1771613527679.png)
+*Visual verification of the simplified header and content-first layout.*
+
+## Technical Updates
+- **[PremiumBookReader.tsx](file:///media/swastik/focus/ldm%20feb/src/components/library/PremiumBookReader.tsx)**: Stripped of sidebar state, extraction logic, and additional UI overlays.
+- **Library Portals**: Updated the Public and Student library pages to remove redundant prop passing (`relatedDocs`, `onSwitchDoc`).

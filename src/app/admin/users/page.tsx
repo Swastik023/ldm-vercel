@@ -2,18 +2,27 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
-import { User, Trash2, Mail, Search, Plus, Eye, EyeOff, X, GraduationCap } from 'lucide-react';
+import { User, Trash2, Mail, Search, Plus, Eye, EyeOff, X, GraduationCap, Pencil, Phone, BookOpen, Calendar, ChevronRight } from 'lucide-react';
 
 interface UserData {
     _id: string;
     username: string;
     email: string;
     fullName: string;
+    mobileNumber?: string;
     role: 'admin' | 'student' | 'teacher' | 'employee';
-    status: 'active' | 'inactive' | 'suspended';
+    status: 'active' | 'inactive' | 'suspended' | 'pending' | 'under_review' | 'rejected';
     createdAt: string;
+    rollNumber?: string;
+    semester?: number;
+    joiningMonth?: string;
+    joiningYear?: number;
+    courseEndDate?: string;
+    isProfileComplete?: boolean;
+    isEmailVerified?: boolean;
     session?: { _id: string; name: string };
-    batch?: { _id: string; name: string };
+    batch?: { _id: string; name: string; program?: { name: string; code: string } };
+    programId?: { _id: string; name: string; code: string };
 }
 
 interface AcademicOption { _id: string; name: string; session?: { name: string }; program?: { name: string; code: string } }
@@ -25,8 +34,21 @@ const roleBadge = (role: string) => {
     return m[role] || 'bg-gray-100 text-gray-700';
 };
 const statusBadge = (s: string) => {
-    const m: Record<string, string> = { active: 'bg-green-100 text-green-700 border-green-200', inactive: 'bg-gray-100 text-gray-600 border-gray-200', suspended: 'bg-red-100 text-red-600 border-red-200' };
+    const m: Record<string, string> = {
+        active: 'bg-green-100 text-green-700 border-green-200',
+        inactive: 'bg-gray-100 text-gray-600 border-gray-200',
+        suspended: 'bg-red-100 text-red-600 border-red-200',
+        pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+        under_review: 'bg-blue-100 text-blue-700 border-blue-200',
+        rejected: 'bg-red-100 text-red-700 border-red-200',
+    };
     return m[s] || 'bg-gray-100 text-gray-700 border-gray-200';
+};
+
+const semesterLabel = (n?: number) => {
+    if (!n) return '—';
+    const suffix = n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th';
+    return `${n}${suffix} Sem`;
 };
 
 export default function ManageUsers() {
@@ -42,6 +64,11 @@ export default function ManageUsers() {
     const [batches, setBatches] = useState<AcademicOption[]>([]);
     const [academicLoaded, setAcademicLoaded] = useState(false);
 
+    // Edit slide-over state
+    const [editUser, setEditUser] = useState<UserData | null>(null);
+    const [editForm, setEditForm] = useState<Partial<UserData> & { batchId?: string; sessionId?: string }>({});
+    const [editSubmitting, setEditSubmitting] = useState(false);
+
     const fetchUsers = useCallback(async () => {
         setLoading(true);
         try {
@@ -53,7 +80,6 @@ export default function ManageUsers() {
         finally { setLoading(false); }
     }, []);
 
-    // Fetch sessions/batches only when form opens and role = student
     const fetchAcademicOptions = useCallback(async () => {
         if (academicLoaded) return;
         try {
@@ -64,17 +90,19 @@ export default function ManageUsers() {
                 setBatches(data.batches || []);
                 setAcademicLoaded(true);
             }
-        } catch { /* silently fail */ }
+        } catch { }
     }, [academicLoaded]);
 
     useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
-    // When form opens and role is student, load options
     useEffect(() => {
         if (showForm && formData.role === 'student') fetchAcademicOptions();
     }, [showForm, formData.role, fetchAcademicOptions]);
 
-    // Filter batches by selected session
+    useEffect(() => {
+        if (editUser) fetchAcademicOptions();
+    }, [editUser, fetchAcademicOptions]);
+
     const filteredBatches = formData.sessionId
         ? batches.filter((b: any) => {
             const bSessionId = typeof b.session === 'object' ? b.session?._id : b.session;
@@ -82,13 +110,60 @@ export default function ManageUsers() {
         })
         : batches;
 
+    // Open edit drawer and pre-fill form
+    const openEdit = (u: UserData) => {
+        setEditUser(u);
+        setEditForm({
+            fullName: u.fullName,
+            email: u.email,
+            mobileNumber: u.mobileNumber || '',
+            rollNumber: u.rollNumber || '',
+            semester: u.semester,
+            status: u.status,
+            role: u.role,
+            batchId: (u.batch as any)?._id || (u.batch as any) || '',
+            sessionId: (u.session as any)?._id || (u.session as any) || '',
+        });
+    };
+
+    const handleEditSave = async () => {
+        if (!editUser) return;
+        setEditSubmitting(true);
+        try {
+            const payload: Record<string, unknown> = {
+                fullName: editForm.fullName,
+                email: editForm.email,
+                mobileNumber: editForm.mobileNumber,
+                rollNumber: editForm.rollNumber,
+                semester: editForm.semester ? Number(editForm.semester) : null,
+                status: editForm.status,
+                role: editForm.role,
+                ...(editForm.batchId ? { batch: editForm.batchId } : {}),
+                ...(editForm.sessionId ? { session: editForm.sessionId } : {}),
+            };
+            const res = await fetch(`/api/admin/users?id=${editUser._id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (data.success) {
+                toast.success('User updated successfully!');
+                setEditUser(null);
+                fetchUsers();
+            } else {
+                toast.error(data.message || 'Failed to update');
+            }
+        } catch { toast.error('Network error'); }
+        finally { setEditSubmitting(false); }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitting(true);
         try {
             const res = await fetch('/api/admin/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
             const data = await res.json();
@@ -97,9 +172,7 @@ export default function ManageUsers() {
                 setFormData(emptyForm);
                 setShowForm(false);
                 fetchUsers();
-            } else {
-                toast.error(data.message || 'Failed to create user');
-            }
+            } else { toast.error(data.message || 'Failed to create user'); }
         } catch { toast.error('Network error creating user'); }
         finally { setSubmitting(false); }
     };
@@ -115,9 +188,11 @@ export default function ManageUsers() {
     };
 
     const filtered = users.filter(u => {
-        const matchSearch = u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        const matchSearch =
+            u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
             u.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            u.email.toLowerCase().includes(searchTerm.toLowerCase());
+            u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (u.rollNumber || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchRole = roleFilter === 'all' || u.role === roleFilter;
         return matchSearch && matchRole;
     });
@@ -200,8 +275,6 @@ export default function ManageUsers() {
                                         <option value="admin">Admin</option>
                                     </select>
                                 </div>
-
-                                {/* Student-only: Session + Batch */}
                                 {formData.role === 'student' && (
                                     <div className="border-t border-dashed border-gray-200 pt-3.5 space-y-3.5">
                                         <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 uppercase tracking-wide">
@@ -212,13 +285,8 @@ export default function ManageUsers() {
                                             <select className={inputClass} value={formData.sessionId}
                                                 onChange={e => setFormData({ ...formData, sessionId: e.target.value, batchId: '' })}>
                                                 <option value="">— Select Session —</option>
-                                                {sessions.map(s => (
-                                                    <option key={s._id} value={s._id}>{s.name}</option>
-                                                ))}
+                                                {sessions.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
                                             </select>
-                                            {sessions.length === 0 && (
-                                                <p className="text-xs text-amber-600 mt-1">No active sessions found. Create one in Academic Config.</p>
-                                            )}
                                         </div>
                                         <div>
                                             <label className={labelClass}>Batch</label>
@@ -232,13 +300,9 @@ export default function ManageUsers() {
                                                     </option>
                                                 ))}
                                             </select>
-                                            {formData.sessionId && filteredBatches.length === 0 && (
-                                                <p className="text-xs text-amber-600 mt-1">No batches for this session. Create one in Batches.</p>
-                                            )}
                                         </div>
                                     </div>
                                 )}
-
                                 <button type="submit" disabled={submitting}
                                     className="w-full bg-blue-600 text-white py-2.5 rounded-xl hover:bg-blue-700 transition font-medium text-sm disabled:opacity-60 mt-1">
                                     {submitting ? 'Creating...' : 'Create User'}
@@ -248,12 +312,11 @@ export default function ManageUsers() {
                     </div>
                 )}
 
-                {/* User List */}
+                {/* User Table */}
                 <div className={showForm ? 'lg:col-span-2' : 'lg:col-span-3'}>
-                    {/* Search */}
                     <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-200 flex items-center gap-2 mb-4">
                         <Search className="text-gray-400 flex-shrink-0" size={17} />
-                        <input type="text" placeholder="Search by name, email, or username..."
+                        <input type="text" placeholder="Search by name, email, username, or roll no…"
                             className="bg-transparent outline-none flex-1 text-gray-700 text-sm"
                             value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
                         {searchTerm && <button onClick={() => setSearchTerm('')} className="text-gray-400 hover:text-gray-600"><X size={15} /></button>}
@@ -276,15 +339,15 @@ export default function ManageUsers() {
                                 <tbody className="bg-white divide-y divide-gray-100">
                                     {filtered.map(u => (
                                         <tr key={u._id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-5 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
+                                            <td className="px-5 py-4">
+                                                <div className="flex items-center gap-3">
                                                     <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center text-blue-700 font-bold text-sm flex-shrink-0">
                                                         {u.fullName?.charAt(0)?.toUpperCase() || '?'}
                                                     </div>
-                                                    <div className="ml-3">
+                                                    <div>
                                                         <div className="text-sm font-semibold text-gray-900">{u.fullName}</div>
                                                         <div className="text-xs text-gray-500 flex items-center gap-1"><Mail size={10} />{u.email}</div>
-                                                        <div className="text-xs text-gray-400">@{u.username}</div>
+                                                        {u.mobileNumber && <div className="text-xs text-gray-400 flex items-center gap-1"><Phone size={10} />{u.mobileNumber}</div>}
                                                     </div>
                                                 </div>
                                             </td>
@@ -294,8 +357,11 @@ export default function ManageUsers() {
                                             <td className="px-5 py-4">
                                                 {u.role === 'student' ? (
                                                     <div className="text-xs text-gray-600 space-y-0.5">
-                                                        {u.session ? <div className="flex items-center gap-1"><span className="text-gray-400">Session:</span> {u.session.name}</div> : <span className="text-gray-400">—</span>}
-                                                        {u.batch && <div className="flex items-center gap-1"><span className="text-gray-400">Batch:</span> {u.batch.name}</div>}
+                                                        {u.rollNumber && <div className="flex items-center gap-1"><span className="text-gray-400">Roll:</span> <span className="font-mono font-semibold">{u.rollNumber}</span></div>}
+                                                        {u.semester && <div className="flex items-center gap-1"><span className="text-gray-400">Sem:</span> {semesterLabel(u.semester)}</div>}
+                                                        {u.batch && <div className="flex items-center gap-1"><span className="text-gray-400">Batch:</span> {(u.batch as any).name || u.batch}</div>}
+                                                        {u.session && <div className="flex items-center gap-1"><span className="text-gray-400">Session:</span> {(u.session as any).name || u.session}</div>}
+                                                        {!u.rollNumber && !u.batch && <span className="text-gray-400">—</span>}
                                                     </div>
                                                 ) : <span className="text-xs text-gray-400">—</span>}
                                             </td>
@@ -303,10 +369,16 @@ export default function ManageUsers() {
                                                 <span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusBadge(u.status)}`}>{u.status}</span>
                                             </td>
                                             <td className="px-5 py-4 whitespace-nowrap text-right">
-                                                <button onClick={() => handleDelete(u._id, u.fullName)}
-                                                    className="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-colors" title="Delete user">
-                                                    <Trash2 size={16} />
-                                                </button>
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <button onClick={() => openEdit(u)}
+                                                        className="text-blue-400 hover:text-blue-600 p-1.5 hover:bg-blue-50 rounded-lg transition-colors" title="Edit user">
+                                                        <Pencil size={15} />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(u._id, u.fullName)}
+                                                        className="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition-colors" title="Delete user">
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -321,6 +393,134 @@ export default function ManageUsers() {
                     )}
                 </div>
             </div>
+
+            {/* ── Edit Slide-Over ───────────────────────────────────────────────── */}
+            {editUser && (
+                <div className="fixed inset-0 z-50 flex">
+                    {/* Backdrop */}
+                    <div className="flex-1 bg-black/40" onClick={() => setEditUser(null)} />
+                    {/* Panel */}
+                    <div className="w-full max-w-lg bg-white shadow-2xl flex flex-col overflow-hidden">
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-full flex items-center justify-center text-blue-700 font-bold">
+                                    {editUser.fullName?.charAt(0)?.toUpperCase()}
+                                </div>
+                                <div>
+                                    <h2 className="font-bold text-gray-900 text-base">{editUser.fullName}</h2>
+                                    <p className="text-xs text-gray-400">@{editUser.username} · {editUser.role}</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setEditUser(null)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400"><X size={18} /></button>
+                        </div>
+
+                        {/* Fields */}
+                        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+                            {/* Read-only info */}
+                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-xs text-gray-500 space-y-1.5">
+                                <p className="flex justify-between"><span>Registered</span><span className="font-mono">{new Date(editUser.createdAt).toLocaleDateString('en-IN')}</span></p>
+                                <p className="flex justify-between"><span>Email Verified</span><span className={editUser.isEmailVerified ? 'text-green-600 font-semibold' : 'text-red-500'}>{editUser.isEmailVerified ? '✓ Yes' : '✗ No'}</span></p>
+                                <p className="flex justify-between"><span>Profile Complete</span><span className={editUser.isProfileComplete ? 'text-green-600 font-semibold' : 'text-yellow-600'}>{editUser.isProfileComplete ? '✓ Yes' : 'Incomplete'}</span></p>
+                                <p className="flex justify-between"><span>Username</span><span className="font-mono">@{editUser.username}</span></p>
+                                {editUser.joiningMonth && <p className="flex justify-between"><span>Joined</span><span>{editUser.joiningMonth} {editUser.joiningYear}</span></p>}
+                                {editUser.courseEndDate && <p className="flex justify-between"><span>Course Ends</span><span>{new Date(editUser.courseEndDate).toLocaleDateString('en-IN')}</span></p>}
+                            </div>
+
+                            {/* Editable section header */}
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 uppercase tracking-widest">
+                                <Pencil size={11} /> Editable Fields
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="col-span-2">
+                                    <label className={labelClass}>Full Name</label>
+                                    <input className={inputClass} value={editForm.fullName || ''} onChange={e => setEditForm(p => ({ ...p, fullName: e.target.value }))} />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className={labelClass}>Email</label>
+                                    <div className="relative">
+                                        <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <input className={inputClass + ' pl-8'} type="email" value={editForm.email || ''} onChange={e => setEditForm(p => ({ ...p, email: e.target.value }))} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className={labelClass}>Mobile Number</label>
+                                    <div className="relative">
+                                        <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <input className={inputClass + ' pl-8'} maxLength={10} inputMode="tel" value={editForm.mobileNumber || ''} onChange={e => setEditForm(p => ({ ...p, mobileNumber: e.target.value }))} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className={labelClass}>Status</label>
+                                    <select className={inputClass} value={editForm.status || ''} onChange={e => setEditForm(p => ({ ...p, status: e.target.value as any }))}>
+                                        {['active', 'inactive', 'suspended', 'pending', 'under_review', 'rejected'].map(s => (
+                                            <option key={s} value={s}>{s}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className={labelClass}>Role</label>
+                                    <select className={inputClass} value={editForm.role || ''} onChange={e => setEditForm(p => ({ ...p, role: e.target.value as any }))}>
+                                        <option value="student">Student</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="employee">Employee</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+
+                                {/* Student-specific fields */}
+                                {editForm.role === 'student' && (
+                                    <>
+                                        <div>
+                                            <label className={labelClass}><span className="flex items-center gap-1"><BookOpen size={12} /> Roll Number</span></label>
+                                            <input className={inputClass + ' font-mono'} value={editForm.rollNumber || ''} onChange={e => setEditForm(p => ({ ...p, rollNumber: e.target.value }))} placeholder="e.g. 01, A-12" />
+                                        </div>
+                                        <div>
+                                            <label className={labelClass}><span className="flex items-center gap-1"><Calendar size={12} /> Semester</span></label>
+                                            <select className={inputClass} value={editForm.semester || ''} onChange={e => setEditForm(p => ({ ...p, semester: e.target.value ? Number(e.target.value) : undefined }))}>
+                                                <option value="">— Not Set —</option>
+                                                {Array.from({ length: 10 }, (_, i) => i + 1).map(s => (
+                                                    <option key={s} value={s}>
+                                                        {s === 1 ? '1st' : s === 2 ? '2nd' : s === 3 ? '3rd' : `${s}th`} Semester
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className={labelClass}>Session</label>
+                                            <select className={inputClass} value={editForm.sessionId || ''} onChange={e => setEditForm(p => ({ ...p, sessionId: e.target.value, batchId: '' }))}>
+                                                <option value="">— Select Session —</option>
+                                                {sessions.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className={labelClass}>Batch</label>
+                                            <select className={inputClass} value={editForm.batchId || ''} onChange={e => setEditForm(p => ({ ...p, batchId: e.target.value }))}>
+                                                <option value="">— Select Batch —</option>
+                                                {batches.map((b: any) => (
+                                                    <option key={b._id} value={b._id}>
+                                                        {b.name}{b.program ? ` (${b.program.code})` : ''}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-6 py-4 border-t border-gray-100 flex gap-3">
+                            <button onClick={() => setEditUser(null)} className="flex-1 py-2.5 border border-gray-200 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50 transition">Cancel</button>
+                            <button onClick={handleEditSave} disabled={editSubmitting}
+                                className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition disabled:opacity-60 flex items-center justify-center gap-2">
+                                {editSubmitting ? 'Saving…' : <><span>Save Changes</span><ChevronRight size={15} /></>}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

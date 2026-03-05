@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_TASK",
+  "summary": "Development stages checklist with 10 main stages and 3 future stages covering backend hardening, mobile polish, Terraform infrastructure, Ansible automation, Jenkins CI/CD, security testing, production deployment, monitoring, store submission, and post-launch tasks. Each stage has specific actionable checklist items.",
+  "updatedAt": "2026-02-07T01:44:22.555492141Z",
+  "version": "18"
+}

@@ -1,0 +1,48 @@
+# Implementation Plan - Headless PHP & React Admin
+
+The goal is to implement a strict "React Frontend + PHP API" architecture.
+All backend features must have a React Interface.
+
+## User Review Required
+> [!IMPORTANT]
+> The previous "PHP Admin Panel" at `/php_backend/admin/` will be superseded by the new React Admin Routes at `/admin`.
+> You must ensure `vite.config.ts` proxy is active for this to work locally.
+
+## Proposed Changes
+
+### 1. API Extensions (`php_backend/api/`)
+We will create JSON endpoints to replace the HTML pages.
+
+#### [NEW] `login.php`
+- Accepts POST `{email, password}`.
+- Returns JSON `{success: true, role: 'admin', user: {...}}`.
+- Sets PHP Session Cookie.
+
+#### [NEW] `auth_check.php`
+- Returns current logged-in user state (for React caching).
+
+#### [NEW] `admin/stats.php`
+- Returns JSON stats for the Admin Dashboard.
+
+#### [NEW] `admin/notices_crud.php`
+- GET/POST/DELETE for notices.
+
+### 2. React Components (`src/pages/`)
+#### [NEW] `Login.tsx`
+- Form for Email/Password.
+- Redirects based on Role.
+
+#### [NEW] `admin/AdminDashboard.tsx`
+- Fetches stats from `api/admin/stats.php`.
+- Shows Overview.
+
+#### [NEW] `admin/ManageNotices.tsx`
+- CRUD UI for notices.
+
+#### [NEW] `components/NotificationBell.tsx`
+- Polls `api/notifications.php`.
+
+## Verification Plan
+1.  **Login**: Use `Login.tsx` to log in as 'admin'.
+2.  **Dashboard**: Verify Admin Dashboard allows viewing stats.
+3.  **Notices**: Verify creating a notice in React Admin appears in "Public Notices".

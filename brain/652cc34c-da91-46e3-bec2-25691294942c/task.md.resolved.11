@@ -1,0 +1,19 @@
+# Tasks
+
+- [/] Explore project structure and identify key files <!-- id: 0 -->
+- [ ] Analyze code for potential problems <!-- id: 1 -->
+    - [x] Install dependencies (`npx pnpm install`) <!-- id: 1.1 -->
+    - [x] Run linting (`npx pnpm run lint`) - Failed due to configuration/dependency issues <!-- id: 1.2 -->
+    - [x] Run build (`npx pnpm run build`) - Failed due to 'sharp' module issues <!-- id: 1.3 -->
+    - [x] Check for other obvious code issues <!-- id: 1.4 -->
+- [ ] Report findings to user <!-- id: 2 -->
+- [/] Fix configuration and scripts <!-- id: 3 -->
+    - [x] Update [package.json](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/package.json) lint script <!-- id: 3.1 -->
+- [/] Fix source code issues <!-- id: 4 -->
+    - [x] Remove redundant [NavigateWithScroll](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/NavigateWithScroll.tsx#20-33) from [AppRoutes.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/routes/AppRoutes.tsx) <!-- id: 4.1 -->
+    - [x] Optimize [HeroSlider.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/HeroSlider.tsx) <!-- id: 4.2 -->
+- [/] Fix dependency issues <!-- id: 5 -->
+    - [/] Rebuild `sharp` (Clean install) <!-- id: 5.1 -->
+- [ ] Verify fixes <!-- id: 6 -->
+    - [ ] Run linting <!-- id: 6.1 -->
+    - [ ] Run build <!-- id: 6.2 -->

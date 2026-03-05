@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "This plan details the implementation of a Bulk Delete feature for the Gallery functionality.\nIt includes:\n1.  **Backend Update**: Modifying `gallery_delete.php` to accept an array of IDs for batch processing.\n2.  **Frontend Update**: Enhancing `ManageGallery.tsx` with a Selection Mode, checkboxes, and a bulk delete action bar.\nThis addresses the user's request for \"out of box\" thinking by significantly improving administrative efficiency.",
+  "updatedAt": "2026-01-28T20:53:42.434184348Z",
+  "version": "3"
+}

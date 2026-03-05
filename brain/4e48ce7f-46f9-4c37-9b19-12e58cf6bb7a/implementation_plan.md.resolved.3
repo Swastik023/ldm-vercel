@@ -1,0 +1,99 @@
+# Academic Structure Upgrade
+
+Add full academic fields to student registration: **Class** (Batch + Session years), **Roll Number**, with compound uniqueness enforcement. Build on the already-existing [Batch](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/register/page.tsx#11-12), [User](file:///media/swastik/focus/ldm%20feb/src/types/next-auth.d.ts#13-19), and [StudentDocuments](file:///media/swastik/focus/ldm%20feb/src/models/StudentDocuments.ts#3-17) models without breaking the existing academic/teacher/attendance system.
+
+## Key Design Decisions
+
+> [!IMPORTANT]
+> The existing [Batch](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/register/page.tsx#11-12) model in [Academic.ts](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts) is complex (links to Program, Session, Assignments). We will **keep it untouched** for the teacher/attendance system. The registration flow uses Batch name only — we add a separate lightweight `Class` model that holds `batchId + sessionFrom + sessionTo`.
+
+> [!NOTE]
+> A **Class** is auto-created on first registration into that Batch+Session combination. Class name is auto-generated: `BatchName (SessionFrom-SessionTo)` e.g. `D.Pharma (2024-2026)`.
+
+## Proposed Changes
+
+---
+
+### 1. New Model
+
+#### [NEW] [Class.ts](file:///media/swastik/focus/ldm%20feb/src/models/Class.ts)
+```ts
+IClass { batchId, sessionFrom, sessionTo, className }
+// Unique index: { batchId, sessionFrom, sessionTo }
+```
+
+---
+
+### 2. Model Updates
+
+#### [MODIFY] [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts)
+Add fields: `classId` (ref Class, required for students), `rollNumber` (String).
+Add compound index: `{ classId, rollNumber }` unique.
+
+#### [MODIFY] [next-auth.d.ts](file:///media/swastik/focus/ldm%20feb/src/types/next-auth.d.ts)
+No changes needed — `isProfileComplete` already in JWT interface.
+
+---
+
+### 3. API Changes
+
+#### [MODIFY] [register/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts)
+- Accept: `fullName, email, mobileNumber, batchId, sessionFrom, sessionTo, rollNumber, password`
+- Validate: `sessionFrom < sessionTo`
+- Find-or-create the `Class` doc for that batch + session
+- Check duplicate roll number within the class (before creating user)
+- Save `classId + rollNumber` on User
+
+#### [NEW] [api/public/classes/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/classes/route.ts)
+`GET ?batchId=X` — returns existing classes for batch (to populate session dropdowns)
+
+#### [MODIFY] [api/student/dashboard/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/dashboard/route.ts)
+Include `className, rollNumber, sessionFrom, sessionTo` in profile response.
+
+#### [MODIFY] [api/admin/students/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/students/route.ts)
+Add filters: `?classId=`, `?batchId=`, `?sessionFrom=`, `?rollNumber=`
+
+---
+
+### 4. Frontend Changes
+
+#### [MODIFY] [register/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/register/page.tsx)
+Form Step 0 adds:
+- Session From (year picker, 4 digits)
+- Session To (year picker, validate > sessionFrom)
+- Roll Number (text, unique hint)
+- Auto-preview: `"Your class: D.Pharma (2024-2026)"`
+
+#### [MODIFY] [student/profile/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/profile/page.tsx)
+Show Class Name + Roll Number + Session in Personal Info section.
+
+#### [MODIFY] [admin/students/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28admin%29/admin/students/page.tsx)
+Add: Batch filter, Session filter, Roll Number search, Group-by-Class view, Roll Number column.
+
+---
+
+### 5. Auth (Google flow)
+
+#### [MODIFY] [auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts)
+Google sign-in creates user without classId/rollNumber (they'll fill these on `/complete-profile`).
+
+#### [MODIFY] [complete-profile/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/complete-profile/page.tsx)
+Google users (no classId yet) see the extra panel: Batch + Session From + Session To + Roll Number.
+
+#### [MODIFY] [api/auth/complete-profile/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/complete-profile/route.ts)
+If `batchId + sessionFrom + sessionTo + rollNumber` are present, resolve/create Class and set `classId + rollNumber` on the user before marking `isProfileComplete = true`.
+
+---
+
+## Verification Plan
+
+### Automated
+- `npm run dev` — check no TypeScript build errors
+- Register with email → check DB for Class doc + User.classId + User.rollNumber
+- Try registering with same batch + session + roll number → expect 409 conflict
+
+### Manual
+- Register two students in same batch/session → second student with same roll number should be blocked
+- Google sign-in → redirected to `/complete-profile` → can select batch/session/roll → completes
+- Student dashboard → shows Class Name, Roll Number, Session
+- Admin → filter by batch → see students grouped with roll numbers

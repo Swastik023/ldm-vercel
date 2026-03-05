@@ -1,0 +1,182 @@
+# MCQ Tests + Website Improvements — Implementation Plan
+
+This covers 8 feature areas. Work is ordered by complexity — quick fixes first, complex features last.
+
+---
+
+## Quick Summary of What's Being Built
+
+| # | Area | New / Fix | Complexity |
+|---|---|---|---|
+| 1 | MCQ Test system (admin bulk paste + student UI) | New | High |
+| 2 | Navigation — add Register link | Fix | Low |
+| 3 | Course `[id]` page — Next.js 15 params bug | Fix | Low |
+| 4 | Map — replace iframe with correct LDM location | Fix | Trivial |
+| 5 | Fee & Discount management system | New | High |
+| 6 | Homepage Slider — admin upload control | New | Medium |
+| 7 | Google Analytics GA4 | New | Low |
+| 8 | Apply Now form improvements | Improve | Medium |
+
+> [!NOTE]
+> **Full audit (point 9)** is done as a final pass after all features are complete. Specific bugs like the course page error are fixed in their respective phases.
+
+---
+
+## Phase 1 — MCQ Test System
+
+### Database Models
+
+#### [NEW] `src/models/Test.ts`
+```
+title, duration (minutes), isActive, createdBy,
+questions: [{ questionText, options: [{ label, text }], correctAnswer }]
+```
+
+#### [NEW] `src/models/TestAttempt.ts`
+```
+testId, studentId, answers: [{ questionIndex, selectedOption }],
+score, totalQuestions, percentage, submittedAt
+```
+
+### Parser Utility — `src/lib/mcqParser.ts`
+Reusable pure function `parseMCQText(raw: string)` that handles:
+- `Q1.` / `Q 1.` / `1.` prefixes
+- Options: `A)`, `A.`, `(A)` formats
+- `Answer: B` / `Ans: B` / `Correct: B` variants
+- Validates completeness (all 4 options + answer)
+- Deduplicates identical question text
+
+### Admin APIs
+- `POST /api/admin/tests` — accepts `{ title, duration, rawText }`, parses MCQ, saves
+- `GET /api/admin/tests` — list all tests + attempt counts
+- `GET /api/admin/tests/[id]` — test detail + all student attempts
+- `PATCH /api/admin/tests/[id]` — toggle isActive
+
+### Student APIs
+- `GET /api/student/tests` — list active tests
+- `GET /api/student/tests/[id]` — get test (no answers exposed)
+- `POST /api/student/tests/[id]/submit` — submit answers, compute score, save attempt
+
+### Admin Frontend
+#### [NEW] `/admin/tests/page.tsx` — List all tests, see attempt counts, toggle active
+#### [NEW] `/admin/tests/create/page.tsx` — Create test form with bulk MCQ textarea
+
+### Student Frontend
+#### [NEW] `/student/tests/page.tsx` — Card list of available tests
+#### [NEW] `/student/tests/[id]/page.tsx` — Take test (radio buttons, countdown timer)
+#### [NEW] `/student/tests/[id]/result/page.tsx` — Score + per-question review
+
+---
+
+## Phase 2 — Navigation Fixes
+
+#### [MODIFY] `src/components/layout/PublicNavbar.tsx`
+- Add "Register" link to the navbar (next to "Apply Now")
+- Verify "Apply Now" button correctly points to `/collect-info`
+
+#### [MODIFY] `src/app/(public)/courses/[id]/page.tsx`
+- Fix Next.js 15 `params` type from `{ id: string }` → `Promise<{ id: string }>`
+- Same fix for `generateMetadata` function
+
+---
+
+## Phase 3 — Map Update
+
+#### [MODIFY] `src/app/(public)/contact/page.tsx`
+Replace the old map iframe `src` with:
+```
+https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3465.3816864176983!2d76.9398064755409!3d29.70870117509437...
+```
+Keep the existing responsive wrapper.
+
+---
+
+## Phase 4 — Fee & Discount Management
+
+> [!IMPORTANT]
+> The existing `/admin/finance` pages handle salary/expense. This new fee system is a separate clean module.
+
+#### [NEW] `src/models/FeeRecord.ts`
+Central model with: `studentId`, `course`, `baseCoursePrice`, `discountPercent`, `discountAmount`, `finalFees`, `amountPaid`, `remainingAmount`, `payments: []`
+
+#### Calculation Logic (centralized utility)
+```ts
+// src/lib/feeCalculator.ts
+calcFees(basePrice, discountPercent?, flatDiscount?) → { discountAmount, finalFees }
+```
+
+#### [NEW] Admin APIs: `/api/admin/finance/fee-records/`
+- `GET` — list with filters (course, status, date)
+- `POST` — create record (validates discount ≤ basePrice)
+- `PATCH /[id]` — update discount or add payment entry
+
+#### [NEW] Student API: `/api/student/fees` — own record only
+
+#### [NEW] Admin page: `/admin/finance/fees/page.tsx`
+- Revenue summary cards (total collected, pending dues)
+- Fee records table with filters
+- "Add Record" modal with discount calculator preview
+- "Add Payment" drawer
+
+#### [NEW] Student fee panel (added to student dashboard sidebar)
+
+---
+
+## Phase 5 — Homepage Slider Admin Control
+
+#### [NEW] `src/models/SliderImage.ts`
+`{ url, publicId, title, subtitle, ctaText, order, isActive }`
+
+#### [NEW] Admin APIs: `/api/admin/slider/`
+- `GET`, `POST` (Cloudinary upload), `PATCH /[id]`, `DELETE /[id]`
+
+#### [NEW] Admin page: `/admin/slider/page.tsx`
+- Image grid with drag-to-reorder (or up/down arrows), activate/deactivate toggle
+- Upload via Cloudinary (existing `cloudinary.ts` lib)
+
+#### [MODIFY] `src/components/public/HeroSlider.tsx`
+- Fetch slides from DB, fall back to static array if empty
+
+---
+
+## Phase 6 — Google Analytics
+
+#### [MODIFY] `src/app/layout.tsx`
+Add GA4 `<Script>` tag with measurement ID.
+
+#### [MODIFY] Key pages (collect-info, courses, contact)
+Add `gtag('event', ...)` calls:
+- Course detail visit → `course_view`
+- Apply Now click → `apply_click`
+- Contact form submit → `contact_submit`
+
+> [!IMPORTANT]
+> **Please provide your GA4 Measurement ID** (format: `G-XXXXXXXXXX`). I'll use a placeholder `G-XXXXXXXXXX` for now that you can replace.
+
+---
+
+## Phase 7 — Apply Now Form Improvements
+
+#### [MODIFY] `src/app/(public)/collect-info/page.tsx`
+Add full professional fields: Name, Phone, Email, Course Selection (dropdown of all courses), Qualification, Current Address, Message. Stronger validation. Success/error states.
+
+#### [MODIFY] `/api/public/contact` or new `ApplicationForm` model
+Store all admission enquiry fields properly.
+
+---
+
+## Verification Plan
+
+### After each phase:
+- `npm run build` to check TypeScript errors
+- Manual test in browser
+
+### Full audit checklist (Phase 8):
+- [ ] Every nav link works
+- [ ] All course cards → detail pages load
+- [ ] Register → OTP → Dashboard flow
+- [ ] MCQ test: create → take → results
+- [ ] Fee record: create → add payment → student view
+- [ ] Map shows LDM location
+- [ ] Slider updates reflect on homepage
+- [ ] GA events fire in browser Network tab

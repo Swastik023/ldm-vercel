@@ -1,0 +1,9 @@
+# Rate Limiting, Business Logic & Dashboard Audit
+
+- [/] Scan for rate limiting (existing or missing)
+- [ ] Audit route handler patterns (error handling, auth patterns)
+- [ ] Audit business logic (attendance, tests, fees, documents)
+- [ ] Audit dashboard connections (student/teacher/admin data flow)
+- [ ] Document findings in implementation plan
+- [ ] Fix identified issues
+- [ ] Build + Push

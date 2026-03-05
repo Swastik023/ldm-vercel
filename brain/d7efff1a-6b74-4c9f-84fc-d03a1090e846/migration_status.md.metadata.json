@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Post-migration status report showing which frontend features now work with backend, which need new backend endpoints, and testing recommendations.",
+  "updatedAt": "2026-02-01T02:37:01.389609765Z"
+}

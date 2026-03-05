@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Updated walkthrough to include the critical fix for the Service Worker (PWA) cache issue.",
+  "updatedAt": "2026-01-28T17:45:09.818838088Z",
+  "version": "1"
+}

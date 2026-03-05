@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Walkthrough of the QA Automation setup, including Playwright installation, test suite implementation, and instructions for running tests locally due to cloud environment constraints.",
+  "updatedAt": "2026-02-10T22:34:20.530227922Z",
+  "version": "2"
+}

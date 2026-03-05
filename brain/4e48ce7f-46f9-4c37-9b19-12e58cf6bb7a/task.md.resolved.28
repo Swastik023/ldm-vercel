@@ -1,0 +1,11 @@
+# Data Validation Audit
+
+- [x] Scan ALL API routes for missing input validation edge cases
+- [x] Document all findings in an implementation plan
+- [x] Fix all identified validation gaps
+  - [x] Auth: register, verify-otp
+  - [x] Finance: expenses, fee-structures, salary, payments
+  - [x] Admin CRUD: students PATCH, marquee, settings
+  - [x] Student/Job: referral, document requirements
+- [x] Build verification
+- [x] Push (`893c1d1`)

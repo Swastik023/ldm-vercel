@@ -1,0 +1,10 @@
+# Model References & Linking Audit
+
+- [x] Audit all Mongoose model ObjectId references (50+ refs across 35 models)
+- [x] Check all populate chains for missing/broken links
+- [x] Find routes that write references without validating target exists
+- [/] Fix identified issues:
+  - [/] Approve flow: trigger autoCreateStudentFee + auto-create Class on approval
+  - [ ] Approve GET: populate session, programId
+  - [ ] Register: auto-create Class record for student
+- [ ] Build + Push

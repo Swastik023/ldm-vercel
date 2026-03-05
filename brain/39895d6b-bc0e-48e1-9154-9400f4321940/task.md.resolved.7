@@ -1,0 +1,16 @@
+# Connecting to Stitch MCP
+
+- [x] Ensure only one MCP config exists <!-- id: 10 -->
+    - [x] Rename `~/.gemini/antigravity/mcp_config.json` to `.bak` <!-- id: 11 -->
+    - [x] Rename `~/.gemini/antigravity/mcp.json` to `.bak` (to be safe) <!-- id: 12 -->
+- [x] Update workspace MCP config [/.gemini/mcp.json](file:///media/swastik/focus/ldm%20new%20updae%202.0/.gemini/mcp.json) <!-- id: 13 -->
+    - [x] Use `url` instead of `serverUrl` <!-- id: 14 -->
+    - [x] Use `Authorization: Bearer` header <!-- id: 15 -->
+- [ ] User to perform HARD RESTART <!-- id: 16 -->
+- [x] Verify connection with `list_resources` <!-- id: 17 -->
+    - [x] `list_resources` failed (Method not supported by server) <!-- id: 18 -->
+    - [x] Verified `tools/list` via curl (SUCCESS) <!-- id: 19 -->
+    - [x] Verify `tools/call` (list_projects) via curl <!-- id: 20 -->
+        - [x] Failed with `Authorization` header <!-- id: 21 -->
+        - [x] Succeeded with `X-Goog-Api-Key` header <!-- id: 22 -->
+- [x] Revert [mcp.json](file:///home/swastik/.gemini/antigravity/mcp.json) to use `X-Goog-Api-Key` <!-- id: 23 -->

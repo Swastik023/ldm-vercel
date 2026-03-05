@@ -1,0 +1,75 @@
+# Final Validation Phase — E2E Logic & Usability Tests
+
+System context: ~50 internal students, low load. Focus: **logical correctness and working UI behavior only**.
+
+## Gap Analysis
+
+| Flow | Existing E2E | Gap |
+|------|------------|-----|
+| Registration → OTP | None | Multi-step form interaction, validation, OTP UI |
+| Admin fee creation | Page-load smoke only | Form submit, duplicate guard, invalid input |
+| Payment recording | Page-load smoke only | Status transition (unpaid → partial → paid) |
+| Attendance mark + lock | Page-load smoke only | Mark, lock toggle, locked-edit rejection |
+| Input validation | None | Negative numbers, empty fields, double-click |
+| Error messages | None | User-facing error visibility on failure |
+
+## Proposed Changes
+
+### E2E Tests (Playwright)
+
+> [!NOTE]
+> All E2E tests require the dev server running (`npm run dev`) with a seeded database. They use existing auth fixtures for admin/student sessions.
+
+---
+
+#### [NEW] [register-flow.spec.ts](file:///media/swastik/focus/ldm%20feb/tests/e2e/auth/register-flow.spec.ts)
+- **Step 1 validation**: Submit with empty fields → error message visible
+- **Step progression**: Fill all fields → advances to step 2
+- **Step 2 validation**: Empty academic fields → blocked
+- **OTP UI renders**: After registration, OTP input boxes appear
+- **Navigability**: "Login" link navigates to `/login`
+
+---
+
+#### [NEW] [fee-management.spec.ts](file:///media/swastik/focus/ldm%20feb/tests/e2e/admin/fee-management.spec.ts)
+Uses `adminTest` fixture.
+- **Page loads with data or empty state**: No blank screen
+- **Create fee record modal**: Add button opens form/modal
+- **Empty form submit blocked**: Required fields show validation
+- **Negative price rejected**: Numeric guard on base price
+- **Payment modal opens**: Click pay on a record → modal appears
+- **Zero/negative payment blocked**: Amount field validation
+
+---
+
+#### [NEW] [attendance-flow.spec.ts](file:///media/swastik/focus/ldm%20feb/tests/e2e/admin/attendance-flow.spec.ts)
+Uses `adminTest` fixture.
+- **Page loads**: Attendance page renders without crash
+- **Date picker and filters render**: Subject/batch selectors visible
+- **No crash on empty state**: No students for date → shows message, not error
+
+---
+
+#### [NEW] [input-validation.spec.ts](file:///media/swastik/focus/ldm%20feb/tests/e2e/validation/input-validation.spec.ts)
+Uses `adminTest` fixture.
+- **Expense form**: Empty required fields → submit blocked
+- **Expense form**: Amount ≤ 0 → validation error visible
+- **Salary form**: Deduction > base amount → error
+- **Double-click protection**: Submit button disabled after first click (via button disabled state or loading indicator)
+- **Error messages**: All form errors use visible user-facing text (not console-only)
+
+## Verification Plan
+
+```bash
+# Run only new validation tests
+npx playwright test tests/e2e/auth/register-flow.spec.ts --project=chromium
+npx playwright test tests/e2e/admin/fee-management.spec.ts --project=chromium
+npx playwright test tests/e2e/admin/attendance-flow.spec.ts --project=chromium
+npx playwright test tests/e2e/validation/input-validation.spec.ts --project=chromium
+
+# Run all E2E tests
+npx playwright test --project=chromium
+```
+
+> [!IMPORTANT]
+> These tests interact with real UI. They require `npm run dev` running with a MongoDB database. Auth fixtures (`adminTest`, `studentTest`) need valid session state files in `.auth/`.

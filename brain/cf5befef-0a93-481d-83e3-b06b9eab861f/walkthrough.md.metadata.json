@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Documenting the simplification of the PremiumBookReader interface. The walkthrough details the removal of sidebars, Table of Contents, Study Tools, and Related Modules to create a clean, content-centric reading experience. Visual verification is included.",
+  "updatedAt": "2026-02-20T18:56:29.146532773Z",
+  "version": "7"
+}

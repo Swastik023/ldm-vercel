@@ -1,0 +1,40 @@
+# Task: Clone and Setup LDM Repository
+
+- [x] Clone repository from https://github.com/saatvik-29/ldm.git <!-- id: 0 -->
+- [x] Initialize project environment (if applicable) <!-- id: 1 -->
+- [x] Configure .env file <!-- id: 2 -->
+- [x] Verify application starts <!-- id: 3 -->
+- [x] Switch remote origin to git@github.com:Swastik023/ldm-vercel.git <!-- id: 4 -->
+- [x] Push main branch to new origin <!-- id: 5 -->
+- [x] Re-initialize git repository after .git deletion <!-- id: 6 -->
+- [x] Make app Vercel-ready (TS fix, vercel.json) <!-- id: 7 -->
+- [x] Commit and push Employee Layout <!-- id: 8 -->
+- [x] Troubleshoot Hostinger DNS conflict <!-- id: 9 -->
+- [x] Update database seed data with real LDM College info <!-- id: 10 -->
+- [x] Restore missing images from temp folder <!-- id: 11 -->
+- [x] Create comprehensive Client Documentation and SOPs <!-- id: 12 -->
+    - [x] Research and map all ERP features <!-- id: 13 -->
+    - [x] Draft User Manual for Admin, Teacher, and Student roles <!-- id: 14 -->
+    - [x] Create Standard Operating Procedures (SOPs) for Finance and Gallery <!-- id: 15 -->
+    - [x] Review and finalize documentation with user <!-- id: 16 -->
+- [x] Perform Comprehensive End-to-End Logic Review <!-- id: 17 -->
+    - [x] Review Academic and User flow <!-- id: 18 -->
+    - [x] Review Finance flow (Fees, Expenses, Salaries) <!-- id: 19 -->
+    - [x] Review Attendance and Library flows <!-- id: 20 -->
+    - [x] Identify gaps and propose fixes for real-world viability <!-- id: 21 -->
+- [x] Fix Finance "Invisible Defaulter" Logic <!-- id: 22 -->
+    - [x] Auto-generate FeePayment records when FeeStructure is created <!-- id: 23 -->
+- [x] Fix Academic Semester Progression <!-- id: 24 -->
+    - [x] Add `current_semester` to [Batch](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#31-40) schema <!-- id: 25 -->
+    - [x] Create API to promote a batch to the next semester <!-- id: 26 -->
+- [x] Build Exams and Results Module <!-- id: 27 -->
+    - [x] Create [Result.ts](file:///media/swastik/focus/ldm%20feb/src/models/Result.ts) Mongoose model <!-- id: 28 -->
+    - [x] Implement API endpoint for Teachers to enter marks <!-- id: 29 -->
+    - [x] Implement API endpoint for Students to view report card <!-- id: 30 -->
+- [ ] Implement Root Admin & Secure Finance Architecture <!-- id: 32 -->
+    - [ ] Add `is_root` flag to User model and distinguish from regular admins <!-- id: 33 -->
+    - [ ] Create `AuditLog` model to track all sensitive finance actions <!-- id: 34 -->
+    - [ ] Prevent hard deletions of FeePayments and Expenses (use soft delete/cancellation) <!-- id: 35 -->
+    - [ ] Implement period locking for old financial records <!-- id: 36 -->
+    - [ ] Update Finance APIs to enforce Root vs Power Admin privileges <!-- id: 37 -->
+

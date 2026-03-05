@@ -1,0 +1,111 @@
+# Google OAuth + Email OTP Dual Authentication
+
+Add Google OAuth login alongside existing credentials/OTP flow. Email is the unique identifier — no duplicate users across providers.
+
+## Proposed Changes
+
+### Environment Variables
+
+#### [MODIFY] [.env](file:///media/swastik/focus/ldm%20feb/.env)
+Add Google OAuth credentials and update SMTP password:
+```diff
++GOOGLE_CLIENT_ID=451721477846-8gum8cvjnp1c8nh8nnvpqbkmnv6ak947.apps.googleusercontent.com
++GOOGLE_CLIENT_SECRET=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
+
+-SMTP_PASS=Apples@023
++SMTP_PASS=Ldmadmin@007
+```
+
+---
+
+### User Model
+
+#### [MODIFY] [User.ts](file:///media/swastik/focus/ldm%20feb/src/models/User.ts)
+- Make `password` **not required** (Google users have no password)
+- Add `provider` field: `'credentials' | 'google'` (default: `'credentials'`)
+- Add optional `image` field for Google profile picture
+
+```diff
+-    password: { type: String, required: true },
++    password: { type: String },
++    provider: { type: String, enum: ['credentials', 'google'], default: 'credentials' },
++    image: { type: String },
+```
+
+---
+
+### Auth Configuration
+
+#### [MODIFY] [auth.ts](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts)
+Add `GoogleProvider` alongside existing `CredentialsProvider`. Add a `signIn` callback that handles auto-registration:
+
+**Providers array**: Add GoogleProvider with env-based client ID/secret.
+
+**`signIn` callback** (new):
+```
+if (account.provider === 'google') {
+  1. Find user by email
+  2. If exists → allow sign-in (return true)
+  3. If not exists → create new user with:
+     - email, fullName from Google profile
+     - role: 'student', provider: 'google'
+     - username: derived from email (before @)
+     - no password
+  4. Return true
+}
+```
+
+**[jwt](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#45-53) callback** (update): For Google sign-ins, look up the user from DB to get `role`, `username`, [id](file:///media/swastik/focus/ldm%20feb/src/context/AuthContext.tsx#61-70) — since Google doesn't provide these.
+
+**[session](file:///media/swastik/focus/ldm%20feb/src/lib/auth.ts#53-61) callback**: No changes needed (already reads from token).
+
+---
+
+### Login UI
+
+#### [MODIFY] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(auth)/login/page.tsx)
+- Add "Sign in with Google" button that calls `signIn('google')`
+- Add visual divider ("or") between the existing form and the Google button
+- Add Google icon (inline SVG)
+
+---
+
+### NextAuth Types
+
+#### [MODIFY] [next-auth.d.ts](file:///media/swastik/focus/ldm%20feb/src/types/next-auth.d.ts)
+No changes needed — `role`, `username`, [id](file:///media/swastik/focus/ldm%20feb/src/context/AuthContext.tsx#61-70) already declared.
+
+## Auth Flow Diagram
+
+```mermaid
+graph TD
+    A[Login Page] --> B{Method?}
+    B -->|Username + Password| C[CredentialsProvider]
+    B -->|Google Button| D[GoogleProvider]
+    C --> E[Check DB: username match?]
+    E -->|Yes + password match| F[Return user token]
+    E -->|No| G[Error: Invalid credentials]
+    D --> H[Google OAuth consent]
+    H --> I[signIn callback]
+    I --> J{User exists by email?}
+    J -->|Yes| K[Use existing user]
+    J -->|No| L[Auto-create student user]
+    K --> F
+    L --> F
+    F --> M[JWT + Session]
+    M --> N[Role-based redirect]
+```
+
+## Verification Plan
+
+### Automated
+```bash
+npm run test:unit   # Existing 108 tests must still pass
+```
+
+### Browser
+1. Google login → redirects to correct dashboard
+2. Credentials login → still works as before
+3. Google login with existing email → uses existing user (no duplicate)
+4. Google login with new email → creates student user
+5. Logout works for both methods

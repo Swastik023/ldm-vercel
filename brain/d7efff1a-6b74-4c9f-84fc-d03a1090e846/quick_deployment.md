@@ -1,0 +1,279 @@
+# Quick Deployment Walkthrough - Hostinger
+
+## 🚀 Fast Track (30 minutes)
+
+### Prerequisites
+- Hostinger account with cPanel access
+- Domain ldmcollege.com configured
+- Local site tested and working
+
+---
+
+## Step-by-Step Deployment
+
+### 1. Prepare Files (5 min)
+
+```bash
+cd "/media/swastik/focus/ldm new updae 2.0"
+
+# Run automated preparation script
+./prepare_deployment.sh
+```
+
+**Output:**
+- `deploy_package/` folder created
+- `ldm_production_YYYYMMDD.sql.gz` database export
+- `DEPLOY_INSTRUCTIONS.txt` checklist
+
+---
+
+### 2. Update Configuration (2 min)
+
+**Edit:** `deploy_package/api/index.php`
+
+**Lines 43-47 - Database:**
+```php
+$db_host = 'localhost';
+$db_name = 'u542293952_gibbon_ldm';  // Your Hostinger DB
+$db_user = 'u542293952_ldm_api';      // Your DB user
+$db_pass = 'YOUR_STRONG_PASSWORD';    // SET THIS!
+```
+
+**Line 52 - JWT Secret:**
+```php
+// Generate new secret:
+// openssl rand -hex 32
+
+$jwtSecret = 'PASTE_64_CHAR_SECRET_HERE';
+```
+
+---
+
+### 3. Create Hostinger Database (3 min)
+
+**In cPanel:**
+1. **MySQL Databases** → Create database: `u542293952_gibbon_ldm`
+2. **Add New User:** `u542293952_ldm_api` with strong password
+3. **Add User to Database** → Grant **ALL PRIVILEGES**
+
+---
+
+### 4. Import Database (5 min)
+
+**In cPanel:**
+1. **phpMyAdmin** → Select `u542293952_gibbon_ldm`
+2. **Import** tab
+3. Choose `ldm_production_YYYYMMDD.sql.gz`
+4. Click **Go**
+5. Wait for success message
+
+---
+
+### 5. Upload Files (10 min)
+
+**Via File Manager (cPanel):**
+
+Navigate to: `/public_html/ldmcollege.com/`
+
+**Upload:**
+- `deploy_package/public/*` → To `/public_html/ldmcollege.com/` (root)
+- `deploy_package/api/` → To `/public_html/ldmcollege.com/api/`
+
+**Final Structure:**
+```
+/public_html/ldmcollege.com/
+├── api/               ← Upload this folder
+├── uploads/           ← Upload this folder
+├── assets/            ← From public/
+├── index.html         ← From public/
+└── .htaccess         ← From public/
+```
+
+---
+
+### 6. Set Permissions (2 min)
+
+**In File Manager:**
+- Right-click `api/` → Permissions → `755`
+- Right-click `uploads/` → Permissions → `755` (**Recursive**)
+
+**Or via SSH:**
+```bash
+chmod -R 755 api/
+chmod -R 755 uploads/
+```
+
+---
+
+### 7. Install Composer (3 min)
+
+**Option A - Upload vendor folder:**
+```bash
+# On local machine
+cd deploy_package/api
+composer install --no-dev --optimize-autoloader
+
+# Upload api/vendor/ folder via FTP
+```
+
+**Option B - SSH (if available):**
+```bash
+ssh u542293952@ldmcollege.com
+cd public_html/ldmcollege.com/api
+composer install --no-dev
+```
+
+---
+
+### 8. Test Deployment (5 min)
+
+#### Test API
+```bash
+# Health check
+curl https://ldmcollege.com/api/health
+
+# Should return: {"status":"healthy",...}
+```
+
+#### Test Login
+```bash
+curl -X POST https://ldmcollege.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"password"}'
+
+# Should return JWT token
+```
+
+#### Test Frontend
+1. Open: https://ldmcollege.com
+2. Click **Login**
+3. Use admin credentials
+4. Check **Admin Dashboard**
+
+---
+
+## ✅ Verification Checklist
+
+- [ ] API health check returns `{"status":"healthy"}`
+- [ ] Login returns JWT token
+- [ ] Frontend loads at https://ldmcollege.com
+- [ ] Login redirects to dashboard
+- [ ] Dashboard shows statistics
+- [ ] Gallery page loads
+- [ ] Upload image works
+- [ ] Notices display
+- [ ] Contact form submits
+- [ ] SSL certificate active (green padlock)
+
+---
+
+## 🚨 Common Issues & Fixes
+
+### Issue: 500 Internal Server Error
+**Cause:** PHP syntax error or wrong permissions  
+**Fix:**
+```bash
+chmod 755 api/
+chmod 644 api/index.php
+# Check error log: cPanel → Error Logs
+```
+
+### Issue: Database Connection Failed
+**Cause:** Wrong credentials  
+**Fix:** Double-check `api/index.php` lines 43-47 match cPanel database
+
+### Issue: API Returns Empty
+**Cause:** .htaccess not working  
+**Fix:** Verify `.htaccess` exists in root and API rewrite rules present
+
+### Issue: Upload Fails
+**Cause:** Folder permissions  
+**Fix:**
+```bash
+chmod -R 755 uploads/
+# Check PHP limits in cPanel → Select PHP Version → Options
+```
+
+### Issue: Frontend Routes 404
+**Cause:** Missing .htaccess rewrite rules  
+**Fix:** Ensure `.htaccess` in root has React Router rules
+
+---
+
+## 🔒 Post-Deployment Security
+
+### 1. Change Admin Password
+```sql
+-- In phpMyAdmin
+UPDATE gibbonPerson 
+SET passwordStrong = '$2y$10$NEW_HASH_HERE'
+WHERE username = 'admin';
+
+-- Generate hash:
+-- php -r "echo password_hash('YOUR_NEW_PASSWORD', PASSWORD_DEFAULT);"
+```
+
+### 2. Enable Free SSL
+cPanel → **SSL/TLS Status** → Run AutoSSL for ldmcollege.com
+
+### 3. Set Up Backups
+cPanel → **Backup Wizard** → Schedule daily backups
+
+---
+
+## 📱 Quick Test Script
+
+Save as `test_production.sh`:
+```bash
+#!/bin/bash
+BASE_URL="https://ldmcollege.com"
+
+echo "Testing production deployment..."
+echo "================================"
+
+# Test health
+echo -n "API Health: "
+curl -s ${BASE_URL}/api/health | jq -r '.status' || echo "FAIL"
+
+# Test login
+echo -n "Login: "
+TOKEN=$(curl -s -X POST ${BASE_URL}/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"password"}' | jq -r '.token')
+
+if [ "$TOKEN" != "null" ]; then
+  echo "✓ Success"
+  
+  # Test stats
+  echo -n "Admin Stats: "
+  curl -s ${BASE_URL}/api/admin/stats \
+    -H "Authorization: Bearer $TOKEN" | jq -r '.success' | grep -q true && echo "✓" || echo "✗"
+else
+  echo "✗ Failed"
+fi
+
+echo "================================"
+```
+
+---
+
+## 📞 Support Resources
+
+- **Hostinger Support:** https://support.hostinger.com
+- **cPanel Docs:** https://docs.cpanel.net
+- **Project Docs:** `PROJECT_NOTES.md`
+
+---
+
+## 🎉 Success!
+
+Your CMS is now live at: **https://ldmcollege.com**
+
+**Admin Access:** https://ldmcollege.com → Login → Admin Dashboard
+
+**Next Steps:**
+- Add real content
+- Upload gallery images
+- Create notices
+- Customize branding
+- Set up regular backups

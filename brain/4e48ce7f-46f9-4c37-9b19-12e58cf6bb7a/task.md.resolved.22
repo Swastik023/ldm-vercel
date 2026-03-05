@@ -1,0 +1,23 @@
+# Batch Management Fix — Tasks
+
+## Component 1 — Schema
+- [x] Modify [Academic.ts](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts): session optional, add batchCode, add compound unique index (program + joiningYear + intakeMonth)
+
+## Component 2 — Seeding
+- [x] Update [populateBatches()](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts#132-189) in [actions/academic.ts](file:///media/swastik/focus/ldm%20feb/src/actions/academic.ts): new name format, remove session dep
+
+## Component 3 — Batch CRUD API
+- [x] Create `/api/admin/batches/route.ts` (GET + POST)
+- [x] Create `/api/admin/batches/seed/route.ts` (POST idempotent seed)
+
+## Component 4 — academic-options fix
+- [x] Allow teacher role in [academic-options/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/academic-options/route.ts)
+- [x] Update [public/batches/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/batches/route.ts) to include batchCode
+
+## Component 5 — UI
+- [x] Update [TestManager.tsx](file:///media/swastik/focus/ldm%20feb/src/components/admin/TestManager.tsx) to use new `/api/admin/batches` endpoint
+- [x] Update [BatchManager.tsx](file:///media/swastik/focus/ldm%20feb/src/components/admin/BatchManager.tsx) to add Seed button
+
+## Verification
+- [ ] TypeScript check
+- [ ] Git commit & push

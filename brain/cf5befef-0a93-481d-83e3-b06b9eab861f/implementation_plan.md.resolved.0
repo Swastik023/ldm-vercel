@@ -1,0 +1,34 @@
+# Implementation Plan: Enhance E-Library Content
+
+Enhance the content of e-library materials (Curriculum, Notes, etc.) to look and feel professional, structured, and information-dense, moving away from the current "pamphlet-like" appearance.
+
+## Proposed Changes
+
+### [Component Name] Script / Data
+
+#### [NEW] update_library_content.ts
+Create a script to backfill/update existing library documents with rich, structured content.
+- Use professional HTML tags (`<article>`, `<section>`, `<table>`, `<h3>`).
+- Add detailed information:
+    - Expanded course descriptions.
+    - Comprehensive subject-wise syllabi with unit breakdowns.
+    - Clinical/Practical skill checklists.
+    - Recommended reading lists with ISBN-style details.
+    - Professional "Disclaimer" and "Copyright" footers.
+
+#### [MODIFY] seed_library.ts (Optional)
+I will keep the seed script as is for now, but focus on the update script for immediate impact on existing data.
+
+## Verification Plan
+
+### Automated Verification
+- Run the `update_library_content.ts` script using `npx ts-node`.
+- Check database records using a small test script to ensure content has been updated.
+
+### Manual Verification
+- Navigate to the `/library` page in the browser.
+- Open multiple documents (e.g., DCCM, DHM) and verify:
+    - Rich formatting is applied.
+    - Content is significantly longer and more detailed.
+    - Tables and sections are used effectively.
+    - The "Read" modal displays the content clearly.

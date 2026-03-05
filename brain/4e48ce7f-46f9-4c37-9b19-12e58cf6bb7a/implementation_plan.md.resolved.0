@@ -1,0 +1,102 @@
+# QA Coverage Upgrade — Missing Business Logic Tests
+
+Gap analysis identified 7 critical business logic modules with zero unit test coverage. All new tests follow the established architecture (`tests/unit/`, Jest + mocks).
+
+## Coverage Gap Summary
+
+| Module | Risk | Current Coverage | Gap |
+|--------|------|-----------------|-----|
+| `feeCalculator.ts` | 🔴 Financial | None | Discount math, guards, edge cases |
+| `mcqParser.ts` | 🔴 Data integrity | None | Parsing, validation, malformed input |
+| Auth registration API | 🔴 Security | None | Field validation, duplicate check, username gen |
+| OTP verification API | 🔴 Security | None | Expiry, attempts, rate limiting |
+| Expense API | 🟡 Financial | None | Soft-delete, lock guards, root-only |
+| Fee record creation | 🔴 Financial | None | calcFees integration, duplicate prevention |
+| Attendance locking | 🟡 Data integrity | None | Lock/unlock, rejection on locked records |
+
+## Proposed Changes
+
+### Unit Tests — Pure Business Logic (no DB required)
+
+#### [NEW] [feeCalculator.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/lib/feeCalculator.test.ts)
+- Percentage discount calculation (10%, 50%, 100%)
+- Flat discount calculation
+- Flat discount capped at base price
+- Percentage takes priority over flat
+- Zero discount (no discount applied)
+- Negative base price throws
+- Discount percent out of range (< 0, > 100) throws
+- Zero base price edge case
+
+#### [NEW] [mcqParser.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/lib/mcqParser.test.ts)
+- Valid MCQ block parsing (standard format)
+- Multiple question formats (Q1., 1., Q 1.)
+- Option format variants (A), A., (A), a))
+- Answer format variants (Answer:, Ans:, Correct:)
+- Missing answer line → error
+- Less than 4 options → error
+- Duplicate question dedup
+- Empty input → error
+- Malformed block → skipped with error
+- Short block (< 3 lines) → error
+
+### Unit Tests — API Route Logic (mocked DB)
+
+#### [NEW] [register.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/auth/register.test.ts)
+- Missing required fields → 400
+- Duplicate email → 409
+- Username collision auto-increment
+- Successful registration → 201
+
+#### [NEW] [verifyOtp.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/auth/verifyOtp.test.ts)
+- Missing email/OTP → 400
+- No OTP record found → 404
+- Already verified → 400
+- Expired OTP → 410
+- Max attempts exceeded → 429
+- Wrong OTP increments attempts → 401
+- Correct OTP → verified
+
+#### [NEW] [expenses.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/finance/expenses.test.ts)
+- Non-admin access → 401
+- Missing required fields → 400
+- Amount ≤ 0 → 400
+- Soft-delete: non-root user → 403
+- Soft-delete: locked record → 403
+- Soft-delete: already deleted → 400
+- Soft-delete: success with audit log
+
+#### [NEW] [feeRecords.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/finance/feeRecords.test.ts)
+- Non-admin access → 401
+- Missing required fields → 400
+- Negative base price → 400
+- Student not found → 404
+- Duplicate fee record → 409
+- Successful creation with calcFees math
+
+#### [NEW] [attendance.test.ts](file:///media/swastik/focus/ldm%20feb/tests/unit/api/attendance/attendance.test.ts)
+- markAttendance: locked record → rejected
+- markAttendance: new record → created
+- markAttendance: existing record → updated
+- updateStudentAttendance: locked → rejected
+- updateStudentAttendance: not found → error
+- lockAttendance: lock + unlock operations
+
+## Verification Plan
+
+### Automated Tests
+
+```bash
+# Run only new tests
+./node_modules/.bin/jest tests/unit/lib/feeCalculator.test.ts --config jest.config.ts --forceExit
+./node_modules/.bin/jest tests/unit/lib/mcqParser.test.ts --config jest.config.ts --forceExit
+
+# Run all unit tests (new + existing)
+SUPPRESS_JEST_WARNINGS=true ./node_modules/.bin/jest --config jest.config.ts --forceExit
+
+# Confirm no existing tests broken
+# Expected: All 4 existing + 7 new = 11+ test suites, all passing
+```
+
+> [!IMPORTANT]
+> Pure logic tests (`feeCalculator`, `mcqParser`) need zero mocking — they test exported functions directly. API route tests require mocking `next-auth`, `mongoose`, `bcryptjs`, and `next/cache`.

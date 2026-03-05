@@ -1,0 +1,20 @@
+# QA Coverage Upgrade
+
+## Analysis
+- [x] Audit existing test files (4 unit + 12 E2E)
+- [x] Map all source modules (69 API routes, 27 models, 6 actions, 7 lib utils)
+- [x] Identify untested critical business logic
+- [x] Write implementation plan
+
+## New Unit Tests (Business Logic)
+- [x] [feeCalculator.ts](file:///media/swastik/focus/ldm%20feb/src/lib/feeCalculator.ts) — 12 cases: discount math, edge cases, error guards
+- [x] [mcqParser.ts](file:///media/swastik/focus/ldm%20feb/src/lib/mcqParser.ts) — 13 cases: parsing, validation, dedup, malformed input
+- [x] Auth registration — 4 cases: field validation, duplicate email, username gen
+- [x] OTP verification — 7 cases: expiry, attempts, wrong code, already verified
+- [x] Expense API — 8 cases: soft-delete guards, lock check, root-only access
+- [x] Fee record creation — 7 cases: calcFees integration, duplicate prevention
+- [x] Attendance locking — 8 cases: lock/unlock, locked-record rejection
+
+## Verification
+- [x] All 11 test suites pass (66/66 tests)
+- [x] No existing tests broken

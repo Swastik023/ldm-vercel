@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Comprehensive mapping of backend API endpoints to frontend implementations, identifying connected features, missing implementations, and required changes for ERP system deployment.",
+  "updatedAt": "2026-02-01T02:30:17.718774880Z"
+}

@@ -1,0 +1,294 @@
+# LDM College ERP — Complete Implementation Plan
+
+## 📊 Current State Assessment
+
+### Existing API Endpoints (38 total)
+| Category | Endpoints | Status |
+|----------|-----------|--------|
+| **Authentication** | `/auth/login`, `/auth/logout`, `/auth/check` | ✅ Working |
+| **Public** | `/`, `/health`, `/health/stats` | ✅ Working |
+| **Students** | `/students`, `/students/{id}` | ⚠️ Needs RBAC |
+| **Attendance** | `/attendance`, `/attendance/mark` | ⚠️ Partial |
+| **Timetable** | `/timetable/{personId}` | ⚠️ Partial |
+| **Contact** | `/contact`, `/admin/contact-messages` | ✅ Working |
+| **Notices** | `/notices`, `/admin/notices` CRUD | ✅ Working |
+| **Gallery** | `/gallery`, `/admin/gallery` CRUD | ✅ Working |
+| **Admin** | `/admin/stats`, `/admin/audit-logs`, `/admin/users` | ⚠️ Partial |
+| **Dashboards** | `/student/dashboard`, `/teacher/dashboard`, `/employee/dashboard` | ⚠️ Partial |
+| **Notifications** | `/notifications` | ⚠️ Stub |
+
+### Frontend Pages
+| Role | Pages | Status |
+|------|-------|--------|
+| **Admin** | Dashboard, Users, Notices, Gallery, Attendance, Audit, Contact, Content, Marquee | ⚠️ UI exists, API wiring incomplete |
+| **Teacher** | Dashboard only | ⚠️ Needs class management, attendance marking |
+| **Student** | Dashboard only | ⚠️ Needs profile, grades, attendance views |
+| **Employee** | Dashboard only | ❌ Minimal implementation |
+
+---
+
+## 🎯 Implementation Phases
+
+### Phase 1: Core Infrastructure & RBAC (Priority: CRITICAL)
+**Goal:** Ensure all existing endpoints have proper RBAC and audit logging
+
+#### 1.1 Create `audit_logs` Table
+```sql
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(20),
+    username VARCHAR(100),
+    action VARCHAR(50) NOT NULL,
+    entity_type VARCHAR(50) NOT NULL,
+    entity_id VARCHAR(50),
+    old_values JSON,
+    new_values JSON,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user (user_id),
+    INDEX idx_action (action),
+    INDEX idx_entity (entity_type, entity_id),
+    INDEX idx_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+#### 1.2 Enhance `RoleMiddleware.php`
+- Add `studentOnly()` method
+- Add `employeeOnly()` method
+- Add `ownerOrAdmin()` for self-data access
+- Add request attribute for permission checks
+
+#### 1.3 Create `ApiResponse.php` Helper
+- Standardize all responses: `{ success, data/error, meta }`
+- Add pagination helper
+- Add error code mapping
+
+---
+
+### Phase 2: Admin Module Completion (Priority: HIGH)
+
+#### 2.1 User Management CRUD
+| Endpoint | Method | Description | Status |
+|----------|--------|-------------|--------|
+| `GET /admin/users` | GET | List users with filters | ⚠️ Enhance |
+| `GET /admin/users/{id}` | GET | Get single user | ❌ Add |
+| `POST /admin/users` | POST | Create user | ⚠️ Enhance |
+| `PUT /admin/users/{id}` | PUT | Update user | ❌ Add |
+| `DELETE /admin/users/{id}` | DELETE | Soft delete | ⚠️ Enhance |
+| `POST /admin/users/import` | POST | Bulk CSV import | ❌ Add |
+
+#### 2.2 Course & Class Management
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `GET /admin/courses` | GET | List courses |
+| `POST /admin/courses` | POST | Create course |
+| `PUT /admin/courses/{id}` | PUT | Update course |
+| `DELETE /admin/courses/{id}` | DELETE | Delete course |
+| `GET /admin/classes` | GET | List classes |
+| `POST /admin/classes` | POST | Create class |
+| `PUT /admin/classes/{id}` | PUT | Update class |
+| `POST /admin/classes/{id}/enroll` | POST | Enroll student |
+| `DELETE /admin/classes/{id}/enroll/{studentId}` | DELETE | Remove student |
+| `POST /admin/classes/{id}/assign-teacher` | POST | Assign teacher |
+
+#### 2.3 Enhanced Admin Dashboard
+- Real-time stats from multiple tables
+- Active user count by role
+- Today's attendance summary
+- Recent audit log entries
+- System health indicators
+
+---
+
+### Phase 3: Teacher Module (Priority: HIGH)
+
+#### 3.1 Teacher-Specific Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `GET /teacher/dashboard` | GET | Teacher dashboard data |
+| `GET /teacher/classes` | GET | My assigned classes |
+| `GET /teacher/classes/{id}/students` | GET | Students in my class |
+| `GET /teacher/schedule` | GET | My timetable |
+| `POST /teacher/attendance/mark` | POST | Mark attendance for class |
+| `GET /teacher/attendance/{classId}` | GET | View class attendance |
+| `GET /teacher/notifications` | GET | Teacher notifications |
+
+#### 3.2 Attendance Marking Flow
+1. Teacher selects class from dropdown
+2. API returns enrolled students for that class
+3. Teacher marks each student (Present/Absent/Late)
+4. Submit -> INSERT into `gibbonAttendanceLogPerson`
+5. Audit log entry created
+
+#### 3.3 Teacher Dashboard Widgets
+- Today's classes (from timetable)
+- Pending attendance (classes not marked today)
+- Class performance summary
+- Recent notifications
+
+---
+
+### Phase 4: Student Module (Priority: HIGH)
+
+#### 4.1 Student-Specific Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `GET /student/dashboard` | GET | Student dashboard |
+| `GET /student/profile` | GET | My profile |
+| `PUT /student/profile` | PUT | Update allowed fields |
+| `GET /student/attendance` | GET | My attendance records |
+| `GET /student/timetable` | GET | My class schedule |
+| `GET /student/grades` | GET | My grades |
+| `GET /student/notifications` | GET | My notifications |
+
+#### 4.2 Data Filtering Rules
+- ALL queries MUST filter by `gibbonPersonID = {current_user}`
+- Cannot access other students' data
+- Profile update limited to: phone, address, emergency contact
+
+#### 4.3 Student Dashboard Widgets
+- Profile summary with photo
+- Attendance percentage (last 30 days)
+- Today's classes
+- Recent grades (placeholder if not implemented)
+- Unread notifications
+
+---
+
+### Phase 5: Employee Module (Priority: MEDIUM)
+
+#### 5.1 Employee-Specific Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `GET /employee/dashboard` | GET | Employee dashboard |
+| `GET /employee/profile` | GET | My profile |
+| `PUT /employee/profile` | PUT | Update allowed fields |
+| `GET /employee/notices` | GET | Internal notices |
+| `GET /employee/tasks` | GET | Assigned tasks (future) |
+
+#### 5.2 Employee Dashboard Widgets
+- Profile summary
+- Internal notices
+- Department information
+- Quick links
+
+---
+
+### Phase 7: Academic Core System (NEW ARCHITECTURE)
+
+### 7.1 Core Schema & API (Phase 1) - ✅ COMPLETED
+- [x] Academic Sessions (Database + API)
+- [x] Program Structure (Database + API)
+- [x] Student Enrollment (Lifecycle tracking)
+- [x] Legacy ID Generation (YYYY-PROG-XXXX)
+
+### 7.2 Examination System (Phase 2) - 🚧 IN PROGRESS
+- [x] Exam Definition Schema (Midterm, Final, Practical)
+- [x] Marks Entry Schema (Theory/Practical separation)
+- [x] Grade Rules Schema (GPA Calculation)
+- [x] Exam Creation API (Auto-subject mapping)
+- [x] Student Exam View API
+- [x] Teacher Marks Entry API (RBAC restricted)
+- [x] Result Processing Logic (Promotion/Detention)
+
+### 7.3 Fees & Certification (Phase 3) - 🚧 NEXT
+- [ ] Fee Structure Schema
+- [ ] Payment Tracking API
+- [ ] Transcript Generation
+- [ ] Certificate generation logic
+
+#### 6.2 Grade Management
+- Markbook columns (assessments)
+- Grade entry by teachers
+- Grade viewing by students
+
+---
+
+### Phase 6: Advanced Features (Priority: LOW)
+
+#### 6.1 Timetable System
+- Admin creates timetable structure
+- Class ↔ Time slot assignments
+- Room allocation
+- Teacher/Student schedule views
+
+
+#### 6.3 Reports & Analytics
+- Attendance reports (by class, by date range)
+- Grade reports
+- User activity reports
+
+---
+
+## 📁 File Structure for New Code
+
+```
+api/
+├── index.php           # Main router (enhance existing)
+├── ApiResponse.php     # NEW: Standardized responses
+├── RoleMiddleware.php  # ENHANCE: Add more role methods
+├── AuditLogger.php     # ENHANCE: Ensure table exists
+├── modules/
+│   ├── AdminModule.php     # NEW: Admin endpoints
+│   ├── TeacherModule.php   # NEW: Teacher endpoints
+│   ├── StudentModule.php   # NEW: Student endpoints
+│   ├── EmployeeModule.php  # NEW: Employee endpoints
+│   ├── CourseModule.php    # NEW: Course/Class management
+│   └── TimetableModule.php # NEW: Timetable management
+└── migrations/
+    └── 001_create_audit_logs.sql
+```
+
+---
+
+## 🔒 RBAC Implementation Matrix
+
+| Endpoint Pattern | Admin | Teacher | Student | Employee |
+|------------------|-------|---------|---------|----------|
+| `/admin/*` | ✅ | ❌ | ❌ | ❌ |
+| `/teacher/*` | ✅ | ✅ | ❌ | ❌ |
+| `/student/*` | ✅ | ❌ | ✅ (self) | ❌ |
+| `/employee/*` | ✅ | ❌ | ❌ | ✅ (self) |
+| `/attendance/mark` | ✅ | ✅ (own class) | ❌ | ❌ |
+| `/students` | ✅ | ✅ (own class) | ❌ | ❌ |
+| `/notices` (public) | ✅ | ✅ | ✅ | ✅ |
+| `/gallery` (public) | ✅ | ✅ | ✅ | ✅ |
+
+---
+
+## 🚀 Execution Order
+
+### Immediate (Today)
+1. Create `audit_logs` table on production
+2. Fix `AuditLogger.php` to use correct table
+3. Create `ApiResponse.php` helper
+4. Enhance `/admin/users` CRUD (GET single, PUT update)
+
+### Short-Term (This Week)
+5. Implement `/admin/courses` and `/admin/classes` CRUD
+6. Implement teacher class listing and attendance marking
+7. Wire frontend Admin pages to new endpoints
+
+### Medium-Term (Next Week)
+8. Complete student dashboard with real data
+9. Complete teacher dashboard with real data
+10. Add profile update functionality
+
+### Long-Term (Future)
+11. Timetable system
+12. Grade management
+13. Reports and analytics
+
+---
+
+## ✅ Approval Required
+
+Before proceeding with implementation, please confirm:
+
+1. **Database Priority:** Should I use `u542293952_test1` (current) or migrate to `u542293952_productionldm`?
+2. **Phase Order:** Start with Phase 1 (Infrastructure) or jump to Phase 2 (Admin CRUD)?
+3. **Frontend Priority:** Focus on backend APIs first, or update frontend simultaneously?
+4. **Employee Module:** Is this a priority, or can it be deferred?
+
+Once approved, I will begin implementation systematically.

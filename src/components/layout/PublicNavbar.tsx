@@ -88,15 +88,16 @@ const Header = () => (
     <motion.header
         initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
         className="bg-white/80 backdrop-blur-xl border-b border-white/20 py-3 shadow-sm relative z-50"
+        suppressHydrationWarning
     >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-4">
                 {/* Left — LDM Logo + Secondary Logo */}
                 <div className="flex items-center gap-2 shrink-0">
                     <Link href="/" aria-label="Home">
-                        <div className="relative group">
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" />
-                            <img src="/newlogo.png" alt="LDM College" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-blue-400 transition duration-300" loading="lazy" />
+                        <div className="relative group" suppressHydrationWarning>
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-300" suppressHydrationWarning />
+                            <img src="/newlogo.png" alt="LDM College" className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-contain relative ring-2 ring-gray-200 group-hover:ring-blue-400 transition duration-300" loading="lazy" suppressHydrationWarning />
                         </div>
                     </Link>
                     <div className="relative group hidden sm:block">
@@ -107,8 +108,8 @@ const Header = () => (
 
                 {/* Centre — Title + Collaboration Badge */}
                 <div className="text-center flex-1">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-                        <span className="bg-gradient-to-r from-[#0A192F] to-blue-800 bg-clip-text text-transparent drop-shadow-sm">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight" suppressHydrationWarning>
+                        <span className="bg-gradient-to-r from-[#0A192F] to-blue-800 bg-clip-text text-transparent drop-shadow-sm" suppressHydrationWarning>
                             LDM College
                         </span>
                     </h1>

@@ -1,0 +1,503 @@
+# LDM College ERP — Forensic Audit & Recovery Plan
+
+---
+
+## 1. AUDIT SUMMARY
+
+### Feature Audit Table
+
+| Feature | UI Exists | API Exists | DB Table | E2E Flow | Verdict |
+|---------|-----------|------------|----------|----------|---------|
+| **Login/Auth** | ✅ Login.tsx | ✅ POST /auth/login | ✅ gibbonPerson | ✅ | `REAL` |
+| **Admin Dashboard** | ✅ AdminDashboard.tsx | ✅ GET /admin/stats | ✅ Multiple | ✅ | `REAL` |
+| **Contact Form** | ✅ Contact.tsx | ✅ POST /contact | ✅ contact_messages | ✅ | `REAL` |
+| **Contact Admin** | ✅ ContactMessages.tsx | ✅ CRUD /admin/contact-messages | ✅ contact_messages | ✅ | `REAL` |
+| **Notices (Public)** | ✅ Notices.tsx | ✅ GET /notices | ✅ notices | ✅ | `REAL` |
+| **Notices (Admin)** | ✅ ManageNotices.tsx | ✅ CRUD /admin/notices | ✅ notices | ✅ | `REAL` |
+| **Gallery (Public)** | ✅ Gallery.tsx | ✅ GET /gallery | ✅ gallery | ✅ | `REAL` |
+| **Gallery (Admin)** | ✅ ManageGallery.tsx | ✅ CRUD /admin/gallery | ✅ gallery | ✅ | `REAL` |
+| **Marquee** | ✅ Component | ✅ GET /marquee | ⚠️ marquee (optional) | ✅ | `REAL` |
+| **User Management** | ✅ ManageUsers.tsx | ✅ CRUD /admin/users | ✅ gibbonPerson | ✅ | `REAL` |
+| **Audit Logs** | ✅ AuditLogs.tsx | ✅ GET /admin/audit-logs | ✅ audit_logs | ✅ | `REAL` |
+| **Students List** | ⚠️ Partial | ✅ GET /students | ✅ gibbonPerson | ✅ | `PARTIAL` |
+| **Student Detail** | ⚠️ Partial | ✅ GET /students/{id} | ✅ gibbonPerson | ✅ | `PARTIAL` |
+| **Attendance** | ✅ AttendanceManagement.tsx | ⚠️ POST /attendance/mark (STUB) | ✅ gibbonAttendanceLogPerson | ❌ | `BROKEN` |
+| **Timetable** | ❌ | ⚠️ GET /timetable/{id} (STUB) | ✅ gibbonTT* tables | ❌ | `BROKEN` |
+| **Student Dashboard** | ✅ StudentDashboard.tsx | ❌ | N/A | ❌ | `FAKE` |
+| **Teacher Dashboard** | ✅ TeacherDashboard.tsx | ❌ | N/A | ❌ | `FAKE` |
+| **Employee Dashboard** | ✅ EmployeeDashboard.tsx | ❌ | N/A | ❌ | `FAKE` |
+| **Manage Content** | ✅ ManageContent.tsx | ❌ | ❌ | ❌ | `FAKE` |
+| **Courses** | ✅ Courses.tsx, CourseDetail.tsx | ❌ | ✅ gibbonCourse | ❌ | `FAKE` |
+| **Team/Faculty** | ✅ Team.tsx, FacultyDetail.tsx | ❌ | ❌ | ❌ | `FAKE` |
+
+### Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           FRONTEND (React)                              │
+│  localhost:5173                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│  Public Pages        │  Admin Pages          │  Role Dashboards        │
+│  ─────────────       │  ─────────────        │  ─────────────          │
+│  Home, About         │  AdminDashboard       │  StudentDashboard [FAKE]│
+│  Courses [FAKE]      │  ManageNotices        │  TeacherDashboard [FAKE]│
+│  Gallery             │  ManageUsers          │  EmployeeDashboard[FAKE]│
+│  Contact             │  ManageGallery        │                         │
+│  Notices             │  AttendanceM [BROKEN] │                         │
+└─────────────────────┬───────────────────────┬─────────────────────────┘
+                      │ Vite Proxy /api → :8000
+                      ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        BACKEND (PHP Slim)                               │
+│  localhost:8000                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│  Auth          │  Admin               │  Public         │  Stubs       │
+│  ──────        │  ──────              │  ──────         │  ──────      │
+│  /auth/login   │  /admin/stats        │  /notices       │  /attendance │
+│  /auth/check   │  /admin/notices      │  /gallery       │  /timetable  │
+│  /auth/logout  │  /admin/users        │  /marquee       │              │
+│                │  /admin/gallery      │  /contact       │              │
+│                │  /admin/audit-logs   │                 │              │
+└─────────────────────────────────────────────────────────────────────────┘
+                      │
+                      ▼ PDO
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     DATABASE (MySQL)                                    │
+│  gibbon_ldm_local                                                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│  Gibbon Core (60+ tables)  │  Custom Tables                            │
+│  ──────────────────────    │  ─────────────                            │
+│  gibbonPerson              │  contact_messages ✓                       │
+│  gibbonRole                │  notices ✓                                │
+│  gibbonStudentEnrolment    │  gallery ✓                                │
+│  gibbonCourse*             │  audit_logs ✓                             │
+│  gibbonAttendance*         │  marquee (optional)                       │
+│  gibbonTT*                 │                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Broken Assumptions (Evidence-Based)
+
+1. **Role dashboards have no backend** — [StudentDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/student/StudentDashboard.tsx), [TeacherDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/teacher/TeacherDashboard.tsx), [EmployeeDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/employee/EmployeeDashboard.tsx) exist but NO corresponding APIs. Status: `[FAKE]`
+
+2. **Attendance endpoint is a stub** — Line 579-592 in [index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php):
+   ```php
+   // This is a placeholder - full implementation would go here
+   $response->getBody()->write(json_encode(['success' => true, 'message' => 'Attendance marked successfully']));
+   ```
+   Never touches `gibbonAttendanceLogPerson`. Status: `[BROKEN]`
+
+3. **Timetable endpoint is a stub** — Line 617-627 in [index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php):
+   ```php
+   // This is a placeholder - full implementation would go here
+   ```
+   Never queries `gibbonTT*` tables. Status: `[BROKEN]`
+
+4. **Courses pages are static** — [Courses.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/Courses.tsx) and [CourseDetail.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/pages/CourseDetail.tsx) exist, but NO API. `gibbonCourse` table exists but unused. Status: `[FAKE]`
+
+5. **No RBAC enforcement on most endpoints** — Only `authMiddleware` checks JWT validity. No role-based access control except `PermissionManager::requirePermission` on 2 endpoints. Any authenticated user can access `/admin/*`.
+
+### Root Cause Summary
+
+1. **UI-first development** — Pages built before backend, never connected
+2. **Stub APIs left in place** — Placeholder responses return fake success
+3. **No role middleware** — JWT decoded but role never enforced
+4. **Gibbon tables underutilized** — Full ERP schema exists, queries not written
+5. **No API contracts** — Frontend expects data that backend doesn't provide
+
+---
+
+## 2. DATA MODEL
+
+### Current Custom Tables (REAL)
+
+```sql
+-- contact_messages ✓ (properly structured)
+-- notices ✓ (properly structured)  
+-- gallery ✓ (properly structured)
+-- audit_logs ✓ (properly structured)
+```
+
+### Gibbon Core Tables Used
+
+| Table | Purpose | Currently Used |
+|-------|---------|----------------|
+| gibbonPerson | All users | ✅ Auth, User CRUD |
+| gibbonRole | Role definitions | ✅ Role lookup |
+| gibbonStudentEnrolment | Student-YearGroup-FormGroup | ⚠️ Only in `/students` |
+| gibbonCourse | Course catalog | ❌ Unused |
+| gibbonCourseClass | Course sections | ❌ Unused |
+| gibbonCourseClassPerson | Enrollments | ❌ Unused |
+| gibbonAttendanceLogPerson | Person attendance | ❌ STUB only |
+| gibbonTTDayDate | Timetable dates | ❌ STUB only |
+| gibbonNotification | User notifications | ✅ `/notifications` |
+
+### Missing Tables to Create
+
+```sql
+-- None required. Gibbon schema is comprehensive.
+-- Problem is not schema, it's unused queries.
+```
+
+### Key Relationships (Already Exist)
+
+```
+gibbonPerson (1) ←→ (1) gibbonRoleIDPrimary → gibbonRole
+gibbonPerson (1) ←→ (N) gibbonStudentEnrolment
+gibbonStudentEnrolment → gibbonYearGroup
+gibbonStudentEnrolment → gibbonFormGroup  
+gibbonCourseClassPerson → gibbonPerson
+gibbonCourseClassPerson → gibbonCourseClass → gibbonCourse
+gibbonAttendanceLogPerson → gibbonPerson
+gibbonAttendanceLogPerson → gibbonAttendanceCode
+```
+
+---
+
+## 3. RBAC MATRIX
+
+### Current State: `[BROKEN]`
+
+```php
+// Only checks JWT validity, NOT role
+$authMiddleware = function (Request $request, $handler) use ($jwtSecret) {
+    // ... validates token exists and is valid
+    // NEVER checks: $decoded->role === 'admin'
+}
+```
+
+### Required Access Matrix
+
+| Role | /admin/* | /students | /teacher/* | /student/* | /attendance |
+|------|----------|-----------|------------|------------|-------------|
+| Admin | ✅ C/R/U/D | ✅ All | ✅ All | ✅ All | ✅ All |
+| Teacher | ❌ | ✅ Own classes | ✅ Own | ❌ | ✅ Own classes |
+| Student | ❌ | ✅ Self only | ❌ | ✅ Own | ✅ View self |
+| Employee | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+### JWT Payload (Current)
+
+```json
+{
+  "user_id": "0000000001",
+  "username": "admin",
+  "role": "admin",
+  "role_name": "Administrator",
+  "role_id": "001",
+  "exp": 1770503095
+}
+```
+
+### Required Middleware (TO IMPLEMENT)
+
+```php
+// Role-based middleware factory
+function requireRole(array $allowedRoles) {
+    return function (Request $request, $handler) use ($allowedRoles) {
+        $user = $request->getAttribute('user');
+        if (!in_array($user->role, $allowedRoles)) {
+            $response = new \Slim\Psr7\Response();
+            $response->getBody()->write(json_encode([
+                'error' => 'Forbidden',
+                'message' => 'Insufficient permissions'
+            ]));
+            return $response->withStatus(403);
+        }
+        return $handler->handle($request);
+    };
+}
+
+// Usage on admin routes:
+$app->get('/admin/users', ...)->add($authMiddleware)->add(requireRole(['admin']));
+
+// For teacher routes with scope filter:
+$app->get('/teacher/students', function($req, $res) {
+    $user = $req->getAttribute('user');
+    // WHERE class_id IN (SELECT class_id FROM gibbonCourseClassPerson WHERE gibbonPersonID = $user->user_id)
+})->add($authMiddleware)->add(requireRole(['admin', 'teacher']));
+```
+
+---
+
+## 4. API ↔ UI CONTRACT
+
+### Working Endpoints
+
+| Feature | Method | Endpoint | UI Component | Status |
+|---------|--------|----------|--------------|--------|
+| Login | POST | /auth/login | Login.tsx | ✅ |
+| Admin Stats | GET | /admin/stats | AdminDashboard.tsx | ✅ |
+| Notices CRUD | GET/POST/PUT/DELETE | /admin/notices | ManageNotices.tsx | ✅ |
+| Gallery CRUD | GET/POST/PUT/DELETE | /admin/gallery | ManageGallery.tsx | ✅ |
+| Users CRUD | GET/POST/DELETE | /admin/users | ManageUsers.tsx | ✅ |
+| Audit Logs | GET | /admin/audit-logs | AuditLogs.tsx | ✅ |
+| Contact | POST | /contact | Contact.tsx | ✅ |
+| Public Notices | GET | /notices | Notices.tsx | ✅ |
+| Public Gallery | GET | /gallery | Gallery.tsx | ✅ |
+
+### Missing Endpoints (MUST BUILD)
+
+| Feature | Method | Endpoint | Request | Response | UI |
+|---------|--------|----------|---------|----------|-----|
+| Mark Attendance | POST | /attendance/mark | `{student_id, date, code}` | `{success, record_id}` | AttendanceManagement.tsx |
+| Get Attendance | GET | /attendance?class_id=X&date=Y | - | `{students: [{id, name, status}]}` | AttendanceManagement.tsx |
+| Student Dashboard | GET | /student/dashboard | - | `{profile, attendance, timetable, notifications}` | StudentDashboard.tsx |
+| Teacher Classes | GET | /teacher/classes | - | `{classes: [{id, name, students}]}` | TeacherDashboard.tsx |
+| Teacher Timetable | GET | /teacher/timetable | - | `{days: [{slots}]}` | TeacherDashboard.tsx |
+| Courses List | GET | /courses | - | `{courses: [{id, name, department}]}` | Courses.tsx |
+| Course Detail | GET | /courses/{id} | - | `{id, name, description, teachers}` | CourseDetail.tsx |
+
+### Example: Attendance Mark API Contract
+
+```bash
+# cURL
+curl -X POST http://localhost:8000/attendance/mark \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "class_id": "001",
+    "date": "2026-02-08",
+    "records": [
+      {"student_id": "0000000002", "code": "present"},
+      {"student_id": "0000000003", "code": "absent"}
+    ]
+  }'
+```
+
+```typescript
+// TypeScript Response Interface
+interface AttendanceMarkResponse {
+  success: boolean;
+  records_saved: number;
+  errors?: string[];
+}
+```
+
+---
+
+## 5. DIRECTORY STRUCTURE
+
+### Current Frontend (Flat)
+
+```
+src/
+├── pages/           # 31 files, mixed public/admin/role
+├── components/      # 18 shared components
+├── context/         # 2 files (Auth only)
+├── routes/          # 1 file (AppRoutes.tsx)
+├── hooks/           # 1 file
+└── utils/           # 1 file
+```
+
+### Proposed Frontend (Feature-Based)
+
+```
+src/
+├── api/                    # API client layer
+│   ├── client.ts           # Base fetch wrapper
+│   ├── auth.ts             # Auth endpoints
+│   ├── admin.ts            # Admin endpoints
+│   └── types.ts            # Response types
+├── components/             # Shared UI only
+│   ├── Button.tsx
+│   ├── Modal.tsx
+│   └── DataTable.tsx
+├── features/               # Domain modules
+│   ├── auth/
+│   │   ├── Login.tsx
+│   │   └── useAuth.ts
+│   ├── attendance/
+│   │   ├── AttendanceForm.tsx
+│   │   ├── AttendanceList.tsx
+│   │   └── useAttendance.ts
+│   └── notices/
+│       ├── NoticeCard.tsx
+│       └── useNotices.ts
+├── layouts/
+│   ├── PublicLayout.tsx
+│   ├── AdminLayout.tsx
+│   └── DashboardLayout.tsx
+├── pages/                  # Route entry points only
+│   ├── public/
+│   ├── admin/
+│   ├── student/
+│   └── teacher/
+├── context/
+│   └── AuthContext.tsx
+├── hooks/
+│   └── useApi.ts
+├── routes/
+│   ├── index.tsx
+│   └── ProtectedRoute.tsx  # NEW: Role guard
+└── types/
+    └── index.ts
+```
+
+### Current Backend (Flat)
+
+```
+api/
+├── index.php           # 2049 lines, ALL routes
+├── Validator.php
+├── Cache.php
+├── helpers.php
+├── ImageUploader.php
+├── AuditLogger.php
+├── PermissionManager.php
+└── vendor/
+```
+
+### Proposed Backend (Modular)
+
+```
+api/
+├── index.php                # Bootstrap only (~50 lines)
+├── config/
+│   ├── database.php
+│   └── jwt.php
+├── Controllers/
+│   ├── AuthController.php
+│   ├── NoticeController.php
+│   ├── GalleryController.php
+│   ├── AttendanceController.php
+│   └── UserController.php
+├── Middleware/
+│   ├── AuthMiddleware.php
+│   ├── RoleMiddleware.php   # NEW
+│   └── CorsMiddleware.php
+├── Models/
+│   ├── User.php
+│   ├── Notice.php
+│   └── Attendance.php
+├── Services/
+│   ├── ImageUploader.php
+│   └── AuditLogger.php
+├── Validators/
+│   └── InputValidator.php
+└── vendor/
+```
+
+---
+
+## 6. EXECUTION PLAN
+
+### Phase 1: Fix Critical RBAC (3h)
+
+```
+[x] 1.1 Create RoleMiddleware.php (1h)
+    - Extract role from JWT
+    - 403 if unauthorized
+    
+[ ] 1.2 Apply to all /admin/* routes (1h)
+    - Add ->add(requireRole(['admin']))
+    
+[ ] 1.3 Test role enforcement (1h)
+    - Login as student, try /admin/users → 403
+```
+
+### Phase 2: Fix Attendance API (4h)
+
+```
+[ ] 2.1 Implement POST /attendance/mark (2h)
+    - Insert into gibbonAttendanceLogPerson
+    - Validate class ownership for teachers
+    
+[ ] 2.2 Implement GET /attendance (1h)
+    - Query by class_id + date
+    - Return student list with status
+    
+[ ] 2.3 Connect AttendanceManagement.tsx (1h)
+    - Replace mock data with API calls
+```
+
+### Phase 3: Build Role Dashboards (6h)
+
+```
+[ ] 3.1 Student Dashboard API (2h)
+    - GET /student/dashboard
+    - Profile, attendance summary, notifications
+    
+[ ] 3.2 Teacher Dashboard API (2h)
+    - GET /teacher/dashboard
+    - Classes, today's schedule, attendance counts
+    
+[ ] 3.3 Connect dashboard UIs (2h)
+```
+
+### Phase 4: Delete Fake Features (1h)
+
+```
+[ ] 4.1 Remove or mark as "Coming Soon":
+    - ManageContent.tsx (no backend)
+    - Team.tsx, FacultyDetail.tsx (no API)
+    - Courses.tsx hardcoded data OR build API
+```
+
+### Phase 5: Add Frontend Route Guards (2h)
+
+```
+[ ] 5.1 Create ProtectedRoute.tsx
+    - Check localStorage role
+    - Redirect if unauthorized
+    
+[ ] 5.2 Wrap all /admin/* routes
+[ ] 5.3 Wrap role-specific routes
+```
+
+### Phase 6: Refactor Backend (4h, Optional)
+
+```
+[ ] 6.1 Split index.php into Controllers
+[ ] 6.2 Move routes to Routes/
+[ ] 6.3 Add proper error logging
+```
+
+---
+
+## Total Estimated Time
+
+| Phase | Hours | Priority |
+|-------|-------|----------|
+| 1. RBAC Fix | 3h | 🔴 Critical |
+| 2. Attendance API | 4h | 🔴 Critical |
+| 3. Role Dashboards | 6h | 🟡 High |
+| 4. Delete Fakes | 1h | 🟢 Medium |
+| 5. Route Guards | 2h | 🟡 High |
+| 6. Refactor | 4h | 🟢 Optional |
+| **Total** | **16-20h** | |
+
+---
+
+## Verification Plan
+
+### Automated Tests
+
+No existing test suite found. Recommended:
+
+```bash
+# API smoke test (to create)
+./scripts/testing/test_api.sh
+```
+
+### Manual Verification
+
+1. **RBAC Test**: Login as `s` (student), navigate to `http://localhost:5173/admin` → Should redirect to `/student` or show 403
+2. **Attendance Test**: Login as `admin`, go to Attendance, mark a student, verify in DB:
+   ```sql
+   SELECT * FROM gibbonAttendanceLogPerson ORDER BY timestampTaken DESC LIMIT 5;
+   ```
+3. **Student Dashboard Test**: Login as `s`, verify dashboard shows real attendance data
+
+---
+
+## Summary
+
+| Metric | Before | After (Target) |
+|--------|--------|----------------|
+| REAL Features | 11 | 18 |
+| FAKE Features | 6 | 0 |
+| BROKEN Features | 2 | 0 |
+| RBAC Enforcement | ❌ | ✅ |
+| Role Dashboards | Fake | Real |
+
+**Verdict**: System is ~55% real. With 16-20h of focused work, it can become a legitimate, interview-presentable ERP.

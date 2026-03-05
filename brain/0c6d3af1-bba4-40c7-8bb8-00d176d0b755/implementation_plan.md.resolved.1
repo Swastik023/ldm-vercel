@@ -1,0 +1,54 @@
+# QA Automation - Phase 3 Implementation Plan
+
+We are proceeding with **Phase 3** of the [QA Automation Plan](file:///media/swastik/focus/ldm%20new%20updae%202.0/docs/qa_automation/plan.md), setting up a robust End-to-End (E2E) testing framework using **Playwright**.
+
+## User Review Required
+
+> [!IMPORTANT]
+> This setup introduces **Playwright** as a dev dependency in the `frontend` project. It will run tests against the local development server (`http://localhost:5173`). ensure your local frontend and backend are running during test execution unless we configure Playwright to start them automatically.
+
+## Proposed Changes
+
+### [Frontend Dependencies]
+
+#### [MODIFY] [package.json](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/package.json)
+- Remove `"preinstall": "npx only-allow pnpm"` to allow `npm` usage.
+- Add `@playwright/test` and related types as devDependencies.
+- Add `test:e2e` scripts to run Playwright.
+
+### [Test Configuration]
+
+#### [NEW] [playwright.config.ts](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/playwright.config.ts)
+- Configure Playwright to use `http://localhost:5173` as the base URL.
+- Set up browsers (Chromium, Firefox, WebKit).
+- Configure screenshot/video capture on failure for debugging.
+
+### [Test Structure]
+
+#### [NEW] [tests/e2e Directory]
+Create the folder structure as defined in the automation plan:
+```
+frontend/tests/e2e/
+├── auth/
+│   ├── admin-login.spec.ts   <-- First Test Target
+│   ├── teacher-login.spec.ts
+│   └── student-login.spec.ts
+├── admin/
+│   ├── dashboard.spec.ts
+│   └── ...
+```
+
+#### [NEW] [First Test Suite]
+- Implement `frontend/tests/e2e/auth/admin-login.spec.ts` covering:
+    - **Happy Path:** Valid admin login -> Dashboard redirection.
+    - **Negative Path:** Invalid credentials -> Error message.
+
+## Verification Plan
+
+### Automated Tests
+1. **Run Tests:** `npm run test:e2e` (or `npx playwright test`).
+2. **Launch Report:** `npx playwright show-report`.
+3. **Verify:** Check that the browser performs the login action visible in the headed mode (or screenshot in headless mode).
+
+### Manual Verification
+- Confirm that the `playwright-report` folder is generated and contains detailed traces of the test execution.

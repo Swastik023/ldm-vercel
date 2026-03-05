@@ -1,0 +1,49 @@
+# Document Management System — Task Tracker
+
+## V1 — Complete ✅
+- [x] Planning, Models, Admin APIs, Student APIs, Admin UI, Student UI, Verification
+
+---
+
+## V2 — DMS Upgrade
+
+### Phase 1: Schema Upgrades
+- [ ] Update [DocumentRequirement](file:///media/swastik/focus/ldm%20feb/src/models/DocumentRequirement.ts#3-23) — add `custom_fields[]`, `requires_file_upload`
+- [ ] Update [DocumentSubmission](file:///media/swastik/focus/ldm%20feb/src/models/DocumentSubmission.ts#13-32) — add `form_responses`, `additional_files`, make file fields optional
+- [ ] Update [AuditLog](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts#3-14) — add `download`, `bulk_download` actions
+
+### Phase 2: Dedicated Teacher APIs (7 routes)
+- [ ] `GET /api/teacher/documents/requirements` — teacher's scoped requirements
+- [ ] `POST /api/teacher/documents/requirements` — create (assignment only)
+- [ ] `GET/PUT/DELETE /api/teacher/documents/requirements/[id]` — manage own
+- [ ] `GET /api/teacher/documents/submissions` — scoped submissions
+- [ ] `PUT /api/teacher/documents/submissions/[id]/review` — approve/reject
+- [ ] `GET /api/teacher/documents/submissions/[id]/download` — secure temp link
+
+### Phase 3: Bulk Download API
+- [ ] Install `archiver` package
+- [ ] `POST /api/admin/documents/submissions/bulk-download` — ZIP export
+- [ ] `POST /api/teacher/documents/submissions/bulk-download` — teacher-scoped ZIP
+- [ ] Audit logging for downloads
+
+### Phase 4: Update Student APIs
+- [ ] Update upload route to accept `form_responses` + additional files
+- [ ] Update listing route to return `custom_fields`
+
+### Phase 5: Teacher UI
+- [ ] New `/teacher/documents` page (requirements + submissions tabs)
+- [ ] Form builder UI for custom fields
+- [ ] Add sidebar nav link
+
+### Phase 6: Update Admin UI
+- [ ] Add form builder to create/edit form
+- [ ] Add bulk download button
+- [ ] Secure download links
+
+### Phase 7: Update Student UI
+- [ ] Dynamic form renderer (text, dropdown, date, checkbox, file)
+- [ ] Submit form_responses with file upload
+
+### Phase 8: Verification
+- [ ] TypeScript build check
+- [ ] Manual end-to-end test

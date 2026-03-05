@@ -1,0 +1,42 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+[0] (500,859)<div  />
+	[1] (196,49)<a aria-label='Home' class='hover:opacity-90 transition-opacity min-w-[5rem] sm:min-w-[5.5rem]' href='/' />
+		[2] (196,49)<div  />
+			[3] (196,49)<img  />
+	[4] (162,160)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/' />
+		[5] (146,162)<span  />
+			[6] (146,162)<div  />
+	[7] (237,161)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/about' />
+		[8] (217,163)<span  />
+			[9] (217,163)<div  />
+		[10] (259,163)<div  />
+	[11] (316,160)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/notices' />
+		[12] (298,162)<span  />
+			[13] (298,162)<div  />
+	[14] (399,160)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/courses' />
+		[15] (374,162)<span  />
+			[16] (374,162)<div  />
+		[17] (425,162)<div  />
+	[18] (481,160)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/gallery' />
+		[19] (464,162)<span  />
+			[20] (464,162)<div  />
+	[21] (559,160)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/facilities' />
+		[22] (539,162)<span  />
+			[23] (539,162)<div  />
+	[24] (659,160)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/collaborations' />
+		[25] (620,162)<span  />
+			[26] (620,162)<div  />
+		[27] (699,162)<div  />
+	[28] (762,160)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium transition-colors text-gray-700 hover:text-blue-600' href='/Contact' />
+		[29] (738,162)<span  />
+			[30] (738,162)<div  />
+		[31] (787,162)<div  />
+	[32] (840,161)<a class='inline-flex items-center px-3 pt-1 text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors' href='/login' />
+		[33] (825,163)<span  />
+	[34] (500,819)<a class='inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors' href='/' />
+		[35] (494,819)<span  />
+
+</current_dom>

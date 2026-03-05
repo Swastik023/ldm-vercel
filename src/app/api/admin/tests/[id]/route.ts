@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ success: true, test: testResponse, attempts });
 }
 
-// ── PATCH /api/admin/tests/[id] — toggle isActive / toggle isPublished ──────
+// ── PATCH /api/admin/tests/[id] — toggle isActive / isPublished (respects isLocked) ──
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session?.user || !['admin', 'teacher'].includes(session.user.role)) {
@@ -45,6 +45,17 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const body = await req.json();
     const allowedFields: Record<string, unknown> = {};
     if (typeof body.isActive === 'boolean') allowedFields.isActive = body.isActive;
+
+    // isLocked enforcement: once locked, only isActive and isPublished can be changed
+    const existingTest = await ProTest.findById(id).lean();
+    if (!existingTest) return NextResponse.json({ success: false, message: 'Test not found.' }, { status: 404 });
+
+    if (existingTest.isLocked && (body.questions || body.title || body.durationMinutes || body.totalMarks)) {
+        return NextResponse.json({
+            success: false,
+            message: 'This test is locked because students have already started it. You can only toggle Active/Published status.',
+        }, { status: 403 });
+    }
 
     // HIGH-02: Teachers can only toggle their own tests
     const query = session.user.role === 'admin' ? { _id: id } : { _id: id, createdBy: session.user.id };

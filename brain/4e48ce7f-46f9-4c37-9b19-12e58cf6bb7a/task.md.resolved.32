@@ -1,0 +1,9 @@
+# Model References & Linking Audit
+
+- [/] Audit all Mongoose model ObjectId references
+- [ ] Check all populate chains for missing/broken links
+- [ ] Find routes that write references without validating target exists
+- [ ] Find orphaned or null reference issues affecting business logic
+- [ ] Document findings in implementation plan
+- [ ] Fix identified issues
+- [ ] Build + Push

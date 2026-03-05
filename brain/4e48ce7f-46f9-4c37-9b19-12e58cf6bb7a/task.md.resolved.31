@@ -1,0 +1,11 @@
+# Rate Limiting, Business Logic & Dashboard Fixes
+
+- [x] Rate limiting
+  - [x] Create [rateLimit.ts](file:///media/swastik/focus/ldm%20feb/src/lib/rateLimit.ts) utility
+  - [x] Apply to register (5/min), send-otp (3/min), verify-otp (5/min)
+- [x] Self-mark attendance batch verification
+- [x] Admin attendance status whitelist (present/absent/late/excused) + action whitelist (lock/unlock)
+- [x] Teacher attendance safe JSON parse + status validation per record
+- [x] Admin stats: pending/rejected student counts
+- [x] Build verification ✅
+- [x] Push (`8d284ba`) ✅

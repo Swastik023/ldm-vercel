@@ -1,0 +1,167 @@
+[0] (83,269)<nav class='flex-1 overflow-y-auto py-4 px-3 space-y-6' scrollable='true' />
+	Common & All
+	[1] (79,202)<div class='max-h-60 overflow-y-auto pr-1 mt-1 scrollbar-thin scrollbar-thumb-white/10' scrollable='true' />
+		CAIM
+		-
+		Certificate in Ayurveda Infertility Management
+		CAND
+		-
+		Certificate in Ayurveda Nutrition & Dietetics
+		CAP
+		-
+		Certificate in Ayurveda Parasurgery
+		CACSBC
+		-
+		Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+		DAT
+		-
+		Diploma in Anaesthesia Technology (DAT)
+		DCP
+		-
+		Diploma in Community Care Provider
+		DCCM
+		-
+		Diploma in Critical Care Management
+		DETC
+		-
+		Diploma in Emergency & Trauma Care Technician
+		DHSI
+		-
+		Diploma in Health & Sanitary Inspector
+		DHCP
+		-
+		Diploma in Home Care Provider
+		DHA
+		-
+		Diploma in Hospital Administration
+		DHM
+		-
+		Diploma in Hospital Management
+		DHWM
+		-
+		Diploma in Hospital Waste Management
+		DMLT
+		-
+		Diploma in Medical Laboratory Technology (DMLT)
+		DNT
+		-
+		Diploma in Nanny Training
+		DOTT
+		-
+		Diploma in Operation Theatre Technology (DOTT)
+		DP
+		-
+		Diploma in Panchkarma
+		DRIT
+		-
+		Diploma in Radiology & Imaging Technology (DRIT)
+		MPHW
+		-
+		Multipurpose Health Worker (MPHW)
+	Collections
+	All Categories
+	Module Notes
+	Foundation Modules
+	Master Curriculum & Syllabus
+	Recently Viewed
+	CACSBC-03: Hair Care
+	CACSBC-04: Beauty Treatments
+234
+curated resources
+F-10: Infection Control
+Foundation
+Multi-program Resource
+Academic Book
+20 Feb 2026
+Open Book
+Master Curriculum & Syllabus
+19
+Expand all 19
+CACSBC - Master Curriculum
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+Academic Book
+20 Feb 2026
+Open Book
+CAP - Master Curriculum
+CAP: Certificate in Ayurveda Parasurgery
+Academic Book
+20 Feb 2026
+Open Book
+CAND - Master Curriculum
+CAND: Certificate in Ayurveda Nutrition & Dietetics
+Academic Book
+20 Feb 2026
+Open Book
+CACSBC-03: Hair Care
+CACSBC
+•
+Module Notes
+Save as PDF
+A-
+A+
+[2] (94,543)<aside class='jsx-e2f3cbeeed1be805 bg-[#1e293b]/50 backdrop-blur-xl border-r border-white/5 transition-all duration-300 overflow-y-auto custom-scrollbar flex-shrink-0 w-72' scrollable='true' />
+	Table of Contents
+	01
+	Academic Table of Contents
+	02
+	Chapter I: Foundational Principles
+	03
+	Chapter II: Clinical Protocols & Guidelines
+	04
+	Chapter III: Pharmacological Interventions
+	05
+	Chapter V: The Critical Case Study
+	More to Read
+	Module Notes
+	CACSBC-04: Beauty Treatments
+	Module Notes
+	CACSBC-05: Herbal Cosmetics
+	Module Notes
+	CACSBC-02: Skin Care in Ayurveda
+	Module Notes
+	CACSBC-01: Ayurvedic Cosmetology Basics
+[3] (490,543)<main class='jsx-e2f3cbeeed1be805 flex-1 bg-white overflow-y-auto custom-scrollbar relative' scrollable='true' />
+	CACSBC-03: Hair Care - Academic Comprehensive Edition
+	Academic Table of Contents
+	Chapter I: Foundational Principles
+	Chapter II: Clinical Protocols
+	Chapter III: Pharmacology
+	Chapter IV: Advanced Technology
+	Chapter V: Critical Case Study
+	Chapter VI: Safety & Ethics
+	Chapter I: Foundational Principles
+	The academic pursuit of this module begins with a rigorous understanding of the underlying physiological mechanisms. Unlike basic summaries, this comprehensive study demands mastery over the cellular and systemic responses involved in professional paramedical practice.
+	Academic Insight:
+	Homeostasis in clinical settings is a dynamic equilibrium. Understanding the acid-base balance and electrolyte shifting is paramount for any critical care intervention.
+	Detailed exploration of anatomical structures and their functional significance follows, ensuring the student can visualize the clinical impact of every procedure.
+	Chapter II: Clinical Protocols & Guidelines
+	Adherence to Standard Operating Procedures (SOPs) is what differentiates a technician from an expert. This chapter outlines the latest guidelines from the International Liaison Committee on Resuscitation (ILCOR) and relevant national healthcare standards.
+	Phase
+	Clinical Action
+	Rationale
+High-Yield Fact
+In emergency pharmacology, the "Rule of 4s" often dictates initial dosage intervals for critical IV interventions.
+Related Modules
+CACSBC
+•
+Module Notes
+CACSBC-04: Beauty Treatments
+CACSBC
+•
+Module Notes
+CACSBC-05: Herbal Cosmetics
+CACSBC
+•
+Module Notes
+CACSBC-02: Skin Care in Ayurveda
+Reader Active
+Focus Mode
+LDM College
+Excellence in Medical Education
+Empowering future healthcare professionals with comprehensive medical education, practical training, and innovative learning methodologies with our Experienced Doctors at Dr Dharam Dev Hospital & Institute.
+Our Collaborations
+Hospital Partners
+Ayurvedic Partners
+Vaidya Saurabh Sachdeva
+Academic Partners
+Location

@@ -1,0 +1,52 @@
+# Document Management System — Task Tracker
+
+## V1 — Complete ✅
+- [x] Planning, Models, Admin APIs, Student APIs, Admin UI, Student UI, Verification
+
+---
+
+## V2 — DMS Upgrade
+
+### Phase 1: Schema Upgrades
+- [x] Update [DocumentRequirement](file:///media/swastik/focus/ldm%20feb/src/models/DocumentRequirement.ts#35-57) — add `custom_fields[]`, `requires_file_upload`
+- [x] Update [DocumentSubmission](file:///media/swastik/focus/ldm%20feb/src/models/DocumentSubmission.ts#35-58) — add `form_responses`, `additional_files`, make file fields optional
+- [x] Update [AuditLog](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts#3-14) — add `download`, `bulk_download` actions
+
+### Phase 2: Dedicated Teacher APIs (7 routes)
+- [x] `GET /api/teacher/documents/requirements` — teacher's scoped requirements
+- [x] `POST /api/teacher/documents/requirements` — create (assignment only)
+- [x] `GET/PUT/DELETE /api/teacher/documents/requirements/[id]` — manage own
+- [x] `GET /api/teacher/documents/submissions` — scoped submissions
+- [x] `PUT /api/teacher/documents/submissions/[id]/review` — approve/reject
+- [x] `GET /api/teacher/documents/submissions/[id]/download` — secure temp link
+
+### Phase 3: Bulk Download API
+- [x] Install `archiver` package
+- [x] `POST /api/admin/documents/submissions/bulk-download` — ZIP export
+- [x] `POST /api/teacher/documents/submissions/bulk-download` — teacher-scoped ZIP
+- [x] Audit logging for downloads
+
+### Phase 4: Update Student APIs
+- [x] Update upload route to accept `form_responses` + additional files
+- [x] Update listing route to return `custom_fields`
+
+### Phase 5: Teacher UI
+- [x] New `/teacher/documents` page (requirements + submissions tabs)
+- [x] Form builder UI for custom fields
+- [x] Add sidebar nav link
+
+### Phase 6: Update Admin UI
+- [x] Add form builder to create/edit form
+- [x] Add bulk download button
+- [x] Secure download links
+- [x] Add `requires_file_upload` toggle
+- [x] Form responses in review modal
+
+### Phase 7: Update Student UI
+- [x] Dynamic form renderer (text, textarea, number, date, dropdown, checkbox, file)
+- [x] Submit form_responses with file upload
+- [x] Client-side required field validation
+
+### Phase 8: Verification
+- [/] TypeScript build check
+- [ ] Manual end-to-end test

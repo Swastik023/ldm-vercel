@@ -1,0 +1,169 @@
+# Student Registration + Resume Builder System
+
+A guided, supportive, production-ready registration and resume creation system for healthcare/paramedical students at LDM College. Designed for students weak in English — simple, step-by-step, warm in tone.
+
+## Stitch UI Designs Generated
+
+Three screens have been designed and are ready to guide implementation:
+
+| Screen | Preview |
+|---|---|
+| **Step 1 Registration** (mobile) | ![Registration Step 1](https://lh3.googleusercontent.com/aida/AOfcidXY5taV11J8YF4gTH6imJSmiRb0eROx67cP_3U733A_ylEoGZESj1GeDnN9ChHfJZo_bnGiMWc0Ohluc0nJOc59CcMBEIK8Y0mAImxhbHYU_1keM3vScWdb8sqQjxho2f8ggn92r3Wks9A7-wm3msOhtmhd5-zGp06JLDn_V13D4bHUyU4jCkaYIWc0gKyy37KhXGjP67GFKjm8Cg4nm_fzc3pZZRPwfG06h06dHKXCScG1eMj8bFqddko) |
+| **Guided Resume Builder** (mobile) | ![Resume Builder](https://lh3.googleusercontent.com/aida/AOfcidUD0uVoGzJ9bmAdEXMKEaWZzFX5QnVi7HjU3fwyZVF9uj-QW2M83JMhRutc-cYxqDq58KnaoDHUN-1X8cocIhuk491fbb0Vfj8KwVaOQBjb8INh0fP28L9Ud397MywBRBydl-gUGR8DpB2eM_kbQSE-OWJHJUok1qqpMKyVLsLTEqp-sX_LRW59MW37Sp1Anf9KaBmVkT-_uLYyK9JglgYmjkEHjSyl0GLgWlXZXDImcvQMxQzfYOTmbyc9) |
+| **A4 Resume Preview** (desktop) | ![Resume Preview](https://lh3.googleusercontent.com/aida/AOfcidUQzQ0SBrY2PEtHDeOkKOfOmH2nLTimhRdliGlucPqF5i3nsOltf3S_95joaAzYX74uGRr5XnW6gUjDHYApl-xvAyP3If00vWMwbWenq-WFcUP8cRA_0vyEytBdnCp5aSp9ruUISLGpGkF5FK-fS1idmb-FR1cTYw2qV8Dqguq1Qb3apkDTlFp8gdN3JIeKibdptfypQPw_RXQCGG9lploMpfjVyxCdej5kIBhs-WGvaO9tqszx6n5kyHy5n) |
+
+Design system: `Plus Jakarta Sans`, deep navy `#0A192F` background, emerald `#10B981` accents, white cards, rounded corners.
+
+---
+
+## Proposed Changes
+
+### Database Models
+
+#### [NEW] `src/models/StudentProfile.ts`
+Extended student data captured at registration (beyond the existing [User](file:///media/swastik/focus/ldm%20feb/src/models/User.ts#3-16) model):
+- `userId` → ref to [User](file:///media/swastik/focus/ldm%20feb/src/models/User.ts#3-16)
+- `gender`, `dateOfBirth`, `mobileNumber`
+- `highestQualification`, `yearOfPassing`, `englishComfortLevel`
+- `emailVerified: boolean`
+
+#### [NEW] `src/models/EmailOTP.ts`
+For email OTP verification flow:
+- `email`, `hashedOTP` (bcrypt hashed)
+- `expiresAt` (5 min TTL)
+- `attempts` (max 3)
+- `lastSentAt` (for rate limiting resend)
+- `verified: boolean`
+- TTL index on `expiresAt` for auto-cleanup
+
+#### [NEW] `src/models/Resume.ts`
+Single document per student (upsert on save):
+- `userId` → ref to [User](file:///media/swastik/focus/ldm%20feb/src/models/User.ts#3-16)
+- `careerObjective: string`
+- `address: { state, district, customText }`
+- `skills: string[]`
+- `languages: string[]`
+- `education: [{ qualification, institution, yearOfPassing, percentage }]`
+- `internship: { hasInternship, hospitalName, duration, role }`
+- `experience: { hasFresher, jobRole, organization, duration, responsibilities[] }`
+
+---
+
+### Backend APIs
+
+#### [NEW] `src/app/api/auth/register/route.ts` — `POST`
+Self-registration for new students:
+- Validates uniqueness of email/username
+- Hashes password with bcrypt
+- Creates [User](file:///media/swastik/focus/ldm%20feb/src/models/User.ts#3-16) (role=student, status=active) + `StudentProfile`
+- Returns success (email OTP send is triggered next)
+
+#### [NEW] `src/app/api/auth/send-otp/route.ts` — `POST`
+- Generates 6-digit OTP
+- Hashes with bcrypt, upserts `EmailOTP` record
+- Sends email via **Hostinger SMTP** (`nodemailer`) with branded template
+- Rate limiting: rejects resend if `lastSentAt` < 60 seconds ago
+
+#### [NEW] `src/app/api/auth/verify-otp/route.ts` — `POST`
+- Finds OTP record by email
+- Rejects if expired, already verified, or attempts ≥ 3
+- Compares plain OTP vs hashed with `bcrypt.compare`
+- On success: marks `emailVerified=true` in `StudentProfile`
+
+#### [NEW] `src/app/api/auth/resend-otp/route.ts` — `POST`
+- Same as send-otp but increments resend counter with 60s rate limit
+
+#### [NEW] `src/app/api/student/resume/route.ts` — [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/%5Bid%5D/route.ts#9-59) + `POST`
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/%5Bid%5D/route.ts#9-59): Returns current student's resume data
+- `POST`: Upsert resume (create or update). Protected by session auth.
+
+#### [NEW] `src/app/api/student/resume/pdf/route.ts` — [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/%5Bid%5D/route.ts#9-59)
+- Retrieves student's resume data
+- Renders an HTML template of the resume (A4 layout)
+- Returns it as a streamed HTML response for client-side PDF generation
+
+---
+
+### Frontend Pages & Components
+
+#### [NEW] `src/app/(public)/register/page.tsx`
+Multi-step registration form — 4 steps:
+1. **Basic Details** — Full Name, Gender, DOB, Mobile, Email
+2. **Academic Details** — Qualification dropdown, Year of Passing, English Comfort Level (with helper text accordion)
+3. **Email OTP** — 6 input boxes, countdown timer (5 min), resend link
+4. **Success screen** — Congratulations + Go to Dashboard
+
+Built as a client component with `useState` step progression.
+
+#### [MODIFY] [src/app/(student)/student/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/page.tsx)
+Add new quick-action cards to student dashboard:
+- **My Profile** — edit registration details
+- **Resume Builder** — create/edit resume
+- **Download Resume** — direct PDF download
+
+#### [NEW] `src/app/(student)/student/resume/page.tsx`
+Guided Resume Builder — accordion-style sections following the Stitch design:
+- Personal Info (auto-filled, read-only)
+- Career Objective (dropdown + custom)
+- Education (auto-filled + add more)
+- Skills (multi-select chip buttons)
+- Training / Internship (Yes/No toggle)
+- Work Experience (Fresher / Yes toggle)
+- Languages Known (multi-select chips)
+
+#### [NEW] `src/app/(student)/student/resume/preview/page.tsx`
+A4 Resume Preview page — renders resume HTML from stored data, matching the Stitch design. Includes a "⬇ Download as PDF" button using `react-to-pdf` or `html2pdf.js`.
+
+---
+
+### Libraries to Install
+```bash
+npm install nodemailer @types/nodemailer html2pdf.js
+```
+
+> [!NOTE]
+> `html2pdf.js` runs client-side only. It will be dynamically imported to avoid SSR issues.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **SMTP Configuration needed**: The email OTP system uses Hostinger SMTP. Please confirm these env variable names (or provide the correct values) so I can configure `nodemailer`:
+> ```
+> SMTP_HOST=smtp.hostinger.com
+> SMTP_PORT=465
+> SMTP_USER=noreply@yourdomain.com
+> SMTP_PASS=your_smtp_password
+> SMTP_FROM="LDM College <noreply@yourdomain.com>"
+> ```
+
+> [!IMPORTANT]
+> **Attendance by Photo**: The user requested "attendance by taking picture" — this is a separate, complex feature (camera capture + face recognition or simple selfie log). This plan does **not** include it in this phase. It will need a separate implementation plan. Shall I include it now or keep it for Phase 2?
+
+---
+
+## Verification Plan
+
+### TypeScript Build Check
+```bash
+cd "/media/swastik/focus/ldm feb"
+npm run build
+```
+Expected: zero TypeScript errors.
+
+### Manual Verification Flow
+1. Visit `http://localhost:3000/register`
+2. Fill in Step 1 (Basic Details) → click Continue
+3. Fill in Step 2 (Academic Details) → click Continue
+4. Check email inbox → enter the 6-digit OTP
+5. See the success screen → click "Go to Dashboard"
+6. On student dashboard, click "Resume Builder"
+7. Fill each accordion section → click "Preview My Resume"
+8. On preview page, verify resume looks correct → click "Download as PDF"
+9. Open downloaded PDF → verify formatting is A4 and professional
+
+### OTP Security Tests (Manual)
+- Try entering wrong OTP 3 times → should be locked out
+- Try resending OTP before 60 seconds → should be rate-limited
+- Wait 6 minutes → OTP should be auto-expired (try to verify → rejected)

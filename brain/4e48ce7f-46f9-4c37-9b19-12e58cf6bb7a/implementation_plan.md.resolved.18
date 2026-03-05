@@ -1,0 +1,33 @@
+# Massive Library Content Expansion (3000+ Words Per Doc)
+
+The goal is to provide extreme academic depth for every document in the library, ensuring each meets the 3000-word minimum with high-quality, medically accurate, and specialization-specific content.
+
+## Proposed Strategy
+1.  **Master Curricula**: Generate exhaustive 3000+ word "Master Curriculum & Syllabus" for each program (DOTT, DRIT, MPHW, DNT, DP, CAND, CAP, CACSBC).
+2.  **Unit Expansion**: For individual unit documents (e.g., DOTT-01, DOTT-02), expand each to 3000+ words by focusing deeply on the specific topic while incorporating necessary clinical context and case studies.
+
+## Program List for Generation
+- **DOTT**: Diploma in Operation Theater Technician
+- **DRIT**: Diploma in Radiology & Imaging Technology
+- **MPHW**: Multipurpose Health Worker
+- **DNT**: Diploma in Nursery Teacher Training
+- **DP**: Diploma in Panchakarma
+- **CAND**: Ayurveda Nutrition & Dietetics
+- **CAP**: Ayurveda Parasurgery
+- **CACSBC**: Ayurvedic Cosmetology
+
+## Content Structure (Per Document)
+- **Introduction & Theoretical Foundation**: 400-500 words
+- **Detailed Unit Breakdown / Specific Topic Deep-Dive**: 1000-1200 words
+- **Step-by-Step Practical Procedures & SOPs**: 500-600 words
+- **Clinical Case Scenarios (4-5 scenarios)**: 600-800 words
+- **Industry Trends, Career Pathways & Soft Skills**: 300-400 words
+- **Self-Assessment & Competency Rubrics**: 200 words
+
+## Verification Plan
+### Automated Tests
+- Word count validation using `wc -w` after generation.
+- Database insertion verification via automated script.
+
+### Manual Verification
+- Visual inspection of Markdown rendering in the library UI.

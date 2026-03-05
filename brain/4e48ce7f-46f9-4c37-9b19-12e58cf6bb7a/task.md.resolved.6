@@ -1,0 +1,29 @@
+# College Management System Logic Update
+
+## 1. Intake & Joining Logic
+- [ ] Add joiningMonth dropdown (Jan/Jul only) + joiningYear dropdown
+- [ ] Remove start year / end year fields
+- [ ] Auto-calculate course end date from joining + course duration
+- [ ] Update User model, registration API, admin student forms
+
+## 2. Student Registration & Login (Roll Number)
+- [ ] Replace "Registration Number" with "Roll Number" everywhere
+- [ ] Roll Number = primary unique ID and default username for login
+- [ ] Allow optional email login alongside roll number
+- [ ] Ensure Roll Number uniqueness validation
+
+## 3. Academic Session & Batch Logic
+- [ ] Fix academic session (e.g. "2024–25") — not dynamically generated
+- [ ] Remove academic batch logic from registration flow
+- [ ] Add admin settings endpoint to configure/update session
+
+## 4. Document Upload & Verification
+- [ ] Make Aadhaar upload mandatory (front + back images)
+- [ ] Add documentType, documentNumber fields to upload
+- [ ] Enforce mandatory fields per document type (10th: roll+%, 12th: roll+%, Aadhaar: number)
+
+## 5. Cross-check & Validation
+- [ ] Audit all registration/admission logic for conflicts
+- [ ] Ensure dropdown-based selections where specified
+- [ ] Validate all required fields before submission
+- [ ] TypeScript build check

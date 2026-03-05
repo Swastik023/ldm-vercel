@@ -1,0 +1,268 @@
+# Document Management System — Implementation Plan
+
+A production-grade Document Management System for the LDM College ERP that lets Admin/Teachers dynamically create document requirements (Aadhaar, marksheets, assignments, etc.), assign them to students/batches/programs, and manage a full upload → review → approve/reject workflow.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **File Storage Strategy:** Currently the project uses **local filesystem** (`public/uploads/`) for library documents and **Cloudinary** for gallery media. For student document uploads (Aadhaar, marksheets, etc.), I plan to use **Cloudinary** with `resource_type: 'raw'` to keep files secure, cloud-backed, and not publicly accessible via the filesystem. This is production-ready. Let me know if you prefer local storage instead.
+
+> [!IMPORTANT]
+> **Teacher Access:** The plan gives Teachers the ability to create **assignment-type** requirements (linked to their subjects) and review submissions for their own assignments. Only Admin can create personal document requirements (Aadhaar, marksheets). Let me know if you want teachers to have broader or narrower access.
+
+---
+
+## Proposed Changes
+
+### Database Layer
+
+#### [NEW] [DocumentRequirement.ts](file:///media/swastik/focus/ldm%20feb/src/models/DocumentRequirement.ts)
+
+The "template" model — defines *what* documents are needed and *who* needs to submit them.
+
+| Field | Type | Purpose |
+|---|---|---|
+| `title` | String | e.g. "Aadhaar Card", "Assignment 3" |
+| `description` | String | Instructions for the student |
+| `category` | Enum | `personal_document` \| `academic` \| `assignment` \| `certificate` |
+| `required_file_types` | String[] | Allowed extensions: `['pdf', 'jpg', 'png']` |
+| `max_file_size_mb` | Number | e.g. 5 |
+| `is_mandatory` | Boolean | Whether submission is required |
+| `due_date` | Date | Optional deadline |
+| `scope.type` | Enum | `all` \| `program` \| `batch` \| `student` |
+| `scope.program` | ObjectId → Program | If scoped to a program |
+| `scope.batch` | ObjectId → Batch | If scoped to a batch |
+| `scope.students` | ObjectId[] → User | If assigned to specific students |
+| `subject` | ObjectId → Subject | For assignment-type requirements |
+| `created_by` | ObjectId → User | Admin or Teacher who created it |
+| `is_active` | Boolean | Soft toggle |
+
+**Indexes:** `{ category: 1, is_active: 1 }`, `{ 'scope.program': 1 }`, `{ 'scope.batch': 1 }`
+
+---
+
+#### [NEW] [DocumentSubmission.ts](file:///media/swastik/focus/ldm%20feb/src/models/DocumentSubmission.ts)
+
+The "submission" model — tracks each student's upload and its review status.
+
+| Field | Type | Purpose |
+|---|---|---|
+| `requirement` | ObjectId → DocumentRequirement | Which requirement this fulfills |
+| `student` | ObjectId → User | Who submitted |
+| `file_url` | String | Cloudinary URL |
+| `file_name` | String | Original filename |
+| `file_type` | String | `pdf`, `jpg`, `png`, `docx` |
+| `file_size` | Number | Bytes |
+| `cloudinary_public_id` | String | For deletion/management |
+| `status` | Enum | `pending` \| `approved` \| `rejected` \| `resubmitted` |
+| `review` | Object | `{ reviewed_by, reviewed_at, comment }` |
+| `submission_history` | Array | `[{ file_url, submitted_at, status, comment }]` — tracks all versions |
+| `submitted_at` | Date | Latest submission timestamp |
+
+**Indexes:** `{ requirement: 1, student: 1 }` (unique compound — one submission per requirement per student), `{ student: 1, status: 1 }`
+
+---
+
+#### [MODIFY] [AuditLog.ts](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts)
+
+Add `'DocumentRequirement'` and `'DocumentSubmission'` to the `entityType` enum so all document actions are audit-logged.
+
+---
+
+### Admin/Teacher API Layer
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `GET` | List all requirements (filterable by category, program, batch) |
+| `POST` | Create a new requirement (admin: any type; teacher: assignment only) |
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/[id]/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `GET` | Get single requirement with submission stats |
+| `PUT` | Update requirement (title, description, scope, deadline) |
+| `DELETE` | Soft-delete (set `is_active: false`) |
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/submissions/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `GET` | List all submissions (filterable by requirement, student, status, batch) |
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/submissions/[id]/review/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `PUT` | Approve or reject a submission with optional comment |
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/submissions/[id]/download/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `GET` | Securely download a student's uploaded file (streams from Cloudinary) |
+
+---
+
+### Student API Layer
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `GET` | List all requirements applicable to this student (with their submission status) |
+
+The API resolves which requirements apply by checking:
+1. `scope.type === 'all'` → applies to everyone
+2. `scope.type === 'program'` → student's program matches
+3. `scope.type === 'batch'` → student's batch matches
+4. `scope.type === 'student'` → student's ID is in the list
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/upload/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `POST` | Upload a file for a specific requirement (Cloudinary `raw` upload) |
+
+Validates: file size, file type matches requirement, student is in scope, requirement is active and not past due.
+
+---
+
+#### [NEW] [route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/[id]/resubmit/route.ts)
+
+| Method | Purpose |
+|---|---|
+| `PUT` | Re-upload after rejection (old file archived in `submission_history`) |
+
+---
+
+### Admin UI
+
+#### [NEW] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(admin)/admin/documents/page.tsx)
+
+Two-tab admin page:
+
+**Tab 1 — Requirements:**
+- Create/edit requirement form (title, description, category, scope assignment, file types, deadline)
+- Table listing all requirements with filters
+- Delete (soft) requirements
+
+**Tab 2 — Submissions:**
+- Table of all student submissions with filters (by requirement, batch, status)
+- Each row shows: student name, requirement title, submitted file, status badge, date
+- Click row → side panel with: file preview/download, approve/reject buttons, comment field
+- Bulk approve option
+
+---
+
+### Student UI
+
+#### [NEW] [page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/(student)/student/documents/page.tsx)
+
+Student documents dashboard:
+- Cards grouped by category (Personal Documents, Assignments, Academic, Certificates)
+- Each card shows: requirement title, status badge (Pending/Approved/Rejected/Not Submitted), due date
+- Upload button → opens file upload modal
+- For rejected documents: shows rejection reason + re-upload button
+
+---
+
+## Business Logic Flow
+
+```
+ADMIN CREATES REQUIREMENT
+        │
+        ▼
+    ┌──────────────┐
+    │ Scope Engine  │ → Determines which students see the requirement
+    └──────┬───────┘
+           │
+    ┌──────▼───────┐
+    │ Student sees  │ → "Documents" tab in dashboard
+    │ requirement   │
+    └──────┬───────┘
+           │
+    ┌──────▼───────┐
+    │ Student       │ → Validates file type, size, and scope eligibility
+    │ uploads file  │ → Stores in Cloudinary (secure, not public)
+    └──────┬───────┘
+           │
+    ┌──────▼───────┐
+    │ Submission    │ → Status: "pending"
+    │ created       │ → Audit log recorded
+    └──────┬───────┘
+           │
+    ┌──────▼───────┐
+    │ Admin/Teacher │ → Views submission, downloads file
+    │ reviews       │ → Approves ✅ or Rejects ❌ with comment
+    └──────┬───────┘
+           │
+     ┌─────┴─────┐
+     ▼           ▼
+  Approved    Rejected
+     │           │
+     │     ┌─────▼──────┐
+     │     │ Student     │ → Sees rejection reason
+     │     │ re-uploads  │ → Old file archived in history
+     │     └─────┬──────┘
+     │           │
+     │           ▼
+     │     Status: "resubmitted" → Back to review queue
+     │
+     ▼
+   COMPLETE ✅
+```
+
+---
+
+## Verification Plan
+
+### Manual Verification (recommended approach)
+
+Since the project has no automated test runner configured, I recommend manual testing the full workflow:
+
+**Test 1 — Admin creates a requirement:**
+1. Login as Admin at `ldmcollege.com`
+2. Go to **Admin → Documents** (new sidebar item)
+3. Click **"Create Requirement"**
+4. Fill: Title = "Aadhaar Card", Category = "Personal Document", Scope = "All Students", File Types = PDF/JPG
+5. Verify it appears in the requirements table
+
+**Test 2 — Student sees the requirement:**
+1. Login as a Student
+2. Go to **Student → Documents** (new sidebar item)
+3. Verify the "Aadhaar Card" requirement appears as "Not Submitted"
+
+**Test 3 — Student uploads a document:**
+1. Click "Upload" on the Aadhaar requirement
+2. Select a PDF file under 5MB
+3. Verify status changes to "Pending"
+
+**Test 4 — Admin reviews submission:**
+1. Login as Admin
+2. Go to **Documents → Submissions** tab
+3. Find the student's submission
+4. Click to review, download the file, add a comment, click "Approve"
+5. Verify status changes to "Approved"
+
+**Test 5 — Rejection and re-upload:**
+1. Admin rejects a different submission with comment "Blurry photo, please re-upload"
+2. Student sees the rejection reason and re-uploads
+3. Verify old file is archived in history and new status = "Resubmitted"
+
+**Test 6 — Role-based access:**
+1. Try accessing `/admin/documents` as a Student → should redirect to home
+2. Try calling `/api/admin/documents/submissions` without auth → should return 401
+3. Verify teachers can only create `assignment` category requirements

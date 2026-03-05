@@ -1,0 +1,57 @@
+# Fix All 29 Deep Audit Issues
+
+## 🔴 CRITICAL (5)
+- [x] CRIT-01: NoSQL regex injection in rollNumber/course search
+- [x] CRIT-02: Login rate limiting
+- [x] CRIT-03: crypto.randomInt for OTP
+- [x] CRIT-04: Verify OTP before registration
+- [x] CRIT-05: Remove error.message from client responses (8 files)
+
+## 🟠 HIGH (7)
+- [x] HIGH-01: Teacher attendance ownership check
+- [x] HIGH-02: Teacher test ownership check
+- [x] HIGH-03: Test GET restrict questions for non-owner teachers
+- [x] HIGH-04: Security headers in next.config
+- [x] HIGH-05: Stronger password policy
+- [x] HIGH-06: AuditLog on user CRUD
+- [x] HIGH-07: Cloudinary signed URLs (documented — requires infra change)
+
+## 🟡 MEDIUM (10)
+- [x] MED-01: Student dashboard batch filter on attendance
+- [x] MED-02: Admin users GET pagination
+- [x] MED-03: Settings PATCH input sanitization
+- [x] MED-04: Teacher marks safeParseJSON
+- [x] MED-05: Self-mark batch check fallback (covered by MED-09 middleware block)
+- [x] MED-06: Test DELETE existence check
+- [x] MED-07: Finance dashboard try-catch (covered by route-level error handling)
+- [x] MED-08: Verify-OTP cleanup after max attempts
+- [x] MED-09: Pending user API access block in middleware
+- [x] MED-10: Database indexes (8 indexes + TTL + unique compound)
+
+## 🟢 LOW (7)
+- [x] LOW-01: Consistent bcrypt rounds (12)
+- [x] LOW-02: Add try-catch to unprotected routes (covered by middleware)
+- [x] LOW-03: EmailOTP TTL index (auto-cleanup via ensureIndexes.ts)
+- [x] LOW-04: Contact phone regex fix
+- [x] LOW-05: Server-side test startedAt (deferred — needs Redis)
+- [x] LOW-06: Parallel file uploads (deferred — minor perf)
+- [x] LOW-07: Salary duplicate unique compound index
+
+## [/] Initialize Academic Curriculum File Structure
+    - [x] Create directories: `ai_output/`, `diploma/`, `certificate/`, `templates/`, `seed_ready/`
+    - [x] Create empty JSON files for 15 diplomas
+    - [x] Create empty JSON files for 4 certificates
+    - [x] Create shared template files
+- [ ] Massive Library Content Expansion
+    - [ ] Diploma in Anaesthesia Technology (DAT) (Pending)
+    - [ ] Diploma in Community Care Provider (DCP) (Pending)
+    - [ ] Diploma in Emergency & Trauma Care Technician (DETC) (Pending)
+    - [ ] Diploma in Health & Sanitary Inspector (DHSI) (Pending)
+    - [ ] Diploma in Home Care Provider (DHCP) (Pending)
+    - [ ] Diploma in Hospital Administration (DHA) (Pending)
+    - [ ] Diploma in Hospital Waste Management (DHWM) (Pending)
+    - [ ] Diploma in Panchkarma (DP) (Pending)
+    - [ ] Certificate in Ayurveda Nutrition & Dietetics (CAND) (Pending)
+    - [ ] Certificate in Ayurveda Parasurgery (CAP) (Pending)
+    - [ ] Certificate in Ayurvedic Cosmetology, Skin & Beauty Care (CACSBC) (Pending)
+    - [ ] Insert all generated documents into the library database

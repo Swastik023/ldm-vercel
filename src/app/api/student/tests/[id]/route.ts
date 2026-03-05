@@ -43,6 +43,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         return NextResponse.json({ success: false, message: 'You have already submitted this test.', alreadyAttempted: true }, { status: 409 });
     }
 
+    // Auto-lock: Once first student loads the test, lock it to prevent question edits
+    if (!test.isLocked) {
+        await ProTest.updateOne({ _id: id, isLocked: false }, { $set: { isLocked: true } });
+    }
+
     // Build safe questions (NO correct answers)
     const labels: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
     let questions = test.questions.map(q => {

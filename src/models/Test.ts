@@ -37,6 +37,8 @@ export interface IProTest extends Document {
     resultMode: 'instant' | 'manual';
     isPublished: boolean;                  // Admin publishes results for manual mode
     isActive: boolean;
+    isLocked: boolean;                     // Set to true once first student starts — blocks edits
+    academicYear?: string;                 // e.g. '2025-26' for filtering
     createdBy: mongoose.Types.ObjectId;
     sections: ITestSection[];
     questions: ITestQuestion[];
@@ -74,6 +76,8 @@ const ProTestSchema = new Schema<IProTest>({
     resultMode: { type: String, enum: ['instant', 'manual'], default: 'instant' },
     isPublished: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
+    isLocked: { type: Boolean, default: false },
+    academicYear: { type: String, trim: true },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     sections: { type: [SectionSchema], default: [] },
     questions: {
@@ -81,6 +85,9 @@ const ProTestSchema = new Schema<IProTest>({
         validate: [(v: ITestQuestion[]) => v.length > 0, 'A test must have at least one question'],
     },
 }, { timestamps: true });
+
+// Prevent duplicate tests for the same batch + subject + year + title
+ProTestSchema.index({ batch: 1, subject: 1, academicYear: 1, title: 1 }, { unique: true });
 
 export const ProTest: Model<IProTest> =
     mongoose.models.ProTest || mongoose.model<IProTest>('ProTest', ProTestSchema);

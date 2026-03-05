@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Documentation of fixes applied to make the SecureChat mobile app run on Android. Covers native module linking, app name mismatch, metro config, and babel config fixes. Includes verification steps.",
+  "updatedAt": "2026-02-07T15:22:46.818947627Z"
+}

@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Added detailed walkthrough for the new Examination System features, including Exam Creation, Teacher Assignment, Marks Entry, Result Processing, and Transcript Viewing. Updated credentials section to reflect testing accounts.",
+  "updatedAt": "2026-02-08T17:02:00.092323977Z",
+  "version": "12"
+}

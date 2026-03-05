@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Complete guide for running and testing the LDM College ERP API locally before Hostinger deployment. Includes step-by-step setup for PHP server, database configuration, CORS setup, and testing login/students endpoints with frontend integration.",
+  "updatedAt": "2026-02-01T01:47:46.046821382Z"
+}

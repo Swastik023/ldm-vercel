@@ -1,0 +1,48 @@
+# Database Update: Real LDM College Data
+
+I have successfully updated the database with real content from the website frontend.
+
+## 1. Faculty Members Added (Role: Teacher)
+
+| Name | Username | Password |
+|---|---|---|
+| **Dr. Rajesh Sachdeva** (Medical Director) | `dr.rajesh` | `password` |
+| **Dr. Sakshi Sachdeva** (Chief Gynecologist) | `dr.sakshi` | `password` |
+| **Dr. Saurabh Sachdeva** (Senior Consultant) | `dr.saurabh` | `password` |
+
+> Additional Users:
+> *   **Admin**: `admin` / `admin`
+> *   **Demo Student**: `student` / `password`
+
+## 2. Diploma Programs Added (19 Total)
+
+*   Diploma in Critical Care Management (DCCM)
+*   Diploma in Hospital Management (DHM)
+*   Diploma in Anaesthesia Technology (DAT)
+*   Diploma in Community Care Provider (DCP)
+*   Diploma in Emergency & Trauma Care Technician (DETC)
+*   Diploma in Health & Sanitary Inspector (DHSI)
+*   Diploma in Home Care Provider (DHCP)
+*   Diploma in Hospital Administration (DHA)
+*   Diploma in Hospital Waste Management (DHWM)
+*   Diploma in Medical Laboratory Technology (DMLT)
+*   Diploma in Nanny Training (DNT)
+*   Diploma in Operation Theatre Technology (DOTT)
+*   Diploma in Panchkarma (DP)
+*   Diploma in Radiology & Imaging Technology (DRIT)
+*   Multipurpose Health Worker (MPHW)
+*   *Plus 4 Certificate Courses in Ayurveda*
+
+## 3. Academic Data
+
+*   **Session**: Created "2024-2025" Academic Session.
+*   **Subjects**: Added ~100 subjects based on the syllabus for each course.
+*   **Batches**: Created a default "Batch 2024" for each program.
+
+## How to Reset Data
+
+If you ever need to reset the data again, just run:
+
+```bash
+node scripts/seed_real.js
+```

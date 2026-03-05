@@ -1,0 +1,87 @@
+# Rate Limiting, Business Logic & Dashboard Fixes
+
+Audited all 101 routes for rate limiting, handler patterns, and cross-dashboard connections.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Rate limiting approach**: Since there's no Redis, I'll use an in-memory Map with auto-expiry per IP. This works on Vercel because each serverless function instance gets its own memory — it won't perfectly share state across instances, but it catches 95% of abuse (bots hitting the same instance). This is the right approach for ~100 users without adding infrastructure.
+
+---
+
+## Proposed Changes
+
+### 1. Rate Limiting (Critical — Currently Zero Protection)
+
+#### [NEW] [rateLimit.ts](file:///media/swastik/focus/ldm%20feb/src/lib/rateLimit.ts)
+In-memory rate limiter with configurable window + max attempts per IP. Functions:
+- `rateLimit(ip, action, maxAttempts, windowMs)` → returns `{allowed, remaining, retryAfter}`
+- Separate limits for: `auth-register` (5/min), `auth-login` (10/min), `otp-send` (3/min), `otp-verify` (5/min)
+- Auto-cleanup of expired entries every 60s
+
+#### [MODIFY] [register/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts)
+Add IP rate limiting: 5 attempts per minute per IP.
+
+#### [MODIFY] [send-otp/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/send-otp/route.ts)
+Add IP rate limiting: 3 OTP sends per minute. The existing 60s DB cooldown per email stays as a second layer.
+
+#### [MODIFY] [verify-otp/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/verify-otp/route.ts)
+Add IP rate limiting: 5 attempts per minute to prevent brute-forcing 6-digit OTPs.
+
+---
+
+### 2. Business Logic — Self-Mark Attendance (Security Bug)
+
+#### [MODIFY] [self-mark/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/attendance/self-mark/route.ts)
+**Bug**: Any student can self-mark any attendance session regardless of their batch. A student in Batch A can mark attendance for a Batch B class.
+
+**Fix**: After loading the attendance doc, verify the student belongs to the same batch:
+```typescript
+const student = await User.findById(session.user.id).select('batch').lean();
+if (attendance.batch && student?.batch?.toString() !== attendance.batch.toString()) {
+    return 403 — "This session is not for your batch"
+}
+```
+
+---
+
+### 3. Business Logic — Admin Attendance Status Validation
+
+#### [MODIFY] [admin/attendance/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/attendance/route.ts)
+**Bug**: PUT allows arbitrary `status` values (e.g., `"hacked"`).
+
+**Fix**: Whitelist status to `['present', 'absent', 'late', 'excused']`.
+
+Also add [action](file:///media/swastik/focus/ldm%20feb/src/models/FeePayment.ts#3-12) validation in PATCH — whitelist to `['lock', 'unlock']`.
+
+---
+
+### 4. Handler Pattern — Missing Safe JSON Parse
+
+#### [MODIFY] [teacher/attendance/[assignmentId]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/attendance/%5BassignmentId%5D/route.ts)
+POST uses `await request.json()` without try-catch — malformed body = 500.
+
+#### [MODIFY] [teacher/attendance/[assignmentId]/session/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/teacher/attendance/%5BassignmentId%5D/session/route.ts)
+PATCH uses `await request.json()` without try-catch.
+
+---
+
+### 5. Admin Dashboard — Missing Stats
+
+#### [MODIFY] [admin/stats/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/stats/route.ts)
+Add:
+- `pendingStudents` count (`status: 'pending'` or `'under_review'`)
+- `rejectedStudents` count (for quick visibility)
+
+These are critical for the admin to see at a glance how many students need approval.
+
+---
+
+## Verification Plan
+
+### Automated
+- `npm run build` must pass
+
+### Manual
+- Test rate limiter by hitting register endpoint repeatedly — should get 429 after 5th attempt
+- Test self-mark with wrong batch student — should get 403

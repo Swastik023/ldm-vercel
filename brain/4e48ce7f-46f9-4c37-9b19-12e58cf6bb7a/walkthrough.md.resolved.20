@@ -1,0 +1,52 @@
+# Walkthrough: Seed Curriculum & Fix Course Display
+
+## What Was Done
+
+### 1. Extended [Program](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#62-82) Schema
+[Academic.ts](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts) — Added optional `curriculum` embedded sub-document with typed sub-schemas:
+- `CurriculumUnitSubSchema`, `CurriculumSemesterSubSchema`, `CurriculumProcedureSubSchema`, `CurriculumScenarioSubSchema`
+- `CurriculumSubSchema` — overview, academic_structure, detailed_syllabus, practical_procedures, case_scenarios, internship, assessment, career_pathways, student_engagement
+- All fields default to `undefined` — **zero impact on existing records**
+
+### 2. Created Seed Script
+[seed_curriculum.js](file:///media/swastik/focus/ldm%20feb/scripts/seed_curriculum.js) — Reads `ai_output/diploma/*.json` and upserts curriculum data into matching [Program](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#62-82) records.
+- **Code Alias Map**: Handles 3 mismatched codes (DCP→DCCP, DHCP→DIHCP, DHSI→DSHI)
+- Also backfills `description`, `syllabus[]`, and `careerOptions[]` if they were sparse
+- Does NOT delete any data
+
+### 3. Updated Course Detail API
+[page.tsx (server)](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/courses/%5Bid%5D/page.tsx) — [toClientCourse()](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/courses/%5Bid%5D/page.tsx#25-44) now accepts `includeCurriculum` flag and passes the full curriculum object to the client on detail pages.
+
+### 4. Rewrote Frontend Detail Page
+[CourseDetailClient.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/courses/%5Bid%5D/CourseDetailClient.tsx) — Dynamic section rendering with graceful fallbacks:
+
+| Section | Source | Fallback |
+|---|---|---|
+| Program Overview | `curriculum.overview` | Basic `description` |
+| Academic Structure | `curriculum.academic_structure` | Hidden |
+| Detailed Syllabus | `curriculum.detailed_syllabus` (accordions) | Basic `syllabus[]` list |
+| Practical Training | `curriculum.practical_procedures` | Hidden |
+| Case Scenarios | `curriculum.case_scenarios` | Hidden |
+| Internship | `curriculum.internship` | Hidden |
+| Assessment | `curriculum.assessment` | Hidden |
+| Career Pathways | `curriculum.career_pathways` | Basic `career[]` tags |
+| Student Engagement | `curriculum.student_engagement` | Hidden |
+
+## Verification Results
+
+### Seed Script
+```
+📊 Results: 14 updated, 5 skipped, 0 errors
+```
+- ✅ 14 diploma programs enriched with full curriculum data
+- ⏭️ 5 skipped: MPHW.json (empty), 4 certificate files (empty)
+
+### TypeScript Build
+```
+Exit code: 0
+```
+- ✅ Clean build — no TS compilation errors
+
+### Manual Testing Needed
+1. `npm run dev` → Open `http://localhost:3000/courses/DCCM` — should show all rich sections
+2. Open a course **without** curriculum (e.g., `/courses/GDA`) — should show basic layout without crashes

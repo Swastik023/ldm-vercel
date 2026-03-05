@@ -1,0 +1,182 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+LDM College
+In collaboration with Dr. Dharam Dev Hospital & Institute
+📢 Updates
+check checkkkkkkkk
+heyyyyyy
+check checkkkkkkkk
+heyyyyyy
+Home
+About Us
+Notices
+E-Library
+Courses
+Gallery
+Facilities
+Collaborations
+Contact
+Login
+LDM E-Library
+Paramedical College
+[0] (83,737)<nav class='flex-1 overflow-y-auto py-4 px-3 space-y-6' scrollable='true' />
+	Courses / Programs
+	Common & All
+	[1] (79,669)<div class='max-h-60 overflow-y-auto pr-1 mt-1 scrollbar-thin scrollbar-thumb-white/10' scrollable='true' />
+		CAIM
+		-
+		Certificate in Ayurveda Infertility Management
+		CAND
+		-
+		Certificate in Ayurveda Nutrition & Dietetics
+		CAP
+		-
+		Certificate in Ayurveda Parasurgery
+		CACSBC
+		-
+		Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+		DAT
+		-
+		Diploma in Anaesthesia Technology (DAT)
+		DCP
+		-
+		Diploma in Community Care Provider
+		DCCM
+		-
+		Diploma in Critical Care Management
+		DETC
+		-
+		Diploma in Emergency & Trauma Care Technician
+		DHSI
+		-
+		Diploma in Health & Sanitary Inspector
+		DHCP
+		-
+		Diploma in Home Care Provider
+		DHA
+		-
+		Diploma in Hospital Administration
+		DHM
+		-
+		Diploma in Hospital Management
+	Collections
+	All Categories
+	Module Notes
+	Foundation Modules
+Library
+All Programs
+234
+files found
+234
+Results Found
+19
+Programs
+Selected
+Access provided by LDM Paramedical College
+Module Notes
+203
+Expand all 203
+CACSBC-05: Herbal Cosmetics
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+Academic Book
+20 Feb 2026
+Open Book
+CACSBC-04: Beauty Treatments
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+Academic Book
+20 Feb 2026
+Open Book
+CACSBC-03: Hair Care
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+Academic Book
+20 Feb 2026
+Open Book
+[2] (29,42)<button class='jsx-e2f3cbeeed1be805 w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 hover:bg-white/10 transition' />
+CACSBC-03: Hair Care
+CACSBC
+•
+Module Notes
+[3] (879,42)<button class='jsx-e2f3cbeeed1be805 flex items-center gap-2 px-3 py-1.5 bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 rounded-lg border border-teal-500/30 transition shadow-sm group'>Save as PDF />
+	Save as PDF
+[4] (941,42)<button class='jsx-e2f3cbeeed1be805 p-1.5 text-white/60 hover:text-white transition group'>A- />
+	A-
+[5] (967,42)<button class='jsx-e2f3cbeeed1be805 p-1.5 text-white/60 hover:text-white transition group'>A+ />
+	A+
+[6] (94,543)<aside class='jsx-e2f3cbeeed1be805 bg-[#1e293b]/50 backdrop-blur-xl border-r border-white/5 transition-all duration-300 overflow-y-auto custom-scrollbar flex-shrink-0 w-72' scrollable='true' />
+	Table of Contents
+	[7] (92,181)<button class='jsx-e2f3cbeeed1be805 w-full text-left group flex items-start gap-3'>01
+Academic Table of Contents />
+		01
+		Academic Table of Contents
+	[8] (92,228)<button class='jsx-e2f3cbeeed1be805 w-full text-left group flex items-start gap-3'>02
+Chapter I: Foundational Principles />
+		02
+		Chapter I: Foundational Principles
+	[9] (92,288)<button class='jsx-e2f3cbeeed1be805 w-full text-left group flex items-start gap-3'>03
+Chapter II: Clinical Protocols & Guidelines />
+		03
+		Chapter II: Clinical Protocols & Guidelines
+	[10] (92,361)<button class='jsx-e2f3cbeeed1be805 w-full text-left group flex items-start gap-3'>04
+Chapter III: Pharmacological Interventions />
+		04
+		Chapter III: Pharmacological Interventions
+	[11] (92,421)<button class='jsx-e2f3cbeeed1be805 w-full text-left group flex items-start gap-3'>05
+Chapter V: The Critical Case Study />
+		05
+		Chapter V: The Critical Case Study
+	More to Read
+	[12] (92,594)<button class='jsx-e2f3cbeeed1be805 w-full p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-teal-500/30 transition-all text-left group'>CACSBC-04: Beauty Treatments />
+		Module Notes
+		CACSBC-04: Beauty Treatments
+	[13] (92,697)<button class='jsx-e2f3cbeeed1be805 w-full p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-teal-500/30 transition-all text-left group'>CACSBC-05: Herbal Cosmetics />
+		Module Notes
+		CACSBC-05: Herbal Cosmetics
+	[14] (92,811)<button class='jsx-e2f3cbeeed1be805 w-full p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-teal-500/30 transition-all text-left group'>CACSBC-02: Skin Care in Ayurveda />
+		Module Notes
+		CACSBC-02: Skin Care in Ayurveda
+	[15] (92,934)<button class='jsx-e2f3cbeeed1be805 w-full p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-teal-500/30 transition-all text-left group'>CACSBC-01: Ayurvedic Cosmetology Basics />
+		Module Notes
+		CACSBC-01: Ayurvedic Cosmetology Basics
+[16] (490,543)<main class='jsx-e2f3cbeeed1be805 flex-1 bg-white overflow-y-auto custom-scrollbar relative' scrollable='true' />
+	CACSBC-03: Hair Care - Academic Comprehensive Edition
+	Academic Table of Contents
+	[17] (305,293)<a class='text-teal-700 font-medium' href='#ch1'>Chapter I: Foundational Principles />
+	[18] (560,293)<a class='text-teal-700 font-medium' href='#ch2'>Chapter II: Clinical Protocols />
+	[19] (289,330)<a class='text-teal-700 font-medium' href='#ch3'>Chapter III: Pharmacology />
+	[20] (570,330)<a class='text-teal-700 font-medium' href='#ch4'>Chapter IV: Advanced Technology />
+	[21] (297,367)<a class='text-teal-700 font-medium' href='#ch5'>Chapter V: Critical Case Study />
+	[22] (557,367)<a class='text-teal-700 font-medium' href='#ch6'>Chapter VI: Safety & Ethics />
+	Chapter I: Foundational Principles
+	The academic pursuit of this module begins with a rigorous understanding of the underlying physiological mechanisms. Unlike basic summaries, this comprehensive study demands mastery over the cellular and systemic responses involved in professional paramedical practice.
+	Academic Insight:
+	Homeostasis in clinical settings is a dynamic equilibrium. Understanding the acid-base balance and electrolyte shifting is paramount for any critical care intervention.
+	Detailed exploration of anatomical structures and their functional significance follows, ensuring the student can visualize the clinical impact of every procedure.
+	Chapter II: Clinical Protocols & Guidelines
+	Adherence to Standard Operating Procedures (SOPs) is what differentiates a technician from an expert. This chapter outlines the latest guidelines from the International Liaison Committee on Resuscitation (ILCOR) and relevant national healthcare standards.
+	Phase
+	Clinical Action
+	Rationale
+High-Yield Fact
+In emergency pharmacology, the "Rule of 4s" often dictates initial dosage intervals for critical IV interventions.
+Related Modules
+[23] (896,471)<button class='jsx-e2f3cbeeed1be805 w-full text-left p-4 rounded-2xl bg-white border border-slate-100 hover:border-teal-200 hover:shadow-sm transition-all cursor-pointer group' />
+	[24] (896,458)<p >CACSBC
+•
+Module Notes />
+	[25] (896,484)<p >CACSBC-04: Beauty Treatments />
+[26] (896,578)<button class='jsx-e2f3cbeeed1be805 w-full text-left p-4 rounded-2xl bg-white border border-slate-100 hover:border-teal-200 hover:shadow-sm transition-all cursor-pointer group' />
+	[27] (896,565)<p >CACSBC
+•
+Module Notes />
+	[28] (896,591)<p >CACSBC-05: Herbal Cosmetics />
+[29] (896,685)<button class='jsx-e2f3cbeeed1be805 w-full text-left p-4 rounded-2xl bg-white border border-slate-100 hover:border-teal-200 hover:shadow-sm transition-all cursor-pointer group' />
+	[30] (896,672)<p >CACSBC
+•
+Module Notes />
+	[31] (896,698)<p >CACSBC-02: Skin Care in Ayurveda />
+Reader Active
+[32] (896,925)<button class='jsx-e2f3cbeeed1be805 w-full py-4 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 text-[10px] font-black uppercase tracking-widest hover:border-teal-500 hover:text-teal-600 transition-all flex items-center justify-center gap-2'>Focus Mode />
+
+</current_dom>

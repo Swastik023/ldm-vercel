@@ -1,0 +1,10 @@
+# Database Import/Export Setup
+
+## Tasks
+- [x] Update database configuration for local development
+- [/] Create database import/export guide
+  - [ ] Check existing SQL files
+  - [ ] Create export instructions
+  - [ ] Create import instructions for both directions
+  - [ ] Add troubleshooting steps
+- [ ] Test database import process

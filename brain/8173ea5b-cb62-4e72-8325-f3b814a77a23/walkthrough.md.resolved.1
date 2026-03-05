@@ -1,0 +1,113 @@
+# MCQ Tests + Website Improvements — Walkthrough
+
+## Summary of Everything Done
+
+### Phase 1 — Quick Fixes
+| Fix | File |
+|---|---|
+| Course `[id]` page — Next.js 15 `params as Promise` | [courses/\[id\]/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/courses/%5Bid%5D/page.tsx) |
+| Map iframe → LDM Paramedical College location | [contact/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/contact/page.tsx) |
+| Register link added to navbar (desktop + mobile) | [PublicNavbar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/layout/PublicNavbar.tsx) |
+| Apply Now form — added Address field | [collect-info/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/collect-info/page.tsx) |
+
+---
+
+### Phase 2 — MCQ Test System (13 new files)
+
+#### Database Models
+- [Test.ts](file:///media/swastik/focus/ldm%20feb/src/models/Test.ts) — title, duration, isActive, embedded questions
+- [TestAttempt.ts](file:///media/swastik/focus/ldm%20feb/src/models/TestAttempt.ts) — studentId, score, percentage, answers; unique index prevents re-taking
+
+#### Parser Utility
+- [mcqParser.ts](file:///media/swastik/focus/ldm%20feb/src/lib/mcqParser.ts) — handles `Q1.`, `1.`, options `A)` / `A.` / [(A)](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/fee-records/%5Bid%5D/route.ts#58-70), answers `Answer: B` / `Ans: B`, deduplicates, validates
+
+#### Admin APIs (`/api/admin/tests/`)
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/fee-records/%5Bid%5D/route.ts#58-70) — list tests + attempt counts
+- [POST](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/send-otp/route.ts#21-87) — create test by parsing raw MCQ text
+- `GET /[id]` — test detail + all student attempts
+- `PATCH /[id]` — toggle isActive
+- `DELETE /[id]` — remove test + all attempts
+
+#### Student APIs (`/api/student/tests/`)
+- [GET](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/finance/fee-records/%5Bid%5D/route.ts#58-70) — active tests with "already attempted" flag (no answers exposed)
+- `GET /[id]` — test questions (correct answers stripped)
+- `POST /[id]` — submit, score server-side, return review with answer key
+
+#### Admin Frontend
+- [/admin/tests](file:///media/swastik/focus/ldm%20feb/src/app/admin/tests/page.tsx) — table with attempt counts, toggle, delete
+- [/admin/tests/create](file:///media/swastik/focus/ldm%20feb/src/app/admin/tests/create/page.tsx) — paste MCQs textarea, example loader, parse result feedback
+
+#### Student Frontend
+- [/student/tests](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/tests/page.tsx) — test cards, score if attempted
+- [/student/tests/\[id\]](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/tests/%5Bid%5D/page.tsx) — countdown timer, radio questions, auto-submit on timeout
+- [/student/tests/\[id\]/result](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/tests/%5Bid%5D/result/page.tsx) — score card, grade, full review with correct/wrong colors
+
+---
+
+### Phase 3 — Fee & Discount System (8 new files)
+
+#### Model + Utilities
+- [FeeRecord.ts](file:///media/swastik/focus/ldm%20feb/src/models/FeeRecord.ts) — base price (locked), discount%, discountAmount, finalFees, payments[]
+- [feeCalculator.ts](file:///media/swastik/focus/ldm%20feb/src/lib/feeCalculator.ts) — [calcFees({ basePrice, discountPercent, flatDiscount })](file:///media/swastik/focus/ldm%20feb/src/lib/feeCalculator.ts#21-50) — guarded, centralised
+
+#### Admin APIs
+- `GET /api/admin/finance/fee-records` — list + revenue/dues totals, filterable
+- `POST /api/admin/finance/fee-records` — create (validates discount ≤ base price)
+- `PATCH /api/admin/finance/fee-records/[id]` — `action: "update-discount"` or `"add-payment"` (guards overpayment)
+
+#### Student API
+- `GET /api/student/fees` — returns only the logged-in student's own record
+
+#### Frontend
+- [/admin/finance/fees](file:///media/swastik/focus/ldm%20feb/src/app/admin/finance/fees/page.tsx) — summary cards, filterable table, Add Record modal with live discount calculator preview, Add Payment modal
+- [/student/fees](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/fees/page.tsx) — fee summary card, payment progress bar, payment history list
+
+---
+
+### Phase 4 — Google Analytics 4
+
+Added to [layout.tsx](file:///media/swastik/focus/ldm%20feb/src/app/layout.tsx):
+- GA4 `<Script>` tags (load strategy `afterInteractive`)
+- Measurement ID via `NEXT_PUBLIC_GA_ID` env variable (defaults to placeholder `G-XXXXXXXXXX`)
+
+> **Set up**: Add `NEXT_PUBLIC_GA_ID=G-YOUR_ACTUAL_ID` to your [.env](file:///media/swastik/focus/ldm%20feb/.env) file.
+
+---
+
+### Phase 5 — Student Dashboard Updated
+
+[student/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/page.tsx) now has 2 sections:
+1. **Your Career Tools** — Resume Builder, Preview, Download PDF
+2. **Academic & Finance** — MCQ Tests, Fee Details (newly added)
+
+---
+
+## Test MCQ Parser
+
+The parser handles all these formats correctly:
+
+```
+Q1. What is HTML?
+A) Programming Language
+B) Markup Language  ← selected as correct
+C) Database
+D) Server
+Answer: B
+
+1. CSS stands for?
+A. Computer Style Sheets
+B. Creative Style System
+C. Cascading Style Sheets
+D. Colorful Style Syntax
+Ans: C
+```
+
+---
+
+## Setup Checklist
+
+- [ ] Restart dev server: `npm run dev`  
+- [ ] Add `NEXT_PUBLIC_GA_ID=G-XXXX` to [.env](file:///media/swastik/focus/ldm%20feb/.env) for real GA4 tracking  
+- [ ] Create first admin test at `/admin/tests/create`  
+- [ ] Go to `/admin/finance/fees` to add first fee record  
+- [ ] Student login → Dashboard → MCQ Tests, Fee Details both visible

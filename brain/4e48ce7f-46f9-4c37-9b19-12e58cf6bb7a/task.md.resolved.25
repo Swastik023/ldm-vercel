@@ -1,0 +1,12 @@
+# Production Hardening
+
+- [ ] SEC-01: Fix [if(false)](file:///media/swastik/focus/ldm%20feb/src/lib/gtag.ts#62-65) auth bypass in `/api/admin/students`
+- [ ] DB-01: Add `batch+rollNumber` compound unique index to User model
+- [ ] DB-02: Add `records.student` index to Attendance model
+- [ ] LOG-01: Fix TOCTOU race condition in test submission
+- [ ] LOG-02: Fix option shuffle to re-label A/B/C/D sequentially
+- [ ] UI-01: Fix timer to use absolute `Date.now()` approach
+- [ ] API-01: Add pagination to `/api/admin/finance/payments`
+- [ ] API-02: Add pagination to [/api/admin/tests](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/tests)
+- [ ] Build verification
+- [ ] Commit and push

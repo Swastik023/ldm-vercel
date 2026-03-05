@@ -1,0 +1,385 @@
+# Academic ERP UI Enhancement via Google Stitch
+
+## Executive Summary
+
+This plan enhances the existing LDM College ERP by generating **missing UI screens** using Google Stitch MCP while **preserving all existing components**. The backend API supports 70+ endpoints across 7 core modules, but the frontend only has **13 role-specific screens** (9 admin, 1 teacher, 1 student, 1 employee, 1 parent-less). This plan fills the gaps.
+
+---
+
+## Current State Analysis
+
+### ✅ Existing Frontend (PRESERVE AS-IS)
+
+**Admin Screens (9):**
+- Dashboard (with ERP Management quick actions)
+- Attendance Management
+- Audit Logs
+- Contact Messages
+- Manage Content
+- Manage Gallery
+- Manage Marquee
+- Manage Notices
+- Manage Users
+
+**Role Dashboards (3):**
+- Teacher Dashboard (classes, today's attendance, notifications)
+- Student Dashboard (attendance %, today's schedule, notifications)
+- Employee Dashboard (basic info)
+
+**Public Pages (19):** Home, About, Courses, Gallery, Hospital, Team, Contact, etc.
+
+### ✅ Existing Backend API (70+ Endpoints)
+
+**Authentication:** `/auth/login`, `/auth/logout`, `/auth/check`
+
+**Admin CRUD:** Students, Users, Courses, Classes, Notices, Gallery, Contact Messages, Audit Logs, Permissions
+
+**Teacher Features:** Classes list, Class students, Mark attendance, Import attendance, Schedule, Dashboard
+
+**Student Features:** Profile, Attendance, Timetable, Grades, Notifications, Dashboard
+
+**Employee Features:** Profile, Attendance, Dashboard
+
+**Academic Management ([academic_endpoints.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/academic_endpoints.php)):**
+- Assign teacher to subject
+- List/Create academic sessions
+- List/Get programs (with curriculum)
+- Enroll student in program
+
+**Examination System ([exam_endpoints.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/exam_endpoints.php)):**
+- Admin: List/Create exams
+- Teacher: Get assigned exams, Enter marks
+- Student: Get exam schedule, View results
+- Admin: Process results (GPA calculation), Generate transcripts, Lock marks
+
+### ✅ Design Language (MUST PRESERVE)
+
+**Technology:** Vite + React 18 + TypeScript + Tailwind CSS + Framer Motion
+
+**Design Tokens:**
+- **Primary Palette:** Sky blue (#0ea5e9 to #0c4a6e)
+- **Backgrounds:** Gray gradients (`from-gray-50 to-blue-50`, `from-amber-50 to-orange-50`)
+- **Cards:** `bg-white`, `rounded-xl`, `shadow-lg`, `border-l-4` with role color accent
+- **Role Colors:**
+  - Admin: Blue/Indigo
+  - Teacher: Amber/Orange
+  - Student: Blue/Indigo/Purple
+  - Employee: Gray/Green
+- **Typography:** Default sans-serif, bold headers (text-3xl), uppercase labels (text-sm uppercase)
+- **Animations:** Framer Motion (`whileHover={{ y: -5 }}`, fade-in transitions)
+
+**Layout Patterns:**
+- Full-page container: `min-h-screen bg-gradient-to-br p-8`
+- Max-width wrapper: `max-w-7xl mx-auto`
+- Gradient header bar with greeting + role subtitle
+- Stats grid: `grid grid-cols-1 md:grid-cols-3 gap-6`
+- Action cards: `p-4 border rounded hover:bg-gray-50`
+
+---
+
+## Gap Analysis: Missing UI Screens
+
+### 🔴 **Module 1: Admissions & Student Lifecycle** (0% covered)
+**Backend:** ✅ Enrollment endpoints exist  
+**Frontend:** ❌ None
+
+**Missing Screens:**
+1. **Inquiry Management** (Admin) - Capture prospective student details
+2. **Admission Form** (Admin) - Convert inquiry → admission
+3. **Student Enrollment** (Admin) - Enroll admitted students in programs
+4. **Promotion/Detention** (Admin) - Semester progression management
+5. **Alumni Tracker** (Admin) - Graduated students database
+
+---
+
+### 🟡 **Module 2: Academic Management** (20% covered)
+**Backend:** ✅ Sessions, Programs, Subjects, Teacher Assignment  
+**Frontend:** ⚠️ Only basic dashboard quick links
+
+**Missing Screens:**
+1. **Academic Sessions** (Admin) - CRUD for 2023-24, 2024-25, etc.
+2. **Programs & Curriculum** (Admin) - Manage programs, semesters, subject mapping
+3. **Subject Assignment** (Admin) - Assign teachers to subjects per session
+4. **Timetable Builder** (Admin) - Weekly class schedule generator
+5. **Academic Calendar** (Admin/Teacher/Student) - View term dates, holidays, exam schedule
+
+---
+
+### 🟡 **Module 3: Attendance** (40% covered)
+**Backend:** ✅ Mark, view, import attendance  
+**Frontend:** ⚠️ Admin attendance management exists, teacher can mark via dashboard link
+
+**Missing Screens:**
+1. **Teacher Attendance Interface** (Teacher) - Dedicated UI to mark daily attendance for all classes
+2. **Student Attendance Detail** (Student) - Monthly calendar view, absent date list
+3. **Parent Attendance View** (Parent) - Child's attendance summary with alerts
+
+---
+
+### 🔴 **Module 4: Examination & Gradebook** (10% covered)
+**Backend:** ✅ Full exam CRUD, marks entry, GPA calculation, transcripts  
+**Frontend:** ❌ No dedicated UI (just "Upload Marks" placeholder button on teacher dashboard)
+
+**Missing Screens:**
+1. **Exam Creation** (Admin) - Create exam, assign subjects, set dates
+2. **Marks Entry** (Teacher) - Tabular interface to enter theory + practical marks
+3. **Result Processing** (Admin) - Calculate GPA, lock marks, promote students
+4. **Report Cards** (Student/Parent) - View exam results, semester GPA
+5. **Transcript Generation** (Admin) - Generate academic transcripts
+6. **Grade Analytics** (Admin) - Class-wise performance charts
+
+---
+
+### 🔴 **Module 5: Fees & Accounting** (0% covered)
+**Backend:** ❌ NOT IMPLEMENTED  
+**Frontend:** ❌ None
+
+**Missing Screens:**
+1. **Fee Structure** (Admin/Accountant) - Define fee categories (tuition, lab, hostel)
+2. **Student Fee Assignment** (Admin/Accountant) - Assign fees to students
+3. **Payment Collection** (Accountant) - Record online/offline payments, generate receipts
+4. **Fee Due Reports** (Accountant/Admin) - Defaulters list, collection summary
+5. **Student Fee View** (Student/Parent) - View fee structure, payment history, pending dues
+
+---
+
+### 🔴 **Module 6: Employee Management** (5% covered)
+**Backend:** ⚠️ Only profile + attendance  
+**Frontend:** ⚠️ Basic employee dashboard
+
+**Missing Screens:**
+1. **Staff Directory** (Admin) - All faculty + non-teaching staff profiles
+2. **Leave Management** (Employee/Admin) - Apply leave, approve/reject
+3. **Payroll Summary** (Admin/Employee) - Basic salary, deductions (UI only, no backend)
+4. **Staff Attendance** (Admin) - Mark/view employee attendance
+
+---
+
+### 🔴 **Module 7: Communication** (10% covered)
+**Backend:** ⚠️ Notices exist, no messaging  
+**Frontend:** ⚠️ Manage Notices exists (admin-only CRUD)
+
+**Missing Screens:**
+1. **Announcements Board** (All Roles) - View latest notices (public + role-specific)
+2. **Direct Messaging** (Teacher ↔ Parent) - Send/receive messages
+3. **Broadcast Messages** (Admin) - Send bulk SMS/email to students/parents
+
+---
+
+### 🔴 **Module 8: Documents & Certificates** (0% covered)
+**Backend:** ❌ NOT IMPLEMENTED  
+**Frontend:** ❌ None
+
+**Missing Screens:**
+1. **ID Card Generator** (Admin) - Generate student/staff ID cards
+2. **Certificate Templates** (Admin) - Manage certificate layouts
+3. **Student Documents** (Student/Parent) - Download ID, receipts, certificates, transcripts
+
+---
+
+### 🔴 **Module 9: Parent Portal** (0% covered)
+**Backend:** ❌ NOT IMPLEMENTED (role exists in schema but no endpoints)  
+**Frontend:** ❌ None
+
+**Missing Screens:**
+1. **Parent Dashboard** - View child's attendance, results, fees, notices
+2. **Parent-Teacher Communication** - Message teachers
+3. **Fee Payment** - Online fee payment integration
+
+---
+
+### 🔴 **Module 10: Accountant Role** (0% covered)
+**Backend:** ❌ Role not implemented  
+**Frontend:** ❌ None
+
+**Missing Screens:**
+1. **Accountant Dashboard** - Fee collection stats, pending dues
+2. **Payment Processing** - All screens from Module 5
+
+---
+
+## Proposed UI Generation Strategy
+
+### Phase 1: Core Academic Features (8 screens)
+
+**Priority: CRITICAL** (Backend exists, zero UI)
+
+1. **Academic Sessions Manager** (Admin Desktop)
+   - Create/edit sessions (2023-24, 2024-25)
+   - Set active session
+   - Archive old sessions
+
+2. **Programs & Curriculum Builder** (Admin Desktop)
+   - List programs with semester count
+   - View/edit curriculum (semester → subject mapping)
+   - Add/remove subjects from semesters
+
+3. **Teacher-Subject Assignment** (Admin Desktop)
+   - Select session + program + semester
+   - Assign teacher to each subject
+   - View current assignments
+
+4. **Exam Builder** (Admin Desktop)
+   - Create exam (name, type, dates, program, semester)
+   - Auto-map subjects from curriculum
+   - Set status (upcoming/active/completed)
+
+5. **Marks Entry Interface** (Teacher Desktop)
+   - Select exam → subject → class
+   - Tabular grid: Student | Theory Marks | Practical Marks | Total
+   - Save/lock individual rows
+
+6. **Result Processing Dashboard** (Admin Desktop)
+   - Select exam → program → semester
+   - Process all results (calculate GPA, pass/fail)
+   - Lock marks for entire exam
+   - Promote students to next semester
+
+7. **Student Report Card** (Student/Parent Mobile-First)
+   - View exam results (subject-wise marks, GPA)
+   - Download PDF report card
+   - View semester progression history
+
+8. **Transcript Generator** (Admin Desktop)
+   - Select student
+   - Generate full academic transcript (all semesters)
+   - Download PDF
+
+### Phase 2: Student Lifecycle (4 screens)
+
+**Priority: HIGH** (Backend partially exists)
+
+9. **Inquiry Management** (Admin Desktop)
+10. **Admission & Enrollment** (Admin Desktop)
+11. **Student Promotion/Detention** (Admin Desktop)
+12. **Alumni Database** (Admin Desktop)
+
+### Phase 3: Enhanced Teacher Features (3 screens)
+
+**Priority: HIGH** (Backend exists, minimal UI)
+
+13. **Teacher Attendance Interface** (Teacher Desktop/Tablet)
+14. **Teacher Class Management** (Teacher Desktop)
+15. **Teacher Schedule View** (Teacher Desktop/Mobile)
+
+### Phase 4: Parent Portal (3 screens)
+
+**Priority: MEDIUM** (Requires new backend)
+
+16. **Parent Dashboard** (Parent Mobile-First)
+17. **Parent Communication** (Parent Mobile-First)
+18. **Child Progress Tracker** (Parent Mobile-First)
+
+### Phase 5: Fees Module (5 screens)
+
+**Priority: MEDIUM** (Requires new backend)
+
+19. **Fee Structure Setup** (Admin/Accountant Desktop)
+20. **Fee Assignment** (Admin/Accountant Desktop)
+21. **Payment Collection** (Accountant Desktop)
+22. **Fee Reports** (Accountant Desktop)
+23. **Student Fee Portal** (Student/Parent Mobile-First)
+
+### Phase 6: Employee HR (3 screens)
+
+**Priority: LOW** (Backend minimal)
+
+24. **Staff Directory** (Admin Desktop)
+25. **Leave Management** (Employee/Admin Desktop)
+26. **Payroll Summary** (Admin/Employee Desktop)
+
+---
+
+## Design Specifications for Stitch
+
+### Device Types by Role
+- **Admin/Accountant:** Desktop (1920x1080)
+- **Teacher:** Desktop/Tablet (1024x768)
+- **Student/Parent:** Mobile-First (375x812 iPhone) + responsive desktop
+
+### Theme per Role
+- **Admin:** Light mode, Blue/Indigo primary (#0ea5e9), Professional density
+- **Teacher:** Light mode, Amber/Orange primary (#f59e0b), Medium density
+- **Student:** Light mode, Purple/Blue primary (#8b5cf6), Clean & simple
+- **Parent:** Light mode, Green primary (#10b981), Family-friendly
+- **Accountant:** Light mode, Teal primary (#14b8a6), Data-focused
+
+### Required Components
+- Gradient header (role-specific colors)
+- Stats cards with icons
+- Data tables (sortable, filterable)
+- Form inputs with validation
+- Action buttons (primary, secondary, danger)
+- Modal dialogs
+- Toast notifications (success/error)
+
+### Font
+- **Primary:** Inter (or system sans-serif)
+- **Roundness:** Round 8 (border-radius: 0.5rem)
+- **Saturation:** Medium (2-3/4)
+
+---
+
+## Implementation Workflow
+
+### Step 1: Connect to Stitch MCP
+```bash
+curl -X POST -H "X-Goog-Api-Key: AQ.Ab8RN6INfEsktDJIcKATRr6QtBVja9nnnrn1_Y0EKqo5up4y_g" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "tools/call", "params": {"name": "list_projects"}, "id": 1}' \
+  https://stitch.googleapis.com/mcp
+```
+
+### Step 2: Generate Each Screen
+For each screen in Phase 1:
+```bash
+curl -X POST -H "X-Goog-Api-Key: ..." -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "generate_screen_from_text",
+      "arguments": {
+        "projectId": "5304011400071064164",
+        "prompt": "<detailed screen description>",
+        "deviceType": "DESKTOP"
+      }
+    },
+    "id": 2
+  }' \
+  https://stitch.googleapis.com/mcp
+```
+
+### Step 3: Extract & Convert
+For each generated screen:
+1. Use `get_screen` to retrieve HTML
+2. Convert HTML to React component
+3. Replace inline styles with Tailwind classes
+4. Wire API calls to existing endpoints
+5. Add route to [AppRoutes.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/frontend/src/routes/AppRoutes.tsx)
+
+### Step 4: Verify
+- Build: `npm run build`
+- Test API connections
+- Test role-based routing
+
+---
+
+## Next Steps
+
+1. **User Approval** - Review this plan and confirm Phase 1 priorities
+2. **Stitch Generation** - Generate Phase 1 screens (8 screens)
+3. **Integration** - Convert to React components
+4. **Testing** - Verify functionality
+5. **Iterate** - Move to Phase 2
+
+---
+
+## Risks & Mitigation
+
+| Risk | Mitigation |
+|------|------------|
+| Generated UI doesn't match existing design | Provide detailed design specs in prompts, manually adjust Tailwind classes |
+| API endpoints missing for some features | Skip those screens for now, document as "Backend Required" |
+| Stitch HTML is not responsive | Request mobile/desktop variants, manual responsive adjustments |
+| Generated code uses frameworks we don't use | Extract only HTML structure, rewrite as React+Tailwind |

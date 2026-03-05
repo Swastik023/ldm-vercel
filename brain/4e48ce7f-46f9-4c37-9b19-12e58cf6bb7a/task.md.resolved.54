@@ -1,0 +1,16 @@
+# Seed Curriculum & Fix Course Display
+
+## Phase 1: Schema & Seed
+- [/] Extend [Program](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#17-35) model with optional `curriculum` sub-document
+- [ ] Create `seed_curriculum.js` script
+- [ ] Run seed script and verify 14 programs updated
+
+## Phase 2: API & Frontend
+- [ ] Update public API to expose curriculum data on detail page
+- [ ] Enhance [CourseDetailClient.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/courses/%5Bid%5D/CourseDetailClient.tsx) with dynamic section rendering
+- [ ] Ensure old courses without curriculum still render correctly
+
+## Phase 3: Verification
+- [ ] TypeScript build check passes
+- [ ] Manual testing: course with curriculum renders all sections
+- [ ] Manual testing: course without curriculum renders basic layout

@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
         rollNumber,
         password,
         batchId,
+        semester,
     } = body;
 
     // ── Field presence validation ─────────────────────────────────────────────
@@ -143,6 +144,7 @@ export async function POST(req: NextRequest) {
         role: 'student',
         status: 'pending',
         isProfileComplete: false,
+        ...(semester ? { semester: Number(semester) } : {}),
     });
 
     // ── Auto-create Class record — so user.classId is linked from start ─────

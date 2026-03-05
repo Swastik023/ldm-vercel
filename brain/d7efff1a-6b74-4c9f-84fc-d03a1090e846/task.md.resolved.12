@@ -1,0 +1,78 @@
+# Frontend-Backend Integration Project
+
+## Current Status
+- [x] Backend API fully operational at `/api/`
+- [x] Database connected and tested locally
+- [x] Backend-frontend mapping analysis complete
+- [x] Frontend API URLs updated
+- [x] Admin user created successfully
+- [x] Login working with backend
+- [x] Components tested with new URLs
+- [ ] Missing backend endpoints implemented
+
+## Phase 1: Update Frontend API URLs ✅ COMPLETE
+- [x] Update all 16 frontend files
+- [x] Fix Vite proxy configuration
+- [x] Fix backend login query (passwordStrong)
+
+## Phase 2: Test Updated Components ✅ LOGIN WORKING
+- [x] Test login with new `/api/auth/login`
+- [x] Test authentication state management
+- [x] Create admin user in database
+
+## Phase 3: Database Schema Setup ✅ COMPLETE
+- [x] Create gallery table
+- [x] Create notices table
+- [x] Create contact_messages table
+- [x] Add indexes for performance
+
+## Phase 4: Backend Endpoint Implementation
+
+### Contact Form API ✅ COMPLETE
+- [x] `POST /api/contact` - Submit contact form
+- [x] `GET /api/admin/contact-messages` - List submissions (admin)
+- [x] `PATCH /api/admin/contact-messages/{id}` - Update status (admin)
+- [x] `DELETE /api/admin/contact-messages/{id}` - Delete (admin)
+- [x] Add validation and rate limiting
+- [x] Test endpoint
+
+### Gallery API
+- [ ] `GET /api/gallery` - Public gallery list
+- [ ] `POST /api/admin/gallery` - Upload image (admin)
+- [ ] `PUT /api/admin/gallery/{id}` - Update metadata (admin)
+- [ ] `DELETE /api/admin/gallery/{id}` - Delete (admin)
+- [ ] Add file upload handling
+- [ ] Test endpoint
+
+### Notices API ✅ COMPLETE
+- [x] `GET /api/notices` - Public notices list
+- [x] `POST /api/admin/notices` - Create (admin)
+- [x] `PUT /api/admin/notices/{id}` - Update (admin)
+- [x] `DELETE /api/admin/notices/{id}` - Delete (admin)
+- [x] Test endpoint
+
+### Admin Dashboard API
+- [ ] `GET /api/admin/stats` - Dashboard statistics
+- [ ] Add caching for performance
+- [ ] Test endpoint
+
+## Phase 5: Security & Middleware
+- [ ] Admin role check middleware
+- [ ] Input validation helpers
+- [ ] Rate limiting for public endpoints
+- [ ] Error logging
+
+## Phase 6: Frontend Integration
+- [ ] Test contact form submission
+- [ ] Test gallery display
+- [ ] Test notices display
+- [ ] Test admin dashboard
+- [ ] Handle errors gracefully
+
+## Phase 7: Testing & Documentation
+- [ ] Write API tests
+- [ ] Create API documentation
+- [ ] Test all endpoints locally
+- [ ] Prepare for deployment
+
+

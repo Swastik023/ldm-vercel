@@ -1,0 +1,15 @@
+# Tasks
+
+- [ ] Design PHP Backend Architecture <!-- id: 8 -->
+    - [x] Create Design Document <!-- id: 8.1 -->
+- [x] Implement Database Layer <!-- id: 9 -->
+    - [x] Create [schema.sql](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/sql/schema.sql) <!-- id: 9.1 -->
+    - [x] Create [config/db.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/config/db.php) <!-- id: 9.2 -->
+- [x] Implement Core Logic <!-- id: 10 -->
+    - [x] Create [includes/functions.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/includes/functions.php) (Helpers) <!-- id: 10.1 -->
+    - [x] Create [includes/auth.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/includes/auth.php) (Middleware) <!-- id: 10.2 -->
+    - [x] Create [login.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/login.php) & [logout.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/php_backend/logout.php) <!-- id: 10.3 -->
+- [x] Implement Panels <!-- id: 11 -->
+    - [x] Admin Dashboard (Includes User/Notice CRUD) <!-- id: 11.1 -->
+    - [x] Teacher Dashboard <!-- id: 11.2 -->
+    - [x] Student/Employee Dashboard <!-- id: 11.3 -->

@@ -1,0 +1,238 @@
+# Priority 2: Performance Optimizations - Implementation Plan
+
+## Goal
+
+Implement performance optimizations to achieve **2-3x faster API response times** and better handle concurrent users on Hostinger shared hosting.
+
+> [!IMPORTANT]
+> All optimizations must be compatible with shared hosting constraints (no Redis, no custom Apache modules).
+
+---
+
+## Proposed Changes
+
+### Step 4: API Response Caching
+
+#### [NEW] [api/Cache.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/Cache.php)
+
+**Purpose:** File-based caching system for API responses
+
+**Features:**
+- File-based storage (`/private/cache/`)
+- Configurable TTL (Time To Live)
+- Cache key generation from request params
+- Automatic cache expiration
+- Cache invalidation methods
+- Cache statistics tracking
+
+**Methods:**
+```php
+Cache::get($key)              // Retrieve cached data
+Cache::set($key, $data, $ttl) // Store data with TTL
+Cache::delete($key)           // Invalidate specific cache
+Cache::clear()                // Clear all cache
+Cache::has($key)              // Check if cached
+Cache::stats()                // Get cache statistics
+```
+
+---
+
+#### [MODIFY] [api/index.php](file:///media/swastik/focus/ldm%20new%20updae%202.0/api/index.php)
+
+**Changes:**
+1. Add `Cache.php` require statement
+2. Wrap cacheable endpoints with cache layer
+3. Implement cache invalidation on data updates
+
+**Endpoints to Cache:**
+- `GET /students` (TTL: 5 minutes)
+- `GET /students/{id}` (TTL: 10 minutes)
+- `GET /timetable/{personId}` (TTL: 15 minutes)
+
+**Cache Strategy:**
+```php
+// Before database query
+$cacheKey = "students_page_{$page}_limit_{$limit}";
+if ($cached = Cache::get($cacheKey)) {
+    return $response->write(json_encode($cached));
+}
+
+// ... execute database query ...
+
+// After successful query
+Cache::set($cacheKey, $result, 300); // 5 minutes
+```
+
+---
+
+### Step 5: Database Query Optimization
+
+#### [NEW] [scripts/optimize_database.sql](file:///media/swastik/focus/ldm%20new%20updae%202.0/scripts/optimize_database.sql)
+
+**Purpose:** SQL script to add performance indexes
+
+**Indexes to Add:**
+```sql
+-- Optimize student queries
+ALTER TABLE gibbonPerson ADD INDEX idx_status (status);
+ALTER TABLE gibbonPerson ADD INDEX idx_role (gibbonRoleIDPrimary);
+
+-- Optimize student enrollment queries
+ALTER TABLE gibbonStudentEnrolment ADD INDEX idx_person (gibbonPersonID);
+ALTER TABLE gibbonStudentEnrolment ADD INDEX idx_year (gibbonYearGroupID);
+
+-- Optimize timetable queries
+ALTER TABLE gibbonTTDayRowClass ADD INDEX idx_person (gibbonPersonID);
+```
+
+**Query Optimizations in API:**
+1. Use `SELECT` with specific columns (not `SELECT *`)
+2. Add `LIMIT` clauses everywhere
+3. Optimize JOIN conditions
+4. Use prepared statements (already done)
+
+---
+
+### Step 6: OPcache Configuration
+
+#### [NEW] [.user.ini](file:///media/swastik/focus/ldm%20new%20updae%202.0/.user.ini)
+
+**Purpose:** PHP performance configuration for Hostinger
+
+**Settings:**
+```ini
+; OPcache Configuration
+opcache.enable=1
+opcache.memory_consumption=128
+opcache.interned_strings_buffer=8
+opcache.max_accelerated_files=10000
+opcache.revalidate_freq=60
+opcache.validate_timestamps=1
+opcache.fast_shutdown=1
+
+; Performance Settings
+max_execution_time=60
+memory_limit=256M
+post_max_size=50M
+upload_max_filesize=50M
+
+; Security
+expose_php=Off
+display_errors=Off
+log_errors=On
+```
+
+**Expected Impact:**
+- 2-3x faster PHP execution
+- Reduced memory usage
+- Better handling of traffic spikes
+
+---
+
+## Verification Plan
+
+### Automated Tests
+
+#### [NEW] [scripts/test_cache.sh](file:///media/swastik/focus/ldm%20new%20updae%202.0/scripts/test_cache.sh)
+
+**Tests:**
+1. Cache set/get functionality
+2. Cache expiration (TTL)
+3. Cache invalidation
+4. File permissions
+5. Performance comparison (cached vs uncached)
+
+#### [NEW] [scripts/benchmark_api.sh](file:///media/swastik/focus/ldm%20new%20updae%202.0/scripts/benchmark_api.sh)
+
+**Benchmarks:**
+1. API response time (before/after caching)
+2. Database query time
+3. Concurrent request handling
+4. Cache hit/miss rates
+
+**Metrics to Track:**
+- Response time (ms)
+- Database query time (ms)
+- Cache hit rate (%)
+- Throughput (requests/second)
+
+### Manual Verification
+
+1. Test all cached endpoints return correct data
+2. Verify cache invalidation works on updates
+3. Check cache directory permissions
+4. Monitor cache file sizes
+5. Test OPcache status via phpinfo()
+
+---
+
+## Performance Targets
+
+### Baseline (Before Optimization)
+- API Response Time: 200-500ms
+- Database Query Time: 50-150ms
+- Cache Hit Rate: 0%
+- Concurrent Users: ~10-20
+
+### Target (After Optimization)
+- API Response Time: 50-100ms (cached), 150-300ms (uncached)
+- Database Query Time: 20-50ms
+- Cache Hit Rate: 60-80%
+- Concurrent Users: ~50-100
+
+**Overall Improvement:** 2-3x faster ⚡
+
+---
+
+## Rollback Plan
+
+If performance issues arise:
+
+### Step 1: Disable Caching
+```php
+// In index.php, comment out cache layer
+// Cache::set(...);
+// if ($cached = Cache::get(...)) { ... }
+```
+
+### Step 2: Remove Indexes
+```sql
+-- Drop added indexes if they cause issues
+DROP INDEX idx_status ON gibbonPerson;
+DROP INDEX idx_role ON gibbonPerson;
+```
+
+### Step 3: Reset OPcache
+```bash
+# Remove .user.ini
+rm /home/u542293952/public_html/backend/.user.ini
+```
+
+---
+
+## Implementation Order
+
+1. **Create Cache class** and test independently
+2. **Add caching to one endpoint** (students list) and verify
+3. **Add caching to remaining endpoints** once proven
+4. **Add database indexes** gradually, test after each
+5. **Configure OPcache** last (easiest to rollback)
+
+---
+
+## Notes
+
+> [!WARNING]
+> Cache invalidation is critical! Ensure cache is cleared when data is updated via:
+> - Student enrollment changes
+> - Timetable modifications
+> - Any POST/PUT/DELETE operations
+
+> [!TIP]
+> Monitor cache directory size. With 5-minute TTL, cache should auto-clean, but implement manual cleanup if needed.
+
+---
+
+**Estimated Time:** 2-3 hours  
+**Risk Level:** Low (all changes are additive and reversible)  
+**Dependencies:** None (no external libraries required)

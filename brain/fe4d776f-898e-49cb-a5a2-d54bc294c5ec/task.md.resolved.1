@@ -1,0 +1,16 @@
+# Task: Fix Login CORS Configuration
+
+## Root Cause Analysis
+- [x] Identified CORS misconfiguration in API
+- [x] API only allows `https://ldmcollege.com` but dev runs on `http://localhost:5173`
+- [x] This blocks ALL login attempts (admin and non-admin)
+
+## Implementation
+- [ ] Update CORS headers for local development
+- [ ] Test admin login
+- [ ] Test non-admin login (teacher, student, employee)
+
+## Verification
+- [ ] Confirm successful login for all user types
+- [ ] Verify JWT token generation
+- [ ] Check role-based redirects

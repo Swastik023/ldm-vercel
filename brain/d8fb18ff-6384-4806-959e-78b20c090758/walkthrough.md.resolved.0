@@ -1,0 +1,479 @@
+# Document Management System — Walkthrough
+
+## What Was Built
+
+A production-grade Document Management System integrated into the LDM College ERP. Admins can dynamically create document requirements, assign them to students/batches/programs, and manage a full upload → review → approve/reject workflow.
+
+---
+
+## Files Created & Modified
+
+### New Models (2)
+
+| File | Purpose |
+|---|---|
+| [DocumentRequirement.ts](file:///media/swastik/focus/ldm%20feb/src/models/DocumentRequirement.ts) | Dynamic requirement definitions with scope targeting (all/program/batch/student) |
+| [DocumentSubmission.ts](file:///media/swastik/focus/ldm%20feb/src/models/DocumentSubmission.ts) | Student uploads with review status + full submission history |
+
+### Modified Model (1)
+
+| File | Change |
+|---|---|
+| [AuditLog.ts](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts) | Added [DocumentRequirement](file:///media/swastik/focus/ldm%20feb/src/models/DocumentRequirement.ts#3-23) and [DocumentSubmission](file:///media/swastik/focus/ldm%20feb/src/models/DocumentSubmission.ts#13-32) to entity type enum |
+
+```diff:AuditLog.ts
+import mongoose, { Schema, Document, Model } from 'mongoose';
+
+export interface IAuditLog extends Document {
+    action: 'CREATE' | 'UPDATE' | 'DELETE' | 'SOFT_DELETE' | 'LOCK' | 'UNLOCK' | 'DOWNLOAD';
+    entityType: 'FeePayment' | 'Expense' | 'Salary' | 'FeeStructure' | 'LibraryCategory' | 'LibraryDocument' | 'DocumentVersion';
+    entityId: mongoose.Types.ObjectId;
+    performedBy: mongoose.Types.ObjectId; // User ID
+    changes: { field: string, old: any, new: any }[]; // Detailed delta
+    reason?: string;
+    ipAddress?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const AuditLogSchema = new Schema<IAuditLog>({
+    action: {
+        type: String,
+        enum: ['CREATE', 'UPDATE', 'DELETE', 'SOFT_DELETE', 'LOCK', 'UNLOCK', 'DOWNLOAD'],
+        required: true
+    },
+    entityType: {
+        type: String,
+        enum: ['FeePayment', 'Expense', 'Salary', 'FeeStructure', 'LibraryCategory', 'LibraryDocument', 'DocumentVersion'],
+        required: true
+    },
+    entityId: { type: Schema.Types.ObjectId, required: true },
+    performedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    changes: [{
+        field: { type: String, required: true },
+        old: { type: Schema.Types.Mixed }, // Can be anything
+        new: { type: Schema.Types.Mixed }
+    }],
+    reason: { type: String },
+    ipAddress: { type: String }
+}, { timestamps: true });
+
+// Pre-hook to prevent updates (Audit logs must be immutable) // @ts-ignore
+AuditLogSchema.pre('updateOne', function (this: any, next: any) {
+    next(new Error('Audit logs are immutable and cannot be updated.'));
+});
+
+// Pre-hook to prevent deletions // @ts-ignore
+AuditLogSchema.pre('deleteOne', function (this: any, next: any) {
+    next(new Error('Audit logs are immutable and cannot be deleted.'));
+});
+
+export const AuditLog: Model<IAuditLog> = mongoose.models.AuditLog || mongoose.model<IAuditLog>('AuditLog', AuditLogSchema);
+===
+import mongoose, { Schema, Document, Model } from 'mongoose';
+
+export interface IAuditLog extends Document {
+    action: 'CREATE' | 'UPDATE' | 'DELETE' | 'SOFT_DELETE' | 'LOCK' | 'UNLOCK' | 'DOWNLOAD';
+    entityType: 'FeePayment' | 'Expense' | 'Salary' | 'FeeStructure' | 'LibraryCategory' | 'LibraryDocument' | 'DocumentVersion' | 'DocumentRequirement' | 'DocumentSubmission';
+    entityId: mongoose.Types.ObjectId;
+    performedBy: mongoose.Types.ObjectId; // User ID
+    changes: { field: string, old: any, new: any }[]; // Detailed delta
+    reason?: string;
+    ipAddress?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const AuditLogSchema = new Schema<IAuditLog>({
+    action: {
+        type: String,
+        enum: ['CREATE', 'UPDATE', 'DELETE', 'SOFT_DELETE', 'LOCK', 'UNLOCK', 'DOWNLOAD'],
+        required: true
+    },
+    entityType: {
+        type: String,
+        enum: ['FeePayment', 'Expense', 'Salary', 'FeeStructure', 'LibraryCategory', 'LibraryDocument', 'DocumentVersion', 'DocumentRequirement', 'DocumentSubmission'],
+        required: true
+    },
+    entityId: { type: Schema.Types.ObjectId, required: true },
+    performedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    changes: [{
+        field: { type: String, required: true },
+        old: { type: Schema.Types.Mixed }, // Can be anything
+        new: { type: Schema.Types.Mixed }
+    }],
+    reason: { type: String },
+    ipAddress: { type: String }
+}, { timestamps: true });
+
+// Pre-hook to prevent updates (Audit logs must be immutable) // @ts-ignore
+AuditLogSchema.pre('updateOne', function (this: any, next: any) {
+    next(new Error('Audit logs are immutable and cannot be updated.'));
+});
+
+// Pre-hook to prevent deletions // @ts-ignore
+AuditLogSchema.pre('deleteOne', function (this: any, next: any) {
+    next(new Error('Audit logs are immutable and cannot be deleted.'));
+});
+
+export const AuditLog: Model<IAuditLog> = mongoose.models.AuditLog || mongoose.model<IAuditLog>('AuditLog', AuditLogSchema);
+```
+
+---
+
+### New API Routes (8)
+
+| Route | Method | Role | Purpose |
+|---|---|---|---|
+| [requirements/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/route.ts) | GET, POST | Admin/Teacher | List & create requirements |
+| [requirements/[id]/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/requirements/%5Bid%5D/route.ts) | GET, PUT, DELETE | Admin/Teacher | Single requirement CRUD + stats |
+| [submissions/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/submissions/route.ts) | GET | Admin/Teacher | Paginated submissions list |
+| [submissions/[id]/review/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/submissions/%5Bid%5D/review/route.ts) | PUT | Admin/Teacher | Approve/reject with comment |
+| [submissions/[id]/download/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/documents/submissions/%5Bid%5D/download/route.ts) | GET | Admin/Teacher | Secure file download |
+| [student/documents/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/route.ts) | GET | Student | Scoped requirements + status |
+| [student/documents/upload/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/student/documents/upload/route.ts) | POST | Student | Cloudinary upload + resubmit |
+
+---
+
+### New UI Pages (2)
+
+| File | Description |
+|---|---|
+| [admin/documents/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/admin/documents/page.tsx) | Two-tab admin panel: Requirements management + Submissions review with approve/reject modal |
+| [student/documents/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/documents/page.tsx) | Student dashboard with stats, progress bar, category-grouped docs, drag-and-drop upload |
+
+### Sidebar Integration (2)
+
+| File | Change |
+|---|---|
+| [Sidebar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/layout/Sidebar.tsx) | Added "Documents" link with `FileCheck` icon |
+| [Student Sidebar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/student/Sidebar.tsx) | Added "My Documents" link with `FileCheck` icon |
+
+```diff:Sidebar.tsx
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+import {
+    LayoutDashboard,
+    Bell,
+    Image,
+    MessageSquare,
+    Users,
+    Settings,
+    BookOpen,
+    Calendar,
+    ClipboardCheck,
+    Library,
+    LogOut,
+    Megaphone,
+    Wallet,
+} from 'lucide-react';
+
+const Sidebar = () => {
+    const pathname = usePathname();
+
+    const navItems = [
+        { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+        { name: 'Manage Users', href: '/admin/users', icon: Users },
+        { name: 'Academic Config', href: '/admin/academic', icon: Settings },
+        { name: 'Batches', href: '/admin/batches', icon: Calendar },
+        { name: 'Assignments', href: '/admin/academic/assignments', icon: BookOpen },
+        { name: 'Attendance', href: '/admin/attendance', icon: ClipboardCheck },
+        { name: 'Finance', href: '/admin/finance', icon: Wallet },
+        { name: 'Library Docs', href: '/admin/library/documents', icon: Library },
+        { name: 'Library Folder', href: '/admin/library/categories', icon: BookOpen },
+        { name: 'Scrolling Updates', href: '/admin/marquee', icon: Megaphone },
+        { name: 'Notices', href: '/admin/notices', icon: Bell },
+        { name: 'Gallery', href: '/admin/gallery', icon: Image },
+        { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
+    ];
+
+    const isActive = (href: string) => {
+        if (href === '/admin') return pathname === '/admin';
+        return pathname.startsWith(href);
+    };
+
+    return (
+        <aside className="w-64 bg-gray-900 text-white h-screen sticky top-0 flex flex-col shadow-xl">
+            <div className="p-6 border-b border-gray-800">
+                <h2 className="text-xl font-bold tracking-wider text-blue-400">LDM Admin</h2>
+                <p className="text-xs text-gray-500 mt-1">Management Portal</p>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                {navItems.map((item) => (
+                    <Link key={item.name} href={item.href}>
+                        <div
+                            className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group ${isActive(item.href)
+                                ? 'bg-blue-600 text-white shadow-md'
+                                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                }`}
+                        >
+                            <item.icon
+                                className={`h-5 w-5 mr-3 flex-shrink-0 ${isActive(item.href) ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                                    }`}
+                            />
+                            <span className="font-medium text-sm">{item.name}</span>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+
+            <div className="p-4 border-t border-gray-800">
+                <button
+                    onClick={() => signOut({ callbackUrl: '/login' })}
+                    className="w-full flex items-center justify-center p-3 rounded-lg bg-red-600/10 text-red-400 hover:bg-red-600 hover:text-white transition-all duration-200"
+                >
+                    <LogOut className="h-5 w-5 mr-2" />
+                    <span className="font-medium text-sm">Logout</span>
+                </button>
+            </div>
+        </aside>
+    );
+};
+
+export default Sidebar;
+===
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+import {
+    LayoutDashboard,
+    Bell,
+    Image,
+    MessageSquare,
+    Users,
+    Settings,
+    BookOpen,
+    Calendar,
+    ClipboardCheck,
+    Library,
+    LogOut,
+    Megaphone,
+    Wallet,
+    FileCheck,
+} from 'lucide-react';
+
+const Sidebar = () => {
+    const pathname = usePathname();
+
+    const navItems = [
+        { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+        { name: 'Manage Users', href: '/admin/users', icon: Users },
+        { name: 'Academic Config', href: '/admin/academic', icon: Settings },
+        { name: 'Batches', href: '/admin/batches', icon: Calendar },
+        { name: 'Assignments', href: '/admin/academic/assignments', icon: BookOpen },
+        { name: 'Attendance', href: '/admin/attendance', icon: ClipboardCheck },
+        { name: 'Finance', href: '/admin/finance', icon: Wallet },
+        { name: 'Library Docs', href: '/admin/library/documents', icon: Library },
+        { name: 'Library Folder', href: '/admin/library/categories', icon: BookOpen },
+        { name: 'Documents', href: '/admin/documents', icon: FileCheck },
+        { name: 'Scrolling Updates', href: '/admin/marquee', icon: Megaphone },
+        { name: 'Notices', href: '/admin/notices', icon: Bell },
+        { name: 'Gallery', href: '/admin/gallery', icon: Image },
+        { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
+    ];
+
+    const isActive = (href: string) => {
+        if (href === '/admin') return pathname === '/admin';
+        return pathname.startsWith(href);
+    };
+
+    return (
+        <aside className="w-64 bg-gray-900 text-white h-screen sticky top-0 flex flex-col shadow-xl">
+            <div className="p-6 border-b border-gray-800">
+                <h2 className="text-xl font-bold tracking-wider text-blue-400">LDM Admin</h2>
+                <p className="text-xs text-gray-500 mt-1">Management Portal</p>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                {navItems.map((item) => (
+                    <Link key={item.name} href={item.href}>
+                        <div
+                            className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group ${isActive(item.href)
+                                ? 'bg-blue-600 text-white shadow-md'
+                                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                }`}
+                        >
+                            <item.icon
+                                className={`h-5 w-5 mr-3 flex-shrink-0 ${isActive(item.href) ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                                    }`}
+                            />
+                            <span className="font-medium text-sm">{item.name}</span>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+
+            <div className="p-4 border-t border-gray-800">
+                <button
+                    onClick={() => signOut({ callbackUrl: '/login' })}
+                    className="w-full flex items-center justify-center p-3 rounded-lg bg-red-600/10 text-red-400 hover:bg-red-600 hover:text-white transition-all duration-200"
+                >
+                    <LogOut className="h-5 w-5 mr-2" />
+                    <span className="font-medium text-sm">Logout</span>
+                </button>
+            </div>
+        </aside>
+    );
+};
+
+export default Sidebar;
+```
+```diff:Sidebar.tsx
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+    LayoutDashboard,
+    Library,
+    FileText,
+    User,
+    LogOut,
+    Wallet,
+} from 'lucide-react';
+import { signOut } from 'next-auth/react';
+
+const StudentSidebar = () => {
+    const pathname = usePathname();
+
+    const menuItems = [
+        { title: 'Dashboard', path: '/student', icon: <LayoutDashboard size={20} /> },
+        { title: 'Library', path: '/student/library', icon: <Library size={20} /> },
+        { title: 'Report Card', path: '/student/report-card', icon: <FileText size={20} /> },
+        { title: 'My Fees', path: '/student/fees', icon: <Wallet size={20} /> },
+        // { title: 'Profile', path: '/student/profile', icon: <User size={20} /> },
+    ];
+
+    return (
+        <div className="bg-white h-screen w-64 fixed left-0 top-0 border-r border-gray-200 flex flex-col z-10 hidden md:flex">
+            <div className="p-6 border-b border-gray-100">
+                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                    LDM Student
+                </h2>
+            </div>
+
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                {menuItems.map((item) => (
+                    <Link
+                        key={item.path}
+                        href={item.path}
+                        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${pathname === item.path
+                            ? 'bg-blue-50 text-blue-600 font-medium shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                    >
+                        {item.icon}
+                        <span>{item.title}</span>
+                    </Link>
+                ))}
+            </nav>
+
+            <div className="p-4 border-t border-gray-100">
+                <button
+                    onClick={() => signOut({ callbackUrl: '/login' })}
+                    className="flex items-center space-x-3 px-4 py-3 w-full text-left text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                    <LogOut size={20} />
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default StudentSidebar;
+===
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+    LayoutDashboard,
+    Library,
+    FileText,
+    User,
+    LogOut,
+    Wallet,
+    FileCheck,
+} from 'lucide-react';
+import { signOut } from 'next-auth/react';
+
+const StudentSidebar = () => {
+    const pathname = usePathname();
+
+    const menuItems = [
+        { title: 'Dashboard', path: '/student', icon: <LayoutDashboard size={20} /> },
+        { title: 'Library', path: '/student/library', icon: <Library size={20} /> },
+        { title: 'Report Card', path: '/student/report-card', icon: <FileText size={20} /> },
+        { title: 'My Fees', path: '/student/fees', icon: <Wallet size={20} /> },
+        { title: 'My Documents', path: '/student/documents', icon: <FileCheck size={20} /> },
+        // { title: 'Profile', path: '/student/profile', icon: <User size={20} /> },
+    ];
+
+    return (
+        <div className="bg-white h-screen w-64 fixed left-0 top-0 border-r border-gray-200 flex flex-col z-10 hidden md:flex">
+            <div className="p-6 border-b border-gray-100">
+                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                    LDM Student
+                </h2>
+            </div>
+
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                {menuItems.map((item) => (
+                    <Link
+                        key={item.path}
+                        href={item.path}
+                        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${pathname === item.path
+                            ? 'bg-blue-50 text-blue-600 font-medium shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                    >
+                        {item.icon}
+                        <span>{item.title}</span>
+                    </Link>
+                ))}
+            </nav>
+
+            <div className="p-4 border-t border-gray-100">
+                <button
+                    onClick={() => signOut({ callbackUrl: '/login' })}
+                    className="flex items-center space-x-3 px-4 py-3 w-full text-left text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                    <LogOut size={20} />
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default StudentSidebar;
+```
+
+---
+
+## Key Architecture Decisions
+
+- **Cloudinary** for file storage (`resource_type: 'raw'`, `access_mode: 'authenticated'`) — cloud-backed, secure
+- **Scope Engine** resolves which requirements apply to each student (all → program → batch → individual)
+- **Submission History** — every resubmission archives the old file, maintaining a full audit trail
+- **Teacher Restrictions** — teachers can only create `assignment` category requirements and only review their own
+- **Unique compound index** (`requirement + student`) prevents duplicate submissions
+
+---
+
+## Verification
+
+- ✅ **TypeScript build check passed** — only pre-existing error (`@vercel/analytics/next`), no errors from DMS code
+- ✅ Sidebar navigation links integrated for both Admin and Student
+- ⏳ **Manual testing** recommended: Login as Admin → Create requirement → Login as Student → Upload → Admin reviews → Approve/Reject

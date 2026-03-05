@@ -1,0 +1,37 @@
+# Document Management System - Task Tracker
+
+## Phase 1: Planning
+- [x] Research existing codebase (models, APIs, auth, upload patterns)
+- [/] Write implementation plan
+- [ ] Get user approval on plan
+
+## Phase 2: Database Models
+- [ ] Create `DocumentRequirement` model
+- [ ] Create `DocumentSubmission` model
+- [ ] Update [AuditLog](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts#3-14) entity types
+
+## Phase 3: Admin/Teacher APIs
+- [ ] `POST /api/admin/documents/requirements` — Create requirement
+- [ ] `GET /api/admin/documents/requirements` — List requirements
+- [ ] `PUT /api/admin/documents/requirements/[id]` — Edit requirement
+- [ ] `DELETE /api/admin/documents/requirements/[id]` — Delete requirement
+- [ ] `GET /api/admin/documents/submissions` — View all submissions
+- [ ] `PUT /api/admin/documents/submissions/[id]/review` — Approve/Reject + comment
+- [ ] `GET /api/admin/documents/submissions/[id]/download` — Secure download
+
+## Phase 4: Student APIs
+- [ ] `GET /api/student/documents` — List my required documents + status
+- [ ] `POST /api/student/documents/upload` — Upload a document
+- [ ] `PUT /api/student/documents/[id]/resubmit` — Re-upload after rejection
+
+## Phase 5: Admin UI
+- [ ] Requirements management page
+- [ ] Submissions review page (with approve/reject/comment)
+
+## Phase 6: Student UI
+- [ ] Student documents dashboard page (pending/approved/rejected)
+- [ ] Upload modal/form
+
+## Phase 7: Verification
+- [ ] Manual testing of full workflow
+- [ ] Role-based access verification

@@ -1,0 +1,28 @@
+# Implementation Plan: Enhance E-Library Content
+
+Enhance the content of e-library materials (Curriculum, Notes, etc.) to look and feel professional, structured, and information-dense, moving away from the current "pamphlet-like" appearance.
+
+## Proposed Changes
+
+### [Library Expansion] Bulk Module Seeding
+
+#### [NEW] seed_all_modules.ts
+A new script to handle the creation of over 100 modules across all programs.
+- **Section A (Foundation)**: Will be marked as `is_common: true` and categorized under "Foundation Modules".
+- **Sections B-P (Program Specific)**: Will be linked to their respective `Program` via `course_code` and categorized under "Module Notes".
+- **Section Q (Certificates)**: Specifically for Ayurvedic certificate programs.
+- **Content Strategy**: 
+    - Use a structured "Cheat Notes" template for all modules.
+    - Template includes: "Concept Map", "High-Yield Facts", "Exam Highlights", and "Quick Recall".
+    - Populate sample content for major modules and structured placeholders for others.
+
+## Verification Plan
+
+### Automated Verification
+- Run `seed_all_modules.ts`.
+- Verify document counts per program in the DB.
+
+### Manual Verification
+- Verify the new "Foundation Modules" appear in the library.
+- Verify program-specific modules are correctly categorized.
+- Check the "Cheat Notes" formatting in the modal.

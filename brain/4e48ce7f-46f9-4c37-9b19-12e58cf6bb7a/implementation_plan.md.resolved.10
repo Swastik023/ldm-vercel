@@ -1,0 +1,43 @@
+# Course Data Architecture — Audit & Fix Plan
+
+## The Actual Problem
+
+The sync endpoint ran but matched **0 of 22** records because:
+
+| Source | ID format | Example |
+|---|---|---|
+| [CoursePricing](file:///media/swastik/focus/ldm%20feb/src/models/CoursePricing.ts#3-15) collection (old) | lowercase | `dccm`, `dmlt`, `mba-ha` |
+| [Program](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#17-35) collection (new) | UPPERCASE + trailing spaces | `DCCM`, `DMLT`, `MBA ` |
+
+Case-insensitive matching + `.trim()` will fix this entirely.
+
+## What's Duplicated / Broken Right Now
+
+| File | Problem |
+|---|---|
+| [/app/admin/course-pricing/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/admin/course-pricing/page.tsx) | Still imports [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) (old hardcoded 22) |
+| [/app/admin/finance/fees/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/admin/finance/fees/page.tsx) | Old page, still uses [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts) |
+| [/api/admin/course-pricing/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/course-pricing/route.ts) | Updated to use Program — but its page still uses old data |
+| [/api/admin/fees/course/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/fees/course/route.ts) | Updated to use Program ✓ |
+| [/api/public/courses/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/courses/route.ts) | Updated to use Program ✓ |
+| [/api/public/course-pricing/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/public/course-pricing/route.ts) | Updated to use Program ✓ |
+| [CoursePricingBadge](file:///media/swastik/focus/ldm%20feb/src/components/public/CoursePricing.tsx#45-86) | Fetches [/api/public/course-pricing](file:///media/swastik/focus/ldm%20feb/src/app/api/public/course-pricing) which reads Program ✓ |
+| Sync endpoint | Fails silently due to case mismatch |
+
+## The Fix (2 changes only)
+
+### 1. Fix sync endpoint — case-insensitive + trim matching
+In [/api/admin/courses/sync-pricing/route.ts](file:///media/swastik/focus/ldm%20feb/src/app/api/admin/courses/sync-pricing/route.ts):
+```diff
+- p.code?.toLowerCase() === cp.courseId?.toLowerCase()
++ p.code?.trim().toLowerCase() === cp.courseId?.trim().toLowerCase()
+```
+
+### 2. Delete the two dead duplicate pages
+- [/app/admin/course-pricing/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/admin/course-pricing/page.tsx) — still uses [courseData.ts](file:///media/swastik/focus/ldm%20feb/src/data/courseData.ts). Dead route, remove it.
+- [/app/admin/finance/fees/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/admin/finance/fees/page.tsx) — old page, remove it.
+
+## After Fix
+1. Deploy sync endpoint fix
+2. Call `https://ldmcollege.com/api/admin/courses/sync-pricing?secret=ldm2025sync`
+3. All fees from CoursePricing → Program.pricing. Done.

@@ -1,0 +1,199 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+LDM E-Library
+Paramedical College
+[0] (83,439)<nav class='flex-1 overflow-y-auto py-4 px-3 space-y-6' scrollable='true' />
+	Courses / Programs
+	[1] (79,185)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all bg-teal-500/20 text-teal-300'>Common & All />
+		Common & All
+	[2] (79,371)<div class='max-h-60 overflow-y-auto pr-1 mt-1 scrollbar-thin scrollbar-thumb-white/10' scrollable='true' />
+		[3] (74,233)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CAIM
+-
+Certificate in Ayurveda Infertility Management />
+			CAIM
+			-
+			Certificate in Ayurveda Infertility Management
+		[4] (74,276)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CAND
+-
+Certificate in Ayurveda Nutrition & Dietetics />
+			CAND
+			-
+			Certificate in Ayurveda Nutrition & Dietetics
+		[5] (74,318)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CAP
+-
+Certificate in Ayurveda Parasurgery />
+			CAP
+			-
+			Certificate in Ayurveda Parasurgery
+		[6] (74,360)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>CACSBC
+-
+Certificate in Ayurvedic Cosmetology, Skin & Beauty Care />
+			CACSBC
+			-
+			Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+		[7] (74,403)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DAT
+-
+Diploma in Anaesthesia Technology (DAT) />
+			DAT
+			-
+			Diploma in Anaesthesia Technology (DAT)
+		[8] (74,445)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DCP
+-
+Diploma in Community Care Provider />
+			DCP
+			-
+			Diploma in Community Care Provider
+		[9] (74,488)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DCCM
+-
+Diploma in Critical Care Management />
+			DCCM
+			-
+			Diploma in Critical Care Management
+		[10] (74,530)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>DETC
+-
+Diploma in Emergency & Trauma Care Technician />
+			DETC
+			-
+			Diploma in Emergency & Trauma Care Technician
+		DHSI
+		-
+		Diploma in Health & Sanitary Inspector
+		DHCP
+		-
+		Diploma in Home Care Provider
+		DHA
+		-
+		Diploma in Hospital Administration
+		DHM
+		-
+		Diploma in Hospital Management
+		DHWM
+		-
+		Diploma in Hospital Waste Management
+		DMLT
+		-
+		Diploma in Medical Laboratory Technology (DMLT)
+		DNT
+		-
+		Diploma in Nanny Training
+		DOTT
+		-
+		Diploma in Operation Theatre Technology (DOTT)
+		DP
+		-
+		Diploma in Panchkarma
+		DRIT
+		-
+		Diploma in Radiology & Imaging Technology (DRIT)
+		MPHW
+		-
+		Multipurpose Health Worker (MPHW)
+	Collections
+	[11] (79,614)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all bg-teal-500/10 text-teal-300'>All Categories />
+		All Categories
+	[12] (79,659)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Module Notes />
+		Module Notes
+	[13] (79,704)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Foundation Modules />
+		Foundation Modules
+	[14] (79,749)<button class='w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all text-white/60 hover:bg-white/5 hover:text-white'>Master Curriculum & Syllabus />
+		Master Curriculum & Syllabus
+	Recently Viewed
+	CACSBC-03: Hair Care
+234
+curated resources
+[15] (468,49)<input class='w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-gray-50 outline-none focus:ring-2 focus:ring-teal-400 focus:bg-white transition' placeholder='Search in all programs...' />
+[16] (814,49)<select class='text-sm border border-gray-200 rounded-lg py-2 px-3 bg-white outline-none focus:ring-2 focus:ring-teal-400' />
+CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care
+20 Feb 2026
+[17] (500,105)<div  />
+	[18] (217,105)<div  />
+	[19] (441,105)<div  />
+		CACSBC-04: Beauty Treatments
+		[20] (441,119)<div  />
+			[21] (351,119)<div  />
+				[22] (351,119)<span >CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care />
+	[23] (724,105)<div  />
+		[24] (682,105)<div >Academic Book />
+			Academic Book
+			[25] (682,116)<p >20 Feb 2026 />
+		[26] (765,105)<div  />
+			[27] (765,105)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+[28] (500,229)<div  />
+	[29] (217,229)<div  />
+	[30] (441,229)<div  />
+		[31] (441,215)<div  />
+			[32] (295,215)<h3 >CACSBC-03: Hair Care />
+		[33] (441,243)<div  />
+			[34] (351,243)<div  />
+				[35] (351,243)<span >CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care />
+	[36] (724,229)<div  />
+		[37] (682,229)<div  />
+			[38] (682,217)<p >Academic Book />
+			[39] (682,240)<p >20 Feb 2026 />
+		[40] (765,229)<div  />
+			[41] (765,229)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+Foundation Modules
+12
+[42] (776,360)<button class='flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition px-2 py-1 rounded-md hover:bg-teal-50'>Expand all 12 />
+[43] (500,451)<div  />
+	[44] (217,451)<div  />
+	[45] (441,451)<div  />
+		[46] (441,437)<div  />
+			[47] (315,437)<h3 >F-12: Nutrition Fundamentals />
+			[48] (420,437)<span >Foundation />
+		[49] (441,466)<div  />
+			[50] (281,466)<div  />
+				[51] (281,466)<span >Multi-program Resource />
+	[52] (724,451)<div  />
+		[53] (682,451)<div  />
+			[54] (682,439)<p >Academic Book />
+			[55] (682,462)<p >20 Feb 2026 />
+		[56] (765,451)<div  />
+			[57] (765,451)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+[58] (500,575)<div  />
+	[59] (217,575)<div  />
+	[60] (441,575)<div  />
+		[61] (441,562)<div  />
+			[62] (332,562)<h3 >F-11: Biomedical Waste Management />
+			[63] (452,562)<span >Foundation />
+		[64] (441,591)<div  />
+			[65] (281,591)<div  />
+				[66] (281,591)<span >Multi-program Resource />
+	[67] (724,575)<div  />
+		[68] (682,575)<div  />
+			[69] (682,563)<p >Academic Book />
+			[70] (682,586)<p >20 Feb 2026 />
+		[71] (765,575)<div  />
+			[72] (765,575)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+[73] (500,699)<div  />
+	[74] (217,699)<div  />
+	[75] (441,699)<div  />
+		[76] (441,686)<div  />
+			[77] (301,686)<h3 >F-10: Infection Control />
+			[78] (390,686)<span >Foundation />
+		[79] (441,715)<div  />
+			[80] (281,715)<div  />
+				[81] (281,715)<span >Multi-program Resource />
+	[82] (724,699)<div  />
+		[83] (682,699)<div  />
+			[84] (682,687)<p >Academic Book />
+			[85] (682,711)<p >20 Feb 2026 />
+		[86] (765,699)<div  />
+			[87] (765,699)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+Master Curriculum & Syllabus
+19
+[88] (776,830)<button class='flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition px-2 py-1 rounded-md hover:bg-teal-50'>Expand all 19 />
+[89] (217,922)<div  />
+[90] (315,908)<h3 >CACSBC - Master Curriculum />
+[91] (351,936)<div  />
+	[92] (351,936)<span >CACSBC: Certificate in Ayurvedic Cosmetology, Skin & Beauty Care />
+[93] (724,922)<div  />
+	[94] (682,922)<div  />
+		[95] (682,910)<p >Academic Book />
+		[96] (682,933)<p >20 Feb 2026 />
+	[97] (765,922)<div  />
+		[98] (765,922)<button class='text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-xl bg-gray-50 text-gray-600 border border-gray-100 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-100 transition-all'>Open Book />
+
+</current_dom>

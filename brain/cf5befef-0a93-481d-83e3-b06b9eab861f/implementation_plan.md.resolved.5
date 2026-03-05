@@ -1,0 +1,80 @@
+# Implementation Plan: Enhance E-Library Content
+
+Enhance the content of e-library materials (Curriculum, Notes, etc.) to look and feel professional, structured, and information-dense, moving away from the current "pamphlet-like" appearance.
+
+## Proposed Changes
+
+### [Library Expansion] Bulk Module Seeding
+
+#### [NEW] seed_all_modules.ts
+A new script to handle the creation of over 100 modules across all programs.
+- **Section A (Foundation)**: Will be marked as `is_common: true` and categorized under "Foundation Modules".
+- **Sections B-P (Program Specific)**: Will be linked to their respective [Program](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/library/page.tsx#27-32) via `course_code` and categorized under "Module Notes".
+- **Section Q (Certificates)**: Specifically for Ayurvedic certificate programs.
+- **Content Strategy**: 
+    - Use a structured "Cheat Notes" template for all modules.
+    - Template includes: "Concept Map", "High-Yield Facts", "Exam Highlights", and "Quick Recall".
+    - Populate sample content for major modules and structured placeholders for others.
+
+### [Content Quality] Academic Upgrade (Phase 3)
+To address concerns about content depth and tone, we are upgrading the library modules from "Cheat Notes" to full "Academic Books".
+
+#### [REGENERATE] 100+ Module Books
+- **Professional Tone**: Shift from "quick summary" to "scholarly and pedagogical".
+- **Multi-Chapter Structure**: Instead of a single outline, each book will have 5-8 detailed chapters.
+- **Pedagogical Elements**: Include "Clinical Case Studies", "Pharmacological Summaries", "Safety Protocols", and "Academic Vocabulary".
+- **Content Expansion**: Each module will have 3000+ words of structured text instead of 500.
+
+### [Library UI] Program-Based Navigation
+
+#### [MODIFY] /api/public/library/route.ts
+- Populate `course_id` (Program) for each document.
+- Include `program_code` and `program_name` in the response.
+
+#### [NEW] /api/public/programs/route.ts
+- Create a new public endpoint to fetch all available programs (code and name).
+
+#### [MODIFY] /app/(public)/library/page.tsx
+- Update sidebar to include a "Programs" navigation section.
+- Implement logic to filter documents specifically by selected Program.
+- Add "Common Foundation" as a primary category.
+
+#### [MODIFY] /app/(student)/student/library/page.tsx
+- Apply similar program-based navigation for the student portal.
+
+### [Admin Experience] File CRUD & UI Fixes (Phase 4)
+To provide full management capabilities, we will implement direct file uploads and fix structural UI bugs in the admin portal.
+
+#### [NEW] /api/admin/library/upload/route.ts
+- Create a new endpoint to handle `multipart/form-data`.
+- Save files to `public/uploads/library` and return the relative path.
+
+#### [MODIFY] CategoryManager.tsx & DocumentUploadModal.tsx
+- **Fix "Invalid Date" bug**: Provide fallbacks for `createdAt` in tables.
+- **Implement File Upload**: Add a "Choose File" input that triggers the new upload API.
+- **Enhanced CRUD**: Ensure Edit and Version History work seamlessly with uploaded files.
+
+### [User Experience] Premium Reader Interface (Phase 5)
+To create a "wow" factor, we will replace the basic modal with a high-end medical book reader designed in Stitch.
+
+#### [NEW] Premium Book Reader Component
+- **Format Support**:
+    - **Rich-Text**: Scholarly v2 content rendered in a premium typographic layout with Chapter navigation.
+    - **PDF**: Embedded using a professional frame with zoom and print controls.
+    - **Office Docs**: Automatic download/preview link with a helpful format icon.
+- **Academic Features**:
+    - Left sidebar for Table of Contents.
+    - Right sidebar for "Related Modules" or "Pharmacology Shortcuts".
+    - Progress tracking (visual indicator of how far the student has read).
+
+## Verification Plan
+
+### Automated Verification
+- Run `seed_all_modules.ts`.
+- Verify document counts per program in the DB.
+
+### Manual Verification
+- Verify the new "Programs" section exists in the library sidebar.
+- Select a specific program (e.g., DCCM) and verify only relevant modules are shown.
+- Check "Common Foundation" modules.
+- Check the "Cheat Notes" formatting in the modal.

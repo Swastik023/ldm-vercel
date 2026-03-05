@@ -1,0 +1,12 @@
+# Debugging Gallery Delete and Marquee
+
+- [ ] Investigate Gallery Delete Issue <!-- id: 0 -->
+    - [ ] Reproduce the issue using the browser tool <!-- id: 1 -->
+    - [ ] Check `ManageGallery.tsx` delete implementation <!-- id: 2 -->
+    - [ ] Check `gallery_crud.php` DELETE handling <!-- id: 3 -->
+    - [ ] Fix Gallery Delete <!-- id: 4 -->
+- [ ] Investigate Marquee Issue <!-- id: 5 -->
+    - [ ] Clarify what is wrong with Marquee (Delete? Display?) <!-- id: 6 -->
+    - [ ] Check `ManageMarquee.tsx` and `marquee_crud.php` <!-- id: 7 -->
+    - [ ] Fix Marquee Issue <!-- id: 8 -->
+- [ ] Verify Fixes <!-- id: 9 -->

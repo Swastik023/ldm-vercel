@@ -1,0 +1,59 @@
+# Gen-Z Features Implementation Plan
+
+## Overview
+Implementing 7 demo-ready Gen-Z features for the chat app, focusing on visual impact and frontend-only implementations.
+
+## Proposed Changes
+
+### 1. Vibe Themes (Priority 1)
+
+#### [MODIFY] [style.css](file:///media/swastik/focus/chat%20app/php-social-messenger/public/css/style.css)
+- Add CSS custom properties for theming
+- Create 6 theme presets: Default, Sunset Chill, Neon Rave, Lo-Fi Study, Midnight Aesthetic, Cozy Night
+- Add smooth transitions for theme switching
+
+#### [NEW] [themes.js](file:///media/swastik/focus/chat%20app/php-social-messenger/public/js/themes.js)
+- Theme definitions and switching logic
+- localStorage persistence
+- Theme picker initialization
+
+#### [MODIFY] [conversation.php](file:///media/swastik/focus/chat%20app/php-social-messenger/views/chat/conversation.php)
+- Add theme picker button in header
+- Theme picker dropdown UI
+
+---
+
+### 2. Ghost Mode (Priority 2)
+
+#### [MODIFY] [style.css](file:///media/swastik/focus/chat%20app/php-social-messenger/public/css/style.css)
+- Ghost mode classes for hiding status indicators
+- Ghost icon styling
+
+#### [MODIFY] [conversation.php](file:///media/swastik/focus/chat%20app/php-social-messenger/views/chat/conversation.php)
+- Ghost mode toggle in header menu
+- Ghost mode state management
+
+---
+
+### 3. Self-Destructing Messages (Priority 3)
+
+#### [MODIFY] [style.css](file:///media/swastik/focus/chat%20app/php-social-messenger/public/css/style.css)
+- Self-destruct countdown animation
+- Blur/fade/poof effects
+
+#### [MODIFY] [conversation.php](file:///media/swastik/focus/chat%20app/php-social-messenger/views/chat/conversation.php)
+- Timer selector in message input
+- Self-destruct message rendering
+
+---
+
+### 4-7. Additional Features (Later)
+- Vibe Reactions, Digital Gifts, Streaks, Mini-Games
+
+## Verification Plan
+
+### Manual Testing
+- Test theme switching across all pages
+- Verify localStorage persistence
+- Test animations and transitions
+- Cross-browser check (Chrome, Firefox)

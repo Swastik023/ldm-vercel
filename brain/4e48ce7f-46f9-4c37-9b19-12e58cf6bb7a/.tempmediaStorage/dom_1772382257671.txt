@@ -1,0 +1,7 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+{"success":true,"message":"Done: 0 fees synced, 22 skipped.","synced":0,"skipped":22,"results":["SKIP dccm — no matching program","SKIP dhm — no matching program","SKIP dat — no matching program","SKIP dcp — no matching program","SKIP detc — no matching program","SKIP dhsi — no matching program","SKIP dhcp — no matching program","SKIP dha — no matching program","SKIP dhwm — no matching program","SKIP dmlt — no matching program","SKIP dnt — no matching program","SKIP dott — no matching program","SKIP dp — no matching program","SKIP drit — no matching program","SKIP mphw — no matching program","SKIP caim — no matching program","SKIP cand — no matching program","SKIP cap — no matching program","SKIP cacsbc — no matching program","SKIP gda — no matching program","SKIP nddy — no matching program","SKIP mba-ha — no matching program"]}
+
+</current_dom>

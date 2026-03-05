@@ -1,0 +1,37 @@
+# Premium Attendance System
+
+## Planning
+- [x] Review existing Attendance model + APIs + pages
+- [x] Write implementation plan with flow diagram
+- [x] Get user approval on plan
+
+## Backend — Minimal Additions
+- [x] Add `status`, `self_mark_open`, `self_mark_deadline`, `records[].marked_by` to Attendance model
+- [x] Create `POST /api/student/attendance/self-mark` endpoint
+- [x] Create `PATCH /api/teacher/attendance/[assignmentId]/session` endpoint
+- [x] Extend `GET /api/student/attendance` with calendar data + open sessions
+
+## Student UI — Calendar Dashboard
+- [x] Animated percentage ring component
+- [x] Calendar month grid with status dots per day
+- [x] Day detail expand (subject, teacher, status)
+- [x] Self-mark banner (conditional, with countdown timer)
+- [x] Low attendance warning pulse
+- [x] Mobile-first responsive layout
+
+## Teacher UI — Session Lifecycle
+- [x] "Today's Sessions" card on attendance list page
+- [x] Self-mark toggle + configurable timer on marking page
+- [x] Live counter (X/Y students marked)
+- [x] Session state badges (Open / Reviewing / Finalized)
+- [x] Finalize button with confirmation dialog
+
+## Admin UI — Audit View
+- [x] New admin attendance page with filters
+- [x] Edit modal with mandatory reason field
+- [x] Audit badge on admin-edited records
+- [x] Bulk lock/unlock + export CSV
+
+## Verification
+- [x] TypeScript build check
+- [x] Git commit + push

@@ -1,0 +1,52 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+[0] (130,69)<a aria-label='Home' href='/' />
+	[1] (130,69)<div  />
+		[2] (130,69)<img  />
+LDM College of Pharmacy
+In collaboration with Dr. Dharam Dev Hospital & Institute
+[3] (639,69)<a aria-label='Hospital Partner' class='relative group hidden sm:block' href='/hospital' />
+	[4] (639,69)<img  />
+[5] (701,69)<a aria-label='Visit Hospital Page' class='hidden sm:block' href='/hospital' />
+	[6] (701,69)<img  />
+[7] (770,69)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 border-2 border-[#10B981] text-[#10B981] rounded-full text-sm font-bold hover:bg-[#10B981]/10 transition-all duration-300 whitespace-nowrap' href='/register'>Register />
+[8] (851,69)<a class='hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#10B981] to-[#047857] text-white rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap' href='/collect-info'>Apply Now />
+📢 Updates
+💼 From Education to Employment — We Guide You!
+🚀 Build Skills. Get Certified. Get Placed.
+🎯 Skill-Based Learning for Guaranteed Career Growth!
+[9] (186,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/'>Home />
+[10] (250,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/about'>About />
+	[11] (272,232)<span  />
+[12] (317,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/notices'>Notices />
+[13] (386,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/library'>E-Library />
+[14] (462,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/courses'>Courses />
+	[15] (490,232)<span  />
+[16] (534,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/gallery'>Gallery />
+[17] (619,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/collaborations'>Collaborations />
+	[18] (660,232)<span  />
+[19] (705,233)<a class='inline-flex items-center gap-1.5 px-3 py-4 text-sm font-semibold transition-all duration-300 border-b-2 hover:bg-white/40 rounded-t-lg mt-1 text-[#0A192F] hover:text-[#10B981] border-transparent' href='/contact'>Contact />
+[20] (844,230)<a class='inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#0A192F] to-[#1e3a5f] text-white rounded-full text-sm font-bold shadow-[0_4px_15px_rgba(10,25,47,0.3)] hover:shadow-[0_6px_20px_rgba(10,25,47,0.4)] hover:-translate-y-0.5 transition-all duration-300' href='/login'>Student Portal />
+L
+LDM College
+Let's build your future 🌟
+We will help you, step by step.
+1
+2
+3
+4
+Basic Details
+[21] (500,455)<label class='block text-sm font-semibold text-white/90'>Your Full Name />
+As written on your ID card
+[22] (500,538)<input class='w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:border-transparent transition-all text-sm' placeholder='e.g. Priya Sharma' />
+[23] (500,603)<label class='block text-sm font-semibold text-white/90'>Gender />
+[24] (500,654)<select class='w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:border-transparent transition-all text-sm appearance-none cursor-pointer' />
+[25] (500,719)<label class='block text-sm font-semibold text-white/90'>Date of Birth />
+The day, month, and year you were born
+[26] (500,802)<input class='w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:border-transparent transition-all text-sm' />
+[27] (500,867)<label class='block text-sm font-semibold text-white/90'>Mobile Number />
+We will contact you here
+
+</current_dom>

@@ -1,0 +1,7 @@
+# Task: Fix Syntax Error in index.js
+
+- [x] Investigate line 64 error in [index.js](file:///media/swastik/focus/projects%202026/webdev/index.js) <!-- id: 0 -->
+- [x] Register [custom_middleware](file:///media/swastik/focus/projects%202026/webdev/index.js#8-12) with the Express app <!-- id: 1 -->
+- [x] Fix the ID comparison bug in `/todos/:id` route <!-- id: 3 -->
+- [x] Clean up `console.log(req)` to avoid console spam <!-- id: 4 -->
+- [x] Verify the server starts and middleware works <!-- id: 2 -->

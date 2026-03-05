@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary":  "Walkthrough documenting all changes: schema extension with curriculum sub-document, seed script with code aliases, API update to pass curriculum data, and frontend rewrite with dynamic section rendering. Includes verification results (14 programs seeded, build passes).",
+  "updatedAt":  "2026-03-04T15:15:11.949378743Z",
+  "version":  "20"
+}

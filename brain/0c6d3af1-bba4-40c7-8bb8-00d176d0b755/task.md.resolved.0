@@ -1,0 +1,6 @@
+# Task: Push to GitHub
+
+- [ ] Get GitHub repository URL from user [/]
+- [ ] Add remote origin [ ]
+- [ ] Push local `master` branch to remote [ ]
+- [ ] Verify push was successful [ ]

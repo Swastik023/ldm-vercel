@@ -1,0 +1,7 @@
+# Connecting to Stitch MCP
+
+- [ ] Investigate why "stitch" server is not found <!-- id: 0 -->
+    - [ ] Check `/home/swastik/.gemini` for config files <!-- id: 1 -->
+    - [ ] Verify connectivity to `https://stitch.googleapis.com/mcp` <!-- id: 2 -->
+- [ ] Fix configuration if necessary <!-- id: 3 -->
+- [ ] Successfully list resources from "stitch" <!-- id: 4 -->

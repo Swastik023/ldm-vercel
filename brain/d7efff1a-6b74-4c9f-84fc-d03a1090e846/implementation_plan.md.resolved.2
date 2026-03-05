@@ -1,0 +1,497 @@
+# Backend API Implementation Plan
+
+## Overview
+
+Implement missing backend endpoints for LDM College website with proper security, validation, and frontend integration.
+
+---
+
+## Implementation Order
+
+1. **Contact Form** (Simplest, user-facing)
+2. **Notices** (Medium complexity, content-based)
+3. **Gallery** (Complex, file uploads)
+4. **Admin Dashboard Stats** (Read-only, aggregation)
+
+---
+
+## Database Schema
+
+### 1. Contact Messages Table
+
+```sql
+CREATE TABLE IF NOT EXISTS contact_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    subject VARCHAR(200) NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('new', 'read', 'replied', 'archived') DEFAULT 'new',
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_status (status),
+    INDEX idx_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### 2. Notices Table
+
+```sql
+CREATE TABLE IF NOT EXISTS notices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    content TEXT NOT NULL,
+    category ENUM('general', 'academic', 'exam', 'event', 'urgent') DEFAULT 'general',
+    priority ENUM('low', 'normal', 'high') DEFAULT 'normal',
+    start_date DATE,
+    end_date DATE,
+    is_active BOOLEAN DEFAULT TRUE,
+    attachment_url VARCHAR(255),
+    views INT DEFAULT 0,
+    created_by INT UNSIGNED ZEROFILL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_active (is_active, start_date, end_date),
+    INDEX idx_category (category),
+    FOREIGN KEY (created_by) REFERENCES gibbonPerson(gibbonPersonID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+### 3. Gallery Table
+
+```sql
+CREATE TABLE IF NOT EXISTS gallery (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    image_url VARCHAR(255) NOT NULL,
+    thumbnail_url VARCHAR(255),
+    category VARCHAR(50) DEFAULT 'general',
+    display_order INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
+    uploaded_by INT UNSIGNED ZEROFILL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_active_order (is_active, display_order),
+    INDEX idx_category (category),
+    FOREIGN KEY (uploaded_by) REFERENCES gibbonPerson(gibbonPersonID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+---
+
+## API Endpoints Specification
+
+### Contact Form API
+
+#### POST /api/contact
+**Public endpoint** - Submit contact form
+
+**Request:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+91-9876543210",
+  "subject": "Admission Inquiry",
+  "message": "I would like to know..."
+}
+```
+
+**Validation:**
+- name: required, 3-100 chars
+- email: required, valid email
+- phone: optional, valid format
+- subject: required, 5-200 chars
+- message: required, 10-5000 chars
+
+**Rate Limiting:** 3 requests per IP per 10 minutes
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Thank you! We'll contact you soon.",
+  "id": 123
+}
+```
+
+---
+
+#### GET /api/admin/contact-messages
+**Admin only** - List contact messages
+
+**Query Params:**
+- `status`: filter by status (new, read, replied, archived)
+- `page`: pagination (default: 1)
+- `limit`: items per page (default: 20, max: 100)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "messages": [...],
+    "pagination": {
+      "current_page": 1,
+      "total_pages": 5,
+      "total_count": 95
+    }
+  }
+}
+```
+
+---
+
+#### PATCH /api/admin/contact-messages/{id}
+**Admin only** - Update message status
+
+**Request:**
+```json
+{
+  "status": "read"
+}
+```
+
+---
+
+#### DELETE /api/admin/contact-messages/{id}
+**Admin only** - Delete message
+
+---
+
+### Notices API
+
+#### GET /api/notices
+**Public endpoint** - List active notices
+
+**Query Params:**
+- `category`: filter by category
+- `limit`: max items (default: 10)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Exam Schedule Released",
+      "content": "...",
+      "category": "exam",
+      "priority": "high",
+      "start_date": "2026-02-01",
+      "end_date": "2026-02-15",
+      "created_at": "2026-01-25T10:00:00Z"
+    }
+  ]
+}
+```
+
+---
+
+#### POST /api/admin/notices
+**Admin only** - Create notice
+
+**Request:**
+```json
+{
+  "title": "New Notice",
+  "content": "Full content...",
+  "category": "general",
+  "priority": "normal",
+  "start_date": "2026-02-01",
+  "end_date": "2026-02-28"
+}
+```
+
+**Validation:**
+- title: required, 5-200 chars
+- content: required, 10-10000 chars
+- category: enum validation
+- dates: valid date format, end_date >= start_date
+
+---
+
+#### PUT /api/admin/notices/{id}
+**Admin only** - Update notice
+
+---
+
+#### DELETE /api/admin/notices/{id}
+**Admin only** - Delete notice
+
+---
+
+### Gallery API
+
+#### GET /api/gallery
+**Public endpoint** - List active gallery items
+
+**Query Params:**
+- `category`: filter by category
+- `limit`: max items
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Campus Event 2026",
+      "description": "...",
+      "image_url": "/uploads/gallery/image1.jpg",
+      "thumbnail_url": "/uploads/gallery/thumb_image1.jpg",
+      "category": "events"
+    }
+  ]
+}
+```
+
+---
+
+#### POST /api/admin/gallery
+**Admin only** - Upload image
+
+**Request:** multipart/form-data
+- `image`: file (jpg/png, max 5MB)
+- `title`: string
+- `description`: string
+- `category`: string
+
+**File Handling:**
+- Create thumbnail (300x300)
+- Store in `/public/uploads/gallery/`
+- Generate unique filename
+
+---
+
+#### PUT /api/admin/gallery/{id}
+**Admin only** - Update metadata (not image)
+
+---
+
+### DELETE /api/admin/gallery/{id}
+**Admin only** - Delete image + files
+
+---
+
+### Admin Dashboard Stats API
+
+#### GET /api/admin/stats
+**Admin only** - Dashboard statistics
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "students": {
+      "total": 450,
+      "active": 420,
+      "new_this_month": 15
+    },
+    "staff": {
+      "total": 35,
+      "teachers": 25,
+      "support": 10
+    },
+    "notices": {
+      "active": 8,
+      "expired": 45
+    },
+    "contact_messages": {
+      "new": 12,
+      "total": 156
+    },
+    "gallery": {
+      "total_images": 78,
+      "by_category": {...}
+    }
+  }
+}
+```
+
+---
+
+## Security Implementation
+
+### Admin Role Middleware
+
+```php
+function requireAdmin(Request $request, Response $response, callable $next) {
+    $user = $request->getAttribute('user');
+    
+    if (!$user || $user->role !== 'Staff') {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'error' => 'Admin access required'
+        ]));
+        return $response->withStatus(403);
+    }
+    
+    return $next($request, $response);
+}
+```
+
+### Input Validation Helper
+
+```php
+class Validator {
+    public static function validate($data, $rules) {
+        $errors = [];
+        
+        foreach ($rules as $field => $rule) {
+            // Required check
+            if (isset($rule['required']) && empty($data[$field])) {
+                $errors[$field] = "{$field} is required";
+                continue;
+            }
+            
+            // Length validation
+            if (isset($rule['min']) || isset($rule['max'])) {
+                $len = strlen($data[$field]);
+                if (isset($rule['min']) && $len < $rule['min']) {
+                    $errors[$field] = "{$field} must be at least {$rule['min']} characters";
+                }
+                if (isset($rule['max']) && $len > $rule['max'])) {
+                    $errors[$field] = "{$field} must not exceed {$rule['max']} characters";
+                }
+            }
+            
+            // Email validation
+            if (isset($rule['email']) && !filter_var($data[$field], FILTER_VALIDATE_EMAIL)) {
+                $errors[$field] = "{$field} must be a valid email";
+            }
+        }
+        
+        return empty($errors) ? null : $errors;
+    }
+}
+```
+
+### Rate Limiting
+
+```php
+class RateLimiter {
+    private $cacheDir = '/tmp/rate_limit/';
+    
+    public function check($key, $maxAttempts = 3, $decayMinutes = 10) {
+        $file = $this->cacheDir . md5($key);
+        $data = file_exists($file) ? json_decode(file_get_contents($file), true) : null;
+        
+        if ($data && $data['expires'] > time()) {
+            if ($data['attempts'] >= $maxAttempts) {
+                return false; // Rate limit exceeded
+            }
+            $data['attempts']++;
+        } else {
+            $data = [
+                'attempts' => 1,
+                'expires' => time() + ($decayMinutes * 60)
+            ];
+        }
+        
+        file_put_contents($file, json_encode($data));
+        return true;
+    }
+}
+```
+
+---
+
+## Frontend Integration Points
+
+### Contact Form
+**File:** [ldm_test/src/components/PopupContact.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/components/PopupContact.tsx)
+**Current:** Calls `/api/submit_contact.php`
+**Update:** Call `/api/contact` (already updated)
+
+### Gallery
+**File:** [ldm_test/src/pages/Gallery.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/Gallery.tsx)
+**Current:** Calls `/api/gallery.php`
+**Update:** Call `/api/gallery` (already updated)
+
+### Notices
+**File:** [ldm_test/src/pages/Notices.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/Notices.tsx)
+**Current:** Calls `/api/get_notices.php`
+**Update:** Call `/api/notices` (already updated)
+
+### Admin Dashboard
+**File:** [ldm_test/src/pages/admin/AdminDashboard.tsx](file:///media/swastik/focus/ldm%20new%20updae%202.0/ldm_test/src/pages/admin/AdminDashboard.tsx)
+**Current:** Calls `/api/admin/stats.php`
+**Update:** Call `/api/admin/stats` (already updated)
+
+---
+
+## Testing Strategy
+
+### Unit Tests (Manual CLI)
+```bash
+# Contact form
+curl -X POST http://localhost:8000/api/contact \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@test.com","subject":"Test","message":"Test message here"}'
+
+# Get notices
+curl http://localhost:8000/api/notices
+
+# Admin stats (with token)
+curl http://localhost:8000/api/admin/stats \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Frontend Integration
+1. Test contact form submission
+2. Check gallery loads
+3. Verify notices display
+4. Test admin dashboard stats
+
+---
+
+## Implementation Timeline
+
+**Phase 1 (Day 1):**
+- Create database tables
+- Implement contact API
+- Test contact form
+
+**Phase 2 (Day 2):**
+- Implement notices API
+- Test notices display
+- Add admin CRUD
+
+**Phase 3 (Day 3):**
+- Implement gallery API
+- Handle file uploads
+- Test gallery
+
+**Phase 4 (Day 4):**
+- Implement admin stats
+- Add caching
+- Final testing
+
+---
+
+## Success Criteria
+
+✅ All endpoints return proper JSON responses  
+✅ Admin endpoints require authentication  
+✅ Input validation prevents bad data  
+✅ Rate limiting prevents abuse  
+✅ Frontend displays data correctly  
+✅ No console errors  
+✅ All CRUD operations work  
+
+---
+
+## Next Steps
+
+1. Create database migration script
+2. Add validation & middleware helpers
+3. Implement contact API first
+4. Test thoroughly before moving to next feature

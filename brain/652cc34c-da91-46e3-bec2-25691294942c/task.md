@@ -1,0 +1,12 @@
+# Debugging Gallery Delete and Marquee
+
+- [/] Fix Gallery Delete Issue <!-- id: 0 -->
+    - [x] Identified incorrect file paths in `gallery_delete.php` <!-- id: 1 -->
+    - [ ] Fix path calculation to match `gallery_crud.php` logic <!-- id: 2 -->
+    - [ ] Test deletion from edit modal <!-- id: 3 -->
+- [/] Fix Marquee Display Issue <!-- id: 4 -->
+    - [x] Confirmed Marquee not visible on homepage <!-- id: 5 -->
+    - [ ] Check if marquee table has data <!-- id: 6 -->
+    - [ ] Add sample marquee items if empty <!-- id: 7 -->
+    - [ ] Verify Marquee renders on frontend <!-- id: 8 -->
+- [ ] Final Verification <!-- id: 9 -->

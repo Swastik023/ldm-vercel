@@ -1,0 +1,50 @@
+# Walkthrough: E-Library Transformation
+
+We have successfully transformed the E-Library from a simple document portal into a structured, program-aware educational hub with high-quality academic content and improved administrator controls.
+
+## 核心 Features Implemented
+
+### 1. Program-Based Navigation
+Both the **Public Library** and **Student Portal** now feature a restructured sidebar that allows students to filter resources by their specific course (DCCM, DHM, etc.). 
+- **Auto-Filtering**: Students see their own program's modules by default.
+- **Foundation Highlights**: Common resources (Section A) are now explicitly categorized as "Common Foundation" for easy access.
+
+### 2. "Academic Edition" Content Upgrade
+We upgraded over 100+ module books (v2) to address the need for more professional and information-dense materials.
+- **Scholarly Tone**: Shifted from brief outlines to formal academic text.
+- **7-Chapter Structure**: Each module now includes:
+    - Foundational Principles
+    - Clinical Protocols
+    - Pharmacological Interventions
+    - Advanced Technology & Diagnostics
+    - Critical Case Studies
+    - Safety & Ethics
+- **Interactive TOC**: Books now feature a Table of Contents for easy navigation inside the reader.
+
+### 3. Admin CRUD & File Uploads
+Administrators now have full control over the library with a direct "Choose File" selector.
+- **New Categories**: Added **Previous Year Question Papers**, **Study Notes**, and **Master Syllabus** as requested.
+- **Direct Local Uploads**: Files are saved directly to `public/uploads/library`.
+- **UI Fixes**: The "Invalid Date" bug in the Category board has been resolved (now shows "N/A" for fresh records).
+
+## Visual Verification
+
+````carousel
+![Admin Upload Modal](/home/swastik/.gemini/antigravity/brain/cf5befef-0a93-481d-83e3-b06b9eab861f/upload_modal_verification_1771609821657.png)
+<!-- slide -->
+![Premium Markdown Reader](/home/swastik/.gemini/antigravity/brain/cf5befef-0a93-481d-83e3-b06b9eab861f/verify_markdown_reader_ui_1771610798076.webp)
+<!-- slide -->
+![Academic Book v2](/home/swastik/.gemini/antigravity/brain/cf5befef-0a93-481d-83e3-b06b9eab861f/dccm_upgraded_book_content_1771608668578.png)
+<!-- slide -->
+![Recording: PDF Print Feature](/home/swastik/.gemini/antigravity/brain/cf5befef-0a93-481d-83e3-b06b9eab861f/verify_public_markdown_reader_1771611180615.webp)
+````
+
+## Technical Notes for Vercel Deployment
+> [!WARNING]
+> The current **Local File Upload** (Phase 4) stores files in `public/uploads/library`. 
+> Since Vercel has an ephemeral filesystem, these files will be erased whenever you redeploy.
+> **Next Step**: I recommend integrating a cloud storage provider (like Cloudinary or AWS S3) for persistent file storage.
+
+## GitHub Status
+- [x] Commited all Library API & UI changes.
+- [x] Pushed to `main` for Vercel deployment.

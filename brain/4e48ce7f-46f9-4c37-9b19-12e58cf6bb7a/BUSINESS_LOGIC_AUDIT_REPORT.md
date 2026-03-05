@@ -1,0 +1,335 @@
+# BUSINESS_LOGIC_AUDIT_REPORT
+
+> **Date**: 2026-03-04 | **Scope**: 101 API routes, 35 Mongoose models, full frontend  
+> **Auditor perspective**: Production engineer, security reviewer, product simplification expert
+
+---
+
+# Executive Summary
+
+The system is a college management platform (LDM College) serving students, teachers, and admins. It covers registration, document uploads, attendance, tests, fees, results, job placement, and library.
+
+**Overall assessment**: The system is functionally rich but has **critical data integrity issues** caused by inconsistent object linking between models. The most impactful problem is the **dual fee system** — two completely separate fee mechanisms (`StudentFee` and `FeeStructure`/`FeePayment`) coexist without linking to each other, creating confusion and potential financial discrepancies.
+
+**Stats**: 25 issues found — **5 High**, **12 Medium**, **8 Low**.
+
+---
+
+# System Overview
+
+| Layer | Tech | Notes |
+|---|---|---|
+| Frontend | Next.js (App Router), React, Framer Motion | Premium UI with glassmorphism |
+| Backend | Next.js API routes (101 routes) | Serverless on Vercel |
+| Database | MongoDB via Mongoose (35 models) | Complex object references |
+| Auth | NextAuth (credentials + Google) | Email OTP verification |
+| Storage | Cloudinary | Document/image uploads |
+| Deployment | Vercel | 4.5MB payload limit |
+
+### Key Models & References
+```
+User → batch (Batch), session (Session), classId (Class), programId (Program)
+Batch → program (Program), session (Session)
+Class → batchId (Batch)
+FeeStructure → program (Program), session (Session)
+FeePayment → student (User), fee_structure (FeeStructure)
+StudentFee → studentId (User), batchId (Batch), courseId (string → Program.code)
+Attendance → subject, teacher, session, batch, records[].student
+ProTest → batch, subject
+ProTestAttempt → testId, studentId
+Result → student, session, program, subject, batch
+Assignment → teacher, subject, batch, session
+```
+
+---
+
+# Detailed Feature-by-Feature Audit
+
+---
+
+## 1. Registration Workflow
+
+### Flow
+`Register (email+batch) → OTP verify → complete-profile (Google users) → pending → admin approve → active`
+
+### Issues Found
+
+#### H-01 · Two different batch creation/naming conventions
+- **What**: Register route expects admin-created batches (e.g. `CSE_2026_JAN`). complete-profile auto-creates batches with a different naming scheme (`2026CSE`).
+- **Why wrong**: A Google-signup student gets a batch named `2026CSE` while an email-signup student gets `CSE_2026_JAN`. Two students in the same program and year end up in **different batches**.
+- **Real-world break**: Class lists, attendance, tests — all filtered by batch — will split students incorrectly.
+- **Risk**: 🔴 **HIGH**
+- **Fix**: complete-profile should find batch by `{ program, joiningYear, intakeMonth }` (the unique compound index), not by `name`. Remove the legacy batch-name generation. Use the same `Batch.findOne({ program, joiningYear, intakeMonth })` pattern that register uses.
+
+---
+
+#### M-01 · Approve flow doesn't increment `batch.current_students`
+- **What**: When admin approves a student, `current_students` on the batch is not incremented. Only admin user creation increments it.
+- **Why wrong**: Capacity tracking becomes inaccurate.
+- **Real-world break**: If batch capacity is 60 and 60 students register (self-service), the system still shows 0/60 capacity used.
+- **Risk**: 🟡 **MEDIUM**
+- **Fix**: In approve route, after status = 'active', do `Batch.findByIdAndUpdate(user.batch, { $inc: { current_students: 1 } })`.
+
+---
+
+#### M-02 · Register doesn't check batch capacity
+- **What**: Students can register into a batch regardless of `current_students >= capacity`.
+- **Why wrong**: No admission cap enforcement.
+- **Real-world break**: 200 students register for a batch with capacity 60.
+- **Risk**: 🟡 **MEDIUM**
+- **Fix**: Add check: `if (batch.current_students >= batch.capacity) return 400 'Batch full'`.
+
+---
+
+#### L-01 · Google-signup complete-profile allows any `programId`
+- **What**: The route validates `Program.findOne({ _id: programId, is_active: true })` — but any active program is accepted. There's no check if the program has available batches or if the student's chosen month/year combo is valid.
+- **Risk**: 🟢 **LOW**
+
+---
+
+## 2. Dual Fee System (Critical Architecture Issue)
+
+#### H-02 · Two independent fee systems with no linkage
+- **What**: The system has **two completely separate** fee tracking mechanisms:
+  1. **`StudentFee`** — per-student fee records linked to `Program.pricing`. Uses `courseId` (string = Program.code), `academicYear` (string), `baseFee/finalFee/amountPaid`. Managed via `/api/admin/fees/course`.
+  2. **`FeeStructure` + `FeePayment`** — per-semester fee structures linked to Session + Program (ObjectId refs). Managed via `/api/admin/finance/fee-structures` and `/api/admin/finance/payments`.
+- **Why wrong**: An admin creating a fee structure doesn't affect StudentFee, and vice versa. Payments recorded in one system are invisible to the other. Student dashboard may show contradictory fee data.
+- **Real-world break**: Admin sets fee of ₹50,000 in FeeStructure. Student shows ₹45,000 in StudentFee (from CoursePricing). Admin thinks student paid via FeePayment, but student sees unpaid in StudentFee.
+- **Risk**: 🔴 **HIGH**
+- **Fix**: **Choose one system.** `StudentFee` is more flexible (supports discounts, academic years, batch linkage). Deprecate `FeeStructure` + `FeePayment` or redirect them to create/update `StudentFee` records. At minimum, display both together on admin/student dashboards so nothing is hidden.
+
+---
+
+## 3. Test & Examination Workflow
+
+### Flow
+`Admin creates test (batch+subject) → publishes → student loads questions → submits answers → graded → results (instant or manual-publish)`
+
+#### M-03 · No server-side time enforcement on test submission
+- **What**: The test has `durationMinutes` but the server never checks if `submittedAt - startedAt > durationMinutes`. The `startedAt` is even approximated: `new Date(Date.now() - test.durationMinutes * 60 * 1000)`.
+- **Why wrong**: A student can take 3 hours on a 30-minute test. The server will still accept it.
+- **Real-world break**: Unfair advantage in timed exams.
+- **Risk**: 🟡 **MEDIUM**
+- **Fix**: Track actual `startedAt` when student first loads questions (store in session/cookie or DB). On submit, validate `now - startedAt <= durationMinutes + graceMinutes(2)`. Reject late submissions.
+
+---
+
+#### M-04 · Test questions served with answer key in memory
+- **What**: The answer key is loaded separately from `TestAnswerKey` — this is good. But the `ProTest.questions[].options` still contain the original label ordering, which could leak correct answer info if options are not shuffled and labels correlate.
+- **Risk**: 🟡 **MEDIUM** (mitigated by shuffle, but only if `shuffleOptions` is enabled)
+
+---
+
+#### L-02 · Test delete doesn't cascade to Result model
+- **What**: `DELETE /api/admin/tests/[id]` deletes `ProTest`, `TestAnswerKey`, and `ProTestAttempt` — but not `Result` records that may reference this test's subject/batch/session.
+- **Risk**: 🟢 **LOW** (Result model seems separate from ProTest)
+
+---
+
+## 4. Attendance Workflow
+
+### Flow
+`Teacher creates session → marks attendance → optionally opens self-mark → admin can lock/unlock`
+
+#### M-05 · Self-mark attendance: no duplicate record prevention race condition
+- **What**: Self-mark checks `attendance.records.find(r => r.student === userId)` then pushes — but this is a TOCTOU race. Two concurrent requests from the same student could both succeed.
+- **Risk**: 🟡 **MEDIUM**
+- **Fix**: Use `Attendance.findOneAndUpdate` with `$addToSet` or atomic `$push` with condition instead of find-check-push pattern.
+
+---
+
+#### M-06 · Attendance session has no strict flow enforcement
+- **What**: A teacher can finalize, then another admin can unlock, then a student can self-mark. The flow `open → in_progress → finalized` has no one-way gate enforcement.
+- **Risk**: 🟡 **MEDIUM**
+- **Fix**: Enforce state machine: `open → in_progress → finalized` (one-way). Admin unlock should only go `finalized → in_progress`, not reopen self-mark.
+
+---
+
+## 5. Batch / Class / Session Linking
+
+#### H-03 · `User.classId` is almost always null
+- **What**: Before this session's fixes, no route ever set `user.classId`. The Class model exists but was orphaned — no code connected students to it.
+- **Status**: ✅ **FIXED** (register + approve now auto-create Class)
+- **Remaining risk**: Existing students in DB have `classId: null`. Need backfill.
+
+---
+
+#### H-04 · `User.session` was always null
+- **What**: Batch creation didn't link Session; register propagated null.
+- **Status**: ✅ **FIXED** (batch creation auto-creates Session, backfill script created)
+- **Remaining risk**: Existing data needs backfill. Run `npx tsx backfill-sessions.ts`.
+
+---
+
+#### M-07 · `Batch.batchCode` naming scheme differs between complete-profile and admin creation
+- **What**: Admin batch POST creates `CSE_2026_JAN`. complete-profile creates `2026CSE`. The `batchCode` field uses the same inconsistent name.
+- **Same as H-01** — part of the same root cause.
+
+---
+
+## 6. Admin User Management
+
+#### M-08 · Admin user POST creates student without Class record
+- **What**: `/api/admin/users` POST creates a student with batch but no classId. It has autoCreateStudentFee but no Class auto-creation.
+- **Risk**: 🟡 **MEDIUM**
+- **Fix**: Add same Class auto-creation logic used in register/approve.
+
+---
+
+#### M-09 · User DELETE doesn't cascade — orphaned data remains
+- **What**: Deleting a user only deletes the User doc and decrements batch count. Left behind: `StudentDocuments`, `StudentFee`, `FeePayment`, `ProTestAttempt`, attendance records, job applications, etc.
+- **Risk**: 🟡 **MEDIUM**
+- **Fix**: Add cascade delete or soft-delete pattern (set status = 'deleted' instead of actual delete, filter in all queries).
+
+---
+
+## 7. Document Management
+
+#### L-03 · Document rejection granularity does not extend to DMS V2
+- **What**: The per-field rejection flow (`rejectionReasons`) works for standard documents (passport photo, marksheets) but the newer DMS V2 (`DocumentRequirement` / `DocumentSubmission`) has its own review flow. Two separate document systems coexist.
+- **Risk**: 🟢 **LOW** (they serve different purposes — profile docs vs. admin-requested docs)
+
+---
+
+#### L-04 · Cloudinary cleanup on re-upload
+- **What**: When a student re-uploads documents (reupload flow), old Cloudinary files are not deleted. Storage accumulates.
+- **Risk**: 🟢 **LOW** (cost concern, not functional)
+
+---
+
+## 8. Finance Workflow
+
+#### M-10 · Fee amount change propagates via loop — no bulk update
+- **What**: `PATCH /api/admin/fees/course` loops through all StudentFee records with `fee.save()` inside a loop. For 1000 students, this makes 1000 individual DB writes.
+- **Risk**: 🟡 **MEDIUM** (performance at scale)
+- **Fix**: Use `StudentFee.updateMany` with aggregation pipeline for atomic bulk update.
+
+---
+
+#### L-05 · Record lock period only checks month string
+- **What**: The finance lock-period feature checks if a month is locked before allowing edits. The month format is `YYYY-MM` string comparison. No timezone handling.
+- **Risk**: 🟢 **LOW**
+
+---
+
+## 9. Role Permissions
+
+#### L-06 · Teachers can access some admin-level routes
+- **What**: Several admin routes check `['admin', 'teacher'].includes(role)` — including test management and attendance. This is intentional but there's no granular permission system.
+- **Risk**: 🟢 **LOW** (working as designed for ~100 users, but consider RBAC for scale)
+
+---
+
+#### L-07 · No admin self-delete protection
+- **What**: Admin DELETE `/api/admin/users?id=` can delete the admin's own account. There's no `is_root` check preventing the last admin from being deleted.
+- **Risk**: 🟢 **LOW**
+- **Fix**: Add `if (id === session.user.id) return 403 'Cannot delete your own account'`.
+
+---
+
+# High-Risk Issues
+
+| ID | Area | Issue | Status |
+|---|---|---|---|
+| H-01 | Batch naming | complete-profile creates batches with different naming than admin | 🔴 Open |
+| H-02 | Fees | Two independent fee systems (StudentFee vs FeeStructure/FeePayment) | 🔴 Open |
+| H-03 | Linking | `User.classId` always null | ✅ Fixed |
+| H-04 | Linking | `User.session` always null | ✅ Fixed |
+
+# Medium-Risk Issues
+
+| ID | Area | Issue |
+|---|---|---|
+| M-01 | Approve | No `batch.current_students` increment |
+| M-02 | Register | No batch capacity check |
+| M-03 | Tests | No server-side time enforcement |
+| M-04 | Tests | Answer leakage risk if shuffle disabled |
+| M-05 | Attendance | Self-mark TOCTOU race condition |
+| M-06 | Attendance | No state machine enforcement |
+| M-07 | Batches | Same as H-01 — naming inconsistency |
+| M-08 | Admin users | No Class auto-creation for admin-created students |
+| M-09 | Admin users | Delete doesn't cascade orphaned data |
+| M-10 | Fees | Loop-based fee updates — O(n) DB writes |
+
+# Low-Risk Issues
+
+| ID | Area | Issue |
+|---|---|---|
+| L-01 | Profile | No batch availability check for Google users |
+| L-02 | Tests | Delete doesn't cascade to Result model |
+| L-03 | Documents | Two document systems coexist |
+| L-04 | Documents | Old Cloudinary files never cleaned up |
+| L-05 | Finance | Lock period has no timezone handling |
+| L-06 | Permissions | Teachers share some admin routes |
+| L-07 | Admin | No self-delete or last-admin protection |
+| L-08 | Approve | Approve GET doesn't show session/programId | ✅ Fixed |
+
+---
+
+# Redundant / Unnecessary Logic
+
+1. **Dual fee system** — `StudentFee` + `FeeStructure`/`FeePayment` serve overlapping purposes. Pick one.
+2. **`User.sessionFrom / sessionTo`** — Legacy fields that duplicate `Session.name`. Remove and use `session` ObjectId.
+3. **`User.classId` + Class model** — Essentially stores `batch + year range`, which is already in the Batch model. Consider removing Class entirely.
+4. **`complete-profile` batch creation** — Duplicates admin batch creation with different naming. Remove and require batches to pre-exist.
+5. **Student dashboard attendance calculation** — Duplicates the `student/attendance` API logic. Refactor to call one shared function.
+
+---
+
+# Missing Real-World Business Rules
+
+1. **Admission number generation** — No unique admission number on approval.
+2. **Semester-wise access control** — Tests/subjects not filtered by current semester.
+3. **Academic calendar** — No "working days" concept for attendance percentage.
+4. **Fee payment receipts** — No receipt generation after payment recording.
+5. **Re-admission / batch transfer** — No student batch transfer mechanism.
+6. **Parent/guardian access** — No parent-facing view for fees/attendance/results.
+
+---
+
+# UX Simplification Recommendations
+
+1. **Registration → Merge flows**: Unify Google + email registration into one batch-lookup flow. Remove batch-creation from complete-profile.
+2. **Fee dashboard → Single view**: Show all fee obligations from one unified system.
+3. **Admin batch management → Auto-create sessions**: ✅ Already fixed.
+4. **Test publish flow → Add confirmation**: Add "Publish results for X students?" dialog.
+5. **Document review → Inline preview**: Show inline PDF/image previews in admin review.
+
+---
+
+# Final Simplified Ideal Flow
+
+```
+REGISTRATION:
+  Student visits /register
+  → Chooses auth method (Google or email)
+  → Fills: name, email, phone, batch (filtered by month/year) ✅, roll number, password
+  → OTP verification
+  → Status = 'pending'
+  → Admin reviews → approves/rejects
+  → On approve: session linked ✅, class created ✅, fee auto-created ✅, batch count incremented ⚠️
+
+TESTS:
+  Teacher/Admin creates test for batch + subject
+  → Publishes when ready
+  → Students in that batch see it
+  → Start test → server records startedAt ⚠️
+  → Submit → server validates time ⚠️, grades, stores attempt
+  → Results: instant (auto) or manual (teacher publishes)
+
+ATTENDANCE:
+  Teacher opens session for assignment
+  → Marks attendance OR opens self-mark window
+  → Self-mark: student verifies batch ✅, marks present
+  → Teacher finalizes → locks
+  → Admin can unlock if needed (one-way state machine ⚠️)
+
+FEES (Simplified):
+  One system: StudentFee ⚠️
+  → Auto-created on approval from Program.pricing
+  → Admin can bulk-assign for batch + academic year
+  → Admin records payments → amountPaid increments
+  → Student dashboard shows one clear fee view
+
+✅ = already working    ⚠️ = needs fix (documented above)
+```

@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Comprehensive production deployment guide for Academic ERP. Covers frontend (Vite/React) and backend (PHP/Slim) deployment to various platforms including shared hosting, VPS, Vercel, and Netlify. Includes environment configuration, build commands, server setup, and post-deployment checklist.",
+  "updatedAt": "2026-02-10T16:33:49.849384355Z"
+}

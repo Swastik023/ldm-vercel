@@ -1,0 +1,85 @@
+# Student Registration + Resume Builder – Walkthrough
+
+## Stitch UI Designs (Generated)
+
+| Screen | Preview |
+|---|---|
+| **Registration – Step 1** (mobile) | ![Registration Step 1](https://lh3.googleusercontent.com/aida/AOfcidXY5taV11J8YF4gTH6imJSmiRb0eROx67cP_3U733A_ylEoGZESj1GeDnN9ChHfJZo_bnGiMWc0Ohluc0nJOc59CcMBEIK8Y0mAImxhbHYU_1keM3vScWdb8sqQjxho2f8ggn92r3Wks9A7-wm3msOhtmhd5-zGp06JLDn_V13D4bHUyU4jCkaYIWc0gKyy37KhXGjP67GFKjm8Cg4nm_fzc3pZZRPwfG06h06dHKXCScG1eMj8bFqddko) |
+| **Guided Resume Builder** (mobile) | ![Resume Builder](https://lh3.googleusercontent.com/aida/AOfcidUD0uVoGzJ9bmAdEXMKEaWZzFX5QnVi7HjU3fwyZVF9uj-QW2M83JMhRutc-cYxqDq58KnaoDHUN-1X8cocIhuk491fbb0Vfj8KwVaOQBjb8INh0fP28L9Ud397MywBRBydl-gUGR8DpB2eM_kbQSE-OWJHJUok1qqpMKyVLsLTEqp-sX_LRW59MW37Sp1Anf9KaBmVkT-_uLYyK9JglgYmjkEHjSyl0GLgWlXZXDImcvQMxQzfYOTmbyc9) |
+| **A4 Resume Preview** (desktop) | ![Resume Preview](https://lh3.googleusercontent.com/aida/AOfcidUQzQ0SBrY2PEtHDeOkKOfOmH2nLTimhRdliGlucPqF5i3nsOltf3S_95joaAzYX74uGRr5XnW6gUjDHYApl-xvAyP3If00vWMwbWenq-WFcUP8cRA_0vyEytBdnCp5aSp9ruUISLGpGkF5FK-fS1idmb-FR1cTYw2qV8Dqguq1Qb3apkDTlFp8gdN3JIeKibdptfypQPw_RXQCGG9lploMpfjVyxCdej5kIBhs-WGvaO9tqszx6n5kyHy5n) |
+
+---
+
+## Files Created
+
+### Database Models
+| File | Purpose |
+|---|---|
+| [StudentProfile.ts](file:///media/swastik/focus/ldm%20feb/src/models/StudentProfile.ts) | Extended student registration data (gender, DOB, mobile, qualification, emailVerified) |
+| [EmailOTP.ts](file:///media/swastik/focus/ldm%20feb/src/models/EmailOTP.ts) | Hashed OTP with MongoDB TTL auto-expiry, attempt counter, rate-limit timestamp |
+| [Resume.ts](file:///media/swastik/focus/ldm%20feb/src/models/Resume.ts) | Full resume with embedded education, skills, internship, experience, languages |
+
+### Backend APIs
+| Route | Method | Purpose |
+|---|---|---|
+| [/api/auth/register](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/register/route.ts) | POST | Creates User + StudentProfile, prevents duplicates |
+| [/api/auth/send-otp](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/send-otp/route.ts) | POST | Sends branded OTP email via Hostinger SMTP, 60s rate limit |
+| [/api/auth/verify-otp](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/verify-otp/route.ts) | POST | Validates OTP — max 3 attempts, 5-min expiry, bcrypt compare |
+| [/api/auth/resend-otp](file:///media/swastik/focus/ldm%20feb/src/app/api/auth/resend-otp/route.ts) | POST | Resend OTP (delegates to send-otp with same rate limiting) |
+| [/api/student/resume](file:///media/swastik/focus/ldm%20feb/src/app/api/student/resume/route.ts) | GET + POST | Fetch or upsert resume data, session-protected |
+
+### Frontend Pages
+| Page | Path | Description |
+|---|---|---|
+| [register/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28public%29/register/page.tsx) | `/register` | 4-step form: Basic → Academic → OTP → Success |
+| [resume/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/resume/page.tsx) | `/student/resume` | Guided accordion resume builder with dropdown-heavy, helper-text UI |
+| [preview/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/resume/preview/page.tsx) | `/student/resume/preview` | A4 printable resume preview with PDF download via `html2pdf.js` |
+
+### Other Changes
+- [student/page.tsx](file:///media/swastik/focus/ldm%20feb/src/app/%28student%29/student/page.tsx) — Added **"Your Career Tools"** quick-action cards to student dashboard
+- [.env](file:///media/swastik/focus/ldm%20feb/.env) — Added Hostinger SMTP credentials (`verification@ldmcollege.com`)
+- [html2pdf.d.ts](file:///media/swastik/focus/ldm%20feb/src/types/html2pdf.d.ts) — TypeScript declarations for html2pdf.js
+
+---
+
+## User Flow
+
+```
+/register (Step 1: Name, Gender, DOB, Mobile, Email, Password)
+    ↓ Continue
+(Step 2: Qualification, Year of Passing, English Level)
+    ↓ Continue → POST /api/auth/register → POST /api/auth/send-otp
+(Step 3: 6-digit OTP boxes, 5-min countdown, resend after 60s)
+    ↓ Verify OTP → POST /api/auth/verify-otp
+(Step 4: 🎉 "You're registered!" → Login to Dashboard)
+    ↓
+/login → Student Dashboard
+    ↓ Click "Resume Builder"
+/student/resume (Career Objective → Skills → Education → Internship → Languages)
+    ↓ "Preview My Resume →"
+/student/resume/preview (A4 layout, Download PDF button)
+```
+
+---
+
+## Security Features Implemented
+
+| Feature | Implementation |
+|---|---|
+| OTP hashing | `bcrypt.hash(otp, 10)` — never stored as plain text |
+| Auto-delete expired OTPs | MongoDB TTL index on `expiresAt` |
+| Max OTP attempts | 3 attempts — locked after 3rd failure |
+| Resend rate limiting | 60-second cooldown enforced server-side |
+| Duplicate account prevention | Returns same message regardless (anti-enumeration) |
+| Password hashing | `bcrypt.hash(password, 12)` |
+| Resume route protection | `getServerSession()` check — students only |
+
+---
+
+## Before Going Live
+
+> [!IMPORTANT]
+> **Restart `npm run dev`** after adding the SMTP credentials to [.env](file:///media/swastik/focus/ldm%20feb/.env) — Next.js only reads env vars at startup.
+
+> [!NOTE]
+> **Attendance by Photo** feature was deferred to a separate phase as planned. The current dashboard shows existing attendance records.

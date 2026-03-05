@@ -1,0 +1,89 @@
+# Dynamic Academic Library System Implementation Plan
+
+## 1. System Overview
+We are building a dynamic, version-controlled Academic Library for the 19 healthcare and Ayurveda programs. It will replace static PDFs with editable files (docx, pptx, xlsx) and rich-text content, supporting full CRUD capabilities with strict Role-Based Access Control (RBAC) and Audit Logging.
+
+## 2. Database Schema Changes
+
+### A. Modify existing [Program](file:///media/swastik/focus/ldm%20feb/src/models/Academic.ts#5-14) model
+- Add `course_type: { type: String, enum: ['diploma', 'certificate'], required: true }`.
+- Note: Diploma courses will organize documents by `semester`, while Certificate courses will organize by `module`.
+
+### B. Create [LibraryCategory](file:///media/swastik/focus/ldm%20feb/src/models/LibraryCategory.ts#3-9) Model
+Categories to organize documents (e.g., "Syllabus", "Study Material", "Assignments").
+```typescript
+interface ILibraryCategory extends Document {
+    name: string;
+    semester_or_module?: number; // Nullable for common categories
+    createdAt: Date;
+    updatedAt: Date;
+}
+```
+
+### C. Create [LibraryDocument](file:///media/swastik/focus/ldm%20feb/src/models/LibraryDocument.ts#3-18) Model
+The core document reference.
+```typescript
+interface ILibraryDocument extends Document {
+    course_id?: mongoose.Types.ObjectId; // Nullable if is_common is true
+    category_id: mongoose.Types.ObjectId;
+    title: string;
+    content?: string; // For rich-text content
+    file_path?: string; // For uploaded files
+    file_type: 'docx' | 'pptx' | 'xlsx' | 'rich-text';
+    current_version: number;
+    is_common: boolean; // If true, linked to all courses
+    is_deleted: boolean; // Soft delete
+    deleted_by?: mongoose.Types.ObjectId;
+    deleted_at?: Date;
+    createdAt: Date;
+    updatedAt: Date;
+}
+```
+
+### D. Create [DocumentVersion](file:///media/swastik/focus/ldm%20feb/src/models/DocumentVersion.ts#3-13) Model
+For maintaining version control history.
+```typescript
+interface IDocumentVersion extends Document {
+    document_id: mongoose.Types.ObjectId;
+    file_path?: string;
+    content?: string;
+    version_number: number;
+    updated_by: mongoose.Types.ObjectId;
+    previous_version_reference?: mongoose.Types.ObjectId;
+    timestamp: Date;
+}
+```
+
+### E. Integrate with Existing [AuditLog](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts#3-14)
+- Add `'LibraryDocument'` and `'LibraryCategory'` to the `entityType` enum in [AuditLog.ts](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts).
+
+## 3. Role-Based Access Control (RBAC) & Enforcement Rules
+- **Root Admin** (`is_root: true`): Full control. Can perform permanent deletions if absolutely necessary (though soft-delete is preferred), and can view soft-deleted items.
+- **Power Admin** (Standard `admin`): Can Upload, Download, and Edit documents. Editing a document automatically creates a new [DocumentVersion](file:///media/swastik/focus/ldm%20feb/src/models/DocumentVersion.ts#3-13) and increments the `current_version`. When deleting a document, it performs a **Soft Delete** (`is_deleted: true`). They cannot permanently delete records.
+- **Audit Logging**: Every Upload, Edit, and Delete action will generate an [AuditLog](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts#3-14) entry tracking the `user_id`, [action](file:///media/swastik/focus/ldm%20feb/src/models/FeePayment.ts#3-12), `old_value`, and `new_value`.
+
+## 4. API Endpoints to Build
+- `GET /api/admin/library/categories`
+- `POST /api/admin/library/categories`
+- `GET /api/admin/library/documents` (lists active documents, supports filtering by course/semester/module)
+- `POST /api/admin/library/documents` (creates new document + initial version)
+- `PUT /api/admin/library/documents/[id]` (updates document, creates new [DocumentVersion](file:///media/swastik/focus/ldm%20feb/src/models/DocumentVersion.ts#3-13) linking to previous version)
+- `DELETE /api/admin/library/documents/[id]` (Soft Deletes the document. Root Admin bypass can be implemented if required).
+- `GET /api/admin/library/documents/[id]/versions` (retrieves version history)
+
+## 5. Verification Plan
+1. Create a Diploma document and verify it requires a semester.
+2. Create a Certificate document and verify it requires a module.
+3. Edit the document and verify a [DocumentVersion](file:///media/swastik/focus/ldm%20feb/src/models/DocumentVersion.ts#3-13) is created and `current_version` increments.
+4. Soft-delete the document as a standard admin and verify it is hidden from the main list but still exists in the DB.
+5. Check the [AuditLog](file:///media/swastik/focus/ldm%20feb/src/models/AuditLog.ts#3-14) to ensure the library actions are recorded.
+
+## 6. Frontend Architecture (React)
+The frontend will reside under `/admin/library`. We need the following components:
+1. **Category Management (`/admin/library/categories`)**: A simple page to create and view categories.
+2. **Document Management (`/admin/library/documents`)**:
+   - A filterable table displaying documents by program and category.
+   - **Upload Modal**: Form supporting file uploads or rich-text entry, specifying common vs course-specific scoping.
+   - **Edit Modal**: Same form but pre-populated, creating a new version upon submission.
+   - **Version History Modal**: Lists all previous versions of a document with download/view links and update metadata (`updated_by`, `timestamp`).
+3. **Sidebar Updates**: Adding the new Library features to the main Admin [Sidebar.tsx](file:///media/swastik/focus/ldm%20feb/src/components/layout/Sidebar.tsx).

@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Comprehensive feature coverage matrix documenting all UI pages, API endpoints, database tables, and their implementation status. Includes 50+ features across Admin, Teacher, and Student roles with detailed status tracking (Working/Partial/Broken/Unknown).",
+  "updatedAt": "2026-02-10T20:22:18.332921283Z"
+}
