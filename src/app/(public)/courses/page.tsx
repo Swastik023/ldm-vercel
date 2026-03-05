@@ -28,7 +28,7 @@ function badgeStyle(duration: string) {
 }
 
 export default function CoursesPage() {
-    const [tab, setTab] = useState<'diploma' | 'cert'>('diploma');
+    const [tab, setTab] = useState<'diploma' | 'degree' | 'cert' | 'ayurveda'>('diploma');
     const [allCourses, setAllCourses] = useState<CourseItem[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -42,9 +42,11 @@ export default function CoursesPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    const diplomaCourses = allCourses.filter(c => c.course_type === 'diploma' || !c.course_type);
+    const diplomaCourses = allCourses.filter(c => c.course_type === 'diploma' || c.course_type === 'other' || (!c.course_type));
+    const degreeCourses = allCourses.filter(c => c.course_type === 'degree' || c.course_type === 'bvoc' || (c.title?.toLowerCase().includes('b voc') || c.title?.toLowerCase().includes('mba') || c.title?.toLowerCase().includes('bachelor')));
     const certCourses = allCourses.filter(c => c.course_type === 'certificate');
-    const courses = tab === 'diploma' ? diplomaCourses : certCourses;
+    const ayurvedaCourses = allCourses.filter(c => c.course_type === 'ayurveda');
+    const courses = tab === 'diploma' ? diplomaCourses : tab === 'degree' ? degreeCourses : tab === 'cert' ? certCourses : ayurvedaCourses;
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -99,8 +101,10 @@ export default function CoursesPage() {
             <div className="sticky top-14 z-30 bg-white shadow-sm border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center gap-3">
                     {[
-                        { key: 'diploma' as const, label: `Diploma Courses (${diplomaCourses.length})` },
-                        { key: 'cert' as const, label: `Certificate Courses (${certCourses.length})` },
+                        { key: 'diploma' as const, label: `Diploma (${diplomaCourses.length})` },
+                        { key: 'degree' as const, label: `Degree / B.Voc (${degreeCourses.length})` },
+                        { key: 'cert' as const, label: `Certificate (${certCourses.length})` },
+                        { key: 'ayurveda' as const, label: `Ayurveda (${ayurvedaCourses.length})` },
                     ].map(t => (
                         <button
                             key={t.key}
