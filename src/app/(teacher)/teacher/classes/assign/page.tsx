@@ -15,6 +15,9 @@ export default function TeacherSelfAssignment() {
 
     const [selectedBatch, setSelectedBatch] = useState('');
     const [selectedSubject, setSelectedSubject] = useState('');
+    const [filterMonth, setFilterMonth] = useState('');
+    const [filterYear, setFilterYear] = useState('');
+    const [batchSearch, setBatchSearch] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -66,6 +69,17 @@ export default function TeacherSelfAssignment() {
         s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.code.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const availableYears = [...new Set(batches.map((b: any) => b.joiningYear))].filter(Boolean).sort((a, b) => (b as number) - (a as number));
+
+    const filteredBatches = batches.filter((b: any) => {
+        if (filterMonth && b.intakeMonth !== filterMonth) return false;
+        if (filterYear && b.joiningYear !== Number(filterYear)) return false;
+        if (batchSearch && !b.name.toLowerCase().includes(batchSearch.toLowerCase()) &&
+            !(b.program?.name || '').toLowerCase().includes(batchSearch.toLowerCase()) &&
+            !(b.program?.code || '').toLowerCase().includes(batchSearch.toLowerCase())) return false;
+        return true;
+    });
 
     if (loading) return <div className="p-8 text-center text-gray-500 animate-pulse">Loading...</div>;
 
@@ -147,18 +161,51 @@ export default function TeacherSelfAssignment() {
                             Select Batch
                         </h2>
 
+                        {/* Filter row */}
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            <button type="button" onClick={() => setFilterMonth('')}
+                                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${!filterMonth ? 'bg-amber-500 text-white border-amber-500' : 'bg-white text-gray-600 border-gray-200 hover:border-amber-300'}`}>
+                                All Months
+                            </button>
+                            {['January', 'July'].map(m => (
+                                <button type="button" key={m} onClick={() => { setFilterMonth(m === filterMonth ? '' : m); setSelectedBatch(''); }}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${filterMonth === m ? 'bg-amber-500 text-white border-amber-500' : 'bg-white text-gray-600 border-gray-200 hover:border-amber-300'}`}>
+                                    {m}
+                                </button>
+                            ))}
+                            <span className="w-px bg-gray-200 mx-1" />
+                            <button type="button" onClick={() => setFilterYear('')}
+                                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${!filterYear ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'}`}>
+                                All Years
+                            </button>
+                            {availableYears.map(y => (
+                                <button type="button" key={y as number} onClick={() => { setFilterYear(filterYear === String(y) ? '' : String(y)); setSelectedBatch(''); }}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${filterYear === String(y) ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'}`}>
+                                    {y as number}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Batch search */}
+                        <div className="relative mb-3">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+                            <input type="text" placeholder="Search batch or programme…"
+                                className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+                                value={batchSearch} onChange={e => { setBatchSearch(e.target.value); setSelectedBatch(''); }} />
+                        </div>
+
                         <div className="grid grid-cols-1 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                                    Batch <span className="font-normal text-xs text-gray-400">(leave blank for open electives)</span>
+                                    Batch <span className="font-normal text-xs text-gray-400">(optional — leave blank for open electives)</span>
                                 </label>
                                 <select
                                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none"
                                     value={selectedBatch}
                                     onChange={e => setSelectedBatch(e.target.value)}
                                 >
-                                    <option value="">— Generic / Open Elective —</option>
-                                    {batches.map(b => (
+                                    <option value="">— None / Open Elective —</option>
+                                    {filteredBatches.map((b: any) => (
                                         <option key={b._id} value={b._id}>
                                             {b.name}{b.program ? ` (${b.program.code})` : ''} · {b.intakeMonth} {b.joiningYear}
                                         </option>
@@ -166,6 +213,12 @@ export default function TeacherSelfAssignment() {
                                 </select>
                                 {batches.length === 0 && (
                                     <p className="text-xs text-amber-600 mt-1">No active batches. Ask admin to create batches.</p>
+                                )}
+                                {batches.length > 0 && filteredBatches.length === 0 && (
+                                    <p className="text-xs text-gray-400 mt-1">No batches match your filters.</p>
+                                )}
+                                {filteredBatches.length > 0 && (
+                                    <p className="text-xs text-gray-400 mt-1">{filteredBatches.length} batch{filteredBatches.length !== 1 ? 'es' : ''} shown</p>
                                 )}
                             </div>
                         </div>
