@@ -16,13 +16,13 @@ interface MongooseCache {
 
 declare global {
     // eslint-disable-next-line no-var
-    var mongoose: MongooseCache | undefined;
+    var _mongooseCache: MongooseCache | undefined;
 }
 
-let cached = global.mongoose;
+let cached = global._mongooseCache;
 
 if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null, indexesFixed: false };
+    cached = global._mongooseCache = { conn: null, promise: null, indexesFixed: false };
 }
 
 /**
