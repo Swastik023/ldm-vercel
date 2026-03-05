@@ -335,6 +335,8 @@ function CourseFormModal({ course, onClose, onSaved }: { course: Course | null; 
     );
     const [eligibility, setEligibility] = useState(course?.eligibilitySummary || '');
     const [image, setImage] = useState(course?.image || '');
+    const [imageUploading, setImageUploading] = useState(false);
+    const [imageError, setImageError] = useState('');
     const [syllabusText, setSyllabusText] = useState((course?.syllabus || []).join('\n'));
     const [careerText, setCareerText] = useState((course?.careerOptions || []).join('\n'));
 
@@ -465,9 +467,79 @@ function CourseFormModal({ course, onClose, onSaved }: { course: Course | null; 
                             <textarea className={`${inp} h-24 resize-none`} value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe the course, its scope and career potential…" />
                         </div>
                         <div>
-                            <label className={lbl}>Course Image URL</label>
-                            <input className={inp} value={image} onChange={e => setImage(e.target.value)} placeholder="/course_img/dmlt.jpeg" />
-                            {image && <img src={image} alt="Preview" className="mt-2 w-32 h-20 object-cover rounded-lg border border-gray-200" />}
+                            <label className={lbl}>Course Image</label>
+
+                            {/* Upload Box */}
+                            <label
+                                htmlFor="course-img-upload"
+                                className={`relative flex flex-col items-center justify-center gap-2 w-full h-32 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200 ${imageUploading
+                                        ? 'border-blue-300 bg-blue-50'
+                                        : 'border-gray-200 bg-gray-50 hover:border-blue-400 hover:bg-blue-50/40'
+                                    }`}
+                            >
+                                {imageUploading ? (
+                                    <>
+                                        <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                                        <p className="text-xs text-blue-600 font-medium">Uploading…</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Upload className="w-6 h-6 text-gray-400" />
+                                        <p className="text-xs text-gray-500 text-center">
+                                            <span className="text-blue-600 font-semibold">Click to upload</span> or drag &amp; drop<br />
+                                            <span className="text-gray-400">JPG, PNG, WebP · max 3MB</span>
+                                        </p>
+                                    </>
+                                )}
+                                <input
+                                    id="course-img-upload"
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                    className="sr-only"
+                                    disabled={imageUploading}
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        setImageUploading(true);
+                                        setImageError('');
+                                        try {
+                                            const fd = new FormData();
+                                            fd.append('image', file);
+                                            const res = await fetch('/api/admin/courses/upload-image', { method: 'POST', body: fd });
+                                            const data = await res.json();
+                                            if (data.success) {
+                                                setImage(data.url);
+                                            } else {
+                                                setImageError(data.message || 'Upload failed.');
+                                            }
+                                        } catch {
+                                            setImageError('Upload failed. Please try again.');
+                                        } finally {
+                                            setImageUploading(false);
+                                            e.target.value = '';
+                                        }
+                                    }}
+                                />
+                            </label>
+
+                            {/* Error */}
+                            {imageError && <p className="text-xs text-rose-500 mt-1 font-medium">{imageError}</p>}
+
+                            {/* Preview */}
+                            {image && (
+                                <div className="mt-3 relative inline-block">
+                                    <img src={image} alt="Course preview" className="w-40 h-24 object-cover rounded-xl border border-gray-200 shadow-sm" />
+                                    <button
+                                        type="button"
+                                        onClick={() => { setImage(''); setImageError(''); }}
+                                        className="absolute -top-2 -right-2 w-5 h-5 bg-rose-500 text-white rounded-full flex items-center justify-center hover:bg-rose-600 transition-colors shadow-sm"
+                                        title="Remove image"
+                                    >
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                    <p className="text-[10px] text-gray-400 mt-1 truncate max-w-[160px]">{image}</p>
+                                </div>
+                            )}
                         </div>
                         <div>
                             <label className={lbl}>Syllabus Topics <span className="text-gray-300 normal-case font-normal">(one per line)</span></label>
