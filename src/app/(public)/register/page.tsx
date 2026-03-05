@@ -121,6 +121,9 @@ export default function RegisterPage() {
         if (!form.rollNumber.trim()) errs.rollNumber = 'Roll number is required.';
         if (!form.password) errs.password = 'Password is required.';
         else if (form.password.length < 8) errs.password = 'Must be at least 8 characters.';
+        else if (!/[a-z]/.test(form.password) || !/[A-Z]/.test(form.password) || !/\d/.test(form.password)) {
+            errs.password = 'Must include at least one uppercase, lowercase, and number.';
+        }
 
         if (Object.keys(errs).length > 0) {
             setFieldErrors(errs);
@@ -132,15 +135,17 @@ export default function RegisterPage() {
         setError('');
         setLoading(true);
         try {
-            const res = await fetch('/api/auth/register', {
+            // First, send the OTP. We only register AFTER OTP is verified.
+            const res = await fetch('/api/auth/send-otp', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ email: form.email }),
             });
             const data = await res.json();
             if (!data.success) { setError(data.message); return; }
+
             setRegisteredEmail(form.email);
-            await sendOTP();
-            setStep(1);
+            setOtpTimer(OTP_RESEND_SECONDS);
+            setStep(1); // Move to OTP input screen
         } catch { setError('Something went wrong. Please try again.'); }
         finally { setLoading(false); }
     };
@@ -163,13 +168,29 @@ export default function RegisterPage() {
         if (otpStr.length !== 6) { setError('Enter all 6 digits.'); return; }
         setError(''); setLoading(true);
         try {
+            // 1. Verify OTP
             const res = await fetch('/api/auth/verify-otp', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: form.email, otp: otpStr }),
             });
             const data = await res.json();
-            if (data.success) setStep(2);
-            else setError(data.message);
+            if (!data.success) { setError(data.message); return; }
+
+            // 2. If OTP is correct, actually register the user
+            const regRes = await fetch('/api/auth/register', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            });
+            const regData = await regRes.json();
+
+            if (!regData.success) {
+                setError(regData.message);
+                // If roll number is taken, let them go back to fix it
+                setStep(0);
+                return;
+            }
+
+            setStep(2); // Success screen
         } catch { setError('Something went wrong.'); }
         finally { setLoading(false); }
     };
