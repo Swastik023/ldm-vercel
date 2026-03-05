@@ -167,7 +167,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
             questionId: q.questionId,
             questionText: q.questionText,
             studentAnswer: studentAns ? `${studentAns} - ${studentAnsOption?.text ?? 'Unknown'}` : null,
-            correctAnswer: correctAns ? `${correctAns} - ${correctAnsOption?.text ?? 'Unknown'}` : null,
+            correctAnswer: correctAns ? `${correctAns} - ${correctAnsOption?.text ?? ''}` : '',
             reason: key?.reason ?? '',
             marksAwarded,
             isCorrect,
