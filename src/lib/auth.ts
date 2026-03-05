@@ -156,7 +156,14 @@ export const authOptions: NextAuthOptions = {
                 session.user.status = token.status as string;
             }
             return session;
-        }
+        },
+        async redirect({ url, baseUrl }) {
+            // Prevent NextAuth from redirecting to /account (its default) which doesn't exist
+            // Only allow relative URLs or same-origin URLs; default to home
+            if (url.startsWith('/')) return `${baseUrl}${url}`;
+            if (url.startsWith(baseUrl)) return url;
+            return baseUrl; // fallback to home — never go to /account
+        },
     },
     pages: {
         signIn: '/login',
