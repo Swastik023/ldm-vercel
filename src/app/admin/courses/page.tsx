@@ -119,25 +119,14 @@ export default function AdminCoursesPage() {
         fetchCourses();
     };
 
-    const handleMoveOrder = async (course: Course, direction: 'up' | 'down') => {
-        const sorted = [...courses].sort((a, b) => a.displayOrder - b.displayOrder);
-        const idx = sorted.findIndex(c => c._id === course._id);
-        const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
-        if (swapIdx < 0 || swapIdx >= sorted.length) return;
-        const swapCourse = sorted[swapIdx];
-        // Swap displayOrder values
-        await Promise.all([
-            fetch(`/api/admin/courses/${course._id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ displayOrder: swapCourse.displayOrder }),
-            }),
-            fetch(`/api/admin/courses/${swapCourse._id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ displayOrder: course.displayOrder }),
-            }),
-        ]);
+    const handleOrderChange = async (course: Course, newOrder: string) => {
+        const num = parseInt(newOrder, 10);
+        if (isNaN(num) || num === course.displayOrder) return;
+        await fetch(`/api/admin/courses/${course._id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ displayOrder: num }),
+        });
         fetchCourses();
     };
 
@@ -319,19 +308,17 @@ export default function AdminCoursesPage() {
                                         </td>
                                         {/* Order controls */}
                                         <td className="px-4 py-4 text-center">
-                                            <div className="flex flex-col items-center gap-0.5">
-                                                <button onClick={() => handleMoveOrder(course, 'up')}
-                                                    className="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                                                    title="Move up">
-                                                    <ChevronUp className="w-3.5 h-3.5" />
-                                                </button>
-                                                <span className="text-[10px] font-bold text-gray-400 leading-none">{course.displayOrder}</span>
-                                                <button onClick={() => handleMoveOrder(course, 'down')}
-                                                    className="p-0.5 text-gray-300 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                                                    title="Move down">
-                                                    <ChevronDown className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
+                                            <input
+                                                key={`${course._id}-${course.displayOrder}`}
+                                                type="number"
+                                                defaultValue={course.displayOrder}
+                                                title="Enter number to order. Lower numbers appear first."
+                                                onBlur={(e) => handleOrderChange(course, e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') e.currentTarget.blur();
+                                                }}
+                                                className="w-16 px-2 py-1.5 text-center border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white shadow-sm transition-all hover:bg-gray-50"
+                                            />
                                         </td>
                                         {/* Active toggle */}
                                         <td className="px-4 py-4 text-center">
