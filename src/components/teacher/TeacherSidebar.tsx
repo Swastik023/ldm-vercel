@@ -12,6 +12,7 @@ import {
     HelpCircle,
     BookOpen,
     Bell,
+    Users,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -20,6 +21,7 @@ const TeacherSidebar = () => {
 
     const menuItems = [
         { title: 'Dashboard', path: '/teacher', icon: <LayoutDashboard size={20} /> },
+        { title: 'My Classes', path: '/teacher/classes/assign', icon: <Users size={20} /> },
         { title: 'Attendance', path: '/teacher/attendance', icon: <ClipboardCheck size={20} /> },
         { title: 'Marks Entry', path: '/teacher/marks', icon: <GraduationCap size={20} /> },
         { title: 'MCQ Tests', path: '/teacher/tests', icon: <BookOpen size={20} /> },
@@ -41,9 +43,9 @@ const TeacherSidebar = () => {
                     <Link
                         key={item.path}
                         href={item.path}
-                        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${pathname === item.path
-                            ? 'bg-amber-50 text-amber-600 font-medium shadow-sm'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${(item.path === '/teacher' ? pathname === item.path : pathname.startsWith(item.path))
+                                ? 'bg-amber-50 text-amber-600 font-medium shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                             }`}
                     >
                         {item.icon}
