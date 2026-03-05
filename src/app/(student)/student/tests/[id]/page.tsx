@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import * as gtag from '@/lib/gtag';
 
 interface TestOption { label: string; text: string; }
@@ -11,32 +12,108 @@ interface TestMeta { _id: string; title: string; description?: string; durationM
 
 type PaletteStatus = 'unanswered' | 'answered' | 'flagged';
 
+const MAX_WARNINGS = 3;
+
+// ── Moving watermark ──────────────────────────────────────────────────────────
+function ExamWatermark({ name, id }: { name: string; id: string }) {
+    const [pos, setPos] = useState({ x: 20, y: 20 });
+    const [dir, setDir] = useState({ dx: 0.3, dy: 0.2 });
+
+    useEffect(() => {
+        let x = Math.random() * 60 + 10;
+        let y = Math.random() * 60 + 10;
+        let dx = (Math.random() > 0.5 ? 1 : -1) * (0.2 + Math.random() * 0.2);
+        let dy = (Math.random() > 0.5 ? 1 : -1) * (0.2 + Math.random() * 0.2);
+
+        const frame = setInterval(() => {
+            x += dx;
+            y += dy;
+            if (x <= 5 || x >= 70) dx *= -1;
+            if (y <= 5 || y >= 80) dy *= -1;
+            setPos({ x, y });
+            setDir({ dx, dy });
+        }, 50);
+        return () => clearInterval(frame);
+    }, []);
+
+    return (
+        <div
+            className="fixed pointer-events-none z-50 select-none opacity-[0.08] text-gray-800 font-bold text-sm rotate-[-20deg] transition-none"
+            style={{ left: `${pos.x}%`, top: `${pos.y}%`, willChange: 'left, top' }}
+        >
+            <div>{name}</div>
+            <div className="text-xs opacity-80">{id}</div>
+        </div>
+    );
+}
+
+// ── Security warning overlay ──────────────────────────────────────────────────
+function WarningOverlay({ count, max, onDismiss }: { count: number; max: number; onDismiss: () => void }) {
+    return (
+        <div className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 p-6 text-center space-y-4">
+                <div className="text-5xl">⚠️</div>
+                <h2 className="text-xl font-black text-red-600">Security Warning</h2>
+                <p className="text-gray-700 text-sm">
+                    You switched away from the exam window. This has been logged.
+                </p>
+                <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-2">
+                    <p className="text-red-700 font-bold text-sm">
+                        Warning {count} of {max}
+                    </p>
+                    {count >= max - 1 && (
+                        <p className="text-red-600 text-xs mt-0.5 font-semibold">
+                            Next violation will auto-submit your exam!
+                        </p>
+                    )}
+                </div>
+                <button
+                    onClick={onDismiss}
+                    className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl text-sm"
+                >
+                    Return to Exam
+                </button>
+            </div>
+        </div>
+    );
+}
+
 export default function TakeTestPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
+    const { data: session } = useSession();
     const [testId, setTestId] = useState('');
     const [test, setTest] = useState<TestMeta | null>(null);
     const [questions, setQuestions] = useState<TestQuestion[]>([]);
-    const [answers, setAnswers] = useState<Record<string, string>>({});        // questionId → label
-    const [flags, setFlags] = useState<Set<string>>(new Set());               // flagged for review
+    const [answers, setAnswers] = useState<Record<string, string>>({});
+    const [flags, setFlags] = useState<Set<string>>(new Set());
     const [timeLeft, setTimeLeft] = useState(0);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [activeIdx, setActiveIdx] = useState(0);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [warningCount, setWarningCount] = useState(0);
+    const [showWarning, setShowWarning] = useState(false);
+    const [isAutoSubmitting, setIsAutoSubmitting] = useState(false);
+
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const submittedRef = useRef(false);
     const totalSeconds = useRef(0);
-    const endTimeRef = useRef(0);   // Absolute epoch ms when test expires
+    const endTimeRef = useRef(0);
     const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const warningCountRef = useRef(0); // ref version for use in event handlers
 
     // Resolve params once
     useEffect(() => { params.then(p => setTestId(p.id)); }, [params]);
 
+    // ── Submit ───────────────────────────────────────────────────────────────
     const handleSubmit = useCallback(async (auto = false) => {
         if (submittedRef.current) return;
         submittedRef.current = true;
         setSubmitting(true);
         if (timerRef.current) clearInterval(timerRef.current);
+        // Exit fullscreen on submit
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => { });
 
         const answersArr = questions.map(q => ({ questionId: q.questionId, selectedOption: answers[q.questionId] ?? null }));
 
@@ -62,7 +139,7 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
         }
     }, [answers, testId, router, test, questions]);
 
-    // Load test
+    // ── Load test ────────────────────────────────────────────────────────────
     useEffect(() => {
         if (!testId) return;
         fetch(`/api/student/tests/${testId}`)
@@ -84,7 +161,7 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
             .catch(() => { setError('Failed to load test.'); setLoading(false); });
     }, [testId, router]);
 
-    // Timer — uses absolute endTime so tab-throttling cannot extend the test
+    // ── Timer ────────────────────────────────────────────────────────────────
     useEffect(() => {
         if (!test) return;
         timerRef.current = setInterval(() => {
@@ -94,7 +171,101 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
         }, 1000);
         return () => { if (timerRef.current) clearInterval(timerRef.current); };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [test]);  // Only when test first loads — NOT handleSubmit, to avoid restart
+    }, [test]);
+
+    // ── Fullscreen request ───────────────────────────────────────────────────
+    useEffect(() => {
+        if (!test) return;
+        const requestFS = async () => {
+            try {
+                await document.documentElement.requestFullscreen();
+                setIsFullscreen(true);
+            } catch { /* User denied fullscreen — not blocking */ }
+        };
+        requestFS();
+
+        const onFsChange = () => {
+            const inFs = !!document.fullscreenElement;
+            setIsFullscreen(inFs);
+            if (!inFs && !submittedRef.current) {
+                // They exited fullscreen — treat as warning
+                triggerWarning();
+            }
+        };
+        document.addEventListener('fullscreenchange', onFsChange);
+        return () => document.removeEventListener('fullscreenchange', onFsChange);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [test]);
+
+    // ── Tab / visibility detection ───────────────────────────────────────────
+    const triggerWarning = useCallback(() => {
+        if (submittedRef.current) return;
+        const newCount = warningCountRef.current + 1;
+        warningCountRef.current = newCount;
+        setWarningCount(newCount);
+
+        if (newCount >= MAX_WARNINGS) {
+            setIsAutoSubmitting(true);
+            setShowWarning(false);
+            setTimeout(() => handleSubmit(true), 1500);
+        } else {
+            setShowWarning(true);
+        }
+        // Log to server (fire-and-forget)
+        if (testId) {
+            fetch(`/api/student/tests/${testId}/violation`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'tab_switch', count: newCount }),
+            }).catch(() => { });
+        }
+    }, [testId, handleSubmit]);
+
+    useEffect(() => {
+        if (!test) return;
+        const onVisibilityChange = () => {
+            if (document.visibilityState === 'hidden' && !submittedRef.current) {
+                triggerWarning();
+            }
+        };
+        const onBlur = () => {
+            if (!submittedRef.current) triggerWarning();
+        };
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        window.addEventListener('blur', onBlur);
+        return () => {
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+            window.removeEventListener('blur', onBlur);
+        };
+    }, [test, triggerWarning]);
+
+    // ── Disable copy / right-click / selection ────────────────────────────────
+    useEffect(() => {
+        if (!test) return;
+        const noop = (e: Event) => e.preventDefault();
+        const noContextMenu = (e: MouseEvent) => e.preventDefault();
+        const noKeyboard = (e: KeyboardEvent) => {
+            // Block Ctrl+C, Ctrl+V, Ctrl+A, Ctrl+X, PrintScreen
+            if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'a', 'x', 'u', 's'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+            if (e.key === 'PrintScreen') e.preventDefault();
+        };
+        document.addEventListener('copy', noop);
+        document.addEventListener('cut', noop);
+        document.addEventListener('paste', noop);
+        document.addEventListener('contextmenu', noContextMenu);
+        document.addEventListener('keydown', noKeyboard);
+        document.addEventListener('selectstart', noop);
+        return () => {
+            document.removeEventListener('copy', noop);
+            document.removeEventListener('cut', noop);
+            document.removeEventListener('paste', noop);
+            document.removeEventListener('contextmenu', noContextMenu);
+            document.removeEventListener('keydown', noKeyboard);
+            document.removeEventListener('selectstart', noop);
+        };
+    }, [test]);
 
     const scrollTo = (idx: number) => {
         setActiveIdx(idx);
@@ -122,6 +293,9 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
         return 'bg-white text-gray-500 border-gray-200 hover:border-blue-300 hover:bg-blue-50';
     };
 
+    const studentName = session?.user?.name || session?.user?.email || 'Student';
+    const studentId = session?.user?.id || session?.user?.email || 'ID';
+
     if (loading) return <div className="flex items-center justify-center h-[60vh]"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" /></div>;
     if (error) return (
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4 text-center">
@@ -131,6 +305,15 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
         </div>
     );
     if (!test) return null;
+
+    if (isAutoSubmitting) return (
+        <div className="fixed inset-0 bg-red-900 flex flex-col items-center justify-center gap-4 text-white text-center">
+            <div className="text-6xl">🚨</div>
+            <h2 className="text-2xl font-black">Auto-Submitting Exam</h2>
+            <p className="text-red-300 text-sm">Maximum warnings exceeded. Your answers are being submitted.</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mt-2" />
+        </div>
+    );
 
     // Group questions by section
     const sections = test.sections?.length > 0 ? test.sections : [{ sectionId: '', title: '' }];
@@ -142,8 +325,45 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
     }));
 
     return (
-        <div className="max-w-3xl mx-auto pb-36">
-            {/* ─── Sticky Header ─────────────────────────── */}
+        // user-select:none on the whole exam
+        <div className="max-w-3xl mx-auto pb-36 select-none" style={{ WebkitUserSelect: 'none', userSelect: 'none' }}>
+
+            {/* ─── Floating Watermark ───────────────────────────── */}
+            <ExamWatermark name={studentName} id={studentId} />
+
+            {/* ─── Warning count indicator ──────────────────────── */}
+            {warningCount > 0 && !showWarning && (
+                <div className="mb-3 flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-2 text-sm text-red-700 font-semibold">
+                    ⚠️ Warning {warningCount}/{MAX_WARNINGS} — Stay on this tab!
+                </div>
+            )}
+
+            {/* ─── Fullscreen nag ───────────────────────────────── */}
+            {!isFullscreen && (
+                <div className="mb-3 flex items-center justify-between gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 text-sm text-amber-800">
+                    <span>🔲 For best experience, exam should run in fullscreen.</span>
+                    <button
+                        onClick={() => document.documentElement.requestFullscreen().catch(() => { })}
+                        className="text-xs font-bold bg-amber-500 text-white px-3 py-1 rounded-lg hover:bg-amber-600 transition-colors"
+                    >
+                        Enter Fullscreen
+                    </button>
+                </div>
+            )}
+
+            {/* ─── Warning Overlay ─────────────────────────────── */}
+            {showWarning && (
+                <WarningOverlay
+                    count={warningCount}
+                    max={MAX_WARNINGS}
+                    onDismiss={() => {
+                        setShowWarning(false);
+                        document.documentElement.requestFullscreen().catch(() => { });
+                    }}
+                />
+            )}
+
+            {/* ─── Sticky Header ───────────────────────────────── */}
             <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm px-4 py-3 -mx-4 mb-5">
                 <div className="flex items-center justify-between gap-4">
                     <div className="min-w-0">
@@ -164,7 +384,7 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
                 </div>
             </div>
 
-            {/* ─── Question Palette ───────────────────────── */}
+            {/* ─── Question Palette ──────────────────────────────── */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-5">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Question Navigator</p>
                 <div className="flex flex-wrap gap-1.5 mb-3">
@@ -181,14 +401,14 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
                 <div className="flex flex-wrap gap-4 text-xs text-gray-500">
                     <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-500 inline-block" /> Answered ({answeredCount})</span>
                     <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-orange-400 inline-block" /> Flagged ({flags.size})</span>
-                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-200 inline-block" /> Not Answered ({test.questionCount - answeredCount - flags.size < 0 ? 0 : test.questionCount - answeredCount})</span>
+                    <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-200 inline-block" /> Not Answered ({Math.max(0, test.questionCount - answeredCount)})</span>
                 </div>
                 {test.negativeMarking > 0 && (
                     <p className="mt-2 text-xs text-red-500 font-medium">⚠ Negative marking: −{test.negativeMarking} per wrong answer</p>
                 )}
             </div>
 
-            {/* ─── Questions by Section ───────────────────── */}
+            {/* ─── Questions by Section ────────────────────────── */}
             {bySection.map(sec => (
                 <div key={sec.sectionId || 'default'} className="mb-6">
                     {sec.title && (
@@ -256,7 +476,7 @@ export default function TakeTestPage({ params }: { params: Promise<{ id: string 
                 </div>
             ))}
 
-            {/* ─── Fixed Submit Bar ───────────────────────── */}
+            {/* ─── Fixed Submit Bar ──────────────────────────────── */}
             <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xl z-30">
                 <div className="text-sm text-gray-500 text-center sm:text-left">
                     <span className="font-bold text-gray-900">{answeredCount}</span> of {test.questionCount} answered

@@ -17,6 +17,13 @@ export interface IStudentAnswer {
     selectedOption: 'A' | 'B' | 'C' | 'D' | null;
 }
 
+// ─── Violation entry ───────────────────────────────────────────────────────
+export interface IViolation {
+    type: 'tab_switch' | 'blur' | 'fullscreen_exit';
+    count: number;
+    timestamp: Date;
+}
+
 // ─── ProTestAttempt ────────────────────────────────────────────────────────
 export interface IProTestAttempt extends Document {
     testId: mongoose.Types.ObjectId;
@@ -38,9 +45,17 @@ export interface IProTestAttempt extends Document {
     gradedAnswers: IGradedAnswer[];
     // Whether this student can see their result
     resultVisible: boolean;
+    // Security violation log
+    violations: IViolation[];
     createdAt: Date;
     updatedAt: Date;
 }
+
+const ViolationSchema = new Schema<IViolation>({
+    type: { type: String, enum: ['tab_switch', 'blur', 'fullscreen_exit'], required: true },
+    count: { type: Number, required: true },
+    timestamp: { type: Date, required: true },
+}, { _id: false });
 
 const StudentAnswerSchema = new Schema<IStudentAnswer>({
     questionId: { type: String, required: true },
@@ -73,6 +88,7 @@ const ProTestAttemptSchema = new Schema<IProTestAttempt>({
     percentage: { type: Number, required: true },
     gradedAnswers: { type: [GradedAnswerSchema], default: [] },
     resultVisible: { type: Boolean, default: false },
+    violations: { type: [ViolationSchema], default: [] },
 }, { timestamps: true });
 
 // One attempt per student per test
