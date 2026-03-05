@@ -12,6 +12,7 @@ interface Student {
     batch: { _id: string; name: string } | null;
     classId: { _id: string; className: string } | null;
     programId?: { _id: string; name: string } | null;
+    semester?: number;
 }
 interface Batch { _id: string; name: string; }
 interface StudentDocs {
@@ -632,6 +633,22 @@ export default function AdminStudentsPage() {
                                         <select className={inputCls} value={editForm.status || selectedStudent.status} onChange={e => setEditForm(p => ({ ...p, status: e.target.value }))}>
                                             {['active', 'pending', 'under_review', 'rejected', 'inactive'].map(s => <option key={s} value={s}>{s === 'under_review' ? 'Under Review' : s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                                         </select>
+                                    </div>
+
+                                    {/* Registration details readonly summary */}
+                                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3 mt-4">
+                                        <p className="text-xs font-bold text-gray-600 uppercase tracking-wide">Registration Info</p>
+                                        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm text-gray-700">
+                                            <div><span className="text-gray-400 block text-xs">Registered On</span> {new Date(selectedStudent.createdAt).toLocaleDateString('en-IN')}</div>
+                                            <div><span className="text-gray-400 block text-xs">Course / Program</span> {selectedStudent.programId ? selectedStudent.programId.name : '—'}</div>
+                                            <div><span className="text-gray-400 block text-xs">Batch</span> {selectedStudent.batch ? selectedStudent.batch.name : '—'}</div>
+                                            <div><span className="text-gray-400 block text-xs">Class</span> {selectedStudent.classId ? selectedStudent.classId.className : '—'}</div>
+                                            <div><span className="text-gray-400 block text-xs">Semester</span> {selectedStudent.semester ? `Semester ${selectedStudent.semester}` : '—'}</div>
+                                            <div><span className="text-gray-400 block text-xs">Reg. Method</span> {selectedStudent.provider === 'google' ? 'Google OAuth' : 'Email/Password'}</div>
+                                            {selectedStudent.joiningMonth && selectedStudent.joiningYear && (
+                                                <div><span className="text-gray-400 block text-xs">Joined</span> {selectedStudent.joiningMonth} {selectedStudent.joiningYear}</div>
+                                            )}
+                                        </div>
                                     </div>
                                     <button onClick={saveEdit} disabled={editLoading}
                                         className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2">

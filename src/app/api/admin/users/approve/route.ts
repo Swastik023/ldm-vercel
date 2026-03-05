@@ -129,7 +129,7 @@ export async function GET(req: NextRequest) {
         const statusFilter = searchParams.get('status') || 'pending';
 
         const users = await User.find({ status: statusFilter, role: 'student' })
-            .select('fullName email mobileNumber rollNumber sessionFrom sessionTo isProfileComplete status createdAt batch classId provider rejectionReasons programId session joiningMonth joiningYear')
+            .select('fullName email mobileNumber rollNumber sessionFrom sessionTo isProfileComplete status createdAt batch classId provider rejectionReasons programId session joiningMonth joiningYear semester')
             .populate('batch', 'name batchCode')
             .populate('classId', 'className')
             .populate('programId', 'name code')
