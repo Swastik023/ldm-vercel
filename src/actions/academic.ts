@@ -10,7 +10,7 @@ import { revalidatePath } from 'next/cache';
 export async function getPrograms() {
     await dbConnect();
     try {
-        const programs = await Program.find({}).sort({ createdAt: -1 });
+        const programs = await Program.find({}).sort({ name: 1 });
         return { success: true, data: JSON.parse(JSON.stringify(programs)) };
     } catch (error: any) {
         return { success: false, error: error.message };

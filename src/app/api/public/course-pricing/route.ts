@@ -7,7 +7,7 @@ export async function GET() {
     try {
         await dbConnect();
         const now = new Date();
-        const programs = await Program.find({ is_active: true }).lean();
+        const programs = await Program.find({ is_active: true }).sort({ name: 1 }).lean();
 
         const result = programs.map((p: any) => {
             const pr = p.pricing || {};
