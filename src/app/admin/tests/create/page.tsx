@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface BatchOption { _id: string; name: string; }
 interface SubjectOption { _id: string; name: string; code: string; }
 
-type UploadMode = 'combined' | 'dual';
+type UploadMode = 'combined' | 'dual' | 'paste';
 
 export default function CreateTestPage() {
     const router = useRouter();
@@ -27,6 +27,7 @@ export default function CreateTestPage() {
     const [preview, setPreview] = useState<any>(null);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<{ success: boolean; message?: string; warnings?: string[]; errors?: string[] } | null>(null);
+    const [jsonText, setJsonText] = useState('');
 
     // Dropdown data
     const [batches, setBatches] = useState<BatchOption[]>([]);
@@ -56,6 +57,15 @@ export default function CreateTestPage() {
         });
     };
 
+    const handleJsonText = (text: string) => {
+        setJsonText(text);
+        setPreview(null);
+        if (!text.trim()) return;
+        try {
+            setPreview(JSON.parse(text));
+        } catch { /* still typing */ }
+    };
+
     const handleSubmit = async () => {
         setLoading(true);
         setResult(null);
@@ -70,6 +80,9 @@ export default function CreateTestPage() {
             } else if (uploadMode === 'dual' && questionsFile && answersFile) {
                 fd.append('questions', questionsFile);
                 fd.append('answers', answersFile);
+            } else if (uploadMode === 'paste' && jsonText.trim()) {
+                const blob = new Blob([jsonText], { type: 'application/json' });
+                fd.append('combined', blob, 'test.json');
             }
 
             const res = await fetch('/api/admin/tests', { method: 'POST', body: fd });
@@ -87,7 +100,8 @@ export default function CreateTestPage() {
 
     const canSubmit = batchId && subjectId && (
         (uploadMode === 'combined' && combinedFile) ||
-        (uploadMode === 'dual' && questionsFile && answersFile)
+        (uploadMode === 'dual' && questionsFile && answersFile) ||
+        (uploadMode === 'paste' && jsonText.trim().length > 0)
     );
 
     const inputCls = 'w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white';
@@ -128,18 +142,18 @@ export default function CreateTestPage() {
 
                 {/* Upload Mode Toggle */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Upload Mode</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Input Method</label>
                     <div className="flex rounded-xl overflow-hidden border border-gray-200">
-                        {(['combined', 'dual'] as const).map(mode => (
+                        {(['combined', 'dual', 'paste'] as const).map(mode => (
                             <button key={mode} onClick={() => setUploadMode(mode)}
                                 className={`flex-1 py-2.5 text-sm font-semibold transition-all ${uploadMode === mode ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}>
-                                {mode === 'combined' ? '📄 Single JSON File' : '📁 Two Separate Files'}
+                                {mode === 'combined' ? '📄 Upload JSON' : mode === 'dual' ? '📁 Two Files' : '✏️ Paste JSON'}
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* File Upload */}
+                {/* File Upload OR Paste */}
                 {uploadMode === 'combined' ? (
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1.5">Upload Combined JSON <span className="text-red-500">*</span></label>
@@ -157,13 +171,13 @@ export default function CreateTestPage() {
                             ) : (
                                 <div>
                                     <p className="text-3xl mb-2">📄</p>
-                                    <p className="text-gray-500 font-medium text-sm">Click to upload or drag & drop</p>
+                                    <p className="text-gray-500 font-medium text-sm">Click to upload or drag &amp; drop</p>
                                     <p className="text-xs text-gray-400 mt-1">JSON file with questions + answers combined</p>
                                 </div>
                             )}
                         </div>
                     </div>
-                ) : (
+                ) : uploadMode === 'dual' ? (
                     <div className="grid sm:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">questions.json <span className="text-red-500">*</span></label>
@@ -183,6 +197,23 @@ export default function CreateTestPage() {
                                 <p className="text-sm text-gray-500">{answersFile ? `✓ ${answersFile.name}` : 'Upload answers.json'}</p>
                             </div>
                         </div>
+                    </div>
+                ) : (
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Paste JSON <span className="text-red-500">*</span></label>
+                        <textarea
+                            className="w-full h-64 px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 resize-y"
+                            placeholder={`{\n  "testTitle": "My Test",\n  "durationMinutes": 30,\n  "totalMarks": 10,\n  "questions": [...]\n}`}
+                            value={jsonText}
+                            onChange={e => handleJsonText(e.target.value)}
+                            spellCheck={false}
+                        />
+                        {jsonText.trim() && !preview && (
+                            <p className="text-xs text-red-500 mt-1">⚠️ Invalid JSON — check for syntax errors</p>
+                        )}
+                        {preview && (
+                            <p className="text-xs text-green-600 mt-1">✅ Valid JSON — {preview.questions?.length ?? 0} question(s) detected</p>
+                        )}
                     </div>
                 )}
 

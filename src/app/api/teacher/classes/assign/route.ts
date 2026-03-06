@@ -18,12 +18,29 @@ export async function GET(req: Request) {
         const view = url.searchParams.get('view');
 
         if (view === 'available-batches') {
-            const batches = await Batch.find({ is_active: true })
-                .populate('program', 'name code')
-                .sort({ joiningYear: -1, intakeMonth: 1, name: 1 })
-                .lean();
+            const teacherId = session.user.id;
+            // Only show batches this teacher is actually assigned to
+            const assignments = await Assignment.find({ teacher: teacherId })
+                .populate({
+                    path: 'batch',
+                    populate: { path: 'program', select: 'name code' },
+                })
+                .lean() as any[];
 
-            const subjects = await Subject.find().sort({ semester: 1, name: 1 }).lean();
+            // Deduplicate batches
+            const batchMap = new Map<string, any>();
+            for (const a of assignments) {
+                if (a.batch && a.batch._id) {
+                    batchMap.set(String(a.batch._id), a.batch);
+                }
+            }
+            const batches = Array.from(batchMap.values()).sort((a, b) =>
+                (b.joiningYear ?? 0) - (a.joiningYear ?? 0)
+            );
+
+            // Subjects: only for batches this teacher teaches
+            const subjectIds = [...new Set(assignments.map((a: any) => String(a.subject)).filter(Boolean))];
+            const subjects = await Subject.find({ _id: { $in: subjectIds } }).sort({ semester: 1, name: 1 }).lean();
 
             return NextResponse.json({ success: true, batches, subjects });
         }
