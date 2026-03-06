@@ -36,15 +36,15 @@ interface FeeRecord {
     payments: { _id: string; amount: number; date: string; note?: string; }[];
 }
 
-const STANDARD_DOC_SLOTS = [
+const STANDARD_DOC_SLOTS: { urlKey: string; typeKey: string; label: string; metaKey?: string; }[] = [
     { urlKey: 'passportPhotoUrl', typeKey: 'passportPhotoType', label: 'Passport Photo' },
-    { urlKey: 'marksheet10Url', typeKey: 'marksheet10Type', label: '10th Marksheet' },
-    { urlKey: 'marksheet12Url', typeKey: 'marksheet12Type', label: '12th Marksheet' },
-    { urlKey: 'aadhaarFrontUrl', typeKey: 'aadhaarFrontType', label: 'Aadhaar Card (Front)' },
+    { urlKey: 'marksheet10Url', typeKey: 'marksheet10Type', label: '10th Marksheet', metaKey: '10th' },
+    { urlKey: 'marksheet12Url', typeKey: 'marksheet12Type', label: '12th Marksheet', metaKey: '12th' },
+    { urlKey: 'aadhaarFrontUrl', typeKey: 'aadhaarFrontType', label: 'Aadhaar Card (Front)', metaKey: 'Aadhaar' },
     { urlKey: 'aadhaarBackUrl', typeKey: 'aadhaarBackType', label: 'Aadhaar Card (Back)' },
     { urlKey: 'aadhaarIdUrl', typeKey: 'aadhaarIdType', label: 'Aadhaar Card (Legacy)' },
     { urlKey: 'familyIdUrl', typeKey: 'familyIdType', label: 'Family ID' },
-] as const;
+];
 
 const DOC_SLOTS_FOR_REJECT = [
     { fieldKey: 'passportPhoto', label: 'Passport Photo' },
@@ -148,7 +148,7 @@ export default function AdminStudentsPage() {
 
     const openStudentModal = async (student: Student) => {
         setSelectedStudent(student); setStudentDocs(null); setStudentFees([]); setDocsLoading(true); setModalTab('docs');
-        setEditForm({ fullName: student.fullName, email: student.email, mobileNumber: student.mobileNumber || '', rollNumber: student.rollNumber || '' });
+        setEditForm({ fullName: student.fullName, email: student.email, mobileNumber: student.mobileNumber || '', rollNumber: student.rollNumber || '', batch: student.batch?._id || '' });
         const [docRes, feeRes] = await Promise.all([
             fetch(`/api/admin/students/${student._id}/documents`),
             fetch(`/api/admin/students/${student._id}/fees`),
@@ -423,22 +423,37 @@ export default function AdminStudentsPage() {
                                     : !studentDocs ? <div className="text-center py-8 text-gray-400"><XCircle className="w-8 h-8 mx-auto mb-2 opacity-40" /><p className="text-sm">No documents uploaded yet</p></div>
                                         : (
                                             <div className="space-y-2">
-                                                {STANDARD_DOC_SLOTS.map(({ urlKey, typeKey, label }) => {
+                                                {STANDARD_DOC_SLOTS.map(({ urlKey, typeKey, label, metaKey }) => {
                                                     const url = (studentDocs as any)[urlKey] as string | undefined;
                                                     const type = (studentDocs as any)[typeKey] as string | undefined;
                                                     if (!url) return null;
+
+                                                    // Find matching meta if any
+                                                    const meta = 'metaKey' in { metaKey: 1 } && metaKey && studentDocs.documentMeta
+                                                        ? studentDocs.documentMeta.find(m => m.docType === metaKey) : null;
+
                                                     return (
-                                                        <div key={urlKey} className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                                                            <div className="flex items-center gap-3">
-                                                                <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center">
-                                                                    {type === 'pdf' ? <FileText className="w-4 h-4 text-blue-600" /> : <ImageIcon className="w-4 h-4 text-blue-600" />}
+                                                        <div key={urlKey} className="flex flex-col gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                                            <div className="flex items-center justify-between gap-3">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center">
+                                                                        {type === 'pdf' ? <FileText className="w-4 h-4 text-blue-600" /> : <ImageIcon className="w-4 h-4 text-blue-600" />}
+                                                                    </div>
+                                                                    <div><p className="font-semibold text-gray-900 text-xs">{label}</p><p className="text-gray-400 text-xs uppercase">{type}</p></div>
                                                                 </div>
-                                                                <div><p className="font-semibold text-gray-900 text-xs">{label}</p><p className="text-gray-400 text-xs uppercase">{type}</p></div>
+                                                                <a href={url} target="_blank" rel="noopener noreferrer" download
+                                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors">
+                                                                    <Download className="w-3 h-3" /> Download
+                                                                </a>
                                                             </div>
-                                                            <a href={url} target="_blank" rel="noopener noreferrer" download
-                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors">
-                                                                <Download className="w-3 h-3" /> Download
-                                                            </a>
+                                                            {/* Display Document Meta */}
+                                                            {meta && (
+                                                                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 pl-11 text-xs">
+                                                                    {meta.docNumber && <div><span className="text-gray-400">ID No:</span> <span className="font-mono text-gray-700 font-semibold">{meta.docNumber}</span></div>}
+                                                                    {meta.docRollNumber && <div><span className="text-gray-400">Roll No:</span> <span className="font-mono text-gray-700 font-semibold">{meta.docRollNumber}</span></div>}
+                                                                    {meta.docPercentage && <div><span className="text-gray-400">Percentage:</span> <span className="font-semibold text-green-600">{meta.docPercentage}%</span></div>}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     );
                                                 })}
@@ -628,11 +643,20 @@ export default function AdminStudentsPage() {
                                             </div>
                                         ))}
                                     </div>
-                                    <div>
-                                        <label className="block text-xs font-semibold text-gray-600 mb-1.5">Account Status</label>
-                                        <select className={inputCls} value={editForm.status || selectedStudent.status} onChange={e => setEditForm(p => ({ ...p, status: e.target.value }))}>
-                                            {['active', 'pending', 'under_review', 'rejected', 'inactive'].map(s => <option key={s} value={s}>{s === 'under_review' ? 'Under Review' : s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
-                                        </select>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Account Status</label>
+                                            <select className={inputCls} value={editForm.status || selectedStudent.status} onChange={e => setEditForm(p => ({ ...p, status: e.target.value }))}>
+                                                {['active', 'pending', 'under_review', 'rejected', 'inactive'].map(s => <option key={s} value={s}>{s === 'under_review' ? 'Under Review' : s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Batch</label>
+                                            <select className={inputCls} value={editForm.batch || ''} onChange={e => setEditForm(p => ({ ...p, batch: e.target.value }))}>
+                                                <option value="">No Batch Assigned</option>
+                                                {batches.map(b => <option key={b._id} value={b._id}>{b.name}</option>)}
+                                            </select>
+                                        </div>
                                     </div>
 
                                     {/* Registration details readonly summary */}

@@ -42,10 +42,26 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
             }
         }
 
+        // Handle empty strings for ObjectIds to avoid Mongoose CastErrors
+        if (update.batch === '') update.batch = null;
+        if (update.classId === '') update.classId = null;
+
+        // Auto-sync program/intake data when assigning a new batch
+        if (update.batch) {
+            const batchDoc = await Batch.findById(update.batch).lean() as any;
+            if (batchDoc) {
+                update.programId = batchDoc.program;
+                update.session = batchDoc.session;
+                update.joiningMonth = batchDoc.intakeMonth;
+                update.joiningYear = batchDoc.joiningYear;
+            }
+        }
+
         const updated = await User.findByIdAndUpdate(id, update, { new: true })
             .select('-password')
             .populate('batch', 'name')
             .populate('classId', 'className')
+            .populate('programId', 'name')
             .lean();
 
         // Auto-create default fee if a batch is being assigned for the first time (best-effort)
