@@ -47,14 +47,13 @@ export default function BatchManager({
     const [intakeMonth, setIntakeMonth] = useState('January');
     const [joiningYear, setJoiningYear] = useState(new Date().getFullYear().toString());
     const [programId, setProgramId] = useState('');
-    const [sessionId, setSessionId] = useState('');
     const [capacity, setCapacity] = useState(60);
     const [isLoading, setIsLoading] = useState(false);
     const [isPopulating, setIsPopulating] = useState(false);
 
     // Edit states
     const [editBatchId, setEditBatchId] = useState<string | null>(null);
-    const [editForm, setEditForm] = useState<{ name: string; programId: string; sessionId: string }>({ name: '', programId: '', sessionId: '' });
+    const [editForm, setEditForm] = useState<{ name: string; programId: string }>({ name: '', programId: '' });
     const [editLoading, setEditLoading] = useState(false);
 
     // Filter states
@@ -136,15 +135,13 @@ export default function BatchManager({
             const result = await updateBatch(id, {
                 name: editForm.name,
                 program: editForm.programId,
-                session: editForm.sessionId
             });
 
             if (result.success) {
                 toast.success('Batch updated');
                 const prog = programs.find(p => p._id === editForm.programId);
-                const sess = sessions.find(s => s._id === editForm.sessionId);
-                if (prog && sess) {
-                    setBatches(batches.map(b => b._id === id ? { ...b, name: editForm.name, program: prog, session: sess } : b));
+                if (prog) {
+                    setBatches(batches.map(b => b._id === id ? { ...b, name: editForm.name, program: prog } : b));
                 }
                 setEditBatchId(null);
             } else {
@@ -189,7 +186,7 @@ export default function BatchManager({
             {/* Create Batch Card */}
             <Card>
                 <CardContent className="pt-6">
-                    <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-5 items-end">
+                    <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-4 items-end">
                         <div className="md:col-span-1">
                             <label className="text-sm font-medium">Intake Month</label>
                             <select
@@ -230,25 +227,11 @@ export default function BatchManager({
                             </select>
                         </div>
                         <div className="md:col-span-1">
-                            <label className="text-sm font-medium">Session</label>
-                            <select
-                                className="flex h-10 w-full mt-1 rounded-md border border-input bg-background px-3 py-2 text-sm"
-                                value={sessionId}
-                                onChange={(e) => setSessionId(e.target.value)}
-                                required
-                            >
-                                <option value="">Select Session</option>
-                                {sessions.map(s => (
-                                    <option key={s._id} value={s._id}>{s.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="md:col-span-1">
                             <Button type="submit" isLoading={isLoading} className="w-full">
                                 <Plus className="mr-2 h-4 w-4" /> Create
                             </Button>
                         </div>
-                        <div className="md:col-span-1 md:col-start-1 md:col-end-6">
+                        <div className="md:col-span-1 md:col-start-1 md:col-end-5">
                             <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded border border-gray-100">
                                 <span className="font-semibold text-gray-700">Generated Batch Name:</span>{' '}
                                 {computedName ? (
@@ -326,12 +309,8 @@ export default function BatchManager({
                                         <option value="">Select Program</option>
                                         {programs.map(p => <option key={p._id} value={p._id}>{p.name}</option>)}
                                     </select>
-                                    <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editForm.sessionId} onChange={e => setEditForm({ ...editForm, sessionId: e.target.value })}>
-                                        <option value="">Select Session</option>
-                                        {sessions.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
-                                    </select>
                                     <div className="flex gap-2">
-                                        <Button size="sm" onClick={() => handleEditSave(batch._id)} disabled={editLoading || !editForm.name || !editForm.programId || !editForm.sessionId} className="flex-1 bg-blue-600 hover:bg-blue-700">{editLoading ? 'Saving...' : 'Save'}</Button>
+                                        <Button size="sm" onClick={() => handleEditSave(batch._id)} disabled={editLoading || !editForm.name || !editForm.programId} className="flex-1 bg-blue-600 hover:bg-blue-700">{editLoading ? 'Saving...' : 'Save'}</Button>
                                         <Button size="sm" variant="outline" onClick={() => setEditBatchId(null)} className="flex-1">Cancel</Button>
                                     </div>
                                 </div>
@@ -350,7 +329,7 @@ export default function BatchManager({
                                             </p>
                                         </div>
                                         <div className="flex gap-2 text-gray-400">
-                                            <button onClick={() => { setEditBatchId(batch._id); setEditForm({ name: batch.name, programId: batch.program._id, sessionId: batch.session?._id || '' }); }} className="hover:text-blue-600 transition-colors">
+                                            <button onClick={() => { setEditBatchId(batch._id); setEditForm({ name: batch.name, programId: batch.program._id }); }} className="hover:text-blue-600 transition-colors">
                                                 <Edit2 className="h-4 w-4" />
                                             </button>
                                             <button onClick={() => handleDelete(batch._id)} className="hover:text-red-600 transition-colors">
